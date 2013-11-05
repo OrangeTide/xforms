@@ -467,9 +467,9 @@ load_fd_header( void )
         char *tmp = ff_get_filename_copy( );
 
         if ( ! fdopt.conv_only )
-            fl_show_alert2( 0, "Warning:\fFile %s\nwas created with an older "
-                            "fdesign version,\nthe new output file may not be "
-                            "compatible.", tmp );
+            fl_show_alert_f( 0, "Warning:\fFile %s\nwas created with an older "
+                             "fdesign version,\nthe new output file may not be "
+                             "compatible.", tmp );
         else
             M_warn( "", "Warning: File %s was created with an older fdesign "
                     "version, the new output file may not be compatible",

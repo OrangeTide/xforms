@@ -24,6 +24,13 @@
 #include <stdarg.h>
 #include "private/flsnprintf.h"
 
+#if defined ( HAVE_VASPRINTF ) && ! defined ( HAVE_DECL_VASPRINTF )
+int
+vasprintf( char       ** strp,
+           const char  * fmt,
+           va_list       ap );
+#endif
+
 /* Macro for allocating a buffer and filling it with a string
  * constructed from a format string and an unspecified number
  * of arguments. It expects a char pointer first (which will
@@ -67,9 +74,9 @@
  * a uncommon way of defining a va_list. Messy, isnt' it?
  *
  * BTW, all locally used variables have names starting with 'l1I_'
- * since this a prefix no sane person would ever use, so we avoid
- * compiler warnings about local variables shadowing already defined
- * ones.
+ * since this is a prefix no sane person would ever use - we try to
+ * avoid compiler warnings about local variables shadowing already
+ * defined ones.
  */
 
 #if defined ( HAVE_VASPRINTF )
@@ -95,7 +102,7 @@ do {                                                                        \
                                                                             \
     if ( ! buf && ( buf = fl_malloc( 1 ) ) )                                \
             *buf = '\0';                                                    \
-} while ( 1 )
+} while ( 0 )
 
 #else
 
@@ -110,8 +117,8 @@ do {                                                                        \
     }                                                                       \
     else                                                                    \
     {                                                                       \
-        size_t l1I_min_needed = strlen( fmt ) + 1;                          \
-        size_t l1I_len = l1I_min_needed;                                    \
+        int l1I_min_needed = strlen( fmt ) + 1;                             \
+        int l1I_len = l1I_min_needed;                                       \
         char *l1I_p;                                                        \
                                                                             \
         for ( l1I_p = strchr( fmt, '%' ); l1I_p;                            \
@@ -160,7 +167,7 @@ do {                                                                        \
                                                                             \
     if ( ! buf && ( buf = fl_malloc( 1 ) ) )                                \
             *buf = '\0';                                                    \
-} while ( 1 )
+} while ( 0 )
 
 #endif
 

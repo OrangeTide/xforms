@@ -1,7 +1,7 @@
 include $(top_srcdir)/config/common.am
 
 if USE_BWC_BS_HACK
-BWC = -D USE_BWC_BS_HACK
+BWC = -DUSE_BWC_BS_HACK
 else
 BWC =
 endif

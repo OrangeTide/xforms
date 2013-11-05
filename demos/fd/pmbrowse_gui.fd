@@ -1,4 +1,4 @@
-Magic: 13000
+Magic: 15000
 
 Internal Form Definition File
     (do not change)
@@ -14,7 +14,7 @@ Number of Objects: 5
 
 --------------------
 class: FL_BOX
-type: UP_BOX
+type: FL_UP_BOX
 box: 0 0 330 320
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -32,7 +32,7 @@ argument:
 
 --------------------
 class: FL_BITMAP
-type: NORMAL_BITMAP
+type: FL_NORMAL_BITMAP
 box: 30 20 270 240
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -50,7 +50,7 @@ argument:
 
 --------------------
 class: FL_PIXMAP
-type: NORMAL_PIXMAP
+type: FL_NORMAL_PIXMAP
 box: 30 20 270 240
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -68,7 +68,7 @@ argument:
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 220 280 90 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -86,7 +86,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 20 280 90 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1

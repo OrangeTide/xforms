@@ -1,4 +1,4 @@
-Magic: 13000
+Magic: 15000
 
 Internal Form Definition File
     (do not change)
@@ -14,7 +14,7 @@ Number of Objects: 10
 
 --------------------
 class: FL_BOX
-type: UP_BOX
+type: FL_UP_BOX
 box: 0 0 441 441
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -32,11 +32,11 @@ argument:
 
 --------------------
 class: FL_INPUT
-type: NORMAL_INPUT
+type: FL_NORMAL_INPUT
 box: 40 40 340 30
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -47,14 +47,15 @@ gravity: FL_NoGravity FL_NoGravity
 name: norminput
 callback: input_cb
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: INT_INPUT
+type: FL_INT_INPUT
 box: 40 100 160 30
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -64,15 +65,16 @@ resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: intinput
 callback: input_cb
-argument: 
+argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: FLOAT_INPUT
+type: FL_FLOAT_INPUT
 box: 230 100 160 30
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -82,15 +84,16 @@ resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: floatinput
 callback: input_cb
-argument: 
+argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: DATE_INPUT
+type: FL_DATE_INPUT
 box: 40 150 160 30
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -100,15 +103,16 @@ resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: dateinput
 callback: input_cb
-argument: 
+argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: SECRET_INPUT
+type: FL_SECRET_INPUT
 box: 230 150 160 30
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -118,15 +122,16 @@ resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: secretinput
 callback: input_cb
-argument: 
+argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: MULTILINE_INPUT
+type: FL_MULTILINE_INPUT
 box: 40 210 360 180
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -137,10 +142,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: multiinput
 callback: input_cb
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_TEXT
-type: NORMAL_TEXT
+type: FL_NORMAL_TEXT
 box: 30 400 210 30
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_MCOL
@@ -158,7 +164,7 @@ argument:
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 330 400 70 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -176,7 +182,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 250 400 70 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1

@@ -1,4 +1,4 @@
-Magic: 13000
+Magic: 15000
 
 Internal Form Definition File
     (do not change)
@@ -14,7 +14,7 @@ Number of Objects: 12
 
 --------------------
 class: FL_BOX
-type: UP_BOX
+type: FL_UP_BOX
 box: 0 0 470 230
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -32,7 +32,7 @@ argument:
 
 --------------------
 class: FL_SCROLLBAR
-type: HOR_SCROLLBAR
+type: FL_HOR_SCROLLBAR
 box: 30 15 230 17
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -50,7 +50,7 @@ argument: 0
 
 --------------------
 class: FL_SCROLLBAR
-type: HOR_THIN_SCROLLBAR
+type: FL_HOR_THIN_SCROLLBAR
 box: 30 60 230 18
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
@@ -65,11 +65,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: hor_thin
 callback: noop_cb
 argument: 0
-	value: 0.11
+    value: 0.11
 
 --------------------
 class: FL_SCROLLBAR
-type: HOR_NICE_SCROLLBAR
+type: FL_HOR_NICE_SCROLLBAR
 box: 30 110 230 18
 boxtype: FL_FRAME_BOX
 colors: FL_COL1 FL_COL1
@@ -87,7 +87,7 @@ argument: 0
 
 --------------------
 class: FL_SCROLLBAR
-type: VERT_SCROLLBAR
+type: FL_VERT_SCROLLBAR
 box: 300 10 17 185
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -105,7 +105,7 @@ argument: 0
 
 --------------------
 class: FL_SCROLLBAR
-type: VERT_THIN_SCROLLBAR
+type: FL_VERT_THIN_SCROLLBAR
 box: 338 10 17 185
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
@@ -123,7 +123,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 20 195 80 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -141,7 +141,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 100 195 80 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -159,7 +159,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 200 195 80 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -177,7 +177,7 @@ argument: 0
 
 --------------------
 class: FL_SCROLLBAR
-type: VERT_NICE_SCROLLBAR
+type: FL_VERT_NICE_SCROLLBAR
 box: 370 10 17 185
 boxtype: FL_FRAME_BOX
 colors: FL_COL1 FL_COL1
@@ -192,11 +192,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: vert_nice
 callback: noop_cb
 argument: 0
-	value: 1
+    value: 1
 
 --------------------
 class: FL_SCROLLBAR
-type: HOR_PLAIN_SCROLLBAR
+type: FL_HOR_PLAIN_SCROLLBAR
 box: 30 155 230 18
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
@@ -211,12 +211,12 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: noop_cb
 argument: 0
-	value: 0.77
-	slsize: 0.20
+    value: 0.77
+    slsize: 0.20
 
 --------------------
 class: FL_SCROLLBAR
-type: VERT_PLAIN_SCROLLBAR
+type: FL_VERT_PLAIN_SCROLLBAR
 box: 410 10 17 185
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
@@ -231,8 +231,8 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: noop_cb
 argument: 0
-	value: 0.97
-	slsize: 0.20
+    value: 0.97
+    slsize: 0.20
 
 ==============================
 create_the_forms

@@ -119,10 +119,10 @@ ff_err( const char * message )
     if ( message )
     {
         if ( ! fdopt.conv_only )
-            fl_show_alert2( 0, "Error:\f%s\n%s:%lu.%lu",
-                            message, ff.fname, ( unsigned long ) ff.line_no,
-                            ff.line ?
-                            ( unsigned long ) ( ff.pos - ff.line ) : 0 );
+            fl_show_alert_f( 0, "Error:\f%s\n%s:%lu.%lu",
+                             message, ff.fname, ( unsigned long ) ff.line_no,
+                             ff.line ?
+                             ( unsigned long ) ( ff.pos - ff.line ) : 0 );
         else
             M_err( "Error", "%s at %s:%lu.%lu",
                message, ff.fname, ( unsigned long ) ff.line_no,

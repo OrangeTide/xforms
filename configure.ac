@@ -139,6 +139,7 @@ fi
 AC_CHECK_FUNCS([snprintf strcasecmp strerror usleep nanosleep vsnprintf vasprintf sigaction])
 XFORMS_CHECK_DECL(snprintf, stdio.h)
 XFORMS_CHECK_DECL(vsnprintf, stdio.h)
+XFORMS_CHECK_DECL(vasprintf, stdio.h)
 XFORMS_CHECK_DECL(sigaction, signal.h)
 
 ### Some information on what just happened

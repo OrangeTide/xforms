@@ -1,4 +1,4 @@
-Magic: 13000
+Magic: 15000
 
 Internal Form Definition File
     (do not change)
@@ -14,7 +14,7 @@ Number of Objects: 6
 
 --------------------
 class: FL_BOX
-type: UP_BOX
+type: FL_UP_BOX
 box: 0 0 410 120
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -32,7 +32,7 @@ argument:
 
 --------------------
 class: FL_FRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 8 9 394 67
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_COL1
@@ -50,11 +50,11 @@ argument:
 
 --------------------
 class: FL_INPUT
-type: NORMAL_INPUT
+type: FL_NORMAL_INPUT
 box: 20 33 370 30
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -65,10 +65,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: input
 callback: 
 argument: 
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 30 85 80 26
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -86,7 +87,7 @@ argument:
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 300 85 80 26
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -104,7 +105,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: RETURN_BUTTON
+type: FL_RETURN_BUTTON
 box: 165 85 80 26
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1

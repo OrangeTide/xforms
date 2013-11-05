@@ -1,4 +1,4 @@
-Magic: 13000
+Magic: 15000
 
 Internal Form Definition File
     (do not change)
@@ -16,7 +16,7 @@ Number of Objects: 36
 
 --------------------
 class: FL_BOX
-type: UP_BOX
+type: FL_UP_BOX
 box: 0 0 945 730
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -34,7 +34,7 @@ argument:
 
 --------------------
 class: FL_CANVAS
-type: NORMAL_CANVAS
+type: FL_NORMAL_CANVAS
 box: 15 50 770 630
 boxtype: FL_DOWN_BOX
 colors: FL_NoColor FL_BLACK
@@ -52,7 +52,7 @@ argument:
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 830 35 70 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -70,7 +70,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 850 695 70 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -79,7 +79,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Quit
-shortcut: Qq#q^[
+shortcut: Qq#Q^[
 resize: FL_RESIZE_ALL
 gravity: FL_SouthEast FL_SouthEast
 name: 
@@ -88,7 +88,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 873 100 60 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -106,7 +106,7 @@ argument: FL_IMAGE_MONO
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 813 130 60 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -124,7 +124,7 @@ argument: FL_IMAGE_GRAY
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 873 70 60 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -142,7 +142,7 @@ argument: FL_IMAGE_RGB
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 813 70 60 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -160,7 +160,7 @@ argument: FL_IMAGE_PACKED
 
 --------------------
 class: FL_TEXT
-type: NORMAL_TEXT
+type: FL_NORMAL_TEXT
 box: 20 10 760 33
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_MCOL
@@ -178,7 +178,7 @@ argument:
 
 --------------------
 class: FL_TEXT
-type: NORMAL_TEXT
+type: FL_NORMAL_TEXT
 box: 10 690 230 30
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -196,7 +196,7 @@ argument:
 
 --------------------
 class: FL_TEXT
-type: NORMAL_TEXT
+type: FL_NORMAL_TEXT
 box: 245 690 475 30
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -214,7 +214,7 @@ argument:
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 830 440 80 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -232,7 +232,7 @@ argument: 0
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE2
+type: FL_NORMAL_CHOICE2
 box: 818 477 109 27
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLACK
@@ -247,11 +247,10 @@ gravity: FL_SouthEast FL_SouthEast
 name: format
 callback: 
 argument: 
-  value: 0
 
 --------------------
 class: FL_VALSLIDER
-type: HOR_BROWSER_SLIDER
+type: FL_HOR_BROWSER_SLIDER
 box: 800 575 135 20
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
@@ -267,14 +266,14 @@ name: xfloat
 callback: 
 argument: 
 return: FL_RETURN_END_CHANGED
-	bounds: 0 5
-	precision: 1
-	value: 1
-	step: 0.1
+    bounds: 0 5
+    precision: 1
+    value: 1
+    step: 0.1
 
 --------------------
 class: FL_VALSLIDER
-type: HOR_BROWSER_SLIDER
+type: FL_HOR_BROWSER_SLIDER
 box: 800 595 135 20
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
@@ -290,14 +289,14 @@ name: yfloat
 callback: 
 argument: 
 return: FL_RETURN_END_CHANGED
-	bounds: 0 5
-	precision: 1
-	value: 1
-	step: 0.1
+    bounds: 0 5
+    precision: 1
+    value: 1
+    step: 0.1
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 800 620 50 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -315,7 +314,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 835 540 75 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -333,7 +332,7 @@ argument: 0
 
 --------------------
 class: FL_COUNTER
-type: NORMAL_COUNTER
+type: FL_NORMAL_COUNTER
 box: 825 515 100 20
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLUE
@@ -348,14 +347,14 @@ gravity: FL_SouthEast FL_SouthEast
 name: angle
 callback: 
 argument: 
-  bounds: -180 180
-  precision: 0
-  sstep: 1
-  lstep: 5
+    bounds: -180 180
+    precision: 0
+    sstep: 1
+    lstep: 5
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 815 655 40 26
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -373,7 +372,7 @@ argument: 'y'
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 865 655 40 27
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -391,7 +390,7 @@ argument: 'x'
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 813 100 60 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -409,7 +408,7 @@ argument: FL_IMAGE_CI
 
 --------------------
 class: FL_CHECKBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 850 615 30 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW
@@ -427,7 +426,7 @@ argument:
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 720 690 70 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -445,7 +444,7 @@ argument: 0
 
 --------------------
 class: FL_CHECKBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 815 290 30 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW
@@ -463,7 +462,7 @@ argument:
 
 --------------------
 class: FL_VALSLIDER
-type: HOR_BROWSER_SLIDER
+type: FL_HOR_BROWSER_SLIDER
 box: 794 359 146 20
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
@@ -478,14 +477,14 @@ gravity: FL_East FL_East
 name: level
 callback: window_level
 argument: 0
-	bounds: 0 4095
-	precision: 0
-	value: 0
-	slsize: 0.10
+return: FL_RETURN_CHANGED
+    bounds: 0 4095
+    precision: 0
+    value: 0
 
 --------------------
 class: FL_VALSLIDER
-type: HOR_BROWSER_SLIDER
+type: FL_HOR_BROWSER_SLIDER
 box: 792 400 148 20
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
@@ -500,13 +499,14 @@ gravity: FL_East FL_East
 name: width
 callback: window_level
 argument: 0
-	bounds: 0 4095
-	precision: 0
-	value: 0
+return: FL_RETURN_CHANGED
+    bounds: 0 4095
+    precision: 0
+    value: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 803 168 64 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -524,7 +524,7 @@ argument: (long)FL_SHARPEN
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 803 198 64 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -542,7 +542,7 @@ argument: (long)FL_SMOOTH
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 803 229 64 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -560,7 +560,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 867 228 69 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -578,7 +578,7 @@ argument: (long)FL_SMOOTH
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 867 198 69 29
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -596,7 +596,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 803 260 64 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -614,7 +614,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 868 260 69 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -632,7 +632,7 @@ argument: 1
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 867 168 69 28
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -650,7 +650,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 805 320 55 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -668,7 +668,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 865 320 55 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1

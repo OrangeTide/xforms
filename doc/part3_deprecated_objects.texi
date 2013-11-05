@@ -2,11 +2,10 @@
 @chapter Deprecated Objects
 
 In this chapter describes object types that have been replaced by
-newer ones. They may be in use in older applications. But they
-will remain part of XForms and can be used in new programs. There
-probably will be no more support for these objects except bug
-fixes etc.
-x
+newer ones. But they will remain part of XForms and also can be used
+in new programs. But there probably will be not more support for these
+objects than bug fixes etc.
+
 
 @ifnottex
 @menu

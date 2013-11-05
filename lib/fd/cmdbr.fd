@@ -1,4 +1,4 @@
-Magic: 13000
+Magic: 15000
 
 Internal Form Definition File
     (do not change)
@@ -14,7 +14,7 @@ Number of Objects: 5
 
 --------------------
 class: FL_BOX
-type: UP_BOX
+type: FL_UP_BOX
 box: 0 0 430 190
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -32,7 +32,7 @@ argument:
 
 --------------------
 class: FL_FRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 10 152 410 31
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_COL1
@@ -50,7 +50,7 @@ argument:
 
 --------------------
 class: FL_BROWSER
-type: NORMAL_BROWSER
+type: FL_NORMAL_BROWSER
 box: 10 8 410 140
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_YELLOW
@@ -68,7 +68,7 @@ argument:
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 299 155 60 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -86,7 +86,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 238 155 61 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
