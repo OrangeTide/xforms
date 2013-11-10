@@ -1,4 +1,4 @@
-			  XForms Version 1.0.93
+			  XForms Version 1.2.0
 
 This is the Free Software distribution of the XForms Library, a
 graphical user interface toolkit for X Window Systems.
@@ -11,9 +11,9 @@ See the file COPYING.LIB for the gory details.
 What's new?
 -----------
 
-XForms 1.0.93 is a version in preparation for XForms 1.2.0. While
-it's labeled as a "development version" we believe that it per-
-forms correctly and has less bugs than older versions.
+XForms 1.2.0 is a new stable version of the library. Numerous
+bugs have been fixed, new features have been added and the
+documentation is now part of the package.
 
 For more information, read the file ChangeLog.
 
@@ -76,7 +76,9 @@ Compiling XForms
 You should be able to compile XForms on any 'reasonable' flavour of
 unix.
 
-XForms relies on some other libraries, namely
+XForms relies on some other libraries, namely (for compiling
+XForms you will need development versions, i.e. versions that
+contain the header files for the libraries)
 
     * libX11
 	* libXpm, version 4.7 or newer.
@@ -91,14 +93,22 @@ takes to compile and install XForms is
 	make
 	make install
 
-There are some features that you may want to control:
+There are some features that you may want to control by using
+options when running the 'configure' script'. To find out about
+all of them run 'configure' with the '--help' option. The more
+commonly used include:
 
-  o --disable-gl that makes sure that gl support is not built even if
+  o --disable-gl makes sure that gl support is not built even if
     you have proper GL libraries installed.
 
-  o --enable-demos that adds "demos/" to the list of directories to
+  o --enable-demos adds "demos/" to the list of directories to
     build. It contains various program demonstrating the use of the
     XForms library.
+
+  o --enable-docs instructs the 'configure' script to also
+    add the documentation (in info, HTML and PDF format) to
+    the targets to be build. This requires some additional
+    tools.
 
 For more complicated cases, ./configure takes the following specific
 flags:
@@ -153,7 +163,8 @@ set CFLAGS variable to other values as follows:
 Similarly, if you want to force the use of some specific compiler, you can
 give a value to the CC variable.
 
-The following option might be useful in desperate cases:
+The following option might be useful in order to make the compiler
+more verbose about potential problems:
 
   o --enable-warnings that make the compiler output more warnings during
     the compilation.  Opposite is --disable-warnings.

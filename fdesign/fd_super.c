@@ -62,15 +62,15 @@ get_superspec( FL_OBJECT * ob )
  ***************************************/
 
 SuperSPEC *
-spec_to_superspec( FL_OBJECT * ob )
+spec_to_superspec( FL_OBJECT * obj )
 {
     SuperSPEC *spp;
     int i;
     int n;
 
-    if ( ! ob->u_vdata )
+    if ( ! obj->u_vdata )
     {
-        ob->u_vdata = spp = fl_calloc( 1, sizeof *spp );
+        obj->u_vdata = spp = fl_calloc( 1, sizeof *spp );
 
         spp->content    = NULL;
         spp->shortcut   = NULL;
@@ -82,13 +82,13 @@ spec_to_superspec( FL_OBJECT * ob )
         spp->new_menuapi = 0;
     }
     else
-        spp = ob->u_vdata;
+        spp = obj->u_vdata;
 
-    spp->how_return = ob->how_return;
+    spp->how_return = obj->how_return;
 
-    if ( ob->objclass == FL_BROWSER )
+    if ( obj->objclass == FL_BROWSER )
     {
-        FLI_BROWSER_SPEC *sp = ob->spec;
+        FLI_BROWSER_SPEC *sp = obj->spec;
 
         spp->h_pref = sp->h_pref;
         spp->v_pref = sp->v_pref;
@@ -100,7 +100,7 @@ spec_to_superspec( FL_OBJECT * ob )
             fli_safe_free( spp->callback[ i ] );
         }
 
-        n = fl_get_browser_maxline( ob );
+        n = fl_get_browser_maxline( obj );
 
         spp->content  = fl_realloc( spp->content,
                                     ( n + 1 ) * sizeof *spp->content );
@@ -116,13 +116,13 @@ spec_to_superspec( FL_OBJECT * ob )
         spp->nlines = n;
         for ( i = 1; i <= n; i++ )
         {
-            spp->content[ i ] = fl_strdup( fl_get_browser_line( ob, i ) );
+            spp->content[ i ] = fl_strdup( fl_get_browser_line( obj, i ) );
             spp->shortcut[ i ] = spp->callback[ i ] = NULL;
         }
     }
-    else if ( ob->objclass == FL_CHOICE )
+    else if ( obj->objclass == FL_CHOICE )
     {
-        FLI_CHOICE_SPEC *sp = ob->spec;
+        FLI_CHOICE_SPEC *sp = obj->spec;
 
         for ( i = 1; i <= spp->nlines; i++ )
         {
@@ -149,7 +149,7 @@ spec_to_superspec( FL_OBJECT * ob )
         for ( i = 1; i <= n; i++ )
         {
             spp->mode[ i ] = sp->mode[ i ];
-            spp->content[ i ] = fl_strdup( fl_get_choice_item_text( ob, i ) );
+            spp->content[ i ] = fl_strdup( fl_get_choice_item_text( obj, i ) );
 
             if ( sp->shortcut[ i ] )
                 spp->shortcut[ i ] = fl_strdup( sp->shortcut[ i ] );
@@ -157,9 +157,9 @@ spec_to_superspec( FL_OBJECT * ob )
                 spp->shortcut[ i ] = NULL;
         }
     }
-    else if ( ob->objclass == FL_MENU )
+    else if ( obj->objclass == FL_MENU )
     {
-        FLI_MENU_SPEC *sp = ob->spec;
+        FLI_MENU_SPEC *sp = obj->spec;
 
         for ( i = 1; i <= spp->nlines; i++ )
         {
@@ -186,7 +186,7 @@ spec_to_superspec( FL_OBJECT * ob )
             spp->mode[ i ] = sp->mode[ i ];
             spp->mval[ i ] = sp->mval[ i ];
             spp->content[ i ] =
-                      fl_strdup( fl_get_menu_item_text( ob, sp->mval[ i ] ) );
+                      fl_strdup( fl_get_menu_item_text( obj, sp->mval[ i ] ) );
 
             if ( sp->shortcut[ i ] )
                 spp->shortcut[ i ] = fl_strdup( sp->shortcut[ i ] );
@@ -199,11 +199,11 @@ spec_to_superspec( FL_OBJECT * ob )
                 spp->callback[ i ] = NULL;
         }
     }
-    else if (    ob->objclass == FL_SLIDER
-              || ob->objclass == FL_VALSLIDER
-              || ob->objclass == FL_THUMBWHEEL )
+    else if (    obj->objclass == FL_SLIDER
+              || obj->objclass == FL_VALSLIDER
+              || obj->objclass == FL_THUMBWHEEL )
     {
-        FLI_SLIDER_SPEC *sp = ob->spec;
+        FLI_SLIDER_SPEC *sp = obj->spec;
 
         spp->val        = sp->val;
         spp->min        = sp->min;
@@ -214,11 +214,11 @@ spec_to_superspec( FL_OBJECT * ob )
         spp->rdelta     = sp->rdelta;
         spp->slsize     = sp->slsize;
     }
-    else if (    ISBUTTON( ob->objclass )
-              || ob->objclass == FL_PIXMAP
-              || ob->objclass == FL_BITMAP )
+    else if (    ISBUTTON( obj->objclass )
+              || obj->objclass == FL_PIXMAP
+              || obj->objclass == FL_BITMAP )
     {
-        FL_BUTTON_SPEC *sp = ob->spec;
+        FL_BUTTON_SPEC *sp = obj->spec;
         IconInfo *info;
 
         spp->mbuttons = 0;
@@ -240,10 +240,10 @@ spec_to_superspec( FL_OBJECT * ob )
 
         info = spp->cspecv;
 
-        if (    ob->objclass == FL_PIXMAPBUTTON
-             || ob->objclass == FL_BITMAPBUTTON
-             || ob->objclass == FL_PIXMAP
-             || ob->objclass == FL_BITMAP )
+        if (    obj->objclass == FL_PIXMAPBUTTON
+             || obj->objclass == FL_BITMAPBUTTON
+             || obj->objclass == FL_PIXMAP
+             || obj->objclass == FL_BITMAP )
         {
             spp->align = info->align;
             spp->dx = info->dx;
@@ -254,15 +254,14 @@ spec_to_superspec( FL_OBJECT * ob )
             strcpy( spp->filename, info->filename );
             strcpy( spp->data, info->data );
             strcpy( spp->focus_filename, info->focus_filename );
-            strcpy( spp->helper, info->helper );
             strcpy( spp->focus_data, info->focus_data );
             strcpy( spp->width, info->width );
             strcpy( spp->height, info->height );
         }
     }
-    else if ( ob->objclass == FL_POSITIONER )
+    else if ( obj->objclass == FL_POSITIONER )
     {
-        FLI_POSITIONER_SPEC *sp = ob->spec;
+        FLI_POSITIONER_SPEC *sp = obj->spec;
 
         spp->xstep      = sp->xstep;
         spp->ystep      = sp->ystep;
@@ -273,9 +272,9 @@ spec_to_superspec( FL_OBJECT * ob )
         spp->ymax       = sp->ymax;
         spp->yval       = sp->yval;
     }
-    else if ( ob->objclass == FL_COUNTER )
+    else if ( obj->objclass == FL_COUNTER )
     {
-        FLI_COUNTER_SPEC *sp = ob->spec;
+        FLI_COUNTER_SPEC *sp = obj->spec;
 
         spp->val        = sp->val;
         spp->lstep      = sp->lstep;
@@ -284,16 +283,16 @@ spec_to_superspec( FL_OBJECT * ob )
         spp->max        = sp->max;
         spp->prec       = sp->prec;
     }
-    else if ( ob->objclass == FL_SPINNER )
+    else if ( obj->objclass == FL_SPINNER )
     {
-        spp->dval = fl_get_spinner_value( ob );
-        fl_get_spinner_bounds( ob, &spp->dmin, &spp->dmax );
-        spp->dstep = fl_get_spinner_step( ob );
-        spp->prec = fl_get_spinner_precision( ob );
+        spp->dval = fl_get_spinner_value( obj );
+        fl_get_spinner_bounds( obj, &spp->dmin, &spp->dmax );
+        spp->dstep = fl_get_spinner_step( obj );
+        spp->prec = fl_get_spinner_precision( obj );
     }
-    else if ( ob->objclass == FL_DIAL )
+    else if ( obj->objclass == FL_DIAL )
     {
-        FLI_DIAL_SPEC *sp = ob->spec;
+        FLI_DIAL_SPEC *sp = obj->spec;
 
         spp->min        = sp->min;
         spp->max        = sp->max;
@@ -303,9 +302,9 @@ spec_to_superspec( FL_OBJECT * ob )
         spp->thetaf     = sp->thetaf;
         spp->direction  = sp->direction;
     }
-    else if ( ob->objclass == FL_XYPLOT )
+    else if ( obj->objclass == FL_XYPLOT )
     {
-        FLI_XYPLOT_SPEC *sp = ob->spec;
+        FLI_XYPLOT_SPEC *sp = obj->spec;
 
         spp->xmajor         = sp->xmajor;
         spp->xminor         = sp->xminor;
@@ -320,9 +319,9 @@ spec_to_superspec( FL_OBJECT * ob )
         spp->ybase          = sp->ybase;
         spp->mark_active    = sp->mark_active;
     }
-    else if ( ob->objclass == FL_SCROLLBAR )
+    else if ( obj->objclass == FL_SCROLLBAR )
     {
-        FLI_SCROLLBAR_SPEC *scbsp = ob->spec;
+        FLI_SCROLLBAR_SPEC *scbsp = obj->spec;
         FLI_SLIDER_SPEC *sp = scbsp->slider->spec;
 
         spp->val    = sp->val;
@@ -334,9 +333,9 @@ spec_to_superspec( FL_OBJECT * ob )
         spp->ldelta = sp->ldelta;
         spp->rdelta = sp->rdelta;
     }
-    else if ( ob->objclass == FL_SPINNER )
+    else if ( obj->objclass == FL_SPINNER )
     {
-        FLI_SPINNER_SPEC *sp = ob->spec;
+        FLI_SPINNER_SPEC *sp = obj->spec;
 
         spp->i_val  = sp->i_val;
         spp->i_min  = sp->i_min;
@@ -358,66 +357,68 @@ spec_to_superspec( FL_OBJECT * ob )
  ***************************************/
 
 void *
-superspec_to_spec( FL_OBJECT * ob )
+superspec_to_spec( FL_OBJECT * obj )
 {
-    void *v = ob->spec;
-    SuperSPEC *spp = ob->u_vdata;
+    void *v = obj->spec;
+    SuperSPEC *spp = obj->u_vdata;
     int i = 0;
 
     if ( ! spp )
         return v;
 
-    if ( ob->objclass == FL_BROWSER )
-    {
-        FLI_BROWSER_SPEC *sp = ob->spec;
+    obj->how_return = spp->how_return;
 
-        fl_clear_browser( ob );
+    if ( obj->objclass == FL_BROWSER )
+    {
+        FLI_BROWSER_SPEC *sp = obj->spec;
+
+        fl_clear_browser( obj );
 
         sp->h_pref = spp->h_pref;
         sp->v_pref = spp->v_pref;
 
         for ( i = 1; i <= spp->nlines; i++ )
-            fl_addto_browser( ob, spp->content[ i ] );
+            fl_addto_browser( obj, spp->content[ i ] );
     }
-    else if ( ob->objclass == FL_CHOICE )
+    else if ( obj->objclass == FL_CHOICE )
     {
-        fl_clear_choice( ob );
+        fl_clear_choice( obj );
 
-        ( ( FLI_CHOICE_SPEC * ) ob->spec)->align = spp->align;
+        ( ( FLI_CHOICE_SPEC * ) obj->spec)->align = spp->align;
 
         for ( i = 1; i <= spp->nlines; i++ )
         {
-            fl_addto_choice( ob, spp->content[ i ] );
-            fl_set_choice_item_mode( ob, i, spp->mode[ i ] );
+            fl_addto_choice( obj, spp->content[ i ] );
+            fl_set_choice_item_mode( obj, i, spp->mode[ i ] );
             if ( spp->shortcut[ i ] )
-                fl_set_choice_item_shortcut( ob, i, spp->shortcut[ i ] );
+                fl_set_choice_item_shortcut( obj, i, spp->shortcut[ i ] );
         }
 
         if ( spp->nlines >= spp->int_val )
-            fl_set_choice( ob, spp->int_val );
+            fl_set_choice( obj, spp->int_val );
     }
-    else if ( ob->objclass == FL_MENU )
+    else if ( obj->objclass == FL_MENU )
     {
-        fl_clear_menu( ob );
+        fl_clear_menu( obj );
 
         for ( i = 1; i <= spp->nlines; i++ )
         {
-            fl_addto_menu( ob, spp->content[ i ] );
-            fl_set_menu_item_mode( ob, i, spp->mode[ i ] );
+            fl_addto_menu( obj, spp->content[ i ] );
+            fl_set_menu_item_mode( obj, i, spp->mode[ i ] );
             if ( spp->shortcut[ i ] )
-                fl_set_menu_item_shortcut( ob, i, spp->shortcut[ i ] );
+                fl_set_menu_item_shortcut( obj, i, spp->shortcut[ i ] );
             if ( spp->callback[ i ] )
-                fl_set_menu_item_callback( ob, i,
+                fl_set_menu_item_callback( obj, i,
                                ( FL_PUP_CB ) fl_strdup( spp->callback[ i ] ) );
             if ( spp->mval[ i ] != i )
-                fl_set_menu_item_id( ob, i, spp->mval[ i ] );
+                fl_set_menu_item_id( obj, i, spp->mval[ i ] );
         }
     }
-    else if (    ob->objclass == FL_SLIDER
-              || ob->objclass == FL_VALSLIDER
-              || ob->objclass == FL_THUMBWHEEL)
+    else if (    obj->objclass == FL_SLIDER
+              || obj->objclass == FL_VALSLIDER
+              || obj->objclass == FL_THUMBWHEEL)
     {
-        FLI_SLIDER_SPEC *sp = ob->spec;
+        FLI_SLIDER_SPEC *sp = obj->spec;
 
         sp->val    = spp->val;
         sp->min    = spp->min;
@@ -428,26 +429,26 @@ superspec_to_spec( FL_OBJECT * ob )
         sp->rdelta = spp->rdelta;
         sp->slsize = spp->slsize;
     }
-    else if (    ISBUTTON( ob->objclass )
-              || ob->objclass == FL_PIXMAP
-              || ob->objclass == FL_BITMAP )
+    else if (    ISBUTTON( obj->objclass )
+              || obj->objclass == FL_PIXMAP
+              || obj->objclass == FL_BITMAP )
     {
-        FL_BUTTON_SPEC *sp = ob->spec;
+        FL_BUTTON_SPEC *sp = obj->spec;
         IconInfo *info = spp->cspecv;
 
         for ( i = 0; i < 5; i++ )
             sp->react_to[ i ] = ( spp->mbuttons & ( 1 << i ) ) != 0;
-        if ( ISBUTTON( ob->objclass ) )
-            fl_set_button_mouse_buttons( ob, spp->mbuttons );
+        if ( ISBUTTON( obj->objclass ) )
+            fl_set_button_mouse_buttons( obj, spp->mbuttons );
 
         sp->val = spp->int_val;
-        if ( ISBUTTON( ob->objclass ) )
-            fl_set_button( ob, sp->val );
+        if ( ISBUTTON( obj->objclass ) )
+            fl_set_button( obj, sp->val );
 
-        if (    ob->objclass == FL_PIXMAPBUTTON
-             || ob->objclass == FL_BITMAPBUTTON
-             || ob->objclass == FL_PIXMAP
-             || ob->objclass == FL_BITMAP )
+        if (    obj->objclass == FL_PIXMAPBUTTON
+             || obj->objclass == FL_BITMAPBUTTON
+             || obj->objclass == FL_PIXMAP
+             || obj->objclass == FL_BITMAP )
         {
             info->align      = spp->align;
             info->dx         = spp->dx;
@@ -459,39 +460,36 @@ superspec_to_spec( FL_OBJECT * ob )
             strcpy( info->filename, spp->filename );
             strcpy( info->data, spp->data );
             strcpy( info->focus_filename, spp->focus_filename );
-            strcpy( info->helper, spp->helper );
             strcpy( info->focus_data, spp->focus_data );
             strcpy( info->width, spp->width );
             strcpy( info->height, spp->height );
 
-            if ( ob->objclass == FL_PIXMAPBUTTON || ob->objclass == FL_PIXMAP )
+            if (    obj->objclass == FL_PIXMAPBUTTON
+                 || obj->objclass == FL_PIXMAP )
             {
-                fl_set_pixmap_align( ob, info->align | FL_ALIGN_INSIDE,
+                fl_set_pixmap_align( obj, info->align | FL_ALIGN_INSIDE,
                                      info->dx, info->dy );
-                fl_set_pixmapbutton_focus_outline( ob, info->show_focus );
+                fl_set_pixmapbutton_focus_outline( obj, info->show_focus );
             }
 
             if ( *info->filename )
             {
-                if (    ob->objclass == FL_PIXMAPBUTTON
-                     || ob->objclass == FL_PIXMAP )
+                if (    obj->objclass == FL_PIXMAPBUTTON
+                     || obj->objclass == FL_PIXMAP )
                 {
-                    fl_set_pixmap_file( ob, info->filename );
+                    fl_set_pixmap_file( obj, info->filename );
                     if ( *info->focus_filename )
-                        fl_set_pixmapbutton_focus_file( ob,
+                        fl_set_pixmapbutton_focus_file( obj,
                                                         info->focus_filename );
                 }
                 else
-                    fl_set_bitmap_file( ob, info->filename );
+                    fl_set_bitmap_file( obj, info->filename );
             }
         }
-
-        if ( info->helper[ 0 ] )
-            fl_set_object_helper( ob, get_helper( info->helper ) );
     }
-    else if ( ob->objclass == FL_POSITIONER )
+    else if ( obj->objclass == FL_POSITIONER )
     {
-        FLI_POSITIONER_SPEC *sp = ob->spec;
+        FLI_POSITIONER_SPEC *sp = obj->spec;
 
         sp->xstep      = spp->xstep;
         sp->ystep      = spp->ystep;
@@ -502,9 +500,9 @@ superspec_to_spec( FL_OBJECT * ob )
         sp->ymax       = spp->ymax;
         sp->yval       = spp->yval;
     }
-    else if ( ob->objclass == FL_COUNTER )
+    else if ( obj->objclass == FL_COUNTER )
     {
-        FLI_COUNTER_SPEC *sp = ob->spec;
+        FLI_COUNTER_SPEC *sp = obj->spec;
 
         sp->val        = spp->val;
         sp->sstep      = spp->sstep;
@@ -513,16 +511,16 @@ superspec_to_spec( FL_OBJECT * ob )
         sp->max        = spp->max;
         sp->prec       = spp->prec;
     }
-    else if ( ob->objclass == FL_SPINNER )
+    else if ( obj->objclass == FL_SPINNER )
     {
-        fl_set_spinner_value( ob, spp->dval );
-        fl_set_spinner_bounds( ob, spp->dmin, spp->dmax );
-        fl_set_spinner_step( ob, spp->dstep );
-        fl_set_spinner_precision( ob, spp->prec );
+        fl_set_spinner_value( obj, spp->dval );
+        fl_set_spinner_bounds( obj, spp->dmin, spp->dmax );
+        fl_set_spinner_step( obj, spp->dstep );
+        fl_set_spinner_precision( obj, spp->prec );
     }
-    else if ( ob->objclass == FL_DIAL )
+    else if ( obj->objclass == FL_DIAL )
     {
-        FLI_DIAL_SPEC *sp = ob->spec;
+        FLI_DIAL_SPEC *sp = obj->spec;
 
         sp->min        = spp->min;
         sp->max        = spp->max;
@@ -532,9 +530,9 @@ superspec_to_spec( FL_OBJECT * ob )
         sp->thetaf     = spp->thetaf;
         sp->direction  = spp->direction;
     }
-    else if ( ob->objclass == FL_XYPLOT )
+    else if ( obj->objclass == FL_XYPLOT )
     {
-        FLI_XYPLOT_SPEC *sp = ob->spec;
+        FLI_XYPLOT_SPEC *sp = obj->spec;
 
         sp->xmajor         = spp->xmajor;
         sp->xminor         = spp->xminor;
@@ -549,9 +547,9 @@ superspec_to_spec( FL_OBJECT * ob )
         sp->grid_linestyle = spp->grid_linestyle;
         sp->mark_active    = spp->mark_active;
     }
-    else if ( ob->objclass == FL_SCROLLBAR )
+    else if ( obj->objclass == FL_SCROLLBAR )
     {
-        FLI_SCROLLBAR_SPEC *scbsp = ob->spec;
+        FLI_SCROLLBAR_SPEC *scbsp = obj->spec;
         FLI_SLIDER_SPEC *sp = scbsp->slider->spec;
 
         sp->val    = spp->val;
@@ -563,9 +561,9 @@ superspec_to_spec( FL_OBJECT * ob )
         sp->ldelta = spp->ldelta;
         sp->rdelta = spp->rdelta;
     }
-    else if ( ob->objclass == FL_SLIDER )
+    else if ( obj->objclass == FL_SLIDER )
     {
-        FLI_SPINNER_SPEC *sp = ob->spec;
+        FLI_SPINNER_SPEC *sp = obj->spec;
 
         sp->i_val  = spp->i_val;
         sp->i_min  = spp->i_min;

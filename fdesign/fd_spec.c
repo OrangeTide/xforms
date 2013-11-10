@@ -44,6 +44,7 @@ typedef struct
     void * ( * get_fdform )( void );                    /* spec form     */
     int    ( * set_spec )( FL_OBJECT * );               /* interaction   */
     void   ( * restore_spec )( FL_OBJECT *, long );     /* how to restore */
+    void   ( * apply_attrib )( FL_OBJECT *, long );    /* */
     void   ( * save_attrib )( FILE *, FL_OBJECT * );    /* write to .fd  */
     void   ( * emit_code )( FILE *, FL_OBJECT * );      /* write fl code */
     void   ( * emit_header )( FILE *, FL_OBJECT * );    /* write fl code */
@@ -58,6 +59,7 @@ static ObjSPEC objspec[ ] =
         get_slider_spec_fdform,
         set_slider_attrib,
         slider_spec_restore,
+        slider_apply_attrib,
         save_slider_attrib,
         emit_slider_code,
         NULL,
@@ -70,6 +72,7 @@ static ObjSPEC objspec[ ] =
         get_counter_spec_fdform,
         set_counter_attrib,
         counter_spec_restore,
+        counter_apply_attrib,
         save_counter_attrib,
         emit_counter_code,
         NULL,
@@ -82,6 +85,7 @@ static ObjSPEC objspec[ ] =
         get_spinner_spec_fdform,
         set_spinner_attrib,
         spinner_spec_restore,
+        spinner_apply_attrib,
         save_spinner_attrib,
         emit_spinner_code,
         NULL,
@@ -94,6 +98,7 @@ static ObjSPEC objspec[ ] =
         get_dial_spec_fdform,
         set_dial_attrib,
         dial_spec_restore,
+        dial_apply_attrib,
         save_dial_attrib,
         emit_dial_code,
         NULL,
@@ -106,6 +111,7 @@ static ObjSPEC objspec[ ] =
         get_pos_spec_fdform,
         set_pos_attrib,
         pos_spec_restore,
+        positioner_apply_attrib,
         save_pos_attrib,
         emit_pos_code,
         NULL,
@@ -118,6 +124,7 @@ static ObjSPEC objspec[ ] =
         get_twheel_spec_fdform,
         set_twheel_attrib,
         twheel_spec_restore,
+        twheel_apply_attrib,
         save_twheel_attrib,
         emit_twheel_code,
         NULL,
@@ -131,6 +138,7 @@ static ObjSPEC objspec[ ] =
         get_button_spec_fdform,
         set_button_attrib,
         button_spec_restore,
+        button_apply_attrib,
         save_button_attrib,
         emit_button_code,
         emit_button_header,
@@ -143,6 +151,7 @@ static ObjSPEC objspec[ ] =
         get_pixmap_spec_fdform,
         set_pixmap_attrib,
         pixmap_spec_restore,
+        NULL,
         save_pixmap_attrib,
         emit_pixmap_code,
         emit_pixmap_header,
@@ -155,6 +164,7 @@ static ObjSPEC objspec[ ] =
         get_scrollbar_spec_fdform,
         set_scrollbar_attrib,
         scrollbar_spec_restore,
+        scrollbar_apply_attrib,
         save_scrollbar_attrib,
         emit_scrollbar_code,
         NULL,
@@ -167,6 +177,7 @@ static ObjSPEC objspec[ ] =
         get_browser_spec_fdform,
         set_browser_attrib,
         browser_spec_restore,
+        browser_apply_attrib,
         save_browser_attrib,
         emit_browser_code,
         NULL,
@@ -179,6 +190,7 @@ static ObjSPEC objspec[ ] =
         get_choice_spec_fdform,
         set_choice_attrib,
         choice_spec_restore,
+        NULL,
         save_choice_attrib,
         emit_choice_code,
         emit_menu_header,
@@ -191,6 +203,7 @@ static ObjSPEC objspec[ ] =
         get_menu_spec_fdform,
         set_menu_attrib,
         menu_spec_restore,
+        NULL,
         save_menu_attrib,
         emit_menu_code,
         emit_menu_header,
@@ -203,6 +216,7 @@ static ObjSPEC objspec[ ] =
         get_xyplot_spec_fdform,
         set_xyplot_attrib,
         xyplot_spec_restore,
+        NULL,
         save_xyplot_attrib,
         emit_xyplot_code,
         NULL,
@@ -215,6 +229,7 @@ static ObjSPEC objspec[ ] =
         get_freeobj_spec_fdform,
         set_freeobj_attrib,
         freeobj_spec_restore,
+        NULL,
         save_freeobj_attrib,
         emit_freeobj_code,
         NULL,
@@ -222,14 +237,23 @@ static ObjSPEC objspec[ ] =
         NULL
     },
 
-    {
-        { -1 }, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL   /* sentinel */
+    {                          /* sentinel */
+        { -1 },
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL
     }
 };
 
 
 /***************************************
- * Check if ob has spec info functions
+ * Check if an object has a spec info functions
  ***************************************/
 
 static ObjSPEC *
@@ -251,6 +275,19 @@ find_entry( FL_OBJECT * ob )
 
 
 /***************************************
+ ***************************************/
+
+void
+obj_spec_restore( FL_OBJECT * obj )
+{
+    ObjSPEC *spec = find_entry( obj );
+
+    if ( spec && spec->vdata && spec->restore_spec )
+        spec->restore_spec( NULL, 0 );
+}
+
+
+/***************************************
  * Callback function for SPEC folder. Entry point from fd_attrib.c
  ***************************************/
 
@@ -267,12 +304,12 @@ set_objclass_spec_attributes( FL_OBJECT * ob,
     {
         spec->vdata = fd = spec->get_fdform( );
 
-        if ( spec->set_spec( ob ) >= 0 )
+        if ( spec->set_spec && spec->set_spec( ob ) >= 0 )
         {
-            if ( ( spec->set_spec( ob ) >= 0 ) )
-                fl_set_object_callback( fd_attrib->restoreobj,
-                                        spec->restore_spec, 0 );
-
+            fl_set_object_callback( fd_attrib->restoreobj,
+                                    spec->restore_spec, 0 );
+            fl_set_object_callback( fd_attrib->applyobj,
+                                    spec->apply_attrib, 0 );
             fl_replace_folder_bynumber( fd_attrib->attrib_folder, 2,
                                         fd->form );
         }
@@ -294,10 +331,10 @@ set_objclass_spec_attributes( FL_OBJECT * ob,
 void
 cleanup_spec( FL_OBJECT * ob )
 {
-    ObjSPEC *attrib = find_entry( ob );
+    ObjSPEC *spec = find_entry( ob );
 
-    if ( attrib && attrib->vdata )
-        attrib->vdata = NULL;
+    if ( spec )
+        spec->vdata = NULL;
 }
 
 
@@ -1027,30 +1064,6 @@ ff_read_sp_height( FL_OBJECT * obj  FL_UNUSED_ARG,
  ***************************************/
 
 static int 
-ff_read_sp_helper( FL_OBJECT * obj  FL_UNUSED_ARG,
-                   SuperSPEC * sp )
-{
-    int r;
-    char *p;
-
-    if ( ( r = ff_read( "%S", &p ) ) < 0 )
-        return ff_err( "Can't read expected object helper attribute" );
-
-    if ( strlen( p ) >= sizeof sp->helper )
-        return ff_err( "Text for \"helper\" key too long" );
-
-    strcpy( sp->helper, p );
-
-    fli_safe_free( p );
-
-    return 0;
-}
-
-
-/***************************************
- ***************************************/
-
-static int 
 ff_read_sp_align( FL_OBJECT * obj  FL_UNUSED_ARG,
                   SuperSPEC * sp )
 {
@@ -1433,7 +1446,6 @@ static spec_attr_handlers attr_array[ ] =
     { "fullpath",    ff_read_sp_fullpath    },
     { "width",       ff_read_sp_width       },
     { "height",      ff_read_sp_height      },
-    { "helper",      ff_read_sp_helper      },
     { "align",       ff_read_sp_align       },
     { "struct",      ff_read_sp_struct      },
     { "global",      ff_read_sp_global      },
@@ -1681,6 +1693,43 @@ set_finput_value( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
+int
+get_checked_float( const char * str,
+                   double     * r )
+{
+    char *eptr;
+
+    if ( ! str || ! r || ! *str )
+        return 0;
+
+    *r = strtod( str, &eptr );
+
+    return    ! *eptr
+           && ! ( ( *r == HUGE_VAL || *r == -HUGE_VAL ) && errno == ERANGE );
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+get_checked_int( const char * str,
+                 int        * r )
+{
+    char *eptr;
+
+    if ( ! str || ! r || ! *str )
+        return 0;
+
+    *r = strtol( str, &eptr, 10 );
+
+    return ! *eptr && *r <= INT_MAX && *r >= INT_MIN;
+}
+
+
+/***************************************
+ ***************************************/
+
 double
 get_finput_value( FL_OBJECT * ob )
 {
@@ -1820,7 +1869,7 @@ get_grid_string( void )
 }
 
 
-/* line style string stuff */
+/* Line style string stuff */
 
 static FLI_VN_PAIR linestyle[ ] =
 {

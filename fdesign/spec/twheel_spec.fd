@@ -11,7 +11,7 @@ Border Width: -1
 Name: twheelattrib
 Width: 540
 Height: 280
-Number of Objects: 8
+Number of Objects: 7
 
 --------------------
 class: FL_BOX
@@ -48,28 +48,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
-
---------------------
-class: FL_COUNTER
-type: FL_NORMAL_COUNTER
-box: 330 145 114 23
-boxtype: FL_UP_BOX
-colors: FL_COL1 FL_BLUE
-alignment: FL_ALIGN_TOP
-style: FL_NORMAL_STYLE
-size: FL_DEFAULT_SIZE
-lcol: FL_BLACK
-label: Precision
-shortcut: 
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
-name: prec
-callback: twheel_adjust_precision
-argument: 0
-    bounds: 0 0
-    precision: 0
-    sstep: 0
-    lstep: 0
 
 --------------------
 class: FL_INPUT

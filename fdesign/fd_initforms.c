@@ -173,6 +173,7 @@ static void
 init_attribform( void )
 {
     int a = 1;
+    FL_OBJECT *t;
 
     if ( fl_get_visual_depth( ) <= 2 )
         modify_attrib_basic_color( FL_WHITE, FL_WHITE );
@@ -187,11 +188,13 @@ init_attribform( void )
 
     fl_set_tabfolder_autofit( fd_attrib->attrib_folder, FL_ENLARGE_ONLY );
 
-    fl_addto_tabfolder( fd_attrib->attrib_folder, " Generic ",
-                        fd_generic_attrib->generic_attrib );
+    t = fl_addto_tabfolder( fd_attrib->attrib_folder, " Generic ",
+                            fd_generic_attrib->generic_attrib );
+    fl_set_object_shortcut( t, "#G", 1 );
 
-    fl_addto_tabfolder( fd_attrib->attrib_folder, "  Spec   ",
-                        fd_nullattrib->nullattrib );
+    t = fl_addto_tabfolder( fd_attrib->attrib_folder, "  Spec   ",
+                            fd_nullattrib->nullattrib );
+    fl_set_object_shortcut( t, "#S", 1 );
 }
 
 

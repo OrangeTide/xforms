@@ -1,3 +1,11 @@
+2013-11-07 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/input.c: Bug in validator for float inputs fixed
+	that allowed entering a number followed by a char other
+	than 'e' or 'E'.
+	* lib/dial.c: Functions added for obtaining the settings
+	for the dial angles, step size and direction
+
 2013-11-05 Jens Thoms Toerring    <jt@toerring.de>
 
 	Addition of several functions that instead of accepting

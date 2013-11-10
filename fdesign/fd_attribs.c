@@ -406,8 +406,8 @@ static void
 readback_attributes( FL_OBJECT * obj )
 {
     int spstyle;
-    char name[ 128],
-         cbname[ 128 ];
+    char * name,
+         * cbname;
     char tmpbuf[ 128 ];
 
     obj->boxtype = fl_get_choice( fd_generic_attrib->boxobj ) - 1;
@@ -449,10 +449,8 @@ readback_attributes( FL_OBJECT * obj )
     set_label( obj, fl_get_input( fd_generic_attrib->labelobj ) );
     set_shortcut( obj, fl_get_input( fd_generic_attrib->scobj ) );
 
-    fli_sstrcpy( name, fl_get_input( fd_generic_attrib->nameobj ),
-                 sizeof name );
-    fli_sstrcpy( cbname, fl_get_input( fd_generic_attrib->cbnameobj ),
-                 sizeof cbname );
+    name = fl_strdup( fl_get_input( fd_generic_attrib->nameobj ) );
+    cbname = fl_strdup( fl_get_input( fd_generic_attrib->cbnameobj ) );
 
     if ( ! valid_c_identifier( name ) )
         *name = '\0';
@@ -463,7 +461,10 @@ readback_attributes( FL_OBJECT * obj )
     set_object_name( obj, name, cbname,
                      fl_get_input( fd_generic_attrib->argobj ) );
 
-    /* Change type need to be the last call as it may create objects based on
+    fl_free( cbname );
+    fl_free( name );
+
+    /* Type change needs to be the last call as it may create objects based on
        the current object, which need to have the latest attributes */
 
     if ( obj->objclass == FL_BOX )
@@ -655,12 +656,15 @@ change_object( FL_OBJECT * obj,
     if ( retobj == fd_attrib->cancelobj )
     {
         restore_object( obj );
+        obj_spec_restore( obj );
+        cleanup_spec( obj );
         redraw_the_form( 0 );
         return FL_FALSE;
     }
     else
     {
         readback_attributes( obj );
+        cleanup_spec( obj );
         return FL_TRUE;
     }
 }
@@ -1115,23 +1119,13 @@ accept_spec( FL_OBJECT * ob    FL_UNUSED_ARG,
 {
     long tmp;
 
-    spec_to_superspec( curobj );
+    fl_call_object_callback( fd_attrib->applyobj );
+
     fl_set_folder_bynumber( fd_attrib->attrib_folder, 1 );
     tmp = fd_attrib->attrib_folder->argument;
     fd_attrib->attrib_folder->argument = -1;
     fl_call_object_callback( fd_attrib->attrib_folder );
     fd_attrib->attrib_folder->argument = tmp;
-}
-
-
-/***************************************
- ***************************************/
-
-static void
-spec_apply_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-               long        data  FL_UNUSED_ARG )
-{
-    redraw_the_form( 0 );
 }
 
 
@@ -1158,16 +1152,13 @@ folder_switch_cb( FL_OBJECT * ob,
         fl_set_object_callback( fd_attrib->readyobj, NULL, 0 );
         fl_set_object_callback( fd_attrib->applyobj, apply_cb, 0 );
         fl_set_object_callback( fd_attrib->restoreobj, restore_cb, 0 );
-        cleanup_spec( curobj );
     }
     else
     {
         fd_attrib->readyobj->type = FL_NORMAL_BUTTON;   /* yuk! */
         fl_set_object_shortcut( fd_attrib->readyobj, "", 0 );
         fl_redraw_object( fd_attrib->readyobj );
-        fl_redraw_object( fd_attrib->readyobj );
         fl_set_object_callback( fd_attrib->readyobj, accept_spec, 0 );
-        fl_set_object_callback( fd_attrib->applyobj, spec_apply_cb, 0 );
         set_objclass_spec_attributes( curobj, 0 );
     }
 }

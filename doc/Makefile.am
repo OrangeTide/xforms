@@ -67,8 +67,8 @@ all-local: $(html_docs)
 
 install-data-local:
 	@$(NORMAL_INSTALL)
-	/bin/mkdir -p $(htmldir)
-	/usr/bin/install -c -m 644 xforms.html/*.html $(htmldir)
+	$(install_sh) -d p $(htmldir)
+	$(install_sh) -m 644 xforms.html/*.html $(htmldir)
 
 
 uninstall-local:

@@ -133,9 +133,7 @@ handle_how_return_changes( FL_OBJECT * menu,
 
     fl_set_object_return( target, hr );
 
-    sp->how_return = target->how_return;
-
-    reset_how_return_menu( menu, sp->how_return );
+    reset_how_return_menu( menu, hr );
 }
 
 

@@ -78,10 +78,9 @@ void
 pixmap_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
                      long        data  FL_UNUSED_ARG )
 {
-    FL_OBJECT *pedited = px_attrib->vdata;
-
-    superspec_to_spec( pedited );
-    show_spec( get_superspec( pedited ) );
+    superspec_to_spec( px_attrib->vdata );
+    show_spec( get_superspec( px_attrib->vdata ) );
+    pixmap_filename_change( px_attrib->filename, 0 );
     redraw_the_form( 0 );
 }
 
@@ -96,10 +95,20 @@ show_spec( SuperSPEC * spec )
 
     fl_set_button( px_attrib->use_data, spec->use_data );
     fl_set_button( px_attrib->fullpath, spec->fullpath );
-
     fl_set_choice_text( px_attrib->pixalign, align_name( info->align, 0 ) );
-
     fl_set_input( px_attrib->filename, info->filename );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+pixmap_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
+                     long        data  FL_UNUSED_ARG )
+{
+    spec_to_superspec( px_attrib->vdata );
+    redraw_the_form( 0 );
 }
 
 
@@ -155,7 +164,7 @@ create_a_pixmap( FL_OBJECT * ob )
 static char *
 file_tail( const char * full )
 {
-    static char tmpbuf[ 512 ];
+    static char tmpbuf[ 2048 ];
     char *p;
 
     strcpy( tmpbuf, full );
@@ -174,7 +183,7 @@ emit_pixmap_header( FILE      * fp,
                     FL_OBJECT * ob )
 {
     SuperSPEC *spec;
-    char buf[ 512 ];
+    char buf[ 2048 ];
 
     spec = get_superspec( ob );
     info = spec->cspecv;
@@ -327,10 +336,40 @@ pixmap_filename_change( FL_OBJECT * ob,
           fl_set_pixmap_file : fl_set_bitmap_file )
             ( edited, info->filename );
     else
-        set_testing_pixmap( edited );    /* show the default crab */
+        set_testing_pixmap( edited );  /* show the default broken link image */
 
     if ( auto_apply )
         redraw_the_form( 0 );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+pixmaplookfor_pixmapfile_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+                             long        data  FL_UNUSED_ARG )
+{
+    const char *fn;
+    char buf[ 2048 ];
+    char *cwd;
+
+    fl_use_fselector( XPM_FSELECTOR );
+    fl_set_fselector_placement( FL_PLACE_MOUSE );
+
+    if ( edited->objclass == FL_PIXMAP )
+        fn = fl_show_fselector( "XPM file", "", "*.xpm", "" );
+    else
+        fn = fl_show_fselector( "XBM file", "", "*.xbm", "" );
+
+    if ( ! fn )
+        return;
+
+    if ( strstr( fn, cwd = fli_getcwd( buf, sizeof buf - 2 )) )
+        fn += strlen( cwd ) + 1;
+
+    fl_set_input( px_attrib->filename, fn );
+    fl_call_object_callback( px_attrib->filename );
 }
 
 
@@ -354,44 +393,6 @@ pixmapalign_change( FL_OBJECT * ob,
                          info->dx, info->dy );
     if ( auto_apply )
         redraw_the_form( 0 );
-}
-
-
-/***************************************
- ***************************************/
-
-static int
-loadfile( const char * file,
-          void       * data  FL_UNUSED_ARG )
-{
-    char buf[ 512 ];
-    char *cwd = fli_getcwd( buf, sizeof buf - 2 );
-    const char *s = strstr( file, cwd );
-
-    if ( ! s )
-        s = file;
-    else
-        s = file + strlen( cwd ) + 1;
-
-    fl_set_input( px_attrib->filename, s );
-    fl_call_object_callback( px_attrib->filename );
-    return 1;
-}
-
-
-/***************************************
- ***************************************/
-
-void
-pixmaplookfor_pixmapfile_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-                             long        data  FL_UNUSED_ARG )
-{
-    fl_use_fselector( XPM_FSELECTOR );
-    fl_set_fselector_placement( FL_PLACE_MOUSE );
-    fl_set_fselector_callback( loadfile, 0 );
-    fl_show_fselector( edited->objclass == FL_PIXMAP ? "XPM file" : "XBM file",
-                       "", edited->objclass == FL_PIXMAP ? "*.xpm" : "*.xbm",
-                       "" );
 }
 
 
@@ -435,7 +436,7 @@ static void
 get_xbm_stuff( IconInfo * in,
                FILE     * fp  FL_UNUSED_ARG )
 {
-    char buf[ 512 ],
+    char buf[ 2048 ],
          *p;
 
     strcpy( buf, in->filename );
@@ -498,3 +499,4 @@ get_data_name( FL_OBJECT * ob,
  * indent-tabs-mode: nil
  * End:
  */
+

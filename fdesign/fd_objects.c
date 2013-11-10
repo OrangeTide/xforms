@@ -40,7 +40,7 @@
 
 #include "include/forms.h"
 #include "fd_main.h"
-#include "xpm/crab.xpm"
+#include "xpm/broken.xpm"
 
 #include <string.h>
 #include <stdio.h>
@@ -834,7 +834,7 @@ static unsigned char bm1_bits[ ] =
 void
 set_testing_pixmap( FL_OBJECT * ob )
 {
-    fl_set_pixmap_data( ob, crab );
+    fl_set_pixmap_data( ob, broken );
 }
 
 
@@ -893,7 +893,7 @@ add_an_object( int      objclass,
                 type = FL_NORMAL_PIXMAP;
             obj = cls->addit( type, x, y, w, h, "" );
             if ( ! fdopt.conv_only )
-                fl_set_pixmap_data( obj, crab );
+                fl_set_pixmap_data( obj, broken );
             break;
 
         case FL_CHART:
@@ -920,7 +920,7 @@ add_an_object( int      objclass,
                 type = FL_NORMAL_BUTTON;
             obj = cls->addit( type, x, y, w, h, "" );
             if ( ! fdopt.conv_only )
-                fl_set_pixmapbutton_data( obj, crab );
+                fl_set_pixmapbutton_data( obj, broken );
             break;
 
         case FL_SLIDER:

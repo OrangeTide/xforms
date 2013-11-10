@@ -11,7 +11,7 @@ Border Width: -1
 Name: buttonattrib
 Width: 540
 Height: 280
-Number of Objects: 18
+Number of Objects: 17
 
 --------------------
 class: FL_BOX
@@ -70,7 +70,7 @@ argument: 0
 --------------------
 class: FL_INPUT
 type: FL_NORMAL_INPUT
-box: 160 110 210 25
+box: 160 130 210 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
 alignment: FL_ALIGN_LEFT
@@ -89,7 +89,7 @@ return: FL_RETURN_END_CHANGED
 --------------------
 class: FL_CHOICE
 type: FL_NORMAL_CHOICE2
-box: 280 70 155 25
+box: 280 80 155 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLACK
 alignment: FL_ALIGN_LEFT
@@ -107,7 +107,7 @@ argument: 0
 --------------------
 class: FL_CHECKBUTTON
 type: FL_PUSH_BUTTON
-box: 160 80 30 30
+box: 160 90 30 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW
 alignment: FL_ALIGN_LEFT
@@ -126,7 +126,7 @@ argument: 0
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 370 110 66 25
+box: 370 130 66 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -144,7 +144,7 @@ argument: 0
 --------------------
 class: FL_CHECKBUTTON
 type: FL_PUSH_BUTTON
-box: 175 175 30 30
+box: 180 210 30 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW
 alignment: FL_ALIGN_LEFT
@@ -162,7 +162,7 @@ argument: 0
 --------------------
 class: FL_CHECKBUTTON
 type: FL_PUSH_BUTTON
-box: 275 175 30 30
+box: 280 210 30 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW
 alignment: FL_ALIGN_LEFT
@@ -180,7 +180,7 @@ argument: 0
 --------------------
 class: FL_INPUT
 type: FL_NORMAL_INPUT
-box: 160 145 210 25
+box: 160 170 210 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
 alignment: FL_ALIGN_LEFT
@@ -199,7 +199,7 @@ return: FL_RETURN_END_CHANGED
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 372 145 66 25
+box: 370 170 66 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -213,25 +213,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: browse2
 callback: lookfor_pixmapfile_cb
 argument: 1
-
---------------------
-class: FL_INPUT
-type: FL_NORMAL_INPUT
-box: 160 215 240 28
-boxtype: FL_DOWN_BOX
-colors: FL_COL1 FL_MCOL
-alignment: FL_ALIGN_LEFT
-style: FL_NORMAL_STYLE
-size: FL_DEFAULT_SIZE
-lcol: FL_BLACK
-label: Helper/tooltip
-shortcut: 
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
-name: tooltip
-callback: helper_change_cb
-argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_TEXT

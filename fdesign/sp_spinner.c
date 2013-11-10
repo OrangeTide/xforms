@@ -88,6 +88,36 @@ init_spec( SuperSPEC * spec )
 /***************************************
  ***************************************/
 
+void
+spinner_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
+                      long        data  FL_UNUSED_ARG )
+{
+    double r1, r2;
+
+    obj = spn_attrib->vdata;
+
+    if (    get_checked_float( fl_get_input( spn_attrib->minval ), &r1 )
+         && get_checked_float( fl_get_input( spn_attrib->maxval ), &r2 ) )
+        fl_set_spinner_bounds( obj, r1, r2 );
+
+    if ( get_checked_float( fl_get_input( spn_attrib->initialval ), &r1 ) )
+         fl_set_spinner_value( obj, r1 );
+
+    fl_set_spinner_precision( obj, fl_get_counter_value( spn_attrib->prec ) );
+
+
+    if ( get_checked_float( fl_get_input( spn_attrib->step ), &r1 ) )
+        fl_set_spinner_step( obj, r1 );
+
+    spec_to_superspec( obj );
+
+    redraw_the_form( 0 );
+}
+
+
+/***************************************
+ ***************************************/
+
 int
 set_spinner_attrib( FL_OBJECT * ob )
 {

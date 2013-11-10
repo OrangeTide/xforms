@@ -332,7 +332,6 @@ switch_folder( FL_OBJECT * ob,
     FL_FORM *form;
     Window win;
     FL_OBJECT *bkob;
-    int active = data;
 
     if ( data < 0 || data >= sp->nforms )
     {
@@ -342,7 +341,7 @@ switch_folder( FL_OBJECT * ob,
 
     form = sp->forms[ data ];
 
-    if (    active == sp->active_folder
+    if (    data == sp->active_folder
          && sp->active_folder >= 0
          && ! sp->processing_destroy
          && (    ob->parent->how_return == FL_RETURN_ALWAYS
@@ -356,7 +355,7 @@ switch_folder( FL_OBJECT * ob,
 #endif
     }
 
-    if ( active == sp->active_folder || sp->processing_destroy )
+    if ( data == sp->active_folder || sp->processing_destroy )
     {
         sp->processing_destroy = 0;
         return;
@@ -377,13 +376,13 @@ switch_folder( FL_OBJECT * ob,
 
     if ( sp->num_visible < sp->nforms - 1 || sp->offset )
     {
-        if ( ( active && active == sp->offset ) || active > sp->num_visible )
+        if ( ( data && data == sp->offset ) || data > sp->num_visible )
         {
             int last;
 
-            shift_tabs( ob, active == sp->offset ? -1 : 1 );
-            sp->title[ active ]->boxtype &= ~ FLI_BROKEN_BOX;
-            sp->title[ active ]->align = FL_ALIGN_CENTER;
+            shift_tabs( ob, data == sp->offset ? -1 : 1 );
+            sp->title[ data ]->boxtype &= ~ FLI_BROKEN_BOX;
+            sp->title[ data ]->align = FL_ALIGN_CENTER;
             last = sp->num_visible + sp->offset + 1;
             last = FL_clamp( last, 0, sp->nforms - 1 );
             sp->title[ last ]->boxtype |= FLI_BROKEN_BOX;
@@ -446,7 +445,7 @@ switch_folder( FL_OBJECT * ob,
 #endif
     }
 
-    sp->active_folder = active;
+    sp->active_folder = data;
 }
 
 

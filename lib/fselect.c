@@ -307,7 +307,7 @@ fli_del_tail_slash( char * d )
 /***************************************
  * Callback for selection of a file name. On double click on a directory
  * we change to that directory while for a double click on a normal file
- * the return button gets triggered/
+ * the return button gets triggered
  ***************************************/
 
 static void

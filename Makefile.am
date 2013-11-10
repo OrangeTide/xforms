@@ -30,8 +30,9 @@ SUBDIRS = config lib image $(GL) fdesign fd2ps $(DEMOS) $(DOCS)
 
 # xforms.spec is needed as well as xforms.spec.in or else 'make rpmdist'
 # will fail.
-EXTRA_DIST = ChangeLog COPYING.LIB Copyright INSTALL README \
-			 autogen.sh xforms.spec.in xforms.spec
+
+EXTRA_DIST = ChangeLog COPYING.LIB Copyright INSTALL INSTALL.git \
+			 README autogen.sh xforms.spec.in xforms.spec
 
 rpmdist: dist
 	if [ -z "`type -path rpmbuild`" ]; \

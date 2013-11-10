@@ -101,6 +101,41 @@ init_spec( SuperSPEC * spec )
 /***************************************
  ***************************************/
 
+void
+positioner_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
+                      long        data  FL_UNUSED_ARG )
+{
+    double r1, r2;
+
+    obj = pos_attrib->vdata;
+
+    if (    get_checked_float( fl_get_input( pos_attrib->xminval ), &r1 )
+         && get_checked_float( fl_get_input( pos_attrib->xmaxval ), &r2 ) )
+        fl_set_positioner_xbounds( obj, r1, r2 );
+
+    if (    get_checked_float( fl_get_input( pos_attrib->yminval ), &r1 )
+         && get_checked_float( fl_get_input( pos_attrib->ymaxval ), &r2 ) )
+        fl_set_positioner_ybounds( obj, r1, r2 );
+
+    if ( get_checked_float( fl_get_input( pos_attrib->initialxval ), &r1 ) )
+         fl_set_positioner_xvalue( obj, r1 );
+    if ( get_checked_float( fl_get_input( pos_attrib->initialyval ), &r1 ) )
+         fl_set_positioner_yvalue( obj, r1 );
+
+    if ( get_checked_float( fl_get_input( pos_attrib->xstep ), &r1 ) )
+         fl_set_positioner_xstep( obj, r1 );
+    if ( get_checked_float( fl_get_input( pos_attrib->ystep ), &r1 ) )
+         fl_set_positioner_ystep( obj, r1 );
+
+    spec_to_superspec( obj );
+
+    redraw_the_form( 0 );
+}
+
+
+/***************************************
+ ***************************************/
+
 int
 set_pos_attrib( FL_OBJECT * ob )
 {

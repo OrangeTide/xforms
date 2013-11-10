@@ -48,10 +48,11 @@ using "fdesign -convert".
 Changes the output include file from @code{<forms.h>} to header. Per
 default, the header file name will be enclosed in angle brackets
 ('@code{<}' and '@code{>}') unless the name of the include file
-specified starts with a double quote ('@code{"}'). Useful on systems
-where @file{forms.h} is renamed to something else or if you need an
-application header file with e.g.@: definitions of constants/defines
-for the UI that itself includes the @code{forms.h} file.
+specified is already enclosed in double quote ('@code{"}'). Useful on
+systems where @file{forms.h} is renamed to something else or if you
+need an application header file with e.g.@: definitions of
+constants/defines for the UI that itself includes the @code{forms.h}
+file.
 @item -main
 Emits a main program with callback stubs. Can be useful for simple
 programs.

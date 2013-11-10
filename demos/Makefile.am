@@ -131,6 +131,9 @@ nodist_butttypes_SOURCES = fd/butttypes_gui.c fd/butttypes_gui.h
 butttypes.$(OBJEXT): fd/butttypes_gui.c
 
 canvas_SOURCES = canvas.c
+canvas_LDADD  = ../lib/libforms.la \
+	$(X_LIBS) $(X_PRE_LIBS) -lX11 $(LIBS) $(X_EXTRA_LIBS)
+
 chartall_SOURCES = chartall.c
 chartstrip_SOURCES = chartstrip.c
 choice_SOURCES = choice.c
@@ -172,8 +175,14 @@ nodist_formbrowser_SOURCES = fd/formbrowser_gui.c fd/formbrowser_gui.h
 formbrowser.$(OBJEXT): fd/formbrowser_gui.c
 
 free1_SOURCES = free1.c
+
 freedraw_SOURCES = freedraw.c
+freedraw_LDADD  = ../lib/libforms.la \
+	$(X_LIBS) $(X_PRE_LIBS) -lX11 $(LIBS) $(X_EXTRA_LIBS)
+
 freedraw_leak_SOURCES = freedraw_leak.c
+freedraw_leak_LDADD  = ../lib/libforms.la \
+	$(X_LIBS) $(X_PRE_LIBS) -lX11 $(LIBS) $(X_EXTRA_LIBS)
 
 gl_SOURCES = gl.c
 gl_LDADD  = ../gl/libformsGL.la ../lib/libforms.la \

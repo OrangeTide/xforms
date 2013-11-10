@@ -23,11 +23,17 @@
 extern void set_finput_value( FL_OBJECT *,
                               double,
                               int );
+extern int get_checked_float( const char * str,
+                              double     * r );
+extern int get_checked_int( const char *,
+                            int * );
 extern double get_finput_value( FL_OBJECT * );
 
 /* Slider and value slider */
 
 extern void *get_slider_spec_fdform( void );
+extern void slider_apply_attrib( FL_OBJECT *,
+                                 long );
 extern void slider_spec_restore( FL_OBJECT *,
                                  long );
 extern int set_slider_attrib( FL_OBJECT * );
@@ -39,6 +45,8 @@ extern void emit_slider_code( FILE *,
 /* Scrollbar */
 
 extern void *get_scrollbar_spec_fdform( void );
+extern void scrollbar_apply_attrib( FL_OBJECT *,
+                                    long );
 extern void scrollbar_spec_restore( FL_OBJECT *,
                                     long );
 extern int set_scrollbar_attrib( FL_OBJECT * );
@@ -50,6 +58,8 @@ extern void emit_scrollbar_code( FILE *,
 /* Thumbwheel */
 
 extern void *get_twheel_spec_fdform( void );
+extern void twheel_apply_attrib( FL_OBJECT *,
+                                 long );
 extern void twheel_spec_restore( FL_OBJECT *,
                                  long );
 extern int set_twheel_attrib( FL_OBJECT * );
@@ -61,6 +71,8 @@ extern void emit_twheel_code( FILE *,
 /* Browser */
 
 extern void *get_browser_spec_fdform( void );
+extern void browser_apply_attrib( FL_OBJECT *,
+                                  long );
 extern void browser_spec_restore( FL_OBJECT *,
                                   long );
 extern int set_browser_attrib( FL_OBJECT * );
@@ -101,6 +113,8 @@ extern void emit_menu_item_callback_headers( FILE      * fn,
 /* Counters */
 
 extern void *get_counter_spec_fdform( void );
+extern void counter_apply_attrib( FL_OBJECT *,
+                                  long );
 extern void counter_spec_restore( FL_OBJECT *,
                                   long );
 extern int set_counter_attrib( FL_OBJECT * );
@@ -112,6 +126,8 @@ extern void emit_counter_code( FILE *,
 /* Spiners */
 
 extern void *get_spinner_spec_fdform( void );
+extern void spinner_apply_attrib( FL_OBJECT *,
+                                  long );
 extern void spinner_spec_restore( FL_OBJECT *,
                                   long );
 extern int set_spinner_attrib( FL_OBJECT * );
@@ -123,6 +139,8 @@ extern void emit_spinner_code( FILE *,
 /* Dials */
 
 extern void *get_dial_spec_fdform( void );
+extern void dial_apply_attrib( FL_OBJECT *,
+                               long );
 extern void dial_spec_restore( FL_OBJECT *,
                                long );
 extern int set_dial_attrib( FL_OBJECT * );
@@ -134,6 +152,8 @@ extern void emit_dial_code( FILE *,
 /* Positioner */
 
 extern void *get_pos_spec_fdform( void );
+extern void positioner_apply_attrib( FL_OBJECT *,
+                                     long );
 extern void pos_spec_restore( FL_OBJECT *,
                               long );
 extern int set_pos_attrib( FL_OBJECT * );
@@ -167,7 +187,8 @@ extern void emit_freeobj_code( FILE *,
 /* All buttons */
 
 extern void *get_button_spec_fdform( void );
-extern void destroy_button_spec_fdform( void * );
+extern void button_apply_attrib( FL_OBJECT * obj,
+                                 long );
 extern void button_spec_restore( FL_OBJECT *,
                                  long );
 extern int set_button_attrib( FL_OBJECT * );
@@ -181,7 +202,8 @@ extern void emit_button_header( FILE *,
 /* Pixmap/bitmap */
 
 extern void *get_pixmap_spec_fdform( void );
-extern void destroy_pixmap_spec_fdform( void * );
+extern void pixmap_apply_attrib( FL_OBJECT *,
+                                 long );
 extern void pixmap_spec_restore( FL_OBJECT *,
                                  long );
 extern int set_pixmap_attrib( FL_OBJECT * );

@@ -39,7 +39,6 @@
 extern FD_browserattrib *create_form_browserattrib( void );
 static FD_browserattrib *br_attrib;
 
-static SuperSPEC *browser_spec;
 static void show_spec( SuperSPEC * );
 void change_item_cb( FL_OBJECT * ob, long data );
 
@@ -71,10 +70,15 @@ void
 browser_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
                       long        data  FL_UNUSED_ARG )
 {
-    FL_OBJECT *edited = br_attrib->vdata;
+    ob = br_attrib->vdata;
+    SuperSPEC *sp = get_superspec( ob );
 
-    superspec_to_spec( edited );
-    show_spec( get_superspec( edited ) );
+    fl_set_browser_vscrollbar( ob, sp->v_pref );
+    fl_set_browser_hscrollbar( ob, sp->h_pref );
+
+    superspec_to_spec( ob );
+    show_spec( get_superspec( ob ) );
+
     redraw_the_form( 0 );
 }
 
@@ -103,12 +107,35 @@ show_spec( SuperSPEC * spec )
 /***************************************
  ***************************************/
 
+void
+browser_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
+                      long        data  FL_UNUSED_ARG )
+{
+//    fl_set_choice( br_attrib->hscb_pref, spec->h_pref + 1 );
+//    fl_set_choice( br_attrib->vscb_pref, spec->v_pref + 1 );
+//
+//    fl_freeze_form( br_attrib->content_br->form );
+//    fl_clear_browser( br_attrib->content_br );
+//    for ( i = 1; i <= spec->nlines; i++ )
+//        fl_add_browser_line( br_attrib->content_br, spec->content[ i ] );
+//    fl_unfreeze_form( br_attrib->content_br->form );
+
+    spec_to_superspec( br_attrib->vdata );
+    redraw_the_form( 0 );
+}
+
+
+/***************************************
+ ***************************************/
+
 int
 set_browser_attrib( FL_OBJECT * ob )
 {
+    SuperSPEC *browser_spec;
+
     br_attrib->vdata = ob;
     browser_spec = get_superspec( ob );
-    superspec_to_spec(ob);
+    superspec_to_spec( ob );
 
     show_spec( browser_spec );
     return 0;
@@ -301,10 +328,12 @@ void
 hscb_pref_cb( FL_OBJECT * ob,
               long        data  FL_UNUSED_ARG )
 {
-    FD_browserattrib *ui = ob->form->fdui;
+//    FD_browserattrib *ui = ob->form->fdui;
     int i = fl_get_choice( ob );
 
-    fl_set_browser_hscrollbar( ui->vdata, i - 1 );
+//    fl_set_browser_hscrollbar( ui->vdata, i - 1 );
+
+    fl_set_browser_hscrollbar( br_attrib->vdata, i - 1 );
 
     if ( auto_apply )
         redraw_the_form( 0 );

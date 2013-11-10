@@ -156,6 +156,12 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     const char *sp;
     FRM *new_forms;
     int cc = cur_class;
+    static int busy = 0;
+
+    if ( busy )
+        return;
+    else
+        busy = 1;
 
     new_forms = fl_realloc( forms, ( fnumb + 1 ) * sizeof *forms );
 
@@ -163,6 +169,7 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     {
         fl_show_alert( "Too many forms", "Running out of memory for forms",
                        NULL, 0 );
+        busy = 0;
         return;
     }
     else
@@ -173,8 +180,6 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     set_form( -1 );
 
     /* Get boundary */
-
-    fl_deactivate_form( fd_control->control );
 
     fl_get_win_size( main_window, &xx, &yy );
     set_bounding_box( 0, 0, xx, yy );
@@ -188,7 +193,7 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
                                    "a C variable):", "" ) )
          || ! *s )
     {
-        fl_activate_form( fd_control->control );
+        busy = 0;
         return;
     }
 
@@ -228,11 +233,12 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     /* Finish off */
 
     set_form( fnumb++ );
-    fl_activate_form( fd_control->control );
     changed = FL_TRUE;
 
     if ( cc >= 0 )
         select_object_by_class( cc );
+
+    busy = 0;
 }
 
 

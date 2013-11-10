@@ -121,6 +121,39 @@ set_counter_attrib( FL_OBJECT * ob )
  ***************************************/
 
 void
+counter_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
+                      long        data  FL_UNUSED_ARG )
+{
+    double r1, r2;
+
+    obj = cnt_attrib->vdata;
+
+    if (    get_checked_float( fl_get_input( cnt_attrib->minval ), &r1 )
+         && get_checked_float( fl_get_input( cnt_attrib->maxval ), &r2 ) )
+        fl_set_counter_bounds( obj, r1, r2 );
+
+    if ( get_checked_float( fl_get_input( cnt_attrib->initialval ), &r1 ) )
+         fl_set_counter_value( obj, r1 );
+
+    if ( get_checked_float( fl_get_input( cnt_attrib->initialval ), &r1 ) )
+         fl_set_counter_value( obj, r1 );
+
+    fl_set_counter_precision( obj, fl_get_counter_value( cnt_attrib->prec ) );
+
+    if (    get_checked_float( fl_get_input( cnt_attrib->step1 ), &r1 )
+         && get_checked_float( fl_get_input( cnt_attrib->step2 ), &r2 ) )
+        fl_set_counter_step( obj, r1, r2 );
+
+    spec_to_superspec( obj );
+
+    redraw_the_form( 0 );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
 emit_counter_code( FILE      * fp,
                    FL_OBJECT * ob )
 {
@@ -258,6 +291,8 @@ cnt_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 {
     double val = get_finput_value( cnt_attrib->initialval );
 
+    fprintf( stderr, "ZZZZZZZZZZ\n" );
+
     fl_set_counter_value( cnt_attrib->vdata, val );
 
     if ( val != fl_get_counter_value( cnt_attrib->vdata ) )
@@ -266,6 +301,7 @@ cnt_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
         set_finput_value( cnt_attrib->initialval, counter_spec->val,
                           counter_spec->prec );
     }
+
     if ( auto_apply )
         redraw_the_form( 0 );
 }

@@ -19,18 +19,18 @@ AC_SUBST(SO_VERSION, ["3:1:1"])
 test "x$prefix" = xNONE && prefix=$ac_default_prefix
 test "x$exec_prefix" = xNONE && exec_prefix='${prefix}'
 
-### Set the execute permissions of the various scripts correctly
+### Set the execute permissions of some scripts correctly
 
-for file in config/install-sh config/mkinstalldirs ; do
+for file in config/install-sh ; do
   chmod 755 ${srcdir}/${file}
 done
 
 # Check if the bwc-bs-hack is to be used
 
-AC_ARG_ENABLE(bwc_bs_hack, [AS_HELP_STRING([--enable-bwc-bs-hack],[Enable backward compatiblity hack for browser, scrollbar and tabfolder objects])])
+AC_ARG_ENABLE(bwc_bs_hack, [AS_HELP_STRING([--enable-bwc-bs-hack],[enable backward compatiblity hack for browser, scrollbar and tabfolder objects])])
 AM_CONDITIONAL(USE_BWC_BS_HACK, test x$enable_bwc_bs_hack = xyes)
 
-AC_ARG_ENABLE(classic_editkeys, [AS_HELP_STRING([--enable-classic-editkeys],[Enable backward compatiblity for behaviour of input edit keys])])
+AC_ARG_ENABLE(classic_editkeys, [AS_HELP_STRING([--enable-classic-editkeys],[enable backward compatiblity for behaviour of input edit keys])])
 AM_CONDITIONAL(USE_CLASSIC_EDITKEYS, test x$enable_classic_editkeys = xyes)
 
 AC_ARG_ENABLE(demos, [AS_HELP_STRING([--enable-demos],[Build demo programs])])
@@ -38,11 +38,11 @@ AM_CONDITIONAL(BUILD_DEMOS, test x$enable_demos = xyes)
 
 # Check if docs are to be build
 
-AC_ARG_ENABLE(docs, [AS_HELP_STRING([--enable-docs],[Build documentation (needs makeinfo)])])
+AC_ARG_ENABLE(docs, [AS_HELP_STRING([--enable-docs],[build documentation (needs makeinfo)])])
 AM_CONDITIONAL(BUILD_DOCS, test x$enable_docs = xyes)
 
 # If docs are to be build check for presence of texi2html and pdftex, needed
-# for also building the html and pdf versions of the docs
+# for building the html and pdf versions of the docs, respectively
 
 if test BUILD_DOCS; then
   AC_CHECK_PROG(TEXI2HTML, texi2html, texi2html)

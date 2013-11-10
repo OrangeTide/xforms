@@ -763,6 +763,13 @@ origin of the dial, which is by default at 6 o'clock and rotates
 clock-wise. By default, the minimum angle is 0 and the maximum angle
 is 360.
 
+To obtain the start and end angles use
+@findex fl_get_dial_angles()
+@anchor{fl_get_dial_angles()}
+@example
+void fl_get_dial_angles(FL_OBJECT *obj, double *thetai, double *thetaf)
+@end example
+
 By default, crossing from 359.9 to 0 or from 0 to 359.9 is not
 allowed. To allowing crossing over, use the following routine
 @findex fl_set_dial_crossover()
@@ -786,6 +793,14 @@ After this call dial values will be rounded to multiples of
 @code{step}. Use a value of 0.0 for @code{step} to switch off
 rounding.
 
+To get the current setting for the rounding steps use
+@findex fl_get_dial_step()
+@anchor{fl_get_dial_step()}
+@example
+double fl_get_dial_step(FL_OBJECT *obj);
+@end example
+
+
 By default, clock-wise rotation increases the dial value. To change,
 use the following routine
 @findex fl_set_dial_direction()
@@ -799,6 +814,13 @@ where @code{dir} can be either
 @code{FL_DIAL_CCW} or
 @tindex FL_DIAL_CW
 @code{FL_DIAL_CW}.
+
+To obtain the direction use
+@findex fl_get_dial_direction()
+@anchor{fl_get_dial_direction()}
+@example
+int fl_get_dial_direction(FL_OBJECT *obj);
+@end example
 
 
 @node Dial Attributes

@@ -604,6 +604,7 @@ extern void emit_objclass_spec_global( FILE *,
 
 extern void set_objclass_spec_attributes( FL_OBJECT *,
                                           long );
+extern void obj_spec_restore( FL_OBJECT * obj );
 
 extern int has_class_spec_info( FL_OBJECT * );
 
@@ -768,8 +769,8 @@ typedef struct {
     int              h_pref,
                      v_pref;
     int              nlines;
-    char             filename[ 512 ];
-    char             focus_filename[ 512 ];
+    char             filename[ 2048 ];
+    char             focus_filename[ 2048 ];
     char             data[ MAX_VAR_LEN ];
     char             focus_data[ MAX_VAR_LEN ];
     char             width[ MAX_VAR_LEN ],
@@ -800,7 +801,6 @@ typedef struct {
     int              no_title;
     int              mark_active;
     int            * mval;
-    char             helper[ 512 ];
     int              reserverd[ 12 ];
     int              i_val;
     int              i_min;
@@ -827,15 +827,14 @@ typedef struct {
     int  dx,
          dy;
     int  show_focus;
-    char filename[ 512 ];
-    char focus_filename[ 512 ];
+    char filename[ 2048 ];
+    char focus_filename[ 2048 ];
     char data[ MAX_VAR_LEN ];
     char focus_data[ MAX_VAR_LEN ];
     char width[ MAX_VAR_LEN ];
     char height[ MAX_VAR_LEN ];
     int  use_data;
     int  fullpath;
-    char helper[ 512 ];
 } IconInfo;
 
 #define ISBUTTON( cls )  (    ( cls ) == FL_BUTTON             \
@@ -873,8 +872,6 @@ extern int noop_handle( FL_OBJECT *,
                         FL_Coord,
                         int,
                         void * );
-
-extern char *get_helper( char * );
 
 extern void setup_how_return_menu( FL_OBJECT * );
 

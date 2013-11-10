@@ -616,8 +616,6 @@ fl_set_browser_vscrollbar( FL_OBJECT * obj,
 {
     FLI_BROWSER_SPEC *comp = obj->spec;
 
-    on_off = on_off ? FL_ON : FL_OFF;
-
     if ( comp->v_pref == on_off )
         return;
 
@@ -638,8 +636,6 @@ fl_set_browser_hscrollbar( FL_OBJECT * obj,
                            int         on_off )
 {
     FLI_BROWSER_SPEC *comp = obj->spec;
-
-    on_off = on_off ? FL_ON : FL_OFF;
 
     if ( comp->h_pref == on_off )
         return;

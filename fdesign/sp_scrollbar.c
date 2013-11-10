@@ -67,13 +67,16 @@ get_scrollbar_spec_fdform( void )
  ***************************************/
 
 void
-scrollbar_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
+scrollbar_spec_restore( FL_OBJECT * obj   FL_UNUSED_ARG,
                         long        data  FL_UNUSED_ARG )
 {
-    FL_OBJECT *edited = scb_attrib->vdata;
+    obj = scb_attrib->vdata;
 
-    superspec_to_spec( edited );
-    show_spec( get_superspec( edited ) );
+    fprintf( stderr, "restore1 %d\n", obj->how_return );
+    superspec_to_spec( obj );
+    fprintf( stderr, "restore2 %d\n", obj->how_return );
+    show_spec( get_superspec( obj ) );
+    fprintf( stderr, "restore3 %d\n", obj->how_return );
     redraw_the_form( 0 );
 }
 
@@ -93,6 +96,45 @@ show_spec( SuperSPEC * spec )
     set_finput_value( scb_attrib->rdelta, spec->rdelta, -1 );
 
     reset_how_return_menu( scb_attrib->returnsetting, spec->how_return );
+}
+
+
+#define is_vert( t ) (    t == FL_VERT_SCROLLBAR      \
+                       || t == FL_VERT_NICE_SCROLLBAR \
+                       || t == FL_VERT_THIN_SCROLLBAR )
+
+
+/***************************************
+ ***************************************/
+
+void
+scrollbar_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
+                        long        data  FL_UNUSED_ARG )
+{
+    double r1, r2;
+
+    obj = scb_attrib->vdata;
+
+    if (    get_checked_float( fl_get_input( scb_attrib->minval ), &r1 )
+         && get_checked_float( fl_get_input( scb_attrib->maxval ), &r2 ) )
+        fl_set_scrollbar_bounds( obj, r1, r2 );
+
+    if ( get_checked_float( fl_get_input( scb_attrib->initial_val ), &r1 ) )
+         fl_set_scrollbar_value( obj, r1 );
+
+    if ( get_checked_float( fl_get_input( scb_attrib->slsize ), &r1 ) )
+        fl_set_scrollbar_size( obj, r1 );
+
+    if ( get_checked_float( fl_get_input( scb_attrib->step ), &r1 ) )
+        fl_set_scrollbar_step( obj, r1 );
+
+    if (    get_checked_float( fl_get_input( scb_attrib->ldelta ), &r1 )
+         && get_checked_float( fl_get_input( scb_attrib->ldelta ), &r2 ) )
+        fl_set_scrollbar_increment( obj, r1, r2 );
+
+    spec_to_superspec( obj );
+
+    redraw_the_form( 0 );
 }
 
 

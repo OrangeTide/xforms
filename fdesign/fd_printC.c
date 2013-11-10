@@ -1012,7 +1012,7 @@ print_form_newformat( FILE       * fn,
     fprintf( fn, "    %s->%s = fl_bgn_form( FL_NO_BOX, %d, %d );\n",
              fdvname, fname, convert_u( form->w ), convert_u( form->h ) );
 
-    /* Don't output the first object, it's an unnecessary box */
+    /* Don't output the first object, it's a box only used by fdesign */
 
     for ( obj = form->first->next; obj; obj = obj->next )
         output_object( fn, obj, 0 );

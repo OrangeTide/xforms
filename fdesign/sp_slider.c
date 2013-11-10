@@ -69,10 +69,8 @@ void
 slider_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
                      long        data  FL_UNUSED_ARG )
 {
-    FL_OBJECT *edit_obj = sl_attrib->vdata;
-
-    superspec_to_spec( edit_obj );
-    show_spec( get_superspec( edit_obj ) );
+    superspec_to_spec( sl_attrib->vdata );
+    show_spec( get_superspec( sl_attrib->vdata ) );
     redraw_the_form( 0 );
 }
 
@@ -94,6 +92,42 @@ show_spec( SuperSPEC * spec )
     fl_set_counter_value( sl_attrib->prec, spec->prec );
 
     reset_how_return_menu( sl_attrib->returnsetting, spec->how_return );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+slider_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
+                     long        data  FL_UNUSED_ARG )
+{
+    double r1, r2;
+
+    obj = sl_attrib->vdata;
+
+    if (    get_checked_float( fl_get_input( sl_attrib->minval ), &r1 )
+         && get_checked_float( fl_get_input( sl_attrib->maxval ), &r2 ) )
+        fl_set_slider_bounds( obj, r1, r2 );
+
+    if ( get_checked_float( fl_get_input( sl_attrib->initial_val ), &r1 ) )
+         fl_set_slider_value( obj, r1 );
+
+    if ( obj->objclass == FL_VALSLIDER )
+        fl_set_slider_precision( obj, fl_get_counter_value( sl_attrib->prec ) );
+
+    if ( get_checked_float( fl_get_input( sl_attrib->step ), &r1 ) )
+        fl_set_slider_step( obj, r1 );
+
+    if ( get_checked_float( fl_get_input( sl_attrib->slsize ), &r1 ) )
+        fl_set_slider_size( obj, r1 );
+
+    if (    get_checked_float( fl_get_input( sl_attrib->ldelta ), &r1 )
+         && get_checked_float( fl_get_input( sl_attrib->ldelta ), &r2 ) )
+        fl_set_slider_increment( obj, r1, r2 );
+
+    spec_to_superspec( obj );
+    redraw_the_form( 0 );
 }
 
 
@@ -275,6 +309,7 @@ step_change( FL_OBJECT * ob    FL_UNUSED_ARG,
     double step = get_finput_value( sl_attrib->step );
 
     fl_set_slider_step( sl_attrib->vdata, step );
+
     if ( auto_apply )
         redraw_the_form( 0 );
 }
@@ -304,9 +339,8 @@ initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
     double val = get_finput_value( sl_attrib->initial_val );
 
     fl_set_slider_value( sl_attrib->vdata, val );
-    slider_spec->val = fl_get_slider_value( sl_attrib->vdata );
-    set_finput_value( sl_attrib->initial_val, slider_spec->val,
-                      slider_spec->prec );
+    set_finput_value( sl_attrib->initial_val, val, slider_spec->prec );
+
     if ( auto_apply )
         redraw_the_form( 0 );
 }

@@ -507,7 +507,7 @@ fl_set_dial_angles( FL_OBJECT * obj,
 
     if ( ( amin = fmod( amin, 360.0 ) ) < 0.0 )
         amin += 360.0;
-    if ( ( amax = fmod( amax, 360.0 ) ) < 0.0 )
+    if ( ( amax = fmod( amax, 360.0 ) ) <= 0.0 )
         amax += 360.0;
 
     if ( sp->thetaf != amax || sp->thetai != amin )
@@ -517,6 +517,21 @@ fl_set_dial_angles( FL_OBJECT * obj,
         get_mapping( sp );
         fl_redraw_object( obj );
     }
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_get_dial_angles( FL_OBJECT * obj,
+                    double    * amin,
+                    double    * amax )
+{
+    FLI_DIAL_SPEC *sp = obj->spec;
+
+    *amin = sp->thetai;
+    *amax = sp->thetaf;
 }
 
 
@@ -581,6 +596,17 @@ fl_set_dial_step( FL_OBJECT * obj,
 
 
 /***************************************
+ * Returns the step size to which values are rounded.
+ ***************************************/
+
+double
+fl_get_dial_step( FL_OBJECT * obj )
+{
+    return ( ( FLI_DIAL_SPEC * ) obj->spec )->step;
+}
+
+
+/***************************************
  ***************************************/
 
 void
@@ -595,6 +621,16 @@ fl_set_dial_direction( FL_OBJECT * obj,
         get_mapping( sp );
         fl_redraw_object( obj );
     }
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_get_dial_direction( FL_OBJECT * obj )
+{
+    return ( ( FLI_DIAL_SPEC * ) obj->spec )->direction;
 }
 
 

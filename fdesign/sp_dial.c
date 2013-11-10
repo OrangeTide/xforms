@@ -125,6 +125,41 @@ show_spec( SuperSPEC * spec )
 /***************************************
  ***************************************/
 
+void
+dial_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
+                   long        data  FL_UNUSED_ARG )
+{
+    double r1, r2;
+    int dir = fl_get_choice( dial_attrib->dir ) - 1;
+
+    obj = dial_attrib->vdata;
+
+    if (    get_checked_float( fl_get_input( dial_attrib->minval ), &r1 )
+         && get_checked_float( fl_get_input( dial_attrib->maxval ), &r2 ) )
+         fl_set_dial_bounds( obj, r1, r2 );
+
+    if ( get_checked_float( fl_get_input( dial_attrib->initialval ), &r1 ) )
+        fl_set_dial_value( obj, r1 );
+
+    if (    get_checked_float( fl_get_input( dial_attrib->thetai ), &r1 )
+         && get_checked_float( fl_get_input( dial_attrib->thetaf ), &r2 ) )
+        fl_set_dial_angles( obj, r1, r2 );
+
+    if ( get_checked_float( fl_get_input( dial_attrib->step ), &r1 ) )
+        fl_set_dial_step( obj, r1 );
+
+    if ( dir >= 0 )
+        fl_set_dial_direction( obj, dial_dir[ dir ].val );
+
+    spec_to_superspec( obj );
+
+    redraw_the_form( 0 );
+}
+
+
+/***************************************
+ ***************************************/
+
 int
 set_dial_attrib( FL_OBJECT * ob )
 {
@@ -289,7 +324,7 @@ void
 dir_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
         long        data  FL_UNUSED_ARG )
 {
-    int dir = fl_get_choice( ob ) - 1;
+    int dir = fl_get_choice( dial_attrib->dir ) - 1;
 
     if ( dir >= 0 )
     {

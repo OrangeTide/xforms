@@ -61,15 +61,14 @@ figures_png = borderwidth.png \
 EXTRA_DIST = $(figures_png)
 
 # Copy the png images to a subdirectory both in the directory with the
-# HTML the one with the info documentation
+# HTML and the one with the info documentation
 
 install-data-local:
 	@$(NORMAL_INSTALL)
-	/bin/mkdir -p $(htmldir)
-	/bin/mkdir -p $(htmldir)/xforms_images
-	/usr/bin/install -c -m 644 $(figures_png) $(htmldir)/xforms_images
-	/bin/mkdir -p $(infodir)/xforms_images
-	/usr/bin/install -c -m 644 $(figures_png) $(infodir)/xforms_images
+	$(install_sh) -d  $(htmldir)/xforms_images
+	$(install_sh) -m 644 $(figures_png) $(htmldir)/xforms_images
+	$(install_sh) -d $(infodir)/xforms_images
+	$(install_sh) -m 644 $(figures_png) $(infodir)/xforms_images
 
 # On uninstall remove the subdirectory with the images from the directory
 # for the info documentation (the corresponding subdirectory in the HTML

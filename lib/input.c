@@ -1537,7 +1537,7 @@ handle_input( FL_OBJECT * obj,
             if ( obj->type == FL_MULTILINE_INPUT )
                 sp->dummy->focus = 1;
 
-            // Put th cursor back into the position where it was (except
+            // Put the cursor back into the position where it was (except
             // for DOS mode where it's always positioned at the start)
 
             if ( sp->str && Input_Mode != FL_DOS_INPUT_MODE )
@@ -1570,7 +1570,8 @@ handle_input( FL_OBJECT * obj,
             /* If the event is set to NULL don't validate or report
                any changes - the call came from either closing the
                form or from the user changing the focus with the
-               fl_set_focus_object() function. */
+               fl_set_focus_object() function - never use the event,
+               it may be invalid */
 
             if ( ev )
                 ret =   ( sp->changed ? FL_RETURN_CHANGED : FL_RETURN_NONE )
@@ -2636,7 +2637,7 @@ float_validator( FL_OBJECT  * obj     FL_UNUSED_ARG,
 
     dummy = strtod( str, &eptr );
 
-    /* If it reports no problem were finished */
+    /* If it reports no problem were done */
 
     if (    ! ( ( dummy == HUGE_VAL || dummy == -HUGE_VAL ) && errno == ERANGE )
          && ! *eptr )
@@ -2648,7 +2649,7 @@ float_validator( FL_OBJECT  * obj     FL_UNUSED_ARG,
         return FL_INVALID | FL_RINGBELL;
             
     /* Now we handle cases that strtod() flagged as bad but which we need to
-       accept while editing is still going on. If there's only a single char
+       accept while editing is still underway. If there's only a single char
        it should be a dot or a sign */
 
     len = strlen( str );
@@ -2658,15 +2659,18 @@ float_validator( FL_OBJECT  * obj     FL_UNUSED_ARG,
             FL_VALID : FL_INVALID | FL_RINGBELL;
 
     /* If there are two characters accept a sequence of a sign and a decimal
-       point */
+       point or a number followed by 'e' or 'E' */
 
     if ( len == 2 )
-        return ( ! strcmp( str, "+." ) || strcmp( str, "-." ) ) ?
-               FL_VALID : FL_INVALID | FL_RINGBELL;
+        return (    ! strcmp( str, "+." )
+                 || ! strcmp( str, "-." )
+                 || *eptr == 'e'
+                 || *eptr == 'E' ) ?
+               FL_VALID : ( FL_INVALID | FL_RINGBELL );
 
-    /* Additionally accept an 'e' (or 'E') in the last position, or, when in
-       the second last position, when it's followed by a sign - but only if
-       it's the first 'e' (or 'E') in the string */
+    /* Accept an 'e' or 'E' in the last position, or, if it's in the second last
+       position, when it's followed by a sign - but only if it's the first 'e'
+       or 'E' in the string */
 
     if ( ( *eptr == 'e' || *eptr == 'E' )
          && strchr( str, *eptr ) == eptr

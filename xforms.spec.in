@@ -9,7 +9,7 @@ BuildRequires: xpm
 BuildRequires: xpm-devel
 BuildRoot: %{_tmppath}/%{name}-buildroot
 Prefix: %{_prefix}
-URL: http://www.nongnu.org/xforms/
+URL: http://xforms-toolkit.org/
 
 %description
 XForms is a GUI toolkit based on Xlib for X Window Systems. It
@@ -56,12 +56,11 @@ rm -f %{_tmppath}/%{name}-%{version}-devfiles
 
 %files -n %{name} -f %{_tmppath}/%{name}-%{version}-binfiles
 %defattr(-,root,root)
-%doc COPYING.LIB Copyright ChangeLog INSTALL NEWS README
+%doc COPYING.LIB Copyright ChangeLog INSTALL INSTALL.git README
 
 
 %files -n %{name}-devel -f %{_tmppath}/%{name}-%{version}-devfiles
 %defattr(-,root,root)
-
 
 %post -n %{name}
 #

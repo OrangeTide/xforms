@@ -484,23 +484,25 @@ fli_handle_form( FL_FORM * form,
                FL_PUSH was for is still active - it may have become deactivated
                due to the handler for the object that became unfocused! */
 
-            if (    obj
-                 && form->focusobj
-                 && form->focusobj != obj
-                 && ( obj->input || end_event_for_input ) )
+            if ( obj )
             {
-                FL_OBJECT *old_focusobj = form->focusobj;
+                if (    form->focusobj
+                     && form->focusobj != obj
+                     && ( obj->input || end_event_for_input ) )
+                {
+                    FL_OBJECT *old_focusobj = form->focusobj;
 
-                fli_handle_object( form->focusobj, FL_UNFOCUS,
-                                   x, y, key, xev, 1 );
-
-                if ( ! obj->input || ! obj->active )
-                    fli_handle_object( old_focusobj, FL_FOCUS,
+                    fli_handle_object( old_focusobj, FL_UNFOCUS,
                                        x, y, key, xev, 1 );
-            }
 
-            if ( obj && obj->input && obj->active )
-                fli_handle_object( obj, FL_FOCUS, x, y, key, xev, 1 );
+                    if ( ! obj->input || ! obj->active )
+                        fli_handle_object( old_focusobj, FL_FOCUS,
+                                           x, y, key, xev, 1 );
+                }
+
+                if ( obj->input && obj->active )
+                    fli_handle_object( obj, FL_FOCUS, x, y, key, xev, 1 );
+            }
 
             if ( form->focusobj )
                 fli_int.keyform = form;
