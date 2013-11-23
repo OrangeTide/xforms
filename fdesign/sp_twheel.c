@@ -33,32 +33,33 @@
 #include "include/forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
+#include "sp_twheel.h"
+#include "private/ptwheel.h"
+#include "private/pvaluator.h"
 #include "spec/twheel_spec.h"
 
-extern FD_twheelattrib *create_form_twheelattrib( void );
-
-static FD_twheelattrib *twheel_attrib;
-static SuperSPEC *twheel_spec;
-static void show_spec( SuperSPEC * );
+static FD_twheelattrib * twheel_attrib;
+FL_OBJECT * curobj;
 
 
 /***************************************
  ***************************************/
 
-void *
-get_twheel_spec_fdform( void )
+FL_FORM *
+thwheel_create_spec_form( void )
 {
-    if ( ! twheel_attrib )
-    {
-        twheel_attrib = create_form_twheelattrib( );
+    if ( twheel_attrib )
+        return twheel_attrib->twheelattrib;
 
-        setup_how_return_menu( twheel_attrib->returnsetting );
-        fl_set_menu_item_mode( twheel_attrib->returnsetting, 5,
-                               FL_PUP_BOX | FL_PUP_GRAY );
-        fl_set_menu_item_mode( twheel_attrib->returnsetting, 6,
-                               FL_PUP_BOX | FL_PUP_GRAY );
-    }
-    return twheel_attrib;
+    twheel_attrib = create_form_twheelattrib( );
+
+    setup_how_return_menu( twheel_attrib->returnsetting );
+    fl_set_menu_item_mode( twheel_attrib->returnsetting, 5,
+                           FL_PUP_BOX | FL_PUP_GRAY );
+    fl_set_menu_item_mode( twheel_attrib->returnsetting, 6,
+                           FL_PUP_BOX | FL_PUP_GRAY );
+
+    return twheel_attrib->twheelattrib;
 }
 
 
@@ -66,29 +67,18 @@ get_twheel_spec_fdform( void )
  ***************************************/
 
 void
-twheel_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
-                     long        data  FL_UNUSED_ARG )
+twheel_fill_in_spec_form( FL_OBJECT * obj )
 {
-    FL_OBJECT *edit_obj = twheel_attrib->vdata;
+    FLI_THUMBWHEEL_SPEC *sp = obj->spec;
 
-    superspec_to_spec( edit_obj );
-    show_spec( get_superspec( edit_obj ) );
-    redraw_the_form( 0 );
-}
+    curobj = obj;
 
+    set_finput_value( twheel_attrib->minval,      sp->min, -1 );
+    set_finput_value( twheel_attrib->maxval,      sp->max, -1 );
+    set_finput_value( twheel_attrib->initial_val, sp->val, -1 );
+    set_finput_value( twheel_attrib->step,        sp->step, 3 );
 
-/***************************************
- ***************************************/
-
-static void
-show_spec( SuperSPEC * spec )
-{
-    set_finput_value( twheel_attrib->minval, spec->min, -1 );
-    set_finput_value( twheel_attrib->maxval, spec->max, -1 );
-    set_finput_value( twheel_attrib->initial_val, spec->val, -1 );
-    set_finput_value( twheel_attrib->step, spec->step, 3 );
-
-    reset_how_return_menu( twheel_attrib->returnsetting, spec->how_return );
+    reset_how_return_menu( twheel_attrib->returnsetting, obj->how_return );
 }
 
 
@@ -96,22 +86,19 @@ show_spec( SuperSPEC * spec )
  ***************************************/
 
 void
-twheel_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
-                     long        data  FL_UNUSED_ARG )
+twheel_reread_spec_form( FL_OBJECT * obj )
 {
     double r1, r2;
 
     if (    get_checked_float( fl_get_input( twheel_attrib->minval ), &r1 )
          && get_checked_float( fl_get_input( twheel_attrib->maxval ), &r2 ) )
-        fl_set_thumbwheel_bounds( twheel_attrib->vdata, r1, r2 );
+        fl_set_thumbwheel_bounds( obj, r1, r2 );
 
     if ( get_checked_float( fl_get_input( twheel_attrib->initial_val ), &r1 ) )
-        fl_set_thumbwheel_value( twheel_attrib->vdata, r1 );
+        fl_set_thumbwheel_value( obj, r1 );
 
     if ( get_checked_float( fl_get_input( twheel_attrib->step ), &r1 ) )
-        fl_set_thumbwheel_step( twheel_attrib->vdata, r1 );
-
-    spec_to_superspec( obj );
+        fl_set_thumbwheel_step( obj, r1 );
 
     redraw_the_form( 0 );
 }
@@ -120,75 +107,13 @@ twheel_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
 /***************************************
  ***************************************/
 
-int
-set_twheel_attrib( FL_OBJECT * ob )
-{
-    twheel_attrib->vdata = ob;
-    twheel_spec = get_superspec( ob );
-
-    fl_freeze_form( twheel_attrib->twheelattrib );
-
-    show_spec( twheel_spec );
-
-    fl_unfreeze_form( twheel_attrib->twheelattrib );
-
-    return 0;
-}
-
-
-/***************************************
- ***************************************/
-
 void
-emit_twheel_code( FILE      * fp,
-                  FL_OBJECT * ob )
+twheel_emit_spec_fd_code( FILE      * fp,
+                          FL_OBJECT * obj )
 {
-    FL_OBJECT *defobj;
-    SuperSPEC *sp,
-              *defsp;
-
-    if ( ob->objclass != FL_THUMBWHEEL )
-        return;
-
-    /* create a default object */
-
-    defobj = fl_create_thumbwheel( ob->type, 0, 0, 0, 0, "" );
-
-    defsp = get_superspec( defobj );
-    sp = get_superspec( ob );
-
-    if ( sp->min != defsp->min || sp->max != defsp->max )
-        fprintf( fp, "    fl_set_thumbwheel_bounds( obj, %g, %g );\n",
-                 sp->min, sp->max );
-
-    if ( sp->val != defsp->val )
-        fprintf( fp, "    fl_set_thumbwheel_value( obj, %g );\n", sp->val );
-
-    if ( sp->step != defsp->step )
-        fprintf( fp, "    fl_set_thumbwheel_step( obj, %g );\n", sp->step );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-save_twheel_attrib( FILE      * fp,
-                    FL_OBJECT * ob )
-{
-    FL_OBJECT *defobj;
-    SuperSPEC *defsp,
-              *sp;
-
-    if ( ob->objclass != FL_THUMBWHEEL )
-        return;
-
-    /* create a default object */
-
-    defobj = fl_create_thumbwheel( ob->type, 0, 0, 0, 0, "" );
-
-    defsp = get_superspec( defobj );
-    sp = get_superspec( ob );
+    FL_OBJECT *defobj = fl_create_thumbwheel( obj->type, 0, 0, 0, 0, "" );
+    FLI_THUMBWHEEL_SPEC *sp    = obj->spec,
+                        *defsp = defobj->spec;
 
     if ( sp->min != defsp->min || sp->max != defsp->max )
         fprintf( fp, "    bounds: %g %g\n", sp->min, sp->max );
@@ -204,6 +129,33 @@ save_twheel_attrib( FILE      * fp,
 
     if ( sp->step != defsp->step )
         fprintf( fp, "    step: %g\n", sp->step );
+
+    fl_free_object( defobj );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+twheel_emit_spec_c_code( FILE      * fp,
+                         FL_OBJECT * obj )
+{
+    FL_OBJECT *defobj = fl_create_thumbwheel( obj->type, 0, 0, 0, 0, "" );
+    FLI_THUMBWHEEL_SPEC *sp    = obj->spec,
+                        *defsp = defobj->spec;
+
+    if ( sp->min != defsp->min || sp->max != defsp->max )
+        fprintf( fp, "    fl_set_thumbwheel_bounds( obj, %g, %g );\n",
+                 sp->min, sp->max );
+
+    if ( sp->val != defsp->val )
+        fprintf( fp, "    fl_set_thumbwheel_value( obj, %g );\n", sp->val );
+
+    if ( sp->step != defsp->step )
+        fprintf( fp, "    fl_set_thumbwheel_step( obj, %g );\n", sp->step );
+
+    fl_free_object( defobj );
 }
 
 
@@ -214,12 +166,10 @@ void
 twheel_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
                       long        data  FL_UNUSED_ARG )
 {
-    double min = get_finput_value( twheel_attrib->minval );
-    double max = get_finput_value( twheel_attrib->maxval );
-
-    fl_set_thumbwheel_bounds( twheel_attrib->vdata, min, max );
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_thumbwheel_bounds( curobj,
+                              get_finput_value( twheel_attrib->minval ),
+                              get_finput_value( twheel_attrib->maxval ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -227,14 +177,11 @@ twheel_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 void
-twheel_step_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+twheel_step_change( FL_OBJECT * obj,
                     long        data  FL_UNUSED_ARG )
 {
-    double step = get_finput_value( twheel_attrib->step );
-
-    fl_set_thumbwheel_step( twheel_attrib->vdata, step );
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_thumbwheel_step( curobj, get_finput_value( obj ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -242,16 +189,11 @@ twheel_step_change( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 void
-twheel_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+twheel_initialvalue_change( FL_OBJECT * obj,
                             long        data  FL_UNUSED_ARG )
 {
-    double val = get_finput_value( twheel_attrib->initial_val );
-
-    fl_set_thumbwheel_value( twheel_attrib->vdata, val );
-    twheel_spec->val = fl_get_thumbwheel_value( twheel_attrib->vdata );
-    set_finput_value( twheel_attrib->initial_val, twheel_spec->val, -1 );
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_thumbwheel_value( curobj, get_finput_value( obj ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -259,11 +201,10 @@ twheel_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 void
-twheel_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+twheel_returnsetting_change( FL_OBJECT * obj,
                              long        data  FL_UNUSED_ARG )
 {
-    handle_how_return_changes( twheel_attrib->returnsetting,
-                               twheel_attrib->vdata );
+    handle_how_return_changes( obj, curobj );
 }
 
 

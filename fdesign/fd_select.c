@@ -36,6 +36,7 @@
 
 #include "include/forms.h"
 #include "fd_main.h"
+#include "fd_spec.h"
 #include <ctype.h>
 #include <float.h>
 
@@ -46,6 +47,23 @@
 static FL_OBJECT *selobj[ MAXSEL ]; /* the selected objects */
 static int selnumb = 0;             /* and their number */
 static int backf = FL_FALSE;        /* whether the selection is the backface */
+
+
+static FL_OBJECT * copy_object( FL_OBJECT * obj,
+                                int         exact );
+static void set_attribs( FL_OBJECT  * obj,
+                         int          boxtype,
+                         int          col1,
+                         int          col2,
+                         int          lcol,
+                         int          align,
+                         int          lsize,
+                         int          lstyle,
+                         const char * label );
+static void set_miscattribs( FL_OBJECT    * obj,
+                             unsigned int   nw,
+                             unsigned int   se,
+                             unsigned int   re );\
 
 
 /***************************************
@@ -846,7 +864,7 @@ change_selected_objects( FL_OBJECT * curobj )
         ob = selobj[ i ];
         if ( ob->objclass != FL_BEGIN_GROUP && ob->objclass != FL_END_GROUP )
         {
-            change_type( ob, curobj->type );
+            spec_change_type( ob, curobj->type );
             set_attribs( ob, curobj->boxtype, curobj->col1, curobj->col2,
                          curobj->lcol, curobj->align,
                          curobj->lsize, curobj->lstyle, ob->label );
@@ -1693,6 +1711,115 @@ flatten_selection( void )
 
     cleanup_selection( );
     changed = 1;
+}
+
+
+/***************************************
+ * Makes a copy of the object. Only if 'exact' is set
+ * the objects name is copied.
+ ***************************************/
+
+static FL_OBJECT *
+copy_object( FL_OBJECT * obj,
+             int         exact )
+{
+    char name[ MAX_VAR_LEN ],
+         cbname[ MAX_VAR_LEN ],
+         argname[ MAX_VAR_LEN ];
+    FL_OBJECT *obj2;
+
+    obj2 = add_an_object( obj->objclass, obj->type, obj->x, obj->y,
+                          obj->w, obj->h );
+    get_object_name( obj, name, cbname, argname );
+    set_object_name( obj2, exact ? name : "", cbname, argname );
+
+    set_attribs( obj2, obj->boxtype, obj->col1, obj->col2,
+                 obj->lcol, obj->align, obj->lsize, obj->lstyle, obj->label );
+
+    set_miscattribs( obj2, obj->nwgravity, obj->segravity, obj->resize );
+
+    /* Also copy the object specific info */
+
+    copy_superspec( obj2, obj );
+
+    fl_delete_object( obj2 );
+
+    return obj2;
+}
+
+
+/***************************************
+ * Sets the attributes of an object
+ ***************************************/
+
+static void
+set_attribs( FL_OBJECT  * obj,
+             int          boxtype,
+             int          col1,
+             int          col2,
+             int          lcol,
+             int          align,
+             int          lsize,
+             int          lstyle,
+             const char * label )
+{
+    char *s;
+
+    obj->boxtype = boxtype;
+    obj->col1    = col1;
+    obj->col2    = col2;
+    obj->lcol    = lcol;
+    obj->lsize   = lsize;
+    obj->lstyle  = lstyle;
+
+    if (    obj->objclass == FL_SLIDER
+         && ! ( obj->type & FL_VERT_PROGRESS_BAR ) )
+    {
+        obj->align = fl_to_outside_lalign( obj->align );
+        if ( fl_is_center_lalign( obj->align ) )
+            obj->align = FL_SLIDER_ALIGN;
+    }
+    else
+        obj->align   = align;
+
+    if ( ( s = strchr( label, '\010' ) ) )
+        memmove( s, s + 1, strlen( s ) + 1 );
+        
+    fl_set_object_label( obj, label );
+
+    fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+
+    /* Some extra adjustments for spinner objects (this is a hack but
+       avoiding it would require a complete change of how fdesign works) */
+
+    if ( obj->objclass == FL_SPINNER )
+    {
+        FL_OBJECT *subobj = fl_get_spinner_input( obj );
+
+        subobj->col1 = col1;
+        subobj->col2 = col2;
+
+        subobj->lstyle = lstyle;
+        subobj->lsize  = lsize; 
+
+        fli_handle_object( subobj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+   }
+}
+
+
+/***************************************
+ * More attributes
+ ***************************************/
+
+static void
+set_miscattribs( FL_OBJECT    * obj,
+                 unsigned int   nw,
+                 unsigned int   se,
+                 unsigned int   re )
+{
+    obj->nwgravity = nw;
+    obj->segravity = se;
+    obj->resize    = re;
 }
 
 

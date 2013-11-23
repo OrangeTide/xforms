@@ -33,34 +33,32 @@
 #include "include/forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
+#include "sp_positioner.h"
 #include "private/ppositioner.h"
 #include "spec/positioner_spec.h"
 
-extern FD_posattrib *create_form_posattrib( void );
-
-static FD_posattrib *pos_attrib;
-static SuperSPEC *pos_spec;
-static void init_spec( SuperSPEC * );
+static FD_posattrib * pos_attrib;
+static FL_OBJECT * curobj;
 
 
 /***************************************
  ***************************************/
 
-void *
-get_pos_spec_fdform( void )
+FL_FORM *
+positioner_create_spec_form( void )
 {
-    if ( ! pos_attrib )
-    {
-        pos_attrib = create_form_posattrib( );
+    if ( pos_attrib )
+        return pos_attrib->posattrib;
 
-        setup_how_return_menu( pos_attrib->returnsetting );
-        fl_set_menu_item_mode( pos_attrib->returnsetting, 5,
-                               FL_PUP_BOX | FL_PUP_GRAY );
-        fl_set_menu_item_mode( pos_attrib->returnsetting, 6,
-                               FL_PUP_BOX | FL_PUP_GRAY );
-    }
+    pos_attrib = create_form_posattrib( );
 
-    return pos_attrib;
+    setup_how_return_menu( pos_attrib->returnsetting );
+    fl_set_menu_item_mode( pos_attrib->returnsetting, 5,
+                           FL_PUP_BOX | FL_PUP_GRAY );
+    fl_set_menu_item_mode( pos_attrib->returnsetting, 6,
+                           FL_PUP_BOX | FL_PUP_GRAY );
+
+    return pos_attrib->posattrib;
 }
 
 
@@ -68,33 +66,25 @@ get_pos_spec_fdform( void )
  ***************************************/
 
 void
-pos_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
-                  long        data  FL_UNUSED_ARG )
+positioner_fill_in_spec_form( FL_OBJECT * obj )
 {
-    superspec_to_spec( pos_attrib->vdata );
-    init_spec(get_superspec( pos_attrib->vdata ) );
-    redraw_the_form( 0 );
-}
+    FLI_POSITIONER_SPEC *sp = obj->spec;
 
 
-/***************************************
- ***************************************/
+    curobj = obj;
 
-static void
-init_spec( SuperSPEC * spec )
-{
-    set_finput_value( pos_attrib->xminval, spec->xmin, -1 );
-    set_finput_value( pos_attrib->xmaxval, spec->xmax, -1 );
-    set_finput_value( pos_attrib->yminval, spec->ymin, -1 );
-    set_finput_value( pos_attrib->ymaxval, spec->ymax, -1 );
+    set_finput_value( pos_attrib->xminval, sp->xmin, -1 );
+    set_finput_value( pos_attrib->xmaxval, sp->xmax, -1 );
+    set_finput_value( pos_attrib->yminval, sp->ymin, -1 );
+    set_finput_value( pos_attrib->ymaxval, sp->ymax, -1 );
 
-    set_finput_value( pos_attrib->initialxval, spec->xval, -1 );
-    set_finput_value( pos_attrib->initialyval, spec->yval, -1 );
+    set_finput_value( pos_attrib->initialxval, sp->xval, -1 );
+    set_finput_value( pos_attrib->initialyval, sp->yval, -1 );
 
-    set_finput_value( pos_attrib->xstep, spec->xstep, -1 );
-    set_finput_value( pos_attrib->ystep, spec->ystep, -1 );
+    set_finput_value( pos_attrib->xstep, sp->xstep, -1 );
+    set_finput_value( pos_attrib->ystep, sp->ystep, -1 );
 
-    reset_how_return_menu( pos_attrib->returnsetting, spec->how_return );
+    reset_how_return_menu( pos_attrib->returnsetting, obj->how_return );
 }
 
 
@@ -102,12 +92,9 @@ init_spec( SuperSPEC * spec )
  ***************************************/
 
 void
-positioner_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
-                      long        data  FL_UNUSED_ARG )
+positioner_reread_spec_form( FL_OBJECT * obj )
 {
     double r1, r2;
-
-    obj = pos_attrib->vdata;
 
     if (    get_checked_float( fl_get_input( pos_attrib->xminval ), &r1 )
          && get_checked_float( fl_get_input( pos_attrib->xmaxval ), &r2 ) )
@@ -127,8 +114,6 @@ positioner_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
     if ( get_checked_float( fl_get_input( pos_attrib->ystep ), &r1 ) )
          fl_set_positioner_ystep( obj, r1 );
 
-    spec_to_superspec( obj );
-
     redraw_the_form( 0 );
 }
 
@@ -136,57 +121,31 @@ positioner_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
 /***************************************
  ***************************************/
 
-int
-set_pos_attrib( FL_OBJECT * ob )
-{
-    pos_attrib->vdata = ob;
-    pos_spec = get_superspec( ob );
-
-    init_spec( pos_spec );
-    return 0;
-}
-
-
-/***************************************
- ***************************************/
-
 void
-emit_pos_code( FILE      * fp,
-               FL_OBJECT * ob )
+positioner_emit_spec_fd_code( FILE      * fp,
+                              FL_OBJECT * obj )
 {
-    FL_OBJECT *defobj;
-    SuperSPEC *spec,
-              *defspec;
+    FL_OBJECT *defobj = fl_create_positioner( obj->type, 0, 0, 0, 0, "" );
+    FLI_POSITIONER_SPEC *sp    = obj->spec,
+                        *defsp = defobj->spec;
 
-    if ( ob->objclass != FL_POSITIONER )
-        return;
+    if ( sp->xmin != defsp->xmin || sp->xmax != defsp->xmax )
+        fprintf( fp, "    xbounds: %g %g\n", sp->xmin, sp->xmax );
 
-    /* create a default object */
+    if ( sp->ymin != defsp->ymin || sp->ymax != defsp->ymax )
+        fprintf( fp, "    ybounds: %g %g\n", sp->ymin, sp->ymax );
 
-    defobj = fl_create_positioner( ob->type, 0, 0, 0, 0, "" );
+    if ( sp->xval != defsp->xval )
+        fprintf( fp, "    xvalue: %g\n", sp->xval );
 
-    defspec = get_superspec( defobj );
-    spec = get_superspec( ob );
+    if ( sp->yval != defsp->yval )
+        fprintf( fp, "    yvalue: %g\n", sp->yval );
 
-    if ( spec->xmin != defspec->xmin || spec->xmax != defspec->xmax )
-        fprintf( fp, "    fl_set_positioner_xbounds( obj, %g, %g );\n",
-                 spec->xmin, spec->xmax );
+    if ( sp->xstep != defsp->xstep )
+        fprintf( fp, "    xstep: %g\n", sp->xstep );
 
-    if ( spec->ymin != defspec->ymin || spec->ymax != defspec->ymax )
-        fprintf( fp, "    fl_set_positioner_ybounds( obj, %g, %g );\n",
-                 spec->ymin, spec->ymax );
-
-    if ( spec->xval != defspec->xval )
-        fprintf( fp, "    fl_set_positioner_xvalue( obj, %g );\n", spec->xval );
-
-    if ( spec->yval != defspec->yval )
-        fprintf( fp, "    fl_set_positioner_yvalue( obj, %g );\n", spec->yval );
-
-    if ( spec->xstep != defspec->xstep )
-        fprintf( fp, "    fl_set_positioner_xstep( obj, %g );\n", spec->xstep );
-
-    if ( spec->ystep != defspec->ystep )
-        fprintf( fp, "    fl_set_positioner_ystep( obj, %g );\n", spec->ystep );
+    if ( sp->ystep != defsp->ystep )
+        fprintf( fp, "    ystep: %g\n", sp->ystep );
 
     fl_free_object( defobj );
 }
@@ -196,40 +155,32 @@ emit_pos_code( FILE      * fp,
  ***************************************/
 
 void
-save_pos_attrib( FILE      * fp,
-                 FL_OBJECT * ob )
+positioner_emit_spec_c_code( FILE      * fp,
+                             FL_OBJECT * obj )
 {
-    FL_OBJECT *defobj;
-    SuperSPEC *defspec,
-              *spec;
+    FL_OBJECT *defobj = fl_create_positioner( obj->type, 0, 0, 0, 0, "" );
+    FLI_POSITIONER_SPEC *sp    = obj->spec,
+                        *defsp = defobj->spec;
 
-    if ( ob->objclass != FL_POSITIONER )
-        return;
+    if ( sp->xmin != defsp->xmin || sp->xmax != defsp->xmax )
+        fprintf( fp, "    fl_set_positioner_xbounds( obj, %g, %g );\n",
+                 sp->xmin, sp->xmax );
 
-    /* create a default object */
+    if ( sp->ymin != defsp->ymin || sp->ymax != defsp->ymax )
+        fprintf( fp, "    fl_set_positioner_ybounds( obj, %g, %g );\n",
+                 sp->ymin, sp->ymax );
 
-    defobj = fl_create_positioner( ob->type, 0, 0, 0, 0, "" );
+    if ( sp->xval != defsp->xval )
+        fprintf( fp, "    fl_set_positioner_xvalue( obj, %g );\n", sp->xval );
 
-    defspec = get_superspec( defobj );
-    spec = get_superspec( ob );
+    if ( sp->yval != defsp->yval )
+        fprintf( fp, "    fl_set_positioner_yvalue( obj, %g );\n", sp->yval );
 
-    if ( spec->xmin != defspec->xmin || spec->xmax != defspec->xmax )
-        fprintf( fp, "    xbounds: %g %g\n", spec->xmin, spec->xmax );
+    if ( sp->xstep != defsp->xstep )
+        fprintf( fp, "    fl_set_positioner_xstep( obj, %g );\n", sp->xstep );
 
-    if ( spec->ymin != defspec->ymin || spec->ymax != defspec->ymax )
-        fprintf( fp, "    ybounds: %g %g\n", spec->ymin, spec->ymax );
-
-    if ( spec->xval != defspec->xval )
-        fprintf( fp, "    xvalue: %g\n", spec->xval );
-
-    if ( spec->yval != defspec->yval )
-        fprintf( fp, "    yvalue: %g\n", spec->yval );
-
-    if ( spec->xstep != defspec->xstep )
-        fprintf( fp, "    xstep: %g\n", spec->xstep );
-
-    if ( spec->ystep != defspec->ystep )
-        fprintf( fp, "    ystep: %g\n", spec->ystep );
+    if ( sp->ystep != defsp->ystep )
+        fprintf( fp, "    fl_set_positioner_ystep( obj, %g );\n", sp->ystep );
 
     fl_free_object( defobj );
 }
@@ -242,13 +193,10 @@ void
 pos_xminmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
                     long        data  FL_UNUSED_ARG )
 {
-    double min = get_finput_value( pos_attrib->xminval );
-    double max = get_finput_value( pos_attrib->xmaxval );
-
-    fl_set_positioner_xbounds( pos_attrib->vdata, min, max );
-
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_positioner_xbounds( curobj,
+                               get_finput_value( pos_attrib->xminval ),
+                               get_finput_value( pos_attrib->xmaxval ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -259,13 +207,10 @@ void
 pos_yminmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
                     long        data  FL_UNUSED_ARG )
 {
-    double min = get_finput_value( pos_attrib->yminval );
-    double max = get_finput_value( pos_attrib->ymaxval );
-
-    fl_set_positioner_ybounds( pos_attrib->vdata, min, max );
-
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_positioner_ybounds( curobj,
+                               get_finput_value( pos_attrib->yminval ),
+                               get_finput_value( pos_attrib->ymaxval ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -273,15 +218,11 @@ pos_yminmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 void
-pos_xstepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+pos_xstepchange_cb( FL_OBJECT * obj,
                     long        data  FL_UNUSED_ARG )
 {
-    double s = get_finput_value( pos_attrib->xstep );
-
-    fl_set_positioner_xstep( pos_attrib->vdata, s );
-
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_positioner_xstep( curobj, get_finput_value( obj ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -289,15 +230,11 @@ pos_xstepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 void
-pos_ystepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+pos_ystepchange_cb( FL_OBJECT * obj,
                     long        data  FL_UNUSED_ARG )
 {
-    double s = get_finput_value( pos_attrib->ystep );
-
-    fl_set_positioner_ystep( pos_attrib->vdata, s );
-
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_positioner_ystep( curobj, get_finput_value( obj ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -305,15 +242,11 @@ pos_ystepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 void
-pos_initialxvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+pos_initialxvalue_change( FL_OBJECT * obj,
                           long        data  FL_UNUSED_ARG )
 {
-    double val = get_finput_value( pos_attrib->initialxval );
-
-    fl_set_positioner_xvalue( pos_attrib->vdata, val );
-
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_positioner_xvalue( curobj, get_finput_value( obj ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -321,15 +254,11 @@ pos_initialxvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 void
-pos_initialyvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+pos_initialyvalue_change( FL_OBJECT * obj,
                           long        data  FL_UNUSED_ARG)
 {
-    double val = get_finput_value( pos_attrib->initialyval );
-
-    fl_set_positioner_yvalue( pos_attrib->vdata, val );
-
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_positioner_yvalue( curobj, get_finput_value( obj ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -337,11 +266,10 @@ pos_initialyvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 void
-pos_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+pos_returnsetting_change( FL_OBJECT * obj,
                           long        data  FL_UNUSED_ARG )
 {
-    handle_how_return_changes( pos_attrib->returnsetting,
-                               pos_attrib->vdata );
+    handle_how_return_changes( obj, curobj );
 }
 
 #include "spec/positioner_spec.c"

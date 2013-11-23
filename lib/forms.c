@@ -1319,6 +1319,26 @@ fl_prepare_form_window( FL_FORM    * form,
 
 
 /***************************************
+ ***************************************/
+
+Window
+fl_prepare_form_window_f( FL_FORM    * form,
+                          int          place,
+                          int          border,
+                          const char * fmt,
+                          ... )
+{
+    Window w;
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    w = fl_prepare_form_window( form, place, border, buf );
+    fl_free( buf );
+    return w;
+}
+
+
+/***************************************
  * Maps (displays) a form's window created with fl_prepare_form_window()
  ***************************************/
 
@@ -1380,6 +1400,26 @@ fl_show_form( FL_FORM *    form,
     fl_prepare_form_window( form, place, border, name );
     form->in_redraw = 0;
     return fl_show_form_window( form );
+}
+
+
+/***************************************
+ ***************************************/
+
+Window
+fl_show_f( FL_FORM    * form,
+           int          place,
+           int          border,
+           const char * fmt,
+           ... )
+{
+    Window w;
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    w = fl_show_form( form, place, border, buf );
+    fl_free( buf );
+    return w;
 }
 
 
@@ -1634,6 +1674,23 @@ fl_free_form( FL_FORM * form )
     fl_free( form );
 
     remove_form_from_hidden_list( form );
+}
+
+
+/***************************************
+ * Returns if a form is active
+ ***************************************/
+
+int
+fl_form_is_activated( FL_FORM * form )
+{
+    if ( ! form )
+    {
+        M_err( "fl_form_is_activated", "NULL form" );
+        return 0;
+    }
+
+    return form->deactivated == 0;
 }
 
 

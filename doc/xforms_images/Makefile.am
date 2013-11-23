@@ -9,6 +9,7 @@ figures_png = borderwidth.png \
 			  crossbutton.png \
 			  dials.png \
 			  fd_align.png \
+	          genattr.png \
 			  fdesign.png \
 			  FL_BLACK.png \
 			  FL_BLUE.png \

@@ -1408,12 +1408,16 @@ To generate a PostScript output of a form or forms, use the
 @section Doing Interaction
 
 
-To display the form @code{form} on the screen use
+To display the form @code{form} on the screen use one of
 @findex fl_show_form()
 @anchor{fl_show_form()}
+@findex fl_show_form_f()
+@anchor{fl_show_form_f()}
 @example
 Window fl_show_form(FL_FORM *form, int place, int border,
                     const char *title);
+Window fl_show_form(FL_FORM *form, int place, int border,
+                    const char *fmt, ...);
 @end example
 @noindent
 @code{place} controls the position and size of the form. @code{border}
@@ -1424,6 +1428,10 @@ window identifier of the form. For resource and identification
 purposes, the form name is taken to be the title with spaces removed
 and the first character lower-cased. E.g., if a form has a title
 @w{@code{"Foo Bar}} the forms name is derived as @code{"fooBar"}.
+The only difference between the two functions is that the first one
+accepts a simple string for the title while the second expects a
+format string like @code{printf()}, followed by the appropriate number
+of arguments.
 
 For the the location and size of the window controlled by @code{place}
 the following possibilities exist:
@@ -1568,18 +1576,27 @@ first full-bordered form will have the @code{WM_COMMAND} property set
 and is by default the applications main form.
 
 Sometimes it is necessary to have access to the window resource ID
-before the window is mapped (shown). For this, the following routine
+before the window is mapped (shown). For this, the following routines
 can be used
 @findex fl_prepare_form_window()
 @anchor{fl_prepare_form_window()}
+@findex fl_prepare_form_window_f()
+@anchor{fl_prepare_form_window_f()}
 @example
 Window fl_prepare_form_window(FL_FORM *form, int place, int border,
-const char *name);
+                              const char *name);
+Window fl_prepare_form_window_f(FL_FORM *form, int place, int border,
+                                const char *fmt, ...);
 @end example
 @noindent
-This routine creates a window that obeys any and all constraints just
-as @code{@ref{fl_show_form()}} does but remains unmapped. To map such
-a window, the following must be used
+These routines create a window that obeys any and all constraints just
+as @code{@ref{fl_show_form()}} does but remains unmapped. The only
+difference between the two functions is that the first one takes a
+simple string for the forms name while the second expects a format
+string like @code{printf()}, followed by the appropriate number of
+further arguments.
+
+To map such a window, the following must be used
 @findex fl_show_form_window()
 @anchor{fl_show_form_window()}
 @example
@@ -1784,6 +1801,15 @@ The same can also be done for all forms at once using
 void fl_deactivate_all_forms(void)
 void fl_activate_all_forms(void)
 @end example
+
+To find out if a form is currently active call
+@findex fl_form_is_activated
+@anchor{fl_form_is_activated}
+@example
+int fl_form_is_activated(FL_FORM *form);
+@end example
+A return value of @code{0} tells you that the form is currently
+deactivated.
 
 You can also register callbacks for a form that are invoked whenever
 the activation status of the form is changed:

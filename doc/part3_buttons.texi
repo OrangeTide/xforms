@@ -447,6 +447,12 @@ void fl_set_pixmapbutton_focus_outline(FL_OBJECT *obj, int yes_no);
 See also @ref{Pixmap Object}, for pixmap color and transparency
 handling.
 
+To get rid of a focus pixmap of a pixmap button use the function
+@findex fl_free_pixmap_focus_pixmap
+@anchor{fl_free_pixmap_focus_pixmap}
+@example
+void fl_free_pixmap_focus_pixmap(FL_OBJECT *obj);
+@end example
 
 
 @node Button Attributes

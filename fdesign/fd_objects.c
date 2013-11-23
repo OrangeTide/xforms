@@ -40,7 +40,9 @@
 
 #include "include/forms.h"
 #include "fd_main.h"
+#include "sp_freeobj.h"
 #include "xpm/broken.xpm"
+#include "xpm/broken.xbm"
 
 #include <string.h>
 #include <stdio.h>
@@ -248,20 +250,20 @@ object_cb( FL_OBJECT * obj,
     clear_selection( );
     redraw_the_form( 0 );
 
+    cur_class = -1;
+
     if ( line > 0 )
     {
         const char *name = fl_get_browser_line( obj, line );
         int i;
 
-        for ( i = 0; classes[ i ].cname && i < MAXCLASSES; i++ )
+        for ( i = 0; *classes[ i ].cname && i < MAXCLASSES; i++ )
             if ( ! strcmp( classes[ i ].cname, name ) )
             {
                 cur_class = classes[ i ].cn;
                 break;
             }
     }
-    else
-        cur_class = -1;
 
     select_pallette_entry( cur_class );
 }
@@ -616,7 +618,8 @@ init_classes( void )
     bl++;
 
     fl_add_browser_line( fd_control->objectbrowser, "freeobject" );
-    add_class_def( VN( FL_FREE ), "free", fd_create_free, fd_add_free, ++bl );
+    add_class_def( VN( FL_FREE ), "freeobject", fd_create_free, fd_add_free,
+                   ++bl );
     add_type_def( FL_FREE, FL_NORMAL_FREE,     "NORMAL_FREE" );
     add_type_def( FL_FREE, FL_INACTIVE_FREE,   "INACTIVE_FREE" );
     add_type_def( FL_FREE, FL_INPUT_FREE,      "INPUT_FREE" );
@@ -813,17 +816,6 @@ find_type_value( int          cln,
   ADDING OBJECTS
 ****/
 
-#define bm1_width  16
-#define bm1_height 16
-
-static unsigned char bm1_bits[ ] =
-{
-    0x00, 0x00, 0x00, 0x57, 0x7c, 0x72, 0xc4, 0x52, 0xc4, 0x00, 0x44, 0x01,
-    0x44, 0x1f, 0xfc, 0x22, 0x40, 0x42, 0x40, 0x44, 0x40, 0x43, 0xc0, 0x40,
-    0x70, 0x40, 0x8c, 0x20, 0x00, 0x1f, 0x00, 0x00
-};
-
-
 #define pm_width  28
 #define pm_height 28
 
@@ -835,6 +827,21 @@ void
 set_testing_pixmap( FL_OBJECT * ob )
 {
     fl_set_pixmap_data( ob, broken );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+set_testing_bitmap( FL_OBJECT * obj )
+{
+    if ( obj->type == FL_BITMAP )
+        fl_set_bitmap_data( obj, broken_width, broken_height,
+                            ( unsigned char * ) broken_bits );
+    else
+        fl_set_bitmapbutton_data( obj, broken_width, broken_height,
+                                  ( unsigned char * ) broken_bits );
 }
 
 
@@ -885,7 +892,7 @@ add_an_object( int      objclass,
                 type = FL_NORMAL_BITMAP;
             obj = cls->addit( type, x, y, w, h, "" );
             if ( ! fdopt.conv_only )
-                fl_set_bitmap_data( obj, bm1_width, bm1_height, bm1_bits );
+                set_testing_bitmap( obj );
             break;
 
         case FL_PIXMAP:
@@ -893,7 +900,7 @@ add_an_object( int      objclass,
                 type = FL_NORMAL_PIXMAP;
             obj = cls->addit( type, x, y, w, h, "" );
             if ( ! fdopt.conv_only )
-                fl_set_pixmap_data( obj, broken );
+                set_testing_pixmap( obj );
             break;
 
         case FL_CHART:
@@ -911,8 +918,7 @@ add_an_object( int      objclass,
                 type = FL_NORMAL_BUTTON;
             obj = cls->addit( type, x, y, w, h, "" );
             if ( ! fdopt.conv_only )
-                fl_set_bitmapbutton_data( obj, bm1_width, bm1_height,
-                                          bm1_bits );
+                set_testing_bitmap( obj );
             break;
 
         case FL_PIXMAPBUTTON:
@@ -920,7 +926,7 @@ add_an_object( int      objclass,
                 type = FL_NORMAL_BUTTON;
             obj = cls->addit( type, x, y, w, h, "" );
             if ( ! fdopt.conv_only )
-                fl_set_pixmapbutton_data( obj, broken );
+                set_testing_pixmap( obj );
             break;
 
         case FL_SLIDER:

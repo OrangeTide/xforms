@@ -31,52 +31,50 @@
 #endif
 
 #include "include/forms.h"
+#include <ctype.h>
 #include "fd_main.h"
 #include "fd_spec.h"
-#include <ctype.h>
 #include "spec/button_spec.h"
 
-extern FD_buttonattrib *create_form_buttonattrib( void );
+static FD_buttonattrib *bt_attrib = NULL;
+static FL_OBJECT * curobj = NULL;
 
-static FD_buttonattrib *bt_attrib;
-static SuperSPEC *button_spec;
-static IconInfo *info;
-
-static void show_spec( SuperSPEC * );
+static FL_OBJECT * create_default_button( FL_OBJECT * ob );
 static void get_data_name( FL_OBJECT *,
                            IconInfo * );
-static FL_OBJECT *edited;
 
 
-#define IsIconButton( cls ) \
-    ( ( cls ) == FL_BITMAPBUTTON || ( cls ) == FL_PIXMAPBUTTON )
+#define IsIconButton( obj )                     \
+    (    ( obj )->objclass == FL_BITMAPBUTTON   \
+      || ( obj )->objclass == FL_PIXMAPBUTTON )
 
 
 /***************************************
  ***************************************/
 
-void *
-get_button_spec_fdform( void )
+FL_FORM *
+button_create_spec_form( void )
 {
-    if ( ! bt_attrib )
-    {
-        bt_attrib = create_form_buttonattrib( );
-        fl_addto_choice( bt_attrib->pixalign,
-                         align_name( FL_ALIGN_CENTER, 0 ) );
-        fl_addto_choice( bt_attrib->pixalign,
-                         align_name( FL_ALIGN_TOP, 0 ) );
-        fl_addto_choice( bt_attrib->pixalign,
-                         align_name( FL_ALIGN_BOTTOM, 0 ) );
-        fl_addto_choice( bt_attrib->pixalign,
-                         align_name( FL_ALIGN_LEFT, 0 ) );
-        fl_addto_choice( bt_attrib->pixalign,
-                         align_name( FL_ALIGN_RIGHT, 0 ) );
+    if ( bt_attrib )
+        return bt_attrib->buttonattrib;
 
-        fl_set_input_return( bt_attrib->filename, FL_RETURN_END );
-        fl_set_input_return( bt_attrib->focus_filename, FL_RETURN_END );
-    }
+    bt_attrib = create_form_buttonattrib( );
 
-    return bt_attrib;
+    fl_addto_choice( bt_attrib->pixalign,
+                     align_name( FL_ALIGN_CENTER, 0 ) );
+    fl_addto_choice( bt_attrib->pixalign,
+                     align_name( FL_ALIGN_TOP, 0 ) );
+    fl_addto_choice( bt_attrib->pixalign,
+                     align_name( FL_ALIGN_BOTTOM, 0 ) );
+    fl_addto_choice( bt_attrib->pixalign,
+                     align_name( FL_ALIGN_LEFT, 0 ) );
+    fl_addto_choice( bt_attrib->pixalign,
+                     align_name( FL_ALIGN_RIGHT, 0 ) );
+
+    fl_set_input_return( bt_attrib->filename, FL_RETURN_END );
+    fl_set_input_return( bt_attrib->focus_filename, FL_RETURN_END );
+
+    return bt_attrib->buttonattrib;
 }
 
 
@@ -84,36 +82,67 @@ get_button_spec_fdform( void )
  ***************************************/
 
 void
-button_spec_restore( FL_OBJECT * obj   FL_UNUSED_ARG,
-                     long        data  FL_UNUSED_ARG )
+button_adjust_spec_form( FL_OBJECT * obj )
 {
-    superspec_to_spec( bt_attrib->vdata );
-    show_spec( get_superspec( bt_attrib->vdata ) );
+    curobj = obj;
 
-    iconbutton_filename_change( bt_attrib->filename, 0 );
-    focusiconbutton_filename_change( bt_attrib->focus_filename, 0 );
+    if ( obj->type == FL_PUSH_BUTTON || obj->type == FL_RADIO_BUTTON )
+        fl_show_object( bt_attrib->initialval );
+    else
+        fl_hide_object( bt_attrib->initialval );
 
-    redraw_the_form( 0 );
+    if ( IsIconButton( obj ) )
+    {
+        fl_show_object( bt_attrib->filename );
+        fl_show_object( bt_attrib->browse );
+        fl_show_object( bt_attrib->use_data );
+        fl_show_object( bt_attrib->fullpath );
+
+        if ( obj->objclass == FL_PIXMAPBUTTON )
+        {
+            fl_show_object( bt_attrib->pixalign );
+            fl_show_object( bt_attrib->showfocus );
+            fl_show_object( bt_attrib->focus_filename );
+            fl_show_object( bt_attrib->browse2 );
+        }
+    }
+    else
+    {
+        fl_hide_object( bt_attrib->filename );
+        fl_hide_object( bt_attrib->focus_filename );
+        fl_hide_object( bt_attrib->browse );
+        fl_hide_object( bt_attrib->browse2 );
+        fl_hide_object( bt_attrib->use_data );
+        fl_hide_object( bt_attrib->fullpath );
+    }
+
+    if ( obj->objclass != FL_PIXMAPBUTTON )
+    {
+        fl_hide_object( bt_attrib->pixalign );
+        fl_hide_object( bt_attrib->showfocus );
+        fl_hide_object( bt_attrib->focus_filename );
+        fl_hide_object( bt_attrib->browse2 );
+    }
 }
 
 
 /***************************************
  ***************************************/
 
-static void
-show_spec( SuperSPEC * spec )
+void
+button_fill_in_spec_form( FL_OBJECT * obj )
 {
-    info = spec->cspecv;
-    
-    fl_set_button( bt_attrib->react_left,   spec->mbuttons &  1 );
-    fl_set_button( bt_attrib->react_middle, spec->mbuttons &  2 );
-    fl_set_button( bt_attrib->react_right,  spec->mbuttons &  4 );
-    fl_set_button( bt_attrib->react_up,     spec->mbuttons &  8 );
-    fl_set_button( bt_attrib->react_down,   spec->mbuttons & 16);
+    FL_BUTTON_SPEC *sp = obj->spec;
+    IconInfo *info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
 
-    fl_set_button( bt_attrib->initialval, spec->int_val );
-    fl_set_button( bt_attrib->use_data,   spec->use_data );
-    fl_set_button( bt_attrib->fullpath,   spec->fullpath );
+    fl_set_button( bt_attrib->react_left,   sp->react_to[ 0 ] );
+    fl_set_button( bt_attrib->react_middle, sp->react_to[ 1 ] );
+    fl_set_button( bt_attrib->react_right,  sp->react_to[ 2 ] );
+    fl_set_button( bt_attrib->react_up,     sp->react_to[ 3 ] );
+    fl_set_button( bt_attrib->react_down,   sp->react_to[ 4 ] );
+    fl_set_button( bt_attrib->initialval,   sp->val );
+    fl_set_button( bt_attrib->use_data,     info->use_data );
+    fl_set_button( bt_attrib->fullpath,     info->fullpath );
 
     fl_set_button( bt_attrib->showfocus, info->show_focus );
     fl_set_choice_text( bt_attrib->pixalign, align_name( info->align, 0 ) );
@@ -127,95 +156,424 @@ show_spec( SuperSPEC * spec )
  ***************************************/
 
 void
-button_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
-                      long        data  FL_UNUSED_ARG )
+button_reread_spec_form( FL_OBJECT * obj )
 {
-    int d;
+    if ( ! IsIconButton( obj ) )
+        return;
 
-    obj = bt_attrib->vdata;
+    iconbutton_filename_change( bt_attrib->filename, 0 );
 
-    d =   ( fl_get_button( bt_attrib->react_left   ) ?  1 : 0 )
-        | ( fl_get_button( bt_attrib->react_middle ) ?  2 : 0 )
-        | ( fl_get_button( bt_attrib->react_right  ) ?  4 : 0 )
-        | ( fl_get_button( bt_attrib->react_up     ) ?  8 : 0 )
-        | ( fl_get_button( bt_attrib->react_down   ) ? 16 : 0 );
+    if ( obj->objclass == FL_PIXMAPBUTTON )
+        focusiconbutton_filename_change( bt_attrib->focus_filename, 0 );
 
-    fl_set_button_mouse_buttons( obj, d );
-
-    if ( obj->type == FL_PUSH_BUTTON || obj->type == FL_RADIO_BUTTON )
-        fl_set_button( obj, fl_get_button( bt_attrib->initialval ) );
-
-    spec_to_superspec( obj );
     redraw_the_form( 0 );
 }
-
 
 
 /***************************************
  ***************************************/
 
-int
-set_button_attrib( FL_OBJECT * ob )
+void
+button_restore_spec( FL_OBJECT * obj )
 {
-    bt_attrib->vdata = edited = ob;
+    IconInfo *info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
 
-    button_spec = get_superspec( ob );
+    if ( ! IsIconButton( obj ) )
+        return;
 
-    info = button_spec->cspecv;
-
-    if ( ! info )
-    {
-        M_err( "ButtonAttrib", "internal error" );
-        return -1;
-    }
-
-    fl_show_object( bt_attrib->mbuttons_label );
-    fl_show_object( bt_attrib->react_left );
-    fl_show_object( bt_attrib->react_middle );
-    fl_show_object( bt_attrib->react_right );
-    fl_show_object( bt_attrib->react_up );
-    fl_show_object( bt_attrib->react_down );
-
-    if ( ob->type == FL_PUSH_BUTTON || ob->type == FL_RADIO_BUTTON )
-        fl_show_object( bt_attrib->initialval );
-    else
-        fl_hide_object( bt_attrib->initialval );
-
-    if ( IsIconButton( ob->objclass ) )
-    {
-        fl_show_object( bt_attrib->filename );
-        fl_show_object( bt_attrib->browse );
-        fl_show_object( bt_attrib->use_data );
-        fl_show_object( bt_attrib->fullpath );
-        ( ob->objclass == FL_PIXMAPBUTTON ?
-          fl_show_object : fl_hide_object )( bt_attrib->focus_filename );
-        ( ob->objclass == FL_PIXMAPBUTTON ?
-          fl_show_object : fl_hide_object )( bt_attrib->browse2 );
-    }
+    if ( *info->filename )
+        ( obj->objclass == FL_PIXMAPBUTTON ?
+          fl_set_pixmapbutton_file : fl_set_bitmapbutton_file )
+            ( obj, info->filename );
     else
     {
-        fl_hide_object( bt_attrib->filename );
-        fl_hide_object( bt_attrib->focus_filename );
-        fl_hide_object( bt_attrib->browse );
-        fl_hide_object( bt_attrib->browse2 );
-        fl_hide_object( bt_attrib->use_data );
-        fl_hide_object( bt_attrib->fullpath );
+        /* Show the default broken image link image */
+
+        if ( obj->objclass == FL_PIXMAPBUTTON )
+            set_testing_pixmap( obj );
+        else
+            set_testing_bitmap( obj );
     }
 
-    if ( ob->objclass == FL_PIXMAPBUTTON )
+    if ( obj->objclass == FL_PIXMAPBUTTON && *info->focus_filename )
     {
-        fl_show_object( bt_attrib->pixalign );
-        fl_show_object( bt_attrib->showfocus );
+        ( curobj->objclass == FL_PIXMAPBUTTON ?
+          fl_set_pixmapbutton_focus_file : fl_set_bitmapbutton_file )
+            ( curobj, info->focus_filename );
+    }
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+button_emit_spec_fd_code( FILE      * fp,
+                          FL_OBJECT * obj )
+{
+    FL_OBJECT *defobj = defobj = create_default_button( obj );
+    FL_BUTTON_SPEC *sp    = obj->spec,
+                   *defsp = defobj->spec;
+    IconInfo *info,
+             *definfo;
+
+    if ( memcmp( sp->react_to, defsp->react_to, sizeof sp->react_to ) )
+    {
+        unsigned int rt =   ( sp->react_to[ 0 ] &  1 )
+                          | ( sp->react_to[ 1 ] &  2 )
+                          | ( sp->react_to[ 2 ] &  4 )
+                          | ( sp->react_to[ 3 ] &  8 )
+                          | ( sp->react_to[ 4 ] & 16 );
+
+        fprintf( fp, "    mbuttons: %u\n", rt );
+    }
+
+    if ( sp->val != defsp->val )
+        fprintf( fp, "    value: %d\n", sp->val );
+
+    if ( ! IsIconButton( obj ) )
+    {
+        fl_free_object( defobj );
+        return;
+    }
+
+    get_superspec( obj );
+    info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
+
+    get_superspec( defobj );
+    definfo = ( ( SuperSPEC * ) defobj->u_vdata )->cspecv;
+
+    get_data_name( obj, info );
+
+    if ( *info->filename )
+    {
+        fprintf( fp, "    file: %s\n", info->filename );
+        if ( *info->focus_filename )
+            fprintf( fp, "    focus_file: %s\n", info->focus_filename );
+        fprintf( fp, "    fullpath: %d\n", info->fullpath );
+    }
+
+    if (    obj->objclass == FL_PIXMAPBUTTON
+         && info->align != definfo->align )
+        fprintf( fp, "    align: %s\n",
+                 align_name( info->align | FL_ALIGN_INSIDE, 0 ) );
+
+    if ( info->show_focus != definfo->show_focus )
+        fprintf( fp, "    focus: %d\n", info->show_focus );
+
+    if ( *info->data && *info->filename )
+    {
+        fprintf( fp, "    data: %s\n", info->data );
+        if ( *info->focus_data )
+            fprintf( fp, "    focus_data: %s\n", info->focus_data );
+    }
+
+    if ( *info->width )
+        fprintf( fp, "    width: %s\n", info->width );
+    if ( *info->height )
+        fprintf( fp, "    height: %s\n", info->height );
+
+    free_superspec( defobj );
+    fl_free_object( defobj );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+button_emit_spec_c_code( FILE      * fp,
+                         FL_OBJECT * obj )
+{
+    FL_OBJECT *defobj = defobj = create_default_button( obj );
+    FL_BUTTON_SPEC *sp    = obj->spec,
+                   *defsp = defobj->spec;
+    IconInfo *info,
+             *definfo;
+
+    if ( sp->val != defsp->val )
+        fprintf( fp, "    fl_set_button( obj, %d );\n", sp->val );
+
+    if ( memcmp( sp->react_to, defsp->react_to, sizeof sp->react_to ) )
+    {
+        unsigned int rt =   ( sp->react_to[ 0 ] &  1 )
+                          | ( sp->react_to[ 1 ] &  2 )
+                          | ( sp->react_to[ 2 ] &  4 )
+                          | ( sp->react_to[ 3 ] &  8 )
+                          | ( sp->react_to[ 4 ] & 16 );
+
+        fprintf( fp, "    fl_set_button_mouse_buttons( obj, %u );\n", rt );
+    }
+
+    if ( ! IsIconButton( obj ) )
+    {
+        fl_free_object( defobj );
+        return;
+    }
+
+    get_superspec( obj );
+    info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
+
+    get_superspec( defobj );
+    definfo = ( ( SuperSPEC * ) defobj->u_vdata )->cspecv;
+
+    if (    obj->objclass == FL_PIXMAPBUTTON
+         && info->align != definfo->align )
+        fprintf( fp, "    fl_set_pixmapbutton_align( obj, %s, %d, %d );\n",
+                 align_name( info->align | FL_ALIGN_INSIDE, 1 ),
+                 info->dx, info->dy );
+
+    if ( *info->filename && ! info->use_data )
+    {
+        fprintf( fp, "    fl_set_%sbutton_file( obj, \"%s\" );\n",
+                 obj->objclass == FL_PIXMAPBUTTON ? "pixmap" : "bitmap",
+                 info->filename );
+
+        if ( obj->objclass == FL_PIXMAPBUTTON && *info->focus_filename )
+            fprintf( fp, "    fl_set_pixmapbutton_focus_file( obj, \"%s\" );\n",
+                     info->focus_filename );
+    }
+
+    if ( *info->data && info->use_data && *info->filename )
+    {
+        if ( obj->objclass == FL_PIXMAPBUTTON )
+        {
+            fprintf( fp, "    fl_set_pixmapbutton_data( obj, %s );\n",
+                     info->data );
+
+            if ( *info->focus_filename )
+                fprintf( fp, "    fl_set_pixmapbutton_focus_data( obj, %s );\n",
+                         info->focus_data );
+        }
+        else
+            fprintf( fp, "    fl_set_bitmapbutton_data( obj, %s, %s, "
+                     "( unsigned char * ) %s );\n",
+                     info->width, info->height, info->data );
+    }
+
+    if (    obj->objclass == FL_PIXMAPBUTTON
+         && info->show_focus != definfo->show_focus )
+        fprintf( fp, "    fl_set_pixmapbutton_focus_outline( obj, %d );\n",
+                 info->show_focus );
+
+    free_superspec( defobj );
+    fl_free_object( defobj );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+button_emit_spec_header( FILE      * fp,
+                         FL_OBJECT * obj )
+{
+    IconInfo *info;
+
+    if ( ! IsIconButton( obj ) )
+        return;
+
+    get_superspec( obj );
+    info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
+
+    if ( info->use_data && *info->data && *info->filename )
+    {
+        const char *fn = info->fullpath ? info->filename
+                                        : file_tail( info->filename );
+
+        if ( ! is_duplicate_info( fn ) )
+            fprintf( fp, "#include \"%s\"\n", fn );
+
+        if ( obj->objclass == FL_PIXMAPBUTTON && *info->focus_filename )
+        {
+            fn = info->fullpath ? info->focus_filename
+                                : file_tail( info->focus_filename );
+
+            if ( ! is_duplicate_info( fn ) )
+                fprintf( fp, "#include \"%s\"\n", fn );
+        }
+    }
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+usedata_change( FL_OBJECT * obj,
+                long        data  FL_UNUSED_ARG )
+{
+    IconInfo *info = ( ( SuperSPEC * ) curobj->u_vdata )->cspecv;
+
+    info->use_data = fl_get_button( obj );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fullpath_cb( FL_OBJECT * ob,
+             long        data  FL_UNUSED_ARG )
+{
+    IconInfo *info = ( ( SuperSPEC * ) curobj->u_vdata )->cspecv;
+
+    info->fullpath = fl_get_button( ob );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+react_to_button( FL_OBJECT * obj,
+                 long        data )
+{
+    unsigned int mb;
+
+    fl_get_button_mouse_buttons( curobj, &mb );
+
+    if ( fl_get_button( obj ) )
+        mb |= 1 << data;
+    else
+        mb &= ~ ( 1 << data );
+
+    fl_set_button_mouse_buttons( curobj, mb );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+initialval_change( FL_OBJECT * obj,
+                   long        data  FL_UNUSED_ARG )
+{
+    fl_set_button( curobj, fl_get_button( obj ) );
+    redraw_the_form( 0 );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+showfocus_change( FL_OBJECT * obj,
+                  long        data  FL_UNUSED_ARG )
+{
+    IconInfo *info = ( ( SuperSPEC * ) curobj->u_vdata )->cspecv;
+
+    info->show_focus = fl_get_button( obj );
+    fl_set_pixmapbutton_focus_outline( curobj, info->show_focus );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+iconbutton_filename_change( FL_OBJECT * ob,
+                            long        data  FL_UNUSED_ARG )
+{
+    IconInfo *info = ( ( SuperSPEC * ) curobj->u_vdata )->cspecv;
+
+    if ( ! IsIconButton( curobj ) )
+        return;
+
+    strcpy( info->filename, fl_get_input( ob ) );
+
+    if ( *info->filename )
+    {
+        ( curobj->objclass == FL_PIXMAPBUTTON ?
+          fl_set_pixmapbutton_file : fl_set_bitmapbutton_file )
+            ( curobj, info->filename );
     }
     else
     {
-        fl_hide_object( bt_attrib->pixalign );
-        fl_hide_object( bt_attrib->showfocus );
+        if ( curobj->objclass == FL_PIXMAPBUTTON )
+        {
+            fl_free_pixmap_pixmap( curobj );
+            set_testing_pixmap( curobj );
+        }
+        else
+            set_testing_bitmap( curobj );
     }
 
-    show_spec( button_spec );
+    redraw_the_form( 0 );
+}
 
-    return 0;
+
+/***************************************
+ ***************************************/
+
+void
+focusiconbutton_filename_change( FL_OBJECT * obj,
+                                 long        data  FL_UNUSED_ARG )
+{
+    IconInfo *info = ( ( SuperSPEC * ) curobj->u_vdata )->cspecv;
+
+    strcpy( info->focus_filename, fl_get_input( obj ) );
+
+    if ( *info->focus_filename )
+        fl_set_pixmapbutton_focus_file( curobj, info->focus_filename );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+pixalign_change( FL_OBJECT * obj,
+                 long        data  FL_UNUSED_ARG )
+{
+    IconInfo *info = ( ( SuperSPEC * ) curobj->u_vdata )->cspecv;
+    const char *s = fl_get_choice_text( obj );
+
+    if ( ! s )
+        return;
+
+    info->align = align_val( s );
+
+    /* Don't allow outside align */
+
+    fl_set_pixmap_align( curobj, fl_to_inside_lalign( info->align ),
+                         info->dx, info->dy );
+    redraw_the_form( 0 );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+lookfor_pixmapfile_cb( FL_OBJECT * ob   FL_UNUSED_ARG,
+                       long        data )
+{
+    const char *fn;
+    const char * def = data
+                       ? ( ( FL_BUTTON_STRUCT * ) curobj->spec )->focus_filename
+                       : ( ( FL_BUTTON_STRUCT * ) curobj->spec )->filename;
+    char buf[ 2048 ];
+    char *cwd;
+
+    fl_use_fselector( XPM_FSELECTOR );
+    fl_set_fselector_placement( FL_PLACE_MOUSE );
+
+    if ( curobj->objclass == FL_PIXMAPBUTTON )
+        fn = fl_show_fselector( "XPM file", "", "*.xpm", def );
+    else
+        fn = fl_show_fselector( "XBM file", "", "*.xbm", def );
+
+    if ( ! fn )
+        return;
+
+    if ( strstr( fn, cwd = fli_getcwd( buf, sizeof buf - 2 ) ) )
+        fn += strlen( cwd ) + 1;
+
+    ob = data ? bt_attrib->focus_filename : bt_attrib->filename;
+
+    fl_set_input( ob, fn );
+    fl_call_object_callback( ob );
 }
 
 
@@ -223,11 +581,11 @@ set_button_attrib( FL_OBJECT * ob )
  ***************************************/
 
 static FL_OBJECT *
-create_a_button( FL_OBJECT * ob )
+create_default_button( FL_OBJECT * ob )
 {
     FL_OBJECT *defobj = NULL;
 
-    /* create a default object */
+    /* Create a default object */
 
     if ( ob->objclass == FL_BUTTON )
         defobj = fl_create_button( ob->type, 0, 0, 0, 0, "" );
@@ -255,499 +613,57 @@ create_a_button( FL_OBJECT * ob )
 /***************************************
  ***************************************/
 
-static const char *
-file_tail( const char *full )
-{
-    char *p;
-
-    if ( ( p = strrchr( full, '/' ) ) )
-        return p + 1;
-
-    return full;
-}
-
-
-/***************************************
- ***************************************/
-
-void
-emit_button_header( FILE      * fp,
-                    FL_OBJECT * ob )
-{
-    SuperSPEC *spec;
-
-    if ( ! IsIconButton( ob->objclass ) )
-        return;
-
-    spec = get_superspec( ob );
-    info = spec->cspecv;
-
-    if ( info->use_data && *info->data && *info->filename )
-    {
-        char *buf = fl_malloc( strlen( info->filename ) + 20 );
-
-        if ( info->fullpath )
-            sprintf( buf, "#include \"%s\"", info->filename );
-        else
-            sprintf( buf, "#include \"%s\"", file_tail( info->filename ) );
-
-        if ( ! is_duplicate_info( ob, buf ) )
-            fprintf( fp, "%s\n", buf );
-
-        fl_free( buf );
-
-        if ( *info->focus_filename )
-        {
-            buf = fl_malloc( strlen( info->focus_filename ) + 20 );
-
-            if ( info->fullpath )
-                sprintf( buf, "#include \"%s\"", info->focus_filename );
-            else
-                sprintf( buf, "#include \"%s\"",
-                         file_tail( info->focus_filename ) );
-
-            if ( ! is_duplicate_info( ob, buf ) )
-                fprintf( fp, "%s\n", buf );
-
-            fl_free( buf );
-        }
-    }
-}
-
-
-/***************************************
- ***************************************/
-
-void
-emit_button_code( FILE      * fp,
-                  FL_OBJECT * ob )
-{
-    SuperSPEC *btspec,
-              *defspec;
-    FL_OBJECT *defobj;
-    IconInfo *definfo;
-
-    if ( ! ISBUTTON( ob->objclass ) || ! ( defobj = create_a_button( ob ) ) )
-        return;
-
-    defspec = get_superspec( defobj );
-    btspec = get_superspec( ob );
-
-    if ( btspec->mbuttons != defspec->mbuttons )
-        fprintf( fp, "    fl_set_button_mouse_buttons( obj, %d );\n",
-                 btspec->mbuttons );
-
-    if ( btspec->int_val != defspec->int_val )
-        fprintf( fp, "    fl_set_button( obj, %d );\n", btspec->int_val );
-
-    if ( ! ( info = btspec->cspecv ) )
-        return;
-
-    definfo = defspec->cspecv;
-
-    if ( *info->filename && ! info->use_data )
-    {
-        fprintf( fp, "    fl_set_%sbutton_file( obj, \"%s\" );\n",
-                 ob->objclass == FL_PIXMAPBUTTON ? "pixmap" : "bitmap",
-                 info->filename );
-        if ( *info->focus_filename )
-            fprintf( fp, "    fl_set_%sbutton_focus_file( obj, \"%s\" );\n",
-                     ob->objclass == FL_PIXMAPBUTTON ? "pixmap" : "bitmap",
-                     info->focus_filename );
-    }
-
-    if ( info->align != definfo->align && ob->objclass == FL_PIXMAPBUTTON )
-    {
-        fprintf( fp, "    fl_set_pixmapbutton_align( obj, %s, %d, %d );\n",
-                 align_name( info->align | FL_ALIGN_INSIDE, 1 ),
-                 info->dx, info->dy );
-    }
-
-    if ( *info->data && info->use_data && *info->filename )
-    {
-        if ( ob->objclass == FL_PIXMAPBUTTON )
-            fprintf( fp, "    fl_set_pixmapbutton_data( obj, %s );\n",
-                     info->data );
-    else
-        fprintf( fp, "    fl_set_bitmapbutton_data( obj, %s, %s, "
-                 "( unsigned char * ) %s );\n",
-                 info->width, info->height, info->data );
-        if ( *info->focus_filename )
-            fprintf( fp, "    fl_set_pixmapbutton_focus_data( obj, %s );\n",
-                     info->focus_data );
-    }
-
-    if (    info->show_focus != definfo->show_focus
-         && ob->objclass == FL_PIXMAPBUTTON )
-        fprintf( fp, "    fl_set_pixmapbutton_focus_outline( obj, %d );\n",
-                 info->show_focus );
-
-    fl_free_object( defobj );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-save_button_attrib( FILE      * fp,
-                    FL_OBJECT * ob )
-{
-    FL_OBJECT *defobj;
-    SuperSPEC *defspec,
-              *btspec;
-    IconInfo *definfo;
-
-    if ( ! ISBUTTON( ob->objclass ) || ! ( defobj = create_a_button( ob ) ) )
-        return;
-
-    defspec = get_superspec( defobj );
-    definfo = defspec->cspecv;
-    btspec = get_superspec( ob );
-    info = btspec->cspecv;
-
-    if ( btspec->mbuttons != defspec->mbuttons )
-        fprintf( fp, "    mbuttons: %d\n", btspec->mbuttons );
-
-    if ( btspec->int_val != defspec->int_val )
-        fprintf( fp, "    value: %d\n", btspec->int_val );
-
-    if ( ! info || ! definfo )
-    {
-        M_err( "SaveButtonAttrib", "internal error" );
-        return;
-    }
-
-    get_data_name( ob, info );
-
-    if ( *info->filename )
-    {
-        fprintf( fp, "    file: %s\n", info->filename );
-        if ( *info->focus_filename )
-            fprintf( fp, "    focus_file: %s\n", info->focus_filename );
-        fprintf( fp, "    fullpath: %d\n", info->fullpath );
-    }
-
-    if ( info->align != definfo->align )
-        fprintf( fp, "    align: %s\n",
-                 align_name( info->align | FL_ALIGN_INSIDE, 0 ) );
-
-    if ( info->show_focus != definfo->show_focus )
-        fprintf( fp, "    focus: %d\n", info->show_focus );
-
-    if ( *info->data && *info->filename )
-    {
-        fprintf( fp, "    data: %s\n", info->data );
-        if ( *info->focus_data )
-            fprintf( fp, "    focus_data: %s\n", info->focus_data );
-    }
-
-    if ( *info->width )
-        fprintf( fp, "    width: %s\n", info->width );
-    if ( *info->height )
-        fprintf( fp, "    height: %s\n", info->height );
-
-    fl_free_object( defobj );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-usedata_change( FL_OBJECT * ob,
-                long        data  FL_UNUSED_ARG )
-{
-    info->use_data = fl_get_button( ob );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-fullpath_cb( FL_OBJECT * ob,
-             long        data  FL_UNUSED_ARG )
-{
-    info->fullpath = fl_get_button( ob );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-react_to_button( FL_OBJECT * ob,
-                 long        data )
-{
-    unsigned int mb;
-
-    fl_get_button_mouse_buttons( edited, &mb );
-
-    if ( fl_get_button( ob ) )
-        mb |= 1 << data;
-    else
-        mb &= ~ ( 1 << data );
-
-    fl_set_button_mouse_buttons( edited, mb );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-initialval_change( FL_OBJECT * ob    FL_UNUSED_ARG,
-                   long        data  FL_UNUSED_ARG )
-{
-    fl_set_button( edited, fl_get_button( bt_attrib->initialval ) );
-
-    if ( auto_apply )
-        redraw_the_form( 0 );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-showfocus_change( FL_OBJECT * ob,
-                  long        data  FL_UNUSED_ARG )
-{
-    info->show_focus = fl_get_button( ob );
-    fl_set_pixmapbutton_focus_outline( edited, info->show_focus );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-iconbutton_filename_change( FL_OBJECT * ob,
-                            long        data  FL_UNUSED_ARG )
-{
-    if ( ! IsIconButton( edited->objclass ) )
-        return;
-
-    strcpy( info->filename, fl_get_input( ob ) );
-
-    if ( *info->filename )
-    {
-        ( edited->objclass == FL_PIXMAPBUTTON ?
-          fl_set_pixmapbutton_file : fl_set_bitmapbutton_file )
-            ( edited, info->filename );
-    }
-    else
-    {
-        /* Show the default broken link image */
-
-        if ( edited->objclass == FL_PIXMAPBUTTON )
-            set_testing_pixmap( edited );
-    }
-
-    if ( auto_apply )
-        redraw_the_form( 0 );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-focusiconbutton_filename_change( FL_OBJECT * ob,
-                                 long        data  FL_UNUSED_ARG )
-{
-    if ( ! IsIconButton( edited->objclass ) )
-        return;
-
-    strcpy( info->focus_filename, fl_get_input( ob ) );
-
-    if ( *info->focus_filename )
-    {
-        ( edited->objclass == FL_PIXMAPBUTTON ?
-          fl_set_pixmapbutton_focus_file : fl_set_bitmapbutton_file )
-            ( edited, info->focus_filename );
-    }
-}
-
-
-/***************************************
- ***************************************/
-
-void
-pixalign_change( FL_OBJECT * obj,
-                 long        data  FL_UNUSED_ARG )
-{
-    const char *s = fl_get_choice_text( obj );
-
-    if ( ! s )
-        return;
-
-    info->align = align_val( s );
-
-    /* Don't allow outside align */
-
-    fl_set_pixmap_align( edited, fl_to_inside_lalign( info->align ),
-                         info->dx, info->dy );
-    if ( auto_apply )
-        redraw_the_form( 0 );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-lookfor_pixmapfile_cb( FL_OBJECT * ob   FL_UNUSED_ARG,
-                       long        data )
-{
-    const char *fn;
-    const char * def = data
-                       ? ( ( FL_BUTTON_STRUCT * ) edited->spec )->focus_filename
-                       : ( ( FL_BUTTON_STRUCT * ) edited->spec )->filename;
-    char buf[ 2048 ];
-    char *cwd;
-
-    fl_use_fselector( XPM_FSELECTOR );
-    fl_set_fselector_placement( FL_PLACE_MOUSE );
-
-    if ( edited->objclass == FL_PIXMAPBUTTON )
-        fn = fl_show_fselector( "XPM file", "", "*.xpm", def );
-    else
-        fn = fl_show_fselector( "XBM file", "", "*.xbm", def );
-
-    if ( ! fn )
-        return;
-
-    if ( strstr( fn, cwd = fli_getcwd( buf, sizeof buf - 2 ) ) )
-        fn += strlen( cwd ) + 1;
-
-    ob = data ? bt_attrib->focus_filename : bt_attrib->filename;
-
-    fl_set_input( ob, fn );
-    fl_call_object_callback( ob );
-}
-
-
-/***************************************
- * Read the specified xpm/xbm filename, and return the data name
- * and size
- ***************************************/
-
 static void
-get_xpm_stuff( char * inbuf,
-               FILE * fp )
-{
-    char buf[ 256 ],
-         *p;
-    int done = 0;
-
-    if ( ! fp )
-    {
-        M_warn( "GetXPMStuff", "fp==NULL" );
-        return;
-    }
-
-    while ( fgets( buf, sizeof buf - 1, fp ) && ! done )
-    {
-        if ( ( p = strstr( buf, "static char" ) ) )
-        {
-            char *q = inbuf;
-
-            *p += 11;
-            while ( *p && *++p != '*' )
-                /* empty */;
-            while ( *p && *++p != '[' )
-            {
-                if ( ! isspace( ( unsigned char ) *p ) )
-                    *q++ = *p;
-            }
-            *q = '\0';
-        }
-    }
-}
-
-
-/***************************************
- ***************************************/
-
-static void
-get_xbm_stuff( IconInfo * in,
-               FILE     * fp  FL_UNUSED_ARG )
-{
-    char buf[ 2048 ],
-         *p;
-
-    strcpy( buf, in->filename );
-
-    if ( ( p = strrchr(buf, '/' ) ) )
-        strcpy( buf, ++p );
-
-    if ( ( p = strrchr( buf, '.' ) ) )
-        *p = '\0';
-
-    strcat( strcpy( in->width,  buf ) , "_width" );
-    strcat( strcpy( in->height, buf ), "_height" );
-    strcat( strcpy( in->data,   buf ), "_bits"   );
-}
-
-
-/***************************************
- ***************************************/
-
-static void
-get_data_name( FL_OBJECT * ob,
+get_data_name( FL_OBJECT * obj,
                IconInfo  * inf )
 {
-    FILE *fp = NULL,
-         *focus_fp = NULL;
+    FILE *fp;
 
-    if ( ! IsIconButton( ob->objclass ) )
-    {
-        *inf->filename = '\0';
-        *inf->focus_filename = '\0';
-        *inf->width = '\0';
-        *inf->height = '\0';
+    *inf->filename       = '\0';
+    *inf->focus_filename = '\0';
+    *inf->width          = '\0';
+    *inf->height         = '\0';
+
+    if ( ! IsIconButton( obj ) || ! inf->use_data )
         return;
-    }
 
-    if ( ! inf->use_data )
+    if ( *inf->filename )
     {
-        *inf->data = *inf->width = *inf->height = '\0';
-        return;
-    }
+        if ( ! ( fp = fopen( inf->filename, "r" ) ) )
+        {
+            if ( obj->objclass == FL_PIXMAPBUTTON )
+                get_xpm_stuff( inf->data, fp );
+            else
+                get_xbm_stuff( inf );
 
-    if ( *inf->filename && ! ( fp = fopen( inf->filename, "r" ) ) )
-    {
-        fprintf( stderr, "Can't open '%s'\n", inf->filename );
+            fclose( fp );
+        }
 
-        /* wipe the icon file only if there isn't anything we can do */
-
-        if ( ! inf->use_data || ! *inf->data )
+        if ( ! fp || ! *inf->data )
+        {
+            fprintf( stderr, "Can't open or read '%s'\n", inf->filename );
             *inf->filename = '\0';
+        }
+
     }
 
-    if (    *inf->focus_filename
-         && ! ( focus_fp = fopen( inf->focus_filename, "r" ) ) )
+    if ( obj->objclass != FL_PIXMAPBUTTON || ! *inf->focus_filename )
+        return;
+
+    if ( ( fp = fopen( inf->focus_filename, "r" ) ) )
     {
-        fprintf( stderr, "Can't open focusfile '%s'\n", inf->focus_filename );
-        if ( ! inf->use_data || ! *inf->focus_data )
-            *inf->focus_filename = '\0';
-    }
-
-    if ( ob->objclass == FL_PIXMAPBUTTON )
-    {
-        get_xpm_stuff( inf->data, fp );
-        get_xpm_stuff( inf->focus_data, focus_fp );
-    }
-    else
-        get_xbm_stuff( inf, fp );
-
-    if ( fp )
+        get_xpm_stuff( inf->focus_data, fp );
         fclose( fp );
-    if ( focus_fp )
-        fclose( focus_fp );
+    }
+
+    if ( ! fp || ! *inf->focus_data )
+    {
+        fprintf( stderr, "Can't open or read focusfile '%s'\n",
+                 inf->focus_filename );
+        *inf->focus_filename = '\0';
+    }
 }
+
 
 #include "spec/button_spec.c"
 

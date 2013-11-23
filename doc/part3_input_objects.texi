@@ -56,7 +56,7 @@ resulting string will be accepted by @code{strtod()} in its entirety
 @tindex FL_INT_INPUT
 @anchor{FL_INT_INPUT}
 @item FL_INT_INPUT
-Only an integers can be typed in (e.g. -86). The resulting tring will
+Only an integers can be typed in (e.g. -86). The resulting string will
 be accepted by @code{strtol()} in its entirety (but may be too big to
 be represented by an @code{float} or @code{double}).
 

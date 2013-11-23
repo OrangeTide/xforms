@@ -43,8 +43,6 @@ FD_helpform *fd_help;
 FD_attrib *fd_attrib;
 FD_generic_attrib *fd_generic_attrib;
 
-FD_nullattrib *fd_nullattrib;
-
 extern int fd_helpfontsize;
 extern int fd_align_fontsize,
            fd_type_fontsize;
@@ -77,7 +75,6 @@ create_the_forms( void )
 
     fd_attrib = create_form_attrib( );
     fd_generic_attrib = create_form_generic_attrib( );
-    fd_nullattrib = create_form_nullattrib( );
 
     init_attribform( );
 
@@ -89,7 +86,7 @@ create_the_forms( void )
 
     fd_resize = create_form_resize( );
 
-    /* help form */
+    /* Help form */
 
     fd_help = create_form_helpform( );
     init_helpform( );
@@ -172,7 +169,6 @@ init_controlform( void )
 static void
 init_attribform( void )
 {
-    int a = 1;
     FL_OBJECT *t;
 
     if ( fl_get_visual_depth( ) <= 2 )
@@ -182,19 +178,11 @@ init_attribform( void )
     fl_fit_object_label( fd_attrib->readyobj, 12, 1 );
     fd_attrib->attrib->y = 5;
 
-    fl_get_resource( "autoApply", "AutoApply", FL_BOOL, "1", &a, 0 );
-    fl_set_button( fd_attrib->autoapplyobj, a );
-    fl_call_object_callback( fd_attrib->autoapplyobj );
-
     fl_set_tabfolder_autofit( fd_attrib->attrib_folder, FL_ENLARGE_ONLY );
 
     t = fl_addto_tabfolder( fd_attrib->attrib_folder, " Generic ",
                             fd_generic_attrib->generic_attrib );
     fl_set_object_shortcut( t, "#G", 1 );
-
-    t = fl_addto_tabfolder( fd_attrib->attrib_folder, "  Spec   ",
-                            fd_nullattrib->nullattrib );
-    fl_set_object_shortcut( t, "#S", 1 );
 }
 
 

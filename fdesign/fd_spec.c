@@ -36,215 +36,276 @@
 #include <string.h>
 #include <ctype.h>
 
+#include "sp_slider.h"
+#include "sp_counter.h"
+#include "sp_spinner.h"
+#include "sp_dial.h"
+#include "sp_positioner.h"
+#include "sp_twheel.h"
+#include "sp_button.h"
+#include "sp_pixmap.h"
+#include "sp_scrollbar.h"
+#include "sp_browser.h"
+#include "sp_choice.h"
+#include "sp_menu.h"
+#include "sp_xyplot.h"
+#include "sp_freeobj.h"
+
+
 #define MAXOBJCLASS 8
 
 typedef struct
 {
-    int    objclass[ MAXOBJCLASS ];
-    void * ( * get_fdform )( void );                    /* spec form     */
-    int    ( * set_spec )( FL_OBJECT * );               /* interaction   */
-    void   ( * restore_spec )( FL_OBJECT *, long );     /* how to restore */
-    void   ( * apply_attrib )( FL_OBJECT *, long );    /* */
-    void   ( * save_attrib )( FILE *, FL_OBJECT * );    /* write to .fd  */
-    void   ( * emit_code )( FILE *, FL_OBJECT * );      /* write fl code */
-    void   ( * emit_header )( FILE *, FL_OBJECT * );    /* write fl code */
-    void   ( * emit_global )( FILE *, FL_OBJECT * );    /* write fl code */
-    void * vdata;
+	/* List of object classes this entry is for */
+
+    int objclass[ MAXOBJCLASS ];
+
+    /* Function to be called for changing the objects type */
+
+    void ( * change_type )( FL_OBJECT *, int );
+
+	/* Function for creating the form for editing the specific object
+	   attributes */
+
+	FL_FORM * ( * create_spec_form  )( void                );
+
+	/* Function for adjustments of the form for e.g. the objects type */
+
+	void ( * adjust_spec_form  )( FL_OBJECT *         );
+
+	/* Function for setting up the form with the objects attributes */
+
+	void ( * fill_in_spec_form )( FL_OBJECT *         );
+
+	/* Function for setting up the object attributes according to the forms
+	   data */
+
+	void ( * reread_spec_form  )( FL_OBJECT *         );
+
+    /* Object specific code to be run when object got restored */
+
+    void ( * restore_spec )( FL_OBJECT * );
+
+	/* Function for emitting code for the fd file for the object */
+
+	void ( * emit_spec_fd_code )( FILE *, FL_OBJECT * );
+
+	/* Function for emitting C code for the object */
+
+	void ( * emit_spec_c_code  )( FILE *, FL_OBJECT * );
+
+	/* Function for emitting header code for the object */
+
+	void ( * emit_spec_header  )( FILE *, FL_OBJECT * );
+
+    /* */
+
+    void ( * emit_spec_global_header )( FILE *, FL_OBJECT * );
+
 } ObjSPEC;
 
 static ObjSPEC objspec[ ] =
 {
     {
-        { FL_SLIDER, FL_VALSLIDER },
-        get_slider_spec_fdform,
-        set_slider_attrib,
-        slider_spec_restore,
-        slider_apply_attrib,
-        save_slider_attrib,
-        emit_slider_code,
+        { FL_SLIDER,
+		  FL_VALSLIDER },
         NULL,
+        slider_create_spec_form,
+        slider_adjust_spec_form,
+        slider_fill_in_spec_form,
+        slider_reread_spec_form,
+        NULL,
+        slider_emit_spec_fd_code,
+        slider_emit_spec_c_code,
         NULL,
         NULL
     },
 
     {
         { FL_COUNTER },
-        get_counter_spec_fdform,
-        set_counter_attrib,
-        counter_spec_restore,
-        counter_apply_attrib,
-        save_counter_attrib,
-        emit_counter_code,
         NULL,
+        counter_create_spec_form,
+        counter_adjust_spec_form,
+        counter_fill_in_spec_form,
+        counter_reread_spec_form,
+        NULL,
+        counter_emit_spec_fd_code,
+        counter_emit_spec_c_code,
         NULL,
         NULL
     },
 
     {
         { FL_SPINNER },
-        get_spinner_spec_fdform,
-        set_spinner_attrib,
-        spinner_spec_restore,
-        spinner_apply_attrib,
-        save_spinner_attrib,
-        emit_spinner_code,
+        spinner_change_type,
+        spinner_create_spec_form,
+        spinner_adjust_spec_form,
+        spinner_fill_in_spec_form,
+        spinner_reread_spec_form,
         NULL,
+        spinner_emit_spec_fd_code,
+        spinner_emit_spec_c_code,
         NULL,
         NULL
     },
 
     {
         { FL_DIAL },
-        get_dial_spec_fdform,
-        set_dial_attrib,
-        dial_spec_restore,
-        dial_apply_attrib,
-        save_dial_attrib,
-        emit_dial_code,
         NULL,
+        dial_create_spec_form,
+        NULL,
+        dial_fill_in_spec_form,
+        dial_reread_spec_form,
+        NULL,
+        dial_emit_spec_fd_code,
+        dial_emit_spec_c_code,
         NULL,
         NULL
     },
 
     {
         { FL_POSITIONER },
-        get_pos_spec_fdform,
-        set_pos_attrib,
-        pos_spec_restore,
-        positioner_apply_attrib,
-        save_pos_attrib,
-        emit_pos_code,
         NULL,
+        positioner_create_spec_form,
+        NULL,
+        positioner_fill_in_spec_form,
+        positioner_reread_spec_form,
+        NULL,
+        positioner_emit_spec_fd_code,
+        positioner_emit_spec_c_code,
         NULL,
         NULL
     },
 
     {
         { FL_THUMBWHEEL },
-        get_twheel_spec_fdform,
-        set_twheel_attrib,
-        twheel_spec_restore,
-        twheel_apply_attrib,
-        save_twheel_attrib,
-        emit_twheel_code,
         NULL,
+        thwheel_create_spec_form,
         NULL,
-        NULL
-    },
-
-    {
-        { FL_PIXMAPBUTTON, FL_BITMAPBUTTON, FL_BUTTON, FL_CHECKBUTTON,
-          FL_ROUNDBUTTON, FL_LIGHTBUTTON, FL_ROUND3DBUTTON, FL_LABELBUTTON },
-        get_button_spec_fdform,
-        set_button_attrib,
-        button_spec_restore,
-        button_apply_attrib,
-        save_button_attrib,
-        emit_button_code,
-        emit_button_header,
+        twheel_fill_in_spec_form,
+        twheel_reread_spec_form,
+        NULL,
+        twheel_emit_spec_fd_code,
+        twheel_emit_spec_c_code,
         NULL,
         NULL
     },
 
     {
-        { FL_PIXMAP, FL_BITMAP },
-        get_pixmap_spec_fdform,
-        set_pixmap_attrib,
-        pixmap_spec_restore,
+        { FL_PIXMAPBUTTON,
+		  FL_BITMAPBUTTON,
+		  FL_BUTTON,
+		  FL_CHECKBUTTON,
+          FL_ROUNDBUTTON,
+		  FL_LIGHTBUTTON,
+		  FL_ROUND3DBUTTON,
+		  FL_LABELBUTTON },
         NULL,
-        save_pixmap_attrib,
-        emit_pixmap_code,
-        emit_pixmap_header,
+        button_create_spec_form,
+        button_adjust_spec_form,
+        button_fill_in_spec_form,
+        button_reread_spec_form,
+        button_restore_spec,
+        button_emit_spec_fd_code,
+        button_emit_spec_c_code,
+        button_emit_spec_header,
+        NULL
+    },
+
+    {
+        { FL_PIXMAP,
+		  FL_BITMAP },
         NULL,
+        pixmap_create_spec_form,
+        pixmap_adjust_spec_form,
+        pixmap_fill_in_spec_form,
+        pixmap_reread_spec_form,
+        pixmap_restore_spec,
+        pixmap_emit_spec_fd_code,
+        pixmap_emit_spec_c_code,
+        pixmap_emit_spec_header,
         NULL
     },
 
     {
         { FL_SCROLLBAR },
-        get_scrollbar_spec_fdform,
-        set_scrollbar_attrib,
-        scrollbar_spec_restore,
-        scrollbar_apply_attrib,
-        save_scrollbar_attrib,
-        emit_scrollbar_code,
         NULL,
+        scrollbar_create_spec_form,
+        scrollbar_adjust_spec_form,
+        scrollbar_fill_in_spec_form,
+        scrollbar_reread_spec_form,
+        NULL,
+        scrollbar_emit_spec_fd_code,
+        scrollbar_emit_spec_c_code,
         NULL,
         NULL
     },
 
     {
         { FL_BROWSER },
-        get_browser_spec_fdform,
-        set_browser_attrib,
-        browser_spec_restore,
-        browser_apply_attrib,
-        save_browser_attrib,
-        emit_browser_code,
         NULL,
+        browser_create_spec_form,
+        NULL,
+        browser_fill_in_spec_form,
+        NULL,
+        NULL,
+        browser_emit_spec_fd_code,
+        browser_emit_spec_c_code,
         NULL,
         NULL
     },
 
     {
         { FL_CHOICE },
-        get_choice_spec_fdform,
-        set_choice_attrib,
-        choice_spec_restore,
         NULL,
-        save_choice_attrib,
-        emit_choice_code,
-        emit_menu_header,
-        emit_menu_global,
+        choice_create_spec_form,
+        NULL,
+        choice_fill_in_spec_form,
+        NULL,
+        NULL,
+        choice_emit_spec_fd_code,
+        choice_emit_spec_c_code,
+        NULL,
         NULL
     },
 
     {
         { FL_MENU },
-        get_menu_spec_fdform,
-        set_menu_attrib,
-        menu_spec_restore,
         NULL,
-        save_menu_attrib,
-        emit_menu_code,
-        emit_menu_header,
-        emit_menu_global,
-        NULL
+        menu_create_spec_form,
+        NULL,
+        menu_fill_in_spec_form,
+        NULL,
+        NULL,
+        menu_emit_spec_fd_code,
+        menu_emit_spec_c_code,
+        menu_emit_spec_header,
+        menu_emit_spec_global_header
     },
 
     {
         { FL_XYPLOT },
-        get_xyplot_spec_fdform,
-        set_xyplot_attrib,
-        xyplot_spec_restore,
         NULL,
-        save_xyplot_attrib,
-        emit_xyplot_code,
+        xyplot_create_spec_form,
+        xyplot_adjust_spec_form,
+        xyplot_fill_in_spec_form,
         NULL,
+        NULL,
+        xyplot_emit_spec_fd_code,
+        xyplot_emit_spec_c_code,
         NULL,
         NULL
     },
 
     {
         { FL_FREE },
-        get_freeobj_spec_fdform,
-        set_freeobj_attrib,
-        freeobj_spec_restore,
         NULL,
-        save_freeobj_attrib,
-        emit_freeobj_code,
+        freeobj_create_spec_form,
+        freeobj_adjust_spec_form,
+        freeobj_fill_in_spec_form,
+        freeobj_reread_spec_form,
         NULL,
-        NULL,
-        NULL
-    },
-
-    {                          /* sentinel */
-        { -1 },
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
+        freeobj_emit_spec_fd_code,
         NULL,
         NULL,
         NULL
@@ -253,75 +314,122 @@ static ObjSPEC objspec[ ] =
 
 
 /***************************************
- * Check if an object has a spec info functions
+ * Find the entry in the list of classes for the objects class
  ***************************************/
 
 static ObjSPEC *
 find_entry( FL_OBJECT * ob )
 {
-    ObjSPEC *attrib = objspec;
-    int *cls;
+    size_t i;
 
-    for ( ; ob && attrib->objclass[ 0 ] >= 0; attrib++ )
+    for ( i = 0; i < sizeof objspec / sizeof *objspec; i++ )
     {
-        cls = attrib->objclass;
+        int *cls = objspec[ i ].objclass;
+
         for ( ; *cls > 0; cls++ )
             if ( *cls == ob->objclass )
-                return attrib;
+                return objspec + i;
     }
 
-    return 0;
+    return NULL;
 }
 
 
 /***************************************
  ***************************************/
 
+/***************************************
+ * Returns the form to be shown for the "Spec" tab folder
+ ***************************************/
+
 void
-obj_spec_restore( FL_OBJECT * obj )
+spec_change_type( FL_OBJECT * obj,
+                  int         new_type )
+{
+    ObjSPEC *spec = find_entry( obj );
+    FL_OBJECT * defobj;
+
+    if ( obj->type == new_type )
+        return;
+
+	/* Different types may have different default box types. If the user
+	   obviously didn't change the box type (i.e. expects the default) make
+	   sure that the box type is the default for the object type we switch
+	   to. */
+
+    defobj = find_class_default( obj->objclass, new_type );
+
+    if ( defobj && defobj->boxtype == obj->boxtype )
+        obj->boxtype = defobj->boxtype;
+
+    if ( spec && spec->change_type )
+        spec->change_type( obj, new_type );
+    else
+        obj->type = new_type;
+}
+		
+
+/***************************************
+ * Returns the form to be shown for the "Spec" tab folder (or NULL If none
+ * exists)
+ ***************************************/
+
+FL_FORM *
+create_spec_form( FL_OBJECT * obj )
 {
     ObjSPEC *spec = find_entry( obj );
 
-    if ( spec && spec->vdata && spec->restore_spec )
-        spec->restore_spec( NULL, 0 );
+    return ( spec && spec->create_spec_form ) ?
+           spec->create_spec_form( ) : NULL;
 }
 
 
 /***************************************
- * Callback function for SPEC folder. Entry point from fd_attrib.c
+ * Prepare the form for the object specific attributes for becoming shown
+ * - the form may need adjustments because e.g. the objects type has been
+ * changed and then the form content also have to be modified. Then fill
+ * in all the objects attributes.
  ***************************************/
 
 void
-set_objclass_spec_attributes( FL_OBJECT * ob,
-                              long        data  FL_UNUSED_ARG )
+prepare_spec_form( FL_OBJECT * obj )
 {
-    ObjSPEC *spec;
-    FD_Any *fd;
+    ObjSPEC *spec = find_entry( obj );
 
-    fl_freeze_form( fd_attrib->attrib );
+	if ( ! spec )
+		return;
 
-    if ( ( spec = find_entry( ob ) ) )
-    {
-        spec->vdata = fd = spec->get_fdform( );
+	/* The form may need some modification,. e.g because the objects type
+	   has been changed */
 
-        if ( spec->set_spec && spec->set_spec( ob ) >= 0 )
-        {
-            fl_set_object_callback( fd_attrib->restoreobj,
-                                    spec->restore_spec, 0 );
-            fl_set_object_callback( fd_attrib->applyobj,
-                                    spec->apply_attrib, 0 );
-            fl_replace_folder_bynumber( fd_attrib->attrib_folder, 2,
-                                        fd->form );
-        }
-        else
-            fl_replace_folder_bynumber( fd_attrib->attrib_folder, 2,
-                                        fd_nullattrib->nullattrib );
-    }
-    else
-        fl_replace_folder_bynumber( fd_attrib->attrib_folder, 2,
-                                    fd_nullattrib->nullattrib );
+	if ( spec->adjust_spec_form )
+		spec->adjust_spec_form( obj );
 
-    fl_unfreeze_form( fd_attrib->attrib );
+	/* Fill in the current settings of the objects attributes into the form */
+
+	if ( spec->fill_in_spec_form )
+		spec->fill_in_spec_form( obj );
+}
+
+
+/***************************************
+ * When switching back to the "Generic" form or on end of editing
+ * an input field may not have been processed yet, thus reread all
+ * input fields in the form for the object specific attributes (and
+ * make sure the object gets shown with the potentially modified
+ * attributes).
+ ***************************************/
+
+void
+reread_spec_form( FL_OBJECT * obj )
+{
+    ObjSPEC *spec = find_entry( obj );
+
+    if ( spec && spec->reread_spec_form )
+	{
+		spec->reread_spec_form( obj );
+		redraw_the_form( 0 );
+	}
 }
 
 
@@ -329,12 +437,15 @@ set_objclass_spec_attributes( FL_OBJECT * ob,
  ***************************************/
 
 void
-cleanup_spec( FL_OBJECT * ob )
+restore_spec( FL_OBJECT * obj )
 {
-    ObjSPEC *spec = find_entry( ob );
+    ObjSPEC *spec = find_entry( obj );
 
-    if ( spec )
-        spec->vdata = NULL;
+    if ( spec && spec->restore_spec )
+	{
+		spec->restore_spec( obj );
+		redraw_the_form( 0 );
+	}
 }
 
 
@@ -343,14 +454,56 @@ cleanup_spec( FL_OBJECT * ob )
 
 void
 save_objclass_spec_info( FILE      * fp,
-                         FL_OBJECT * ob )
+                         FL_OBJECT * obj )
 {
-    ObjSPEC *attrib = find_entry( ob );
+    ObjSPEC *spec = find_entry( obj );
 
-    if ( attrib && attrib->save_attrib )
-        attrib->save_attrib( fp, ob );
-    else
-        M_warn( "save info", " class %d unknown", ob->objclass );
+    if ( spec && spec->emit_spec_fd_code )
+        spec->emit_spec_fd_code( fp, obj );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+emit_objclass_spec_info( FILE      * fp,
+                         FL_OBJECT * obj )
+{
+    ObjSPEC *spec = find_entry( obj );
+
+    if ( spec && spec->emit_spec_c_code )
+        spec->emit_spec_c_code( fp, obj );
+}
+
+
+/***************************************
+ * Emit (file scope) variable code
+ ***************************************/
+
+void
+emit_objclass_spec_header( FILE      * fp,
+                           FL_OBJECT * obj )
+{
+    ObjSPEC *spec = find_entry( obj );
+
+    if ( spec && spec->emit_spec_header )
+        spec->emit_spec_header( fp, obj );
+}
+
+
+/***************************************
+ * Emit global variable declarations
+ ***************************************/
+
+void
+emit_objclass_spec_global( FILE      * fp,
+                           FL_OBJECT * obj )
+{
+    ObjSPEC *spec = find_entry( obj );
+
+    if ( spec && spec->emit_spec_global_header )
+        spec->emit_spec_global_header( fp, obj );
 }
 
 
@@ -1369,8 +1522,8 @@ ff_read_sp_dir( FL_OBJECT * obj  FL_UNUSED_ARG,
 
 /***************************************
  * Duplication of code in fd_file.c since in older versions
- * the return setting was considered an "object specific"
- * attribute
+ * the return setting was considered an object specific
+ * attribute while now all objects have it
  ***************************************/
 
 static int 
@@ -1607,63 +1760,6 @@ load_objclass_spec_info( FL_OBJECT * obj,
 }
 
 
-/***************************************
- * Emit (file scope) variable code
- ***************************************/
-
-void
-emit_objclass_spec_header( FILE      * fp,
-                           FL_OBJECT * ob )
-{
-    ObjSPEC *attrib = find_entry( ob );
-
-    if ( attrib && attrib->emit_header )
-        attrib->emit_header( fp, ob );
-}
-
-
-/***************************************
- * Emit global variable declarations
- ***************************************/
-
-void
-emit_objclass_spec_global( FILE      * fp,
-                           FL_OBJECT * ob )
-{
-    ObjSPEC *attrib = find_entry( ob );
-
-    if ( attrib && attrib->emit_global )
-        attrib->emit_global( fp, ob );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-emit_objclass_spec_info( FILE      * fp,
-                         FL_OBJECT * ob )
-{
-    ObjSPEC *attrib = find_entry( ob );
-
-    if ( attrib && attrib->emit_code )
-        attrib->emit_code( fp, ob );
-    else
-        M_warn( "emit code", " class %d unknown", ob->objclass );
-}
-
-
-/***************************************
- ***************************************/
-
-int
-has_class_spec_info( FL_OBJECT * ob )
-{
-    return find_entry( ob ) != NULL;
-}
-
-
-
 /* Utilities */
 
 /***************************************
@@ -1675,6 +1771,9 @@ set_finput_value( FL_OBJECT * ob,
                   int         prec)
 {
     char buf[ 64 ];
+
+    if ( prec > 20 )
+        prec = 20;
 
     if ( prec >= 0 )
     {

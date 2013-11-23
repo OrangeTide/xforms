@@ -35,16 +35,8 @@
 #include "include/forms.h"
 #include "fd_main.h"
 
-#define MAXREC   80
-#define MAXLEN   79
-
-typedef struct {
-    FL_FORM * form;
-    char      buf[ MAXLEN + 1 ];
-} CodeInfo;
-
-static CodeInfo info[ MAXREC ];
-static int ninfo;
+static char ** dup_info_cache = NULL;
+static size_t n_dup_info = 0;
 
 
 /***************************************
@@ -53,7 +45,13 @@ static int ninfo;
 void
 reset_dupinfo_cache( void )
 {
-    ninfo = 0;
+    size_t i;
+
+    for ( i = 0; i < n_dup_info; i++ )
+        fl_free( dup_info_cache[ i ] );
+
+    fli_safe_free( dup_info_cache );
+    n_dup_info = 0;
 }
 
 
@@ -61,22 +59,22 @@ reset_dupinfo_cache( void )
  ***************************************/
 
 int
-is_duplicate_info( FL_OBJECT  * ob  FL_UNUSED_ARG,
-                   const char * s )
+is_duplicate_info( const char * s )
 {
-    int i;
+    size_t i;
 
-    for ( i = 0; i < ninfo; i++ )
-        if ( strcmp( s, info[ i ].buf ) == 0 )
+    for ( i = 0; i < n_dup_info; i++ )
+        if ( ! strcmp( s, dup_info_cache[ i ] ) )
             return 1;
 
-    if ( ninfo == MAXREC )
+    if ( ! (    ( dup_info_cache =
+                         fl_realloc( dup_info_cache,
+                                     ++n_dup_info * sizeof dup_info_cache ) )
+             && ( dup_info_cache[ n_dup_info - 1 ] = fl_strdup( s ) ) ) )
     {
-        fprintf( stderr, "dupinfo cache overflown\n" );
-        ninfo--;
+        fprintf( stderr, "Running oit of memory\n" );
+        exit( 1 );
     }
-
-    fli_sstrcpy( info[ ninfo++ ].buf, s, MAXLEN );
 
     return 0;
 }

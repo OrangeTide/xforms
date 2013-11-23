@@ -70,6 +70,8 @@ FL_EXPORT void fl_set_scrollbar_value( FL_OBJECT * ob,
 FL_EXPORT void fl_set_scrollbar_size( FL_OBJECT * ob,
                                       double      val );
 
+FL_EXPORT double fl_get_scrollbar_size( FL_OBJECT * obj );
+
 FL_EXPORT void fl_set_scrollbar_increment( FL_OBJECT * ob,
                                            double      l,
                                            double      r );

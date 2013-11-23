@@ -6,7 +6,7 @@
 .\"   ul | more -fsk to view
 .\"
 .\"
-.TH FDESIGN 1L "October 2009" "Version 1.0.92" "Forms Library"
+.TH FDESIGN 1L "November 2013" "Version 1.2.0" "Forms Library"
 .SH NAME
 fdesign \-  Forms Library User Interface Designer
 .\"
@@ -23,19 +23,22 @@ fdesign \-  Forms Library User Interface Designer
 [-xformoptions] [-options] [files]
 .SH DESCRIPTION
 .I fdesign
-is a GUI builder that helps the construction of graphical user interface
-in a WYSIWYG (what you see is what you get) way by allowing
-the user to directly manipulate various objects, such as buttons,
-sliders and menus etc.  Once a satisfactory UI is constructed,
-the user can save the composed interface into an external file
-containing some program code. When compiled, linked with the
+is a GUI builder that helps in the construction of graphical user
+interface in a WYSIWYG ("what you see is what you get") way by
+allowing the user to directly manipulate various objects, such as
+buttons, sliders and menus etc.  Once a satisfactory UI is constructed,
+the user can save the composed interface into a set of external files.
+Files with the extension '.fd' contain all information about the objects
+and can be read in again by 
+.IR fdesign .
+The files with C code and header files when compiled and linked
+against the
 .BR "Forms Library" ,
-and executed, the generated code
-would, at run time (or print time for PostScript output), construct
-the exact same interfaces as those seen within
+generate code that at run-time constructs the exact same interface
+as the ones seen within
 .IR fdesign .
 
-A variety of output language is possible via external
+A variety of output languages is possible via external
 filters.  As of this writing, C, perl, ada95, Fortran, pascal,
 and PostScript output filters are known to exist.
 

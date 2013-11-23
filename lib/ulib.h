@@ -32,7 +32,7 @@
 
 #ifndef FL_EXPORT
 #  if ! defined FL_WIN32 || ! defined SHARED_LIB
-#      define FL_EXPORT extern
+#      define FL_EXPORT
 #  else
 #      ifdef MAKING_FORMS
 #          define FL_EXPORT __declspec( dllexport ) extern
@@ -45,29 +45,29 @@
 
 /***************** Portable IO operations *******************{**/
 
-extern int fli_readint( FILE * );
-extern int fli_readpint( FILE * );
-extern int fli_readhexint( FILE * );
-extern int fli_fget4MSBF( FILE * );
-extern int fli_fput4MSBF( int,
+int fli_readint( FILE * );
+int fli_readpint( FILE * );
+int fli_readhexint( FILE * );
+int fli_fget4MSBF( FILE * );
+int fli_fput4MSBF( int,
                          FILE * );
-extern int fli_fget2LSBF( FILE * );
-extern int fli_fput2LSBF( int,
-                         FILE * );
-extern int fli_fget2MSBF( FILE * );
-extern int fli_fput2MSBF( int,
-                         FILE * );
-extern int fli_fget4LSBF( FILE *);
-extern int fli_fput4LSBF( int,
-                         FILE * );
+int fli_fget2LSBF( FILE * );
+int fli_fput2LSBF( int,
+                   FILE * );
+int fli_fget2MSBF( FILE * );
+int fli_fput2MSBF( int,
+                   FILE * );
+int fli_fget4LSBF( FILE *);
+int fli_fput4LSBF( int,
+                   FILE * );
 
 
 /********** End of  Portable IO *******************}**/
 
-extern char * fli_de_space( char * );
-extern char * fli_space_de( char * );
-extern char * fli_de_space_de( char * );
-extern char * fli_nuke_all_non_alnum( char * );
+char * fli_de_space( char * );
+char * fli_space_de( char * );
+char * fli_de_space_de( char * );
+char * fli_nuke_all_non_alnum( char * );
 
 
 /*********************************************************************
@@ -85,9 +85,9 @@ extern char * fli_nuke_all_non_alnum( char * );
 # define ML_DEBUG    3
 # define ML_TRACE    4
 
-extern FL_ERROR_FUNC fli_error_setup( int,
-                                      const char *,
-                                      int );
+FL_ERROR_FUNC fli_error_setup( int,
+                               const char *,
+                               int );
 
 extern FL_ERROR_FUNC efp_;
 extern FL_ERROR_FUNC user_error_function_;
@@ -116,9 +116,9 @@ extern FL_ERROR_FUNC user_error_function_;
 
 /****** Misc. control routines **********/
 
-extern void fli_set_msg_threshold( int );
+void fli_set_msg_threshold( int );
 
-extern const char *fli_get_syserror_msg( void );
+const char *fli_get_syserror_msg( void );
 
 
 #endif /* TC_ULIB_H */

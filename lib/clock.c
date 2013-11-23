@@ -166,10 +166,6 @@ draw_clock( int      type  FL_UNUSED_ARG,
            f2,
            f3;
 
-#if FL_DEBUG >= ML_DEBUG
-    M_info( "draw_clock", "entering" );
-#endif
-
     w -= 4;
     h -= 4;
 

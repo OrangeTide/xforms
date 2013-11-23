@@ -42,22 +42,31 @@ fdesign_SOURCES = \
 	fd_super.c \
 	fd_util.c \
 	sp_browser.c \
+	sp_browser.h \
 	sp_button.c \
+	sp_button.h \
 	sp_choice.c \
+	sp_choice.h \
 	sp_counter.c \
+	sp_counter.h \
 	sp_spinner.c \
+	sp_spinner.h \
 	sp_dial.c \
+	sp_dial.h \
 	sp_freeobj.c \
+	sp_freeobj.h \
 	sp_menu.c \
+	sp_menu.h \
 	sp_pixmap.c \
+	sp_pixmap.h \
 	sp_positioner.c \
+	sp_positioner.h \
 	sp_scrollbar.c \
+	sp_scrollbar.h \
 	sp_slider.c \
+	sp_slider.h \
 	sp_twheel.c \
+	sp_twheel.h \
 	sp_xyplot.c \
-	sp_util.c \
-	xpm.h
-
-#	viewforms.c \
-#	viewforms.h \
-#	viewforms_main.c
+	sp_xyplot.h \
+	sp_util.c

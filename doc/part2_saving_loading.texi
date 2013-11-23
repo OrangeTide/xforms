@@ -77,7 +77,7 @@ extern FD_bar *create_form_bar(void);
 #include "foobar.h"
 
 FD_foo *create_form_foo(void) @{
-    FD_foo *fdui = fl_calloc(1, sizeof *dhui);
+    FD_foo *fdui = fl_calloc(1, sizeof *fdui);
 
     fdui->foo = fl_bgn_form(....);
     fdui->f1obj1 = fl_add_aaaa(....);

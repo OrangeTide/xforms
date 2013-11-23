@@ -1,3 +1,15 @@
+2013-11-23 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib: for quite a number of functions taking a string
+	as their last argument there's now another version
+	with the same name but with '_f' appended that allows
+	to pass the function a printf()-like format srring,
+	followed by the appropriate number of arguments.
+
+	* fdesign: editing object attributes has gotten a
+	rework, it now hopefully works more consistently
+	(and, in some cases, correctly;-)
+
 2013-11-07 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/input.c: Bug in validator for float inputs fixed

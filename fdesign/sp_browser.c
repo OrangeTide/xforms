@@ -33,33 +33,30 @@
 #include "include/forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
+#include "sp_browser.h"
 #include "private/pbrowser.h"
 #include "spec/browser_spec.h"
 
-extern FD_browserattrib *create_form_browserattrib( void );
 static FD_browserattrib *br_attrib;
-
-static void show_spec( SuperSPEC * );
-void change_item_cb( FL_OBJECT * ob, long data );
+static FL_OBJECT * curobj;
 
 
 /***************************************
  ***************************************/
 
-void *
-get_browser_spec_fdform( void )
+FL_FORM *
+browser_create_spec_form( void )
 {
-    if ( ! br_attrib )
-    {
-        br_attrib = create_form_browserattrib( );
-        fl_addto_choice( br_attrib->hscb_pref, get_scrollbar_pref_string( ) );
-        fl_addto_choice( br_attrib->vscb_pref, get_scrollbar_pref_string( ) );
-        fl_set_browser_dblclick_callback( br_attrib->content_br,
-                                          change_item_cb, 0 );
-        setup_how_return_menu( br_attrib->returnsetting );
-    }
+    if ( br_attrib )
+        return br_attrib->browserattrib;
 
-    return br_attrib;
+    br_attrib = create_form_browserattrib( );
+
+    fl_addto_choice( br_attrib->hscb_pref, get_scrollbar_pref_string( ) );
+    fl_addto_choice( br_attrib->vscb_pref, get_scrollbar_pref_string( ) );
+    setup_how_return_menu( br_attrib->returnsetting );
+
+    return br_attrib->browserattrib;
 }
 
 
@@ -67,40 +64,28 @@ get_browser_spec_fdform( void )
  ***************************************/
 
 void
-browser_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
-                      long        data  FL_UNUSED_ARG )
+browser_fill_in_spec_form( FL_OBJECT * obj )
 {
-    ob = br_attrib->vdata;
-    SuperSPEC *sp = get_superspec( ob );
-
-    fl_set_browser_vscrollbar( ob, sp->v_pref );
-    fl_set_browser_hscrollbar( ob, sp->h_pref );
-
-    superspec_to_spec( ob );
-    show_spec( get_superspec( ob ) );
-
-    redraw_the_form( 0 );
-}
-
-
-/***************************************
- ***************************************/
-
-static void
-show_spec( SuperSPEC * spec )
-{
+    FLI_BROWSER_SPEC *sp = obj->spec;
     int i;
+    int nlines = fl_get_browser_maxline( obj );
 
-    fl_set_choice( br_attrib->hscb_pref, spec->h_pref + 1 );
-    fl_set_choice( br_attrib->vscb_pref, spec->v_pref + 1 );
+    curobj = obj;
+
+    fl_set_choice( br_attrib->hscb_pref, sp->h_pref + 1 );
+    fl_set_choice( br_attrib->vscb_pref, sp->v_pref + 1 );
 
     fl_freeze_form( br_attrib->content_br->form );
+
     fl_clear_browser( br_attrib->content_br );
-    for ( i = 1; i <= spec->nlines; i++ )
-        fl_add_browser_line( br_attrib->content_br, spec->content[ i ] );
+
+    for ( i = 1; i <= nlines; i++ )
+        fl_add_browser_line( br_attrib->content_br,
+                             fl_get_browser_line( obj, i ) );
+
     fl_unfreeze_form( br_attrib->content_br->form );
 
-    reset_how_return_menu( br_attrib->returnsetting, spec->how_return );
+    reset_how_return_menu( br_attrib->returnsetting, obj->how_return );
 }
 
 
@@ -108,133 +93,76 @@ show_spec( SuperSPEC * spec )
  ***************************************/
 
 void
-browser_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
-                      long        data  FL_UNUSED_ARG )
+browser_emit_spec_fd_code( FILE      * fp,
+                           FL_OBJECT * obj )
 {
-//    fl_set_choice( br_attrib->hscb_pref, spec->h_pref + 1 );
-//    fl_set_choice( br_attrib->vscb_pref, spec->v_pref + 1 );
-//
-//    fl_freeze_form( br_attrib->content_br->form );
-//    fl_clear_browser( br_attrib->content_br );
-//    for ( i = 1; i <= spec->nlines; i++ )
-//        fl_add_browser_line( br_attrib->content_br, spec->content[ i ] );
-//    fl_unfreeze_form( br_attrib->content_br->form );
-
-    spec_to_superspec( br_attrib->vdata );
-    redraw_the_form( 0 );
-}
-
-
-/***************************************
- ***************************************/
-
-int
-set_browser_attrib( FL_OBJECT * ob )
-{
-    SuperSPEC *browser_spec;
-
-    br_attrib->vdata = ob;
-    browser_spec = get_superspec( ob );
-    superspec_to_spec( ob );
-
-    show_spec( browser_spec );
-    return 0;
-}
-
-
-/***************************************
- ***************************************/
-
-void
-emit_browser_code( FILE      * fp,
-                   FL_OBJECT * ob )
-{
-    FL_OBJECT *defobj;
-    SuperSPEC *spec,
-              *defspec;
+    FL_OBJECT *defobj = fl_create_browser( obj->type, 0, 0, 0, 0, "" );
+    FLI_BROWSER_SPEC *sp    = obj->spec,
+                     *defsp = defobj->spec;
     int i;
+    int nlines = fl_get_browser_maxline( obj );
 
-    if ( ob->objclass != FL_BROWSER )
-        return;
-
-    /* Create a default object */
-
-    defobj = fl_create_browser( ob->type, 0, 0, 0, 0, "" );
-
-    defspec = get_superspec( defobj );
-    spec = get_superspec( ob );
-
-    if ( spec->h_pref != defspec->h_pref )
-        fprintf( fp, "    fl_set_browser_hscrollbar( obj, %s );\n",
-                 get_scrollbar_pref_name( spec->h_pref ) );
-    if ( spec->v_pref != defspec->v_pref )
-        fprintf( fp, "    fl_set_browser_vscrollbar( obj, %s );\n",
-                 get_scrollbar_pref_name( spec->v_pref ) );
-
-    for ( i = 1; i <= spec->nlines; i++ )
-        fprintf( fp, "    fl_add_browser_line( obj, \"%s\" );\n",
-                 spec->content[ i ] );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-save_browser_attrib( FILE      * fp,
-                     FL_OBJECT * ob )
-{
-    FL_OBJECT *defobj;
-    SuperSPEC *defspec,
-              *spec;
-    int i;
-
-    if ( ob->objclass != FL_BROWSER )
-        return;
-
-    /* Create a default object */
-
-    defobj = fl_create_browser( ob->type, 0, 0, 0, 0, "" );
-
-    defspec = get_superspec( defobj );
-    spec = get_superspec( ob );
-
-    if ( defspec->h_pref != spec->h_pref )
+    if ( sp->h_pref != defsp->h_pref )
         fprintf( fp, "h_pref: %s\n",
-                 get_scrollbar_pref_name( spec->h_pref ) );
-    if ( defspec->v_pref != spec->v_pref )
-        fprintf( fp, "v_pref: %s\n",
-                 get_scrollbar_pref_name( spec->v_pref ) );
+                 get_scrollbar_pref_name( sp->h_pref ) );
 
-    for ( i = 1; i <= spec->nlines; i++ )
-        fprintf( fp, "content: %s\n", spec->content[ i ] );
+    if ( sp->v_pref != defsp->v_pref )
+        fprintf( fp, "v_pref: %s\n",
+                 get_scrollbar_pref_name( sp->v_pref ) );
+
+    for ( i = 1; i <= nlines; i++ )
+        fprintf( fp, "content: %s\n", fl_get_browser_line( obj, i ) );
 }
 
 
-/*
- * attributes callbacks
- */
+/***************************************
+ ***************************************/
+
+void
+browser_emit_spec_c_code( FILE      * fp,
+                          FL_OBJECT * obj )
+{
+    FL_OBJECT *defobj = fl_create_browser( obj->type, 0, 0, 0, 0, "" );
+    FLI_BROWSER_SPEC *sp    = obj->spec,
+                     *defsp = defobj->spec;
+    int i;
+    int nlines = fl_get_browser_maxline( obj );
+
+    if ( sp->h_pref != defsp->h_pref )
+        fprintf( fp, "    fl_set_browser_hscrollbar( obj, %s );\n",
+                 get_scrollbar_pref_name( sp->h_pref ) );
+
+    if ( sp->v_pref != defsp->v_pref )
+        fprintf( fp, "    fl_set_browser_vscrollbar( obj, %s );\n",
+                 get_scrollbar_pref_name( sp->v_pref ) );
+
+    for ( i = 1; i <= nlines; i++ )
+        fprintf( fp, "    fl_add_browser_line( obj, \"%s\" );\n",
+                 fl_get_browser_line( obj, i ) );
+}
+
 
 /***************************************
  * Callbacks and freeobj handles for form browserattrib
  ***************************************/
 
 void
-add_item_cb( FL_OBJECT * ob,
+add_item_cb( FL_OBJECT * obj,
              long        data  FL_UNUSED_ARG )
 {
-    FD_browserattrib *ui = ob->form->fdui;
+    FD_browserattrib *ui = obj->form->fdui;
     const char *s = fl_get_input( ui->input );
 
-    if ( s && *s )
-    {
-        fl_addto_browser( ui->content_br, s );
-        fl_addto_browser( ui->vdata, s );
-        if ( fl_get_button( ui->auto_clear ) )
-            fl_set_input( ui->input, "" );
-        if ( auto_apply )
-            redraw_the_form( 0 );
-    }
+    if ( ! s )
+        s = "";
+
+    fl_addto_browser( ui->content_br, s );
+    fl_addto_browser( curobj, s );
+
+    if ( fl_get_button( ui->auto_clear ) )
+        fl_set_input( ui->input, "" );
+
+    redraw_the_form( 0 );
 }
 
 
@@ -242,23 +170,26 @@ add_item_cb( FL_OBJECT * ob,
  ***************************************/
 
 void
-replace_item_cb( FL_OBJECT * ob,
+replace_item_cb( FL_OBJECT * obj,
                  long        data  FL_UNUSED_ARG )
 {
-    FD_browserattrib *ui = ob->form->fdui;
+    FD_browserattrib *ui = obj->form->fdui;
     int i = fl_get_browser( ui->content_br );
     const char *s = fl_get_input( ui->input );
 
-    if ( *s && i > 0 )
+    if ( i > 0 )
     {
+        if ( ! s )
+            s = "";
+
         fl_replace_browser_line( ui->content_br, i, s );
-        fl_replace_browser_line( ui->vdata, i, s );
+        fl_replace_browser_line( curobj, i, s );
+
         if ( fl_get_button( ui->auto_clear ) )
             fl_set_input( ui->input, "" );
     }
 
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    redraw_the_form( 0 );
 }
 
 
@@ -266,23 +197,26 @@ replace_item_cb( FL_OBJECT * ob,
  ***************************************/
 
 void
-insert_cb( FL_OBJECT * ob,
+insert_cb( FL_OBJECT * obj,
            long        data  FL_UNUSED_ARG )
 {
-    FD_browserattrib *ui = ob->form->fdui;
+    FD_browserattrib *ui = obj->form->fdui;
     int i = fl_get_browser( ui->content_br );
     const char *s = fl_get_input( ui->input );
 
-    if ( *s && i > 0 )
+    if ( i > 0 )
     {
+        if ( ! s )
+            s = "";
+
         fl_insert_browser_line( ui->content_br, i, s );
-        fl_insert_browser_line( ui->vdata, i, s );
+        fl_insert_browser_line( curobj, i, s );
+
         if ( fl_get_button( ui->auto_clear ) )
             fl_set_input( ui->input, "" );
     }
 
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    redraw_the_form( 0 );
 }
 
 
@@ -290,19 +224,18 @@ insert_cb( FL_OBJECT * ob,
  ***************************************/
 
 void
-delete_item_cb( FL_OBJECT * ob,
+delete_item_cb( FL_OBJECT * obj,
                 long        data  FL_UNUSED_ARG )
 {
-    FD_browserattrib *ui = ob->form->fdui;
+    FD_browserattrib *ui = obj->form->fdui;
     int i = fl_get_browser( ui->content_br );
 
-    if ( i > 0 )
-    {
-        fl_delete_browser_line( ui->content_br, i );
-        fl_delete_browser_line( ui->vdata, i );
-        if ( auto_apply )
-            redraw_the_form( 0 );
-    }
+    if ( i <= 0 )
+        return;
+
+    fl_delete_browser_line( ui->content_br, i );
+    fl_delete_browser_line( curobj, i );
+    redraw_the_form( 0 );
 }
 
 
@@ -310,33 +243,11 @@ delete_item_cb( FL_OBJECT * ob,
  ***************************************/
 
 void
-change_item_cb( FL_OBJECT * ob,
-                long        data  FL_UNUSED_ARG )
-{
-    FD_browserattrib *ui = ob->form->fdui;
-    int i = fl_get_browser( ui->content_br );
-
-    if ( i > 0 )
-        fl_set_input( ui->input, fl_get_browser_line( ui->content_br, i ) );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-hscb_pref_cb( FL_OBJECT * ob,
+hscb_pref_cb( FL_OBJECT * obj,
               long        data  FL_UNUSED_ARG )
 {
-//    FD_browserattrib *ui = ob->form->fdui;
-    int i = fl_get_choice( ob );
-
-//    fl_set_browser_hscrollbar( ui->vdata, i - 1 );
-
-    fl_set_browser_hscrollbar( br_attrib->vdata, i - 1 );
-
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_browser_hscrollbar( curobj, fl_get_choice( obj ) - 1 );
+    redraw_the_form( 0 );
 }
 
 
@@ -344,16 +255,11 @@ hscb_pref_cb( FL_OBJECT * ob,
  ***************************************/
 
 void
-vscb_pref_cb( FL_OBJECT * ob,
+vscb_pref_cb( FL_OBJECT * obj,
               long        data  FL_UNUSED_ARG )
 {
-    FD_browserattrib *ui = ob->form->fdui;
-    int i = fl_get_choice( ob );
-
-    fl_set_browser_vscrollbar( ui->vdata, i - 1 );
-
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_browser_vscrollbar( curobj, fl_get_choice( obj ) - 1 );
+    redraw_the_form( 0 );
 }
 
 
@@ -361,11 +267,10 @@ vscb_pref_cb( FL_OBJECT * ob,
  ***************************************/
 
 void
-br_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+br_returnsetting_change( FL_OBJECT * obj,
                          long        data  FL_UNUSED_ARG )
 {
-    handle_how_return_changes( br_attrib->returnsetting,
-                               br_attrib->vdata );
+    handle_how_return_changes( obj, curobj );
 }
 
 

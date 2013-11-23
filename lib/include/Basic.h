@@ -1014,6 +1014,8 @@ FL_EXPORT FL_FORM_ATDEACTIVATE
 
 FL_EXPORT void fl_unfreeze_form( FL_FORM * form );
 
+FL_EXPORT int fl_form_is_activated( FL_FORM * form );
+
 FL_EXPORT void fl_deactivate_form( FL_FORM * form );
 
 FL_EXPORT void fl_activate_form( FL_FORM * form );
@@ -1095,6 +1097,12 @@ FL_EXPORT Window fl_show_form( FL_FORM    * form,
                                int          border,
                                const char * name );
 
+FL_EXPORT Window fl_show_form_f( FL_FORM    * form,
+								 int          place,
+								 int          border,
+								 const char * fmt,
+								 ... );
+
 FL_EXPORT void fl_hide_form( FL_FORM * form );
 
 FL_EXPORT void fl_free_form( FL_FORM * form );
@@ -1108,6 +1116,12 @@ FL_EXPORT Window fl_prepare_form_window( FL_FORM    * form,
                                          int          place,
                                          int          border,
                                          const char * name );
+
+FL_EXPORT Window fl_prepare_form_window_f( FL_FORM    * form,
+										   int          place,
+										   int          border,
+										   const char * fmt,
+										   ... );
 
 FL_EXPORT Window fl_show_form_window( FL_FORM * form );
 

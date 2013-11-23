@@ -482,6 +482,18 @@ fl_set_scrollbar_size( FL_OBJECT * obj,
 
 
 /***************************************
+ * Sets the size of the knob of the scrollbar
+ * (the function name is a bit of misnomer)
+ ***************************************/
+
+double
+fl_get_scrollbar_size( FL_OBJECT * obj )
+{
+    return fl_get_slider_size( ( ( FLI_SCROLLBAR_SPEC * ) obj->spec )->slider );
+}
+
+
+/***************************************
  ***************************************/
 
 void

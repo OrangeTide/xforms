@@ -80,6 +80,7 @@ spec_to_superspec( FL_OBJECT * obj )
         spp->cspecv     = NULL;
 
         spp->new_menuapi = 0;
+        spp->nlines = 0;
     }
     else
         spp = obj->u_vdata;
@@ -581,8 +582,6 @@ superspec_to_spec( FL_OBJECT * obj )
 }
 
 
-static int keep_content = 1;
-
 /***************************************
  ***************************************/
 
@@ -590,61 +589,41 @@ void
 copy_superspec( FL_OBJECT * target,
                 FL_OBJECT * src )
 {
-    SuperSPEC *t,
-              *s;
     void *tmp;
+
+    free_superspec( target );
+
+    tmp = get_superspec( src );
+    src->u_vdata = NULL;
+    target->u_vdata = get_superspec( src );
+    src->u_vdata = tmp;
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+free_superspec( FL_OBJECT * obj )
+{
     int i;
+    SuperSPEC *ssp = obj->u_vdata;
 
-    t = get_superspec( target );
-    s = get_superspec( src );
-
-    if ( ! t || ! s )
-    {
-        M_err( "CopySuperSPEC", "null spec" );
+    if ( ! ssp )
         return;
-    }
 
-    tmp = t->cspecv;
-    *t = *s;
-    t->cspecv = tmp;
-
-    if ( ! keep_content )
+    for ( i = 1; i < ssp->nlines; ++i )
     {
-        for ( i = 1; i <= t->nlines; i++ )
-        {
-            t->content[ i ]  = NULL;
-            t->mode[ i ]     = 0;
-            t->shortcut[ i ] = NULL;
-        }
-
-        t->nlines = 0;
+        fl_free( ssp->content[ i ] );
+        fl_free( ssp->shortcut[ i ] );
+        fl_free( ssp->callback[ i ] );
     }
-    else
-    {
-        if ( s->nlines )
-        {
-            if ( s->mode )
-                t->mode = fl_calloc( s->nlines + 1, sizeof *t->mode );
-            if ( s->content )
-                t->content = fl_calloc( s->nlines + 1, sizeof * t->content);
-            if ( s->shortcut )
-                t->shortcut = fl_calloc( s->nlines + 1, sizeof *t->shortcut );
-        }
 
-        for ( i = 1; i <= s->nlines; i++ )
-        {
-            t->mode[ i ]    = s->mode[ i ];
-            t->content[ i ] = fl_strdup( s->content[ i ] );
+    fl_free( ssp->mode );
+    fl_free( ssp->mval );
 
-            if ( s->shortcut[ i ] )
-                t->shortcut[ i ] = fl_strdup( s->shortcut[ i ] );
-        }
-
-        if ( t->cspecv && s->cspecv && t->cspecv_size )
-            memcpy( t->cspecv, s->cspecv, t->cspecv_size );
-    }
-    
-    superspec_to_spec( target );
+    fl_free( ssp->cspecv );
+    fli_safe_free( obj->u_vdata );
 }
 
 

@@ -23,9 +23,7 @@
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
  *
- *  Settting dial class specific attributes. We hang the spec
- *  structure on ob->u_vdata. The real spec ob->spec is affected
- *  by testing and can't be used.
+ *  Settting dial class specific attributes.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -35,14 +33,12 @@
 #include "include/forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
+#include "sp_dial.h"
 #include "private/pdial.h"
 #include "spec/dial_spec.h"
 
-extern FD_dialattrib *create_form_dialattrib( void );
-
-static FD_dialattrib *dial_attrib;
-static SuperSPEC *dial_spec;
-static void show_spec(SuperSPEC *);
+static FD_dialattrib * dial_attrib;
+static FL_OBJECT * curobj;
 
 #define VN( a )  { a, #a }
 
@@ -67,23 +63,22 @@ get_direction_value( const char * s )
 /***************************************
  ***************************************/
 
-void *
-get_dial_spec_fdform( void )
+FL_FORM *
+dial_create_spec_form( void )
 {
-    if ( ! dial_attrib )
-    {
-        dial_attrib = create_form_dialattrib( );
-        fl_addto_choice( dial_attrib->dir, dial_dir[ 0 ].name );
-        fl_addto_choice( dial_attrib->dir, dial_dir[ 1 ].name );
+    if ( dial_attrib )
+        return dial_attrib->dialattrib;
 
-        setup_how_return_menu( dial_attrib->returnsetting );
-        fl_set_menu_item_mode( dial_attrib->returnsetting, 5,
-                               FL_PUP_BOX | FL_PUP_GRAY );
-        fl_set_menu_item_mode( dial_attrib->returnsetting, 6,
-                               FL_PUP_BOX | FL_PUP_GRAY );
-    }
+    dial_attrib = create_form_dialattrib( );
+    fl_addto_choice( dial_attrib->dir, dial_dir[ 0 ].name );
+    fl_addto_choice( dial_attrib->dir, dial_dir[ 1 ].name );
 
-    return dial_attrib;
+    setup_how_return_menu( dial_attrib->returnsetting );
+    fl_set_menu_item_mode( dial_attrib->returnsetting, 5,
+                           FL_PUP_BOX | FL_PUP_GRAY );
+    fl_set_menu_item_mode( dial_attrib->returnsetting, 6,
+                           FL_PUP_BOX | FL_PUP_GRAY );
+    return dial_attrib->dialattrib;
 }
 
 
@@ -91,34 +86,22 @@ get_dial_spec_fdform( void )
  ***************************************/
 
 void
-dial_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
-                   long        data  FL_UNUSED_ARG )
+dial_fill_in_spec_form( FL_OBJECT * obj )
 {
-    FL_OBJECT *edited = dial_attrib->vdata;
+    FLI_DIAL_SPEC *sp = obj->spec;
+    curobj = obj;
 
-    superspec_to_spec( edited );
-    show_spec( get_superspec( edited ) );
-    redraw_the_form( 0 );
-}
-
-
-/***************************************
- ***************************************/
-
-static void
-show_spec( SuperSPEC * spec )
-{
-    set_finput_value( dial_attrib->minval,     spec->min, -1 );
-    set_finput_value( dial_attrib->maxval,     spec->max, -1 );
-    set_finput_value( dial_attrib->initialval, spec->val, -1 );
-    set_finput_value( dial_attrib->thetai,     spec->thetai, -1 );
-    set_finput_value( dial_attrib->thetaf,     spec->thetaf, -1 );
-    set_finput_value( dial_attrib->step,       spec->step, -1 );
+    set_finput_value( dial_attrib->minval,     sp->min,    -1 );
+    set_finput_value( dial_attrib->maxval,     sp->max,    -1 );
+    set_finput_value( dial_attrib->initialval, sp->val,    -1 );
+    set_finput_value( dial_attrib->thetai,     sp->thetai, -1 );
+    set_finput_value( dial_attrib->thetaf,     sp->thetaf, -1 );
+    set_finput_value( dial_attrib->step,       sp->step,   -1 );
 
     fl_set_choice_text( dial_attrib->dir,
-                        fli_get_vn_name( dial_dir, spec->direction ) );
+                        fli_get_vn_name( dial_dir, sp->direction ) );
 
-    reset_how_return_menu( dial_attrib->returnsetting, spec->how_return );
+    reset_how_return_menu( dial_attrib->returnsetting, curobj->how_return );
 }
 
 
@@ -126,13 +109,10 @@ show_spec( SuperSPEC * spec )
  ***************************************/
 
 void
-dial_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
-                   long        data  FL_UNUSED_ARG )
+dial_reread_spec_form( FL_OBJECT * obj )
 {
     double r1, r2;
     int dir = fl_get_choice( dial_attrib->dir ) - 1;
-
-    obj = dial_attrib->vdata;
 
     if (    get_checked_float( fl_get_input( dial_attrib->minval ), &r1 )
          && get_checked_float( fl_get_input( dial_attrib->maxval ), &r2 ) )
@@ -151,8 +131,6 @@ dial_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
     if ( dir >= 0 )
         fl_set_dial_direction( obj, dial_dir[ dir ].val );
 
-    spec_to_superspec( obj );
-
     redraw_the_form( 0 );
 }
 
@@ -160,53 +138,28 @@ dial_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
 /***************************************
  ***************************************/
 
-int
-set_dial_attrib( FL_OBJECT * ob )
-{
-    dial_attrib->vdata = ob;
-    dial_spec = get_superspec( ob );
-    show_spec( dial_spec );
-    return 0;
-}
-
-
-/***************************************
- ***************************************/
-
 void
-emit_dial_code( FILE      * fp,
-                FL_OBJECT * ob )
+dial_emit_spec_fd_code( FILE      * fp,
+                        FL_OBJECT * obj )
 {
-    FL_OBJECT *defobj;
-    SuperSPEC *sp,
-              *defspec;
+    FL_OBJECT *defobj = fl_create_dial( obj->type, 0, 0, 0, 0, "" );
+    FLI_DIAL_SPEC *sp    = obj->spec,
+                  *defsp = defobj->spec;
 
-    if ( ob->objclass != FL_DIAL )
-        return;
+    if ( sp->min != defsp->min || sp->max != defsp->max )
+        fprintf( fp, "    bounds: %g %g\n", sp->min, sp->max );
 
-    /* create a default object */
+    if ( sp->thetai != defsp->thetai || sp->thetaf != defsp->thetaf )
+        fprintf( fp, "    angles: %g %g\n", sp->thetai, sp->thetaf );
 
-    defobj = fl_create_dial( ob->type, 0, 0, 0, 0, "" );
+    if ( sp->val != defsp->val )
+        fprintf( fp, "    value: %g\n", sp->val );
 
-    defspec = get_superspec( defobj );
-    sp = get_superspec( ob );
+    if ( sp->step != defsp->step )
+        fprintf( fp, "    step: %g\n", sp->step );
 
-    if ( sp->min != defspec->min || sp->max != defspec->max )
-        fprintf( fp, "    fl_set_dial_bounds( obj, %g, %g );\n",
-                 sp->min, sp->max );
-
-    if ( sp->thetai != defspec->thetai || sp->thetaf != defspec->thetaf )
-        fprintf( fp, "    fl_set_dial_angles( obj, %g, %g );\n",
-                 sp->thetai, sp->thetaf );
-
-    if ( sp->val != defspec->val )
-        fprintf( fp, "    fl_set_dial_value( obj, %g );\n", sp->val );
-
-    if ( sp->step != defspec->step )
-        fprintf( fp, "    fl_set_dial_step( obj, %g );\n", sp->step );
-
-    if ( sp->direction != defspec->direction )
-        fprintf( fp, "    fl_set_dial_direction( obj, %s );\n",
+    if ( sp->direction != defsp->direction )
+        fprintf( fp, "    dir: %s\n",
                  fli_get_vn_name( dial_dir, sp->direction ) );
 
     fl_free_object( defobj );
@@ -217,38 +170,30 @@ emit_dial_code( FILE      * fp,
  ***************************************/
 
 void
-save_dial_attrib( FILE      * fp,
-                  FL_OBJECT * ob )
+dial_emit_spec_c_code( FILE      * fp,
+                       FL_OBJECT * obj )
 {
-    FL_OBJECT *defobj;
-    SuperSPEC *defspec,
-              *spec;
+    FL_OBJECT *defobj = fl_create_dial( obj->type, 0, 0, 0, 0, "" );
+    FLI_DIAL_SPEC *sp    = obj->spec,
+                  *defsp = defobj->spec;
 
-    if ( ob->objclass != FL_DIAL )
-        return;
+    if ( sp->min != defsp->min || sp->max != defsp->max )
+        fprintf( fp, "    fl_set_dial_bounds( obj, %g, %g );\n",
+                 sp->min, sp->max );
 
-    /* create a default object */
+    if ( sp->thetai != defsp->thetai || sp->thetaf != defsp->thetaf )
+        fprintf( fp, "    fl_set_dial_angles( obj, %g, %g );\n",
+                 sp->thetai, sp->thetaf );
 
-    defobj = fl_create_dial( ob->type, 0, 0, 0, 0, "" );
+    if ( sp->val != defsp->val )
+        fprintf( fp, "    fl_set_dial_value( obj, %g );\n", sp->val );
 
-    defspec = get_superspec( defobj );
-    spec = get_superspec( ob );
+    if ( sp->step != defsp->step )
+        fprintf( fp, "    fl_set_dial_step( obj, %g );\n", sp->step );
 
-    if ( spec->min != defspec->min || spec->max != defspec->max )
-        fprintf( fp, "    bounds: %g %g\n", spec->min, spec->max );
-
-    if ( spec->thetai != defspec->thetai || spec->thetaf != defspec->thetaf )
-        fprintf( fp, "    angles: %g %g\n", spec->thetai, spec->thetaf );
-
-    if ( spec->val != defspec->val )
-        fprintf( fp, "    value: %g\n", spec->val );
-
-    if ( spec->step != defspec->step )
-        fprintf( fp, "    step: %g\n", spec->step );
-
-    if ( spec->direction != defspec->direction )
-        fprintf( fp, "    dir: %s\n",
-                 fli_get_vn_name( dial_dir, spec->direction ) );
+    if ( sp->direction != defsp->direction )
+        fprintf( fp, "    fl_set_dial_direction( obj, %s );\n",
+                 fli_get_vn_name( dial_dir, sp->direction ) );
 
     fl_free_object( defobj );
 }
@@ -261,12 +206,9 @@ void
 dial_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
                     long        data  FL_UNUSED_ARG )
 {
-    double min = get_finput_value( dial_attrib->minval );
-    double max = get_finput_value( dial_attrib->maxval );
-
-    fl_set_dial_bounds( dial_attrib->vdata, min, max );
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_dial_bounds( curobj, get_finput_value( dial_attrib->minval ),
+                        get_finput_value( dial_attrib->maxval ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -277,12 +219,9 @@ void
 dial_thetachange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
                      long        data  FL_UNUSED_ARG )
 {
-    double t1 = get_finput_value( dial_attrib->thetai );
-    double t2 = get_finput_value( dial_attrib->thetaf );
-
-    fl_set_dial_angles( dial_attrib->vdata, t1, t2 );
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_dial_angles( curobj, get_finput_value( dial_attrib->thetai ),
+                        get_finput_value( dial_attrib->thetaf ));
+    redraw_the_form( 0 );
 }
 
 
@@ -293,11 +232,8 @@ void
 dial_stepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
                     long        data  FL_UNUSED_ARG )
 {
-    double s = get_finput_value( dial_attrib->step );
-
-    fl_set_dial_step( dial_attrib->vdata, s );
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_dial_step( curobj, get_finput_value( dial_attrib->step ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -308,11 +244,8 @@ void
 dial_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
                           long        data  FL_UNUSED_ARG )
 {
-    double val = get_finput_value( dial_attrib->initialval );
-
-    fl_set_dial_value( dial_attrib->vdata, val );
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_dial_value( curobj, get_finput_value( dial_attrib->initialval ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -329,8 +262,7 @@ dir_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
     if ( dir >= 0 )
     {
         fl_set_dial_direction( dial_attrib->vdata, dial_dir[ dir ].val );
-        if ( auto_apply )
-            redraw_the_form( 0 );
+        redraw_the_form( 0 );
     }
 }
 
@@ -342,8 +274,7 @@ void
 dial_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
                            long        data  FL_UNUSED_ARG )
 {
-    handle_how_return_changes( dial_attrib->returnsetting,
-                               dial_attrib->vdata );
+    handle_how_return_changes( dial_attrib->returnsetting, curobj );
 }
 
 

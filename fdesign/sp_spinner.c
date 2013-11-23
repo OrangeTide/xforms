@@ -24,34 +24,60 @@
 #include <float.h>
 #include "fd_main.h"
 #include "fd_spec.h"
+#include "sp_spinner.h"
 #include "private/pspinner.h"
 #include "spec/spinner_spec.h"
 
-extern FD_spinnerattrib *create_form_spinnerattrib( void );
-
-static FD_spinnerattrib *spn_attrib;
-static SuperSPEC *spinner_spec;
-static void init_spec( SuperSPEC * );
+static FD_spinnerattrib * spn_attrib;
+FL_OBJECT *curobj;
 
 
 /***************************************
  ***************************************/
 
-void *
-get_spinner_spec_fdform( void )
+void
+spinner_change_type( FL_OBJECT * obj,
+                     int         new_type )
 {
-    if ( ! spn_attrib )
-    {
-        spn_attrib = create_form_spinnerattrib( );
+    FLI_SPINNER_SPEC *sp = obj->spec;
 
-        setup_how_return_menu( spn_attrib->returnsetting );
-        fl_set_menu_item_mode( spn_attrib->returnsetting, 5,
-                               FL_PUP_BOX | FL_PUP_GRAY );
-        fl_set_menu_item_mode( spn_attrib->returnsetting, 6,
-                               FL_PUP_BOX | FL_PUP_GRAY );
+    if ( obj->type == FL_INT_SPINNER )
+    {
+        sp->f_min  = sp->i_min;
+        sp->f_max  = sp->i_max;
+        sp->f_val  = sp->i_val;
+        sp->f_incr = sp->i_incr;
+    }
+    else
+    {
+        sp->i_min  = sp->f_min;
+        sp->i_max  = sp->f_max;
+        sp->i_val  = sp->f_val;
+        sp->i_incr = sp->f_incr;
     }
 
-    return spn_attrib;
+    obj->type = new_type;
+}
+
+
+/***************************************
+ ***************************************/
+
+FL_FORM *
+spinner_create_spec_form( void )
+{
+    if ( spn_attrib )
+        return spn_attrib->spinnerattrib;
+
+    spn_attrib = create_form_spinnerattrib( );
+
+    setup_how_return_menu( spn_attrib->returnsetting );
+    fl_set_menu_item_mode( spn_attrib->returnsetting, 5,
+                           FL_PUP_BOX | FL_PUP_GRAY );
+    fl_set_menu_item_mode( spn_attrib->returnsetting, 6,
+                           FL_PUP_BOX | FL_PUP_GRAY );
+
+    return spn_attrib->spinnerattrib;
 }
 
 
@@ -59,73 +85,14 @@ get_spinner_spec_fdform( void )
  ***************************************/
 
 void
-spinner_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
-                      long        data  FL_UNUSED_ARG )
+spinner_adjust_spec_form( FL_OBJECT * obj )
 {
-    superspec_to_spec( spn_attrib->vdata );
-    init_spec( get_superspec( spn_attrib->vdata ) );
-    redraw_the_form( 0 );
-}
+    curobj = obj;
 
-
-/***************************************
- ***************************************/
-
-static void
-init_spec( SuperSPEC * spec )
-{
-    fl_set_counter_value( spn_attrib->prec, spec->prec );
-
-    set_finput_value( spn_attrib->minval,     spec->dmin,  spec->prec );
-    set_finput_value( spn_attrib->maxval,     spec->dmax,  spec->prec );
-    set_finput_value( spn_attrib->initialval, spec->dval,  spec->prec );
-    set_finput_value( spn_attrib->step,       spec->dstep, spec->prec );
-
-    reset_how_return_menu( spn_attrib->returnsetting, spec->how_return );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-spinner_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
-                      long        data  FL_UNUSED_ARG )
-{
-    double r1, r2;
-
-    obj = spn_attrib->vdata;
-
-    if (    get_checked_float( fl_get_input( spn_attrib->minval ), &r1 )
-         && get_checked_float( fl_get_input( spn_attrib->maxval ), &r2 ) )
-        fl_set_spinner_bounds( obj, r1, r2 );
-
-    if ( get_checked_float( fl_get_input( spn_attrib->initialval ), &r1 ) )
-         fl_set_spinner_value( obj, r1 );
-
-    fl_set_spinner_precision( obj, fl_get_counter_value( spn_attrib->prec ) );
-
-
-    if ( get_checked_float( fl_get_input( spn_attrib->step ), &r1 ) )
-        fl_set_spinner_step( obj, r1 );
-
-    spec_to_superspec( obj );
-
-    redraw_the_form( 0 );
-}
-
-
-/***************************************
- ***************************************/
-
-int
-set_spinner_attrib( FL_OBJECT * ob )
-{
-    spn_attrib->vdata = ob;
-    spinner_spec = get_superspec( ob );
-
-    if ( ob->type == FL_INT_SPINNER )
+    if ( obj->type == FL_INT_SPINNER )
+    {
         fl_hide_object( spn_attrib->prec );
+    }
     else
     {
         fl_set_counter_step( spn_attrib->prec, 1, 2 );
@@ -134,9 +101,10 @@ set_spinner_attrib( FL_OBJECT * ob )
         fl_show_object( spn_attrib->prec );
     }
 
-    init_spec( spinner_spec );
-
-    return 0;
+    fl_set_object_return( spn_attrib->minval, FL_RETURN_END );
+    fl_set_object_return( spn_attrib->maxval, FL_RETURN_END );
+    fl_set_object_return( spn_attrib->initialval, FL_RETURN_END );
+    fl_set_object_return( spn_attrib->step, FL_RETURN_END );
 }
 
 
@@ -144,38 +112,135 @@ set_spinner_attrib( FL_OBJECT * ob )
  ***************************************/
 
 void
-emit_spinner_code( FILE      * fp,
-                   FL_OBJECT * obj )
+spinner_fill_in_spec_form( FL_OBJECT * obj )
 {
-    FL_OBJECT *defobj;
-    SuperSPEC *spec,
-              *defspec;
+    FLI_SPINNER_SPEC *sp = obj->spec;
 
-    if ( obj->objclass != FL_SPINNER )
-        return;
+    fl_set_counter_value( spn_attrib->prec, sp->prec );
 
-    /* Create a default object */
+    if ( obj->type == FL_INT_SPINNER )
+    {
+        set_finput_value( spn_attrib->minval,     sp->i_min,  0 );
+        set_finput_value( spn_attrib->maxval,     sp->i_max,  0 );
+        set_finput_value( spn_attrib->initialval, sp->i_val,  0 );
+        set_finput_value( spn_attrib->step,       sp->i_incr, 0 );
+    }
+    else
+    {
+        set_finput_value( spn_attrib->minval,     sp->f_min,  sp->prec );
+        set_finput_value( spn_attrib->maxval,     sp->f_max,  sp->prec );
+        set_finput_value( spn_attrib->initialval, sp->f_val,  sp->prec );
+        set_finput_value( spn_attrib->step,       sp->f_incr, sp->prec );
+    }
 
-    defobj = fl_create_spinner( obj->type, 0, 0, 0, 0, "" );
+    reset_how_return_menu( spn_attrib->returnsetting, obj->how_return );
+}
 
-    defspec = get_superspec( defobj );
-    spec = get_superspec( obj );
 
-    if ( spec->prec != defspec->prec )
-        fprintf( fp, "    fl_set_spinner_precision( obj, %d );\n",
-                 spec->prec );
+/***************************************
+ ***************************************/
 
-    if ( spec->dmin != defspec->dmin || spec->dmax != defspec->dmax )
-        fprintf( fp, "    fl_set_spinner_bounds( obj, %.*f, %.*f );\n",
-                 spec->prec, spec->dmin, spec->prec, spec->dmax );
+void
+spinner_reread_spec_form( FL_OBJECT * obj )
+{
+    double r1, r2;
 
-    if ( spec->dval != defspec->dval )
-        fprintf( fp, "    fl_set_spinner_value( obj, %.*f );\n",
-                 spec->prec, spec->dval );
+    if (    get_checked_float( fl_get_input( spn_attrib->minval ), &r1 )
+         && get_checked_float( fl_get_input( spn_attrib->maxval ), &r2 ) )
+        fl_set_spinner_bounds( obj, r1, r2 );
 
-    if ( spec->dstep != defspec->dstep )
-        fprintf( fp, "    fl_set_spinner_step( obj, %.*f );\n",
-                 spec->prec, spec->dstep );
+    if ( get_checked_float( fl_get_input( spn_attrib->initialval ), &r1 ) )
+         fl_set_spinner_value( obj, r1 );
+
+    if ( get_checked_float( fl_get_input( spn_attrib->step ), &r1 ) )
+        fl_set_spinner_step( obj, r1 );
+
+    redraw_the_form( 0 );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+spinner_emit_spec_fd_code( FILE      * fp,
+                           FL_OBJECT * obj )
+{
+    FL_OBJECT *defobj = fl_create_spinner( obj->type, 0, 0, 0, 0, "" );
+    FLI_SPINNER_SPEC *sp    = obj->spec,
+                     *defsp = defobj->spec;
+
+    if ( obj->type == FL_FLOAT_SPINNER && sp->prec != defsp->prec )
+        fprintf( fp, "    precision: %d\n", sp->prec );
+
+    if ( obj->type == FL_INT_SPINNER )
+    {
+        if ( sp->i_min != defsp->i_min || sp->i_max != defsp->i_max )
+            fprintf( fp, "    bounds: %d %d\n", sp->i_min, sp->i_max );
+
+        if ( sp->i_val != defsp->i_val )
+            fprintf( fp, "    value: %d\n", sp->i_val );
+
+        if ( sp->i_incr != defsp->i_incr )
+            fprintf( fp, "    step: %d\n", sp->i_incr );
+    }
+    else
+    {
+        if ( sp->f_min != defsp->f_min || sp->f_max != defsp->f_max )
+            fprintf( fp, "    bounds: %.*fd %.*f\n",
+                     sp->prec, sp->f_min, sp->prec, sp->f_max );
+
+        if ( sp->f_val != defsp->f_val )
+            fprintf( fp, "    value: %.*f\n", sp->prec, sp->f_val );
+
+        if ( sp->f_incr != defsp->f_incr )
+            fprintf( fp, "    step: %.*f\n", sp->prec, sp->f_incr );
+    }
+
+    fl_free_object( defobj );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+spinner_emit_spec_c_code( FILE      * fp,
+                          FL_OBJECT * obj )
+{
+    FL_OBJECT *defobj = fl_create_spinner( obj->type, 0, 0, 0, 0, "" );
+    FLI_SPINNER_SPEC *sp    = obj->spec,
+                     *defsp = defobj->spec;
+
+    if ( obj->type == FL_FLOAT_SPINNER && sp->prec != defsp->prec )
+        fprintf( fp, "    fl_set_spinner_precision( obj, %d );\n", sp->prec );
+
+    if ( obj->type == FL_INT_SPINNER )
+    {
+        if ( sp->i_min != defsp->i_min || sp->i_max != defsp->i_max )
+            fprintf( fp, "    fl_set_spinner_bounds( obj, %d, %d );\n",
+                     sp->i_min, sp->i_max );
+
+    if ( sp->i_val != defsp->i_val )
+        fprintf( fp, "    fl_set_spinner_value( obj, %d );\n", sp->i_val );
+
+    if ( sp->i_incr != defsp->i_incr )
+        fprintf( fp, "    fl_set_spinner_step( obj, %d );\n", sp->i_incr );
+    }
+    else
+    {
+        if ( sp->f_min != defsp->f_min || sp->f_max != defsp->f_max )
+            fprintf( fp, "    fl_set_spinner_bounds( obj, %.*f, %.*f );\n",
+                     sp->prec, sp->f_min, sp->prec, sp->f_max );
+
+        if ( sp->f_val != defsp->f_val )
+            fprintf( fp, "    fl_set_spinner_value( obj, %.*f );\n",
+                     sp->prec, sp->f_val );
+
+        if ( sp->f_incr != defsp->f_incr )
+            fprintf( fp, "    fl_set_spinner_step( obj, %.*f );\n",
+                     sp->prec, sp->f_incr );
+    }
 
     if ( obj->lsize != defobj->lsize )
         fprintf( fp, "    fl_set_object_lsize( fl_get_spinner_input( obj ), "
@@ -198,54 +263,14 @@ emit_spinner_code( FILE      * fp,
  ***************************************/
 
 void
-save_spinner_attrib( FILE      * fp,
-                     FL_OBJECT * ob )
-{
-    FL_OBJECT *defobj;
-    SuperSPEC *defspec,
-              *spec;
-
-    if ( ob->objclass != FL_SPINNER )
-        return;
-
-    /* Create a default object */
-
-    defobj = fl_create_spinner( ob->type, 0, 0, 0, 0, "" );
-
-    defspec = get_superspec( defobj );
-    spec = get_superspec( ob );
-
-    if (    spec->dmin != defspec->dmin
-         || spec->dmax != defspec->dmax )
-        fprintf( fp, "    bounds: %.*f %.*f\n",
-                 spec->prec, spec->dmin, spec->prec, spec->dmax );
-
-    if ( spec->prec != defspec->prec )
-        fprintf( fp, "    precision: %d\n", spec->prec );
-
-    if ( spec->dval != defspec->dval )
-        fprintf( fp, "    value: %.*f\n", spec->prec, spec->dval );
-
-    if ( spec->dstep != defspec->dstep )
-        fprintf( fp, "    step: %.*f\n", spec->prec, spec->dstep );
-
-    fl_free_object( defobj );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-spn_precision_cb( FL_OBJECT * ob,
+spn_precision_cb( FL_OBJECT * obj,
                   long        data  FL_UNUSED_ARG )
 {
-    double p = fl_get_counter_value( ob );
+    fl_set_spinner_precision( curobj, fl_get_counter_value( obj ) );
 
-    fl_set_spinner_precision( spn_attrib->vdata, p );
-
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    spn_minmax_change( NULL, 0 );
+    spn_stepchange_cb( NULL, 0 );
+    spn_initialvalue_change( NULL, 0 );
 }
 
 
@@ -253,16 +278,21 @@ spn_precision_cb( FL_OBJECT * ob,
  ***************************************/
 
 void
-spn_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+spn_minmax_change( FL_OBJECT * obj   FL_UNUSED_ARG,
                    long        data  FL_UNUSED_ARG )
 {
-    double min = get_finput_value( spn_attrib->minval );
-    double max = get_finput_value( spn_attrib->maxval );
+    FLI_SPINNER_SPEC *sp = curobj->spec;
 
-    fl_set_spinner_bounds( spn_attrib->vdata, min, max );
+    set_finput_value( spn_attrib->minval,
+                      get_finput_value( spn_attrib->minval ),
+                      curobj->type == FL_INT_SPINNER ? 0 : sp->prec );
+    set_finput_value( spn_attrib->maxval,
+                      get_finput_value( spn_attrib->maxval ),
+                      curobj->type == FL_INT_SPINNER ? 0 : sp->prec );
 
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_spinner_bounds( curobj, get_finput_value( spn_attrib->minval ),
+                           get_finput_value( spn_attrib->maxval ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -270,15 +300,15 @@ spn_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 void
-spn_stepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+spn_stepchange_cb( FL_OBJECT * obj,
                    long        data  FL_UNUSED_ARG )
 {
-    double s1 = get_finput_value( spn_attrib->step );
+    FLI_SPINNER_SPEC *sp = curobj->spec;
 
-    fl_set_spinner_step( spn_attrib->vdata, s1 );
-
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    set_finput_value( obj, get_finput_value( obj ),
+                      curobj->type == FL_INT_SPINNER ? 0 : sp->prec );
+    fl_set_spinner_step( curobj, get_finput_value( obj ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -286,22 +316,15 @@ spn_stepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 void
-spn_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+spn_initialvalue_change( FL_OBJECT * obj,
                          long        data  FL_UNUSED_ARG )
 {
-    double val = get_finput_value( spn_attrib->initialval );
+    FLI_SPINNER_SPEC *sp = curobj->spec;
 
-    fl_set_spinner_value( spn_attrib->vdata, val );
-
-    if ( val != fl_get_spinner_value( spn_attrib->vdata ) )
-    {
-        spinner_spec->dval = fl_get_spinner_value( spn_attrib->vdata );
-        set_finput_value( spn_attrib->initialval, spinner_spec->dval,
-                          spinner_spec->prec );
-    }
-
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    set_finput_value( obj, get_finput_value( obj ),
+                      curobj->type == FL_INT_SPINNER ? 0 : sp->prec );
+    fl_set_spinner_value( curobj, get_finput_value( obj ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -309,11 +332,10 @@ spn_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 void
-spn_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+spn_returnsetting_change( FL_OBJECT * obj,
                           long        data  FL_UNUSED_ARG )
 {
-    handle_how_return_changes( spn_attrib->returnsetting,
-                               spn_attrib->vdata );
+    handle_how_return_changes( obj, curobj );
 }
 
 

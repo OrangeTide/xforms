@@ -1290,8 +1290,8 @@ fl_finish( void )
     XChangeKeyboardControl( flx->display, fli_keybdmask,
                             &fli_keybdcontrol );
 
-    fl_remove_all_signal_callbacks( );
-    fl_remove_all_timeouts( );
+    fli_remove_all_signal_callbacks( );
+    fli_remove_all_timeouts( );
 
     /* Get rid of all forms, first hide all of them */
 

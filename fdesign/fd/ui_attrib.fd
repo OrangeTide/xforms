@@ -3,15 +3,16 @@ Magic: 15000
 Internal Form Definition File
     (do not change)
 
-Number of forms: 3
+Number of forms: 2
 Unit of measure: FL_COORD_PIXEL
 Border Width: -1
+SnapGrid: 1
 
 =============== FORM ===============
 Name: attrib
 Width: 630
 Height: 310
-Number of Objects: 8
+Number of Objects: 6
 
 --------------------
 class: FL_BOX
@@ -52,7 +53,7 @@ argument:
 --------------------
 class: FL_BUTTON
 type: FL_RETURN_BUTTON
-box: 550 85 70 24
+box: 550 200 70 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -65,12 +66,12 @@ resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: readyobj
 callback: 
-argument: 
+argument: 0
 
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 550 109 70 24
+box: 550 240 70 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -88,25 +89,7 @@ argument:
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 550 133 70 24
-boxtype: FL_UP_BOX
-colors: FL_COL1 FL_COL1
-alignment: FL_ALIGN_CENTER
-style: FL_NORMAL_STYLE
-size: FL_DEFAULT_SIZE
-lcol: FL_BLACK
-label: Apply
-shortcut: #A
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
-name: applyobj
-callback: apply_cb
-argument: 0
-
---------------------
-class: FL_BUTTON
-type: FL_NORMAL_BUTTON
-box: 550 158 70 24
+box: 550 280 70 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -122,27 +105,9 @@ callback: restore_cb
 argument: 0
 
 --------------------
-class: FL_CHECKBUTTON
-type: FL_PUSH_BUTTON
-box: 545 25 25 30
-boxtype: FL_NO_BOX
-colors: FL_COL1 FL_BLUE
-alignment: FL_ALIGN_CENTER
-style: FL_NORMAL_STYLE
-size: FL_DEFAULT_SIZE
-lcol: FL_BLACK
-label: AutoApply
-shortcut: 
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
-name: autoapplyobj
-callback: autoapply_setting_cb
-argument: 0
-
---------------------
 class: FL_TABFOLDER
 type: FL_TOP_TABFOLDER
-box: 6 5 531 299
+box: 5 5 530 300
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_LEFT_TOP
@@ -254,7 +219,7 @@ shortcut: #T
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: typeobj
-callback: auto_apply_cb
+callback: apply_cb
 argument: 0
 
 --------------------
@@ -272,7 +237,7 @@ shortcut: #B
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: boxobj
-callback: auto_apply_cb
+callback: apply_cb
 argument: 0
 
 --------------------
@@ -347,7 +312,7 @@ shortcut: #H
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: scobj
-callback: auto_apply_cb
+callback: apply_cb
 argument: 0
 return: FL_RETURN_END_CHANGED
 
@@ -366,7 +331,7 @@ shortcut: #L
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: labelobj
-callback: auto_apply_cb
+callback: apply_cb
 argument: 0
 return: FL_RETURN_END_CHANGED
 
@@ -385,7 +350,7 @@ shortcut: #F
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: fontobj
-callback: auto_apply_cb
+callback: apply_cb
 argument: 0
 
 --------------------
@@ -403,7 +368,7 @@ shortcut: #Y
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: styleobj
-callback: auto_apply_cb
+callback: apply_cb
 argument: 0
 
 --------------------
@@ -421,7 +386,7 @@ shortcut: #Z
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: sizeobj
-callback: auto_apply_cb
+callback: apply_cb
 argument: 0
 
 --------------------
@@ -511,7 +476,7 @@ shortcut: #G
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: align
-callback: auto_apply_cb
+callback: apply_cb
 argument: 0
 
 --------------------
@@ -565,7 +530,7 @@ shortcut: #U
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: inside
-callback: auto_apply_cb
+callback: apply_cb
 argument: 0
 
 --------------------
@@ -588,48 +553,6 @@ argument: 0
 
 --------------------
 class: FL_END_GROUP
-
-=============== FORM ===============
-Name: nullattrib
-Width: 540
-Height: 280
-Number of Objects: 2
-
---------------------
-class: FL_BOX
-type: FL_FLAT_BOX
-box: 0 0 540 280
-boxtype: FL_FLAT_BOX
-colors: FL_COL1 FL_COL1
-alignment: FL_ALIGN_CENTER
-style: FL_NORMAL_STYLE
-size: FL_DEFAULT_SIZE
-lcol: FL_BLACK
-label: 
-shortcut: 
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
-
---------------------
-class: FL_BOX
-type: FL_UP_BOX
-box: 90 100 350 50
-boxtype: FL_UP_BOX
-colors: FL_COL1 FL_COL1
-alignment: FL_ALIGN_CENTER
-style: FL_NORMAL_STYLE
-size: FL_NORMAL_SIZE
-lcol: FL_BLACK
-label: Not implemented (or not interesting)
-shortcut: 
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
 
 ==============================
 create_the_forms

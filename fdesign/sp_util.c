@@ -101,7 +101,6 @@ void
 handle_how_return_changes( FL_OBJECT * menu,
                            FL_OBJECT * target )
 {
-    SuperSPEC *sp = target->u_vdata;
     int hr = FL_RETURN_NONE;
 
     if (    fl_get_menu_item_mode( menu, 1 ) & FL_PUP_CHECK
@@ -243,6 +242,74 @@ get_how_return_name( unsigned int how_return,
     }
 
     return buf + ( with_spaces ? 3 : 1 );
+}
+
+
+/***************************************
+ * Read the specified xpm/xbm filename, and return the data name
+ * and size
+ ***************************************/
+
+void
+get_xpm_stuff( char * in,
+               FILE * fp )
+{
+    char buf[ 128 ],
+         *p;
+
+    while ( fgets( buf, sizeof buf - 1, fp ) )
+        if ( ( p = strstr( buf, "static char" ) ) )
+        {
+            *p += 11;
+            while ( *p && *++p != '*' )
+                /* empty */ ;
+
+            while ( *p && *++p != '[' ) /* ] */
+                if ( ! isspace( ( unsigned char ) *p ) )
+                    *in++ = *p;
+
+            *in = '\0';
+            break;
+        }
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+get_xbm_stuff( IconInfo * in )
+{
+    const char *start,
+               *end;
+    size_t len;
+
+    if ( ! ( start = strrchr( in->filename, '/' ) ) )
+        start = in->filename;
+
+    if ( ( end = strrchr( start, '.' ) ) )
+        len = end - start;
+    else
+        len = strlen( start );
+
+    strcpy( strncpy( in->width,  start, len ) + len, "_width"  );
+    strcpy( strncpy( in->height, start, len ) + len, "_height" );
+    strcpy( strncpy( in->data,   start, len ) + len, "_bits"   );
+}
+
+
+/***************************************
+ ***************************************/
+
+const char *
+file_tail( const char * full )
+{
+    char *p;
+
+    if ( ( p = strrchr( full, '/' ) ) )
+        return p + 1;
+
+    return full;
 }
 
 

@@ -34,86 +34,36 @@
 #include <float.h>
 #include "fd_main.h"
 #include "fd_spec.h"
+#include "sp_counter.h"
 #include "private/pcounter.h"
+#include "private/pvaluator.h"
 #include "spec/counter_spec.h"
 
-extern FD_counterattrib *create_form_counterattrib( void );
-
-static FD_counterattrib *cnt_attrib;
-static SuperSPEC *counter_spec;
-static void init_spec( SuperSPEC * );
-
+static FD_counterattrib * cnt_attrib;
+static FL_OBJECT * curobj;
 
 /***************************************
  ***************************************/
 
-void *
-get_counter_spec_fdform( void )
+FL_FORM *
+counter_create_spec_form( void )
 {
-    if ( ! cnt_attrib )
-    {
-        cnt_attrib = create_form_counterattrib( );
+    if ( cnt_attrib )
+        return cnt_attrib->counterattrib;
 
-        setup_how_return_menu( cnt_attrib->returnsetting );
-        fl_set_menu_item_mode( cnt_attrib->returnsetting, 5,
-                               FL_PUP_BOX | FL_PUP_GRAY );
-        fl_set_menu_item_mode( cnt_attrib->returnsetting, 6,
-                               FL_PUP_BOX | FL_PUP_GRAY );
-    }
-    return cnt_attrib;
-}
+    cnt_attrib = create_form_counterattrib( );
 
-
-/***************************************
- ***************************************/
-
-void
-counter_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
-                      long        data  FL_UNUSED_ARG )
-{
-    superspec_to_spec( cnt_attrib->vdata );
-    init_spec( get_superspec( cnt_attrib->vdata ) );
-    redraw_the_form( 0 );
-}
-
-
-/***************************************
- ***************************************/
-
-static void
-init_spec( SuperSPEC * spec )
-{
-    fl_set_counter_value( cnt_attrib->prec, spec->prec );
-
-    set_finput_value( cnt_attrib->minval,     spec->min,   spec->prec );
-    set_finput_value( cnt_attrib->maxval,     spec->max,   spec->prec );
-    set_finput_value( cnt_attrib->initialval, spec->val,   spec->prec );
-    set_finput_value( cnt_attrib->step1,      spec->sstep, spec->prec );
-    set_finput_value( cnt_attrib->step2,      spec->lstep, spec->prec );
-
-    reset_how_return_menu( cnt_attrib->returnsetting, spec->how_return );
-}
-
-
-/***************************************
- ***************************************/
-
-int
-set_counter_attrib( FL_OBJECT * ob )
-{
-    cnt_attrib->vdata = ob;
-    counter_spec = get_superspec( ob );
+    setup_how_return_menu( cnt_attrib->returnsetting );
+    fl_set_menu_item_mode( cnt_attrib->returnsetting, 5,
+                           FL_PUP_BOX | FL_PUP_GRAY );
+    fl_set_menu_item_mode( cnt_attrib->returnsetting, 6,
+                           FL_PUP_BOX | FL_PUP_GRAY );
 
     fl_set_counter_precision( cnt_attrib->prec, 0 );
     fl_set_counter_step( cnt_attrib->prec, 1, 2 );
     fl_set_counter_bounds( cnt_attrib->prec, 0, DBL_DIG );
 
-    if ( ob->type == FL_SIMPLE_COUNTER )
-        fl_hide_object( cnt_attrib->step2 );
-
-    init_spec( counter_spec );
-
-    return 0;
+    return cnt_attrib->counterattrib;
 }
 
 
@@ -121,12 +71,42 @@ set_counter_attrib( FL_OBJECT * ob )
  ***************************************/
 
 void
-counter_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
-                      long        data  FL_UNUSED_ARG )
+counter_adjust_spec_form( FL_OBJECT * obj )
+{
+    curobj = obj;
+
+    if ( obj->type == FL_SIMPLE_COUNTER )
+        fl_hide_object( cnt_attrib->step2 );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+counter_fill_in_spec_form( FL_OBJECT * obj )
+{
+    FLI_COUNTER_SPEC *sp = obj->spec;
+
+    fl_set_counter_value( cnt_attrib->prec, sp->prec );
+
+    set_finput_value( cnt_attrib->minval,     sp->min,   sp->prec );
+    set_finput_value( cnt_attrib->maxval,     sp->max,   sp->prec );
+    set_finput_value( cnt_attrib->initialval, sp->val,   sp->prec );
+    set_finput_value( cnt_attrib->step1,      sp->sstep, sp->prec );
+    set_finput_value( cnt_attrib->step2,      sp->lstep, sp->prec );
+
+    reset_how_return_menu( cnt_attrib->returnsetting, curobj->how_return );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+counter_reread_spec_form( FL_OBJECT * obj )
 {
     double r1, r2;
-
-    obj = cnt_attrib->vdata;
 
     if (    get_checked_float( fl_get_input( cnt_attrib->minval ), &r1 )
          && get_checked_float( fl_get_input( cnt_attrib->maxval ), &r2 ) )
@@ -135,16 +115,9 @@ counter_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
     if ( get_checked_float( fl_get_input( cnt_attrib->initialval ), &r1 ) )
          fl_set_counter_value( obj, r1 );
 
-    if ( get_checked_float( fl_get_input( cnt_attrib->initialval ), &r1 ) )
-         fl_set_counter_value( obj, r1 );
-
-    fl_set_counter_precision( obj, fl_get_counter_value( cnt_attrib->prec ) );
-
     if (    get_checked_float( fl_get_input( cnt_attrib->step1 ), &r1 )
          && get_checked_float( fl_get_input( cnt_attrib->step2 ), &r2 ) )
         fl_set_counter_step( obj, r1, r2 );
-
-    spec_to_superspec( obj );
 
     redraw_the_form( 0 );
 }
@@ -154,80 +127,28 @@ counter_apply_attrib( FL_OBJECT * obj   FL_UNUSED_ARG,
  ***************************************/
 
 void
-emit_counter_code( FILE      * fp,
-                   FL_OBJECT * ob )
+counter_emit_spec_fd_code( FILE      * fp,
+                           FL_OBJECT * obj )
 {
-    FL_OBJECT *defobj;
-    SuperSPEC *spec,
-              *defspec;
+    FL_OBJECT *defobj = fl_create_counter( obj->type, 0, 0, 0, 0, "" );
+    FLI_COUNTER_SPEC *sp    = obj->spec,
+                     *defsp = defobj->spec;
 
-    if ( ob->objclass != FL_COUNTER )
-        return;
-
-    /* create a default object */
-
-    defobj = fl_create_counter( ob->type, 0, 0, 0, 0, "" );
-
-    defspec = get_superspec( defobj );
-    spec = get_superspec( ob );
-
-    if ( spec->prec != defspec->prec )
-        fprintf( fp, "    fl_set_counter_precision( obj, %d );\n",
-                 spec->prec );
-
-    if ( spec->min != defspec->min || spec->max != defspec->max )
-        fprintf( fp, "    fl_set_counter_bounds( obj, %.*f, %.*f );\n",
-                 spec->prec, spec->min, spec->prec, spec->max );
-
-    if ( spec->val != defspec->val )
-        fprintf( fp, "    fl_set_counter_value( obj, %.*f );\n",
-                 spec->prec, spec->val );
-
-    if ( spec->sstep != defspec->sstep || spec->lstep != defspec->lstep )
-        fprintf( fp, "    fl_set_counter_step( obj, %.*f, %.*f );\n",
-                 spec->prec, spec->sstep, spec->prec, spec->lstep );
-
-    fl_free_object( defobj );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-save_counter_attrib( FILE      * fp,
-                     FL_OBJECT * ob )
-{
-    FL_OBJECT *defobj;
-    SuperSPEC *defspec,
-              *spec;
-
-    if ( ob->objclass != FL_COUNTER )
-        return;
-
-    /* Create a default object */
-
-    defobj = fl_create_counter( ob->type, 0, 0, 0, 0, "" );
-
-    defspec = get_superspec( defobj );
-    spec = get_superspec( ob );
-
-    if (    spec->min != defspec->min
-         || spec->max != defspec->max )
+    if ( sp->min != defsp->min || sp->max != defsp->max )
         fprintf( fp, "    bounds: %.*f %.*f\n",
-                 spec->prec, spec->min, spec->prec, spec->max );
+                 sp->prec, sp->min, sp->prec, sp->max );
 
-    if ( spec->prec != defspec->prec )
-        fprintf( fp, "    precision: %d\n", spec->prec );
+    if ( sp->prec != defsp->prec )
+        fprintf( fp, "    precision: %d\n", sp->prec );
 
-    if ( spec->val != defspec->val )
-        fprintf( fp, "    value: %.*f\n", spec->prec, spec->val );
+    if ( sp->val != defsp->val )
+        fprintf( fp, "    value: %.*f\n", sp->prec, sp->val );
 
-    if ( spec->sstep != defspec->sstep )
-        fprintf( fp, "    sstep: %.*f\n", spec->prec, spec->sstep );
+    if ( sp->sstep != defsp->sstep )
+        fprintf( fp, "    sstep: %.*f\n", sp->prec, sp->sstep );
 
-    if ( spec->lstep != defspec->lstep )
-        fprintf( fp, "    lstep: %.*f\n", spec->prec, spec->lstep );
+    if ( sp->lstep != defsp->lstep )
+        fprintf( fp, "    lstep: %.*f\n", sp->prec, sp->lstep );
 
     fl_free_object( defobj );
 }
@@ -237,14 +158,41 @@ save_counter_attrib( FILE      * fp,
  ***************************************/
 
 void
-cnt_precision_cb( FL_OBJECT * ob,
+counter_emit_spec_c_code( FILE      * fp,
+                          FL_OBJECT * obj )
+{
+    FL_OBJECT *defobj = fl_create_counter( obj->type, 0, 0, 0, 0, "" );
+    FLI_COUNTER_SPEC *sp    = obj->spec,
+                     *defsp = defobj->spec;
+
+    if ( sp->prec != defsp->prec )
+        fprintf( fp, "    fl_set_counter_precision( obj, %d );\n", sp->prec );
+
+    if ( sp->min != defsp->min || sp->max != defsp->max )
+        fprintf( fp, "    fl_set_counter_bounds( obj, %.*f, %.*f );\n",
+                 sp->prec, sp->min, sp->prec, sp->max );
+
+    if ( sp->val != defsp->val )
+        fprintf( fp, "    fl_set_counter_value( obj, %.*f );\n",
+                 sp->prec, sp->val );
+
+    if ( sp->sstep != defsp->sstep || sp->lstep != defsp->lstep )
+        fprintf( fp, "    fl_set_counter_step( obj, %.*f, %.*f );\n",
+                 sp->prec, sp->sstep, sp->prec, sp->lstep );
+
+    fl_free_object( defobj );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+cnt_precision_cb( FL_OBJECT * obj,
                   long        data  FL_UNUSED_ARG )
 {
-    double p = fl_get_counter_value( ob );
-
-    fl_set_counter_precision( cnt_attrib->vdata, p );
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_counter_precision( curobj, fl_get_counter_value( obj ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -252,16 +200,13 @@ cnt_precision_cb( FL_OBJECT * ob,
  ***************************************/
 
 void
-cnt_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+cnt_minmax_change( FL_OBJECT * obj   FL_UNUSED_ARG,
                    long        data  FL_UNUSED_ARG )
 {
-    double min = get_finput_value( cnt_attrib->minval );
-    double max = get_finput_value( cnt_attrib->maxval );
-
-    fl_set_counter_bounds( cnt_attrib->vdata, min, max );
-
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_counter_bounds( curobj,
+                           get_finput_value( cnt_attrib->minval ),
+                           get_finput_value( cnt_attrib->maxval ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -269,16 +214,13 @@ cnt_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 void
-cnt_stepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+cnt_stepchange_cb( FL_OBJECT * obj   FL_UNUSED_ARG,
                    long        data  FL_UNUSED_ARG )
 {
-    double s1 = get_finput_value( cnt_attrib->step1 );
-    double s2 = get_finput_value( cnt_attrib->step2 );
-
-    fl_set_counter_step( cnt_attrib->vdata, s1, s2 );
-
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    fl_set_counter_step( curobj,
+                         get_finput_value( cnt_attrib->step1 ),
+                         get_finput_value( cnt_attrib->step2 ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -286,24 +228,14 @@ cnt_stepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 void
-cnt_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+cnt_initialvalue_change( FL_OBJECT * obj,
                          long        data  FL_UNUSED_ARG )
 {
-    double val = get_finput_value( cnt_attrib->initialval );
+    FLI_COUNTER_SPEC *sp = curobj->spec;
 
-    fprintf( stderr, "ZZZZZZZZZZ\n" );
-
-    fl_set_counter_value( cnt_attrib->vdata, val );
-
-    if ( val != fl_get_counter_value( cnt_attrib->vdata ) )
-    {
-        counter_spec->val = fl_get_counter_value( cnt_attrib->vdata );
-        set_finput_value( cnt_attrib->initialval, counter_spec->val,
-                          counter_spec->prec );
-    }
-
-    if ( auto_apply )
-        redraw_the_form( 0 );
+    set_finput_value( obj, get_finput_value( obj ), sp->prec );
+    fl_set_counter_value( curobj, get_finput_value( obj ) );
+    redraw_the_form( 0 );
 }
 
 
@@ -311,11 +243,10 @@ cnt_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 void
-cnt_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+cnt_returnsetting_change( FL_OBJECT * obj,
                           long        data  FL_UNUSED_ARG )
 {
-    handle_how_return_changes( cnt_attrib->returnsetting,
-                               cnt_attrib->vdata );
+    handle_how_return_changes( obj, curobj );
 }
 
 

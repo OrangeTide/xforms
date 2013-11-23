@@ -1101,6 +1101,17 @@ fl_set_slider_size( FL_OBJECT * ob,
 
 
 /***************************************
+ * Sets the portion of the slider box covered by the slider
+ ***************************************/
+
+double
+fl_get_slider_size( FL_OBJECT * obj )
+{
+    return ( ( FLI_SLIDER_SPEC * ) obj->spec )->slsize;
+}
+
+
+/***************************************
  * Only for value sliders.
  ***************************************/
 
@@ -1111,8 +1122,10 @@ fl_set_slider_precision( FL_OBJECT * ob,
     FLI_SLIDER_SPEC *sp = ob->spec;
 
 
-    if ( prec > 10 )
-        prec = 10;
+    if ( prec > FL_SLIDER_MAX_PREC )
+        prec = FL_SLIDER_MAX_PREC;
+    else if ( prec < 0 )
+        prec = 0;
 
     if ( sp->prec != prec )
     {

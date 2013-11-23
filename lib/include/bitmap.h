@@ -115,6 +115,8 @@ FL_EXPORT void fl_set_pixmap_colorcloseness( int red,
 
 FL_EXPORT void fl_free_pixmap_pixmap( FL_OBJECT * ob );
 
+FL_EXPORT void fl_free_pixmap_focus_pixmap( FL_OBJECT * obj );
+
 FL_EXPORT Pixmap fl_get_pixmap_pixmap( FL_OBJECT * ob,
                                        Pixmap    * p,
                                        Pixmap    * m );

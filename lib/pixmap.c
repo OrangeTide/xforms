@@ -1031,6 +1031,18 @@ fl_free_pixmap_pixmap( FL_OBJECT * obj )
 
 
 /***************************************
+ ***************************************/
+
+void
+fl_free_pixmap_focus_pixmap( FL_OBJECT * obj )
+{
+    CHECK( obj, "fl_free_pixmap_focus_pixmap" );
+
+    free_focuspixmap( obj->spec );
+}
+
+
+/***************************************
  * This can't go into forms.c as it will pull xpm into
  * programs that don't need it
  ***************************************/

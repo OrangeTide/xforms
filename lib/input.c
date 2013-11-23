@@ -139,12 +139,12 @@ static int date_validator( FL_OBJECT *,
                            int );
 
 static int int_validator( FL_OBJECT *,
-                           const char *,
+                          const char *,
                           const char *,
                           int );
 
 static int float_validator( FL_OBJECT *,
-                           const char *,
+                            const char *,
                             const char *,
                             int );
 
@@ -1801,26 +1801,17 @@ fl_create_input( int          type,
     sp->input       = obj;
     sp->field_char  = ' ';
 
-    /* Can't remember why validated input return is set to RETURN_END
-       but probably with some reason. Wait until 1.0 to reset it */
-
     if ( obj->type == FL_INT_INPUT )
-    {
         sp->validate = int_validator;
-        obj->how_return = FL_RETURN_END;
-    }
     else if ( obj->type == FL_FLOAT_INPUT )
-    {
         sp->validate = float_validator;
-        obj->how_return = FL_RETURN_END;
-    }
     else if ( obj->type == FL_DATE_INPUT )
     {
         fl_set_input_format( obj, FL_INPUT_MMDD, '/' );
         sp->validate = date_validator;
-        obj->how_return = FL_RETURN_END;
     }
 
+    obj->how_return = FL_RETURN_END_CHANGED;
     fl_set_object_dblbuffer( obj, type != FL_HIDDEN_INPUT );
 
     return obj;

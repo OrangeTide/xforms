@@ -233,7 +233,7 @@ fl_app_signal_direct( int y )
  ***************************************/
 
 void
-fl_remove_all_signal_callbacks( void )
+fli_remove_all_signal_callbacks( void )
 {
     while ( fli_context->signal_rec )
         fl_remove_signal_callback( fli_context->signal_rec->signum );

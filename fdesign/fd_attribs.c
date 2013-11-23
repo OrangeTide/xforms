@@ -16,203 +16,49 @@
  */
 
 
-/**
- * \file fd_attribs.c
- *
- *  This file is part of XForms package
- *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
- *  All rights reserved.
- *
- * It contains some routines to deal with attributes of the objects.
- */
-
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-#include <string.h>
-#include <stdio.h>
-#include <ctype.h>
 #include "include/forms.h"
 #include "fd_main.h"
-#include "private/flsnprintf.h"
+#include "fd_spec.h"
+#include <string.h>
+#include <ctype.h>
 
 
-/****************** FORMS AND CALL-BACKS ************************/
+/* Pointer to object currently being edited */
 
-int auto_apply = 1;
+static FL_OBJECT * curobj;
 
-static void readback_attributes( FL_OBJECT * );
-
-
-/***************************************
- * Callback routine to get a color from the user
- ***************************************/
-
-void
-setcolor_cb( FL_OBJECT * obj,
-             long        arg  FL_UNUSED_ARG )
-{
-    int col1 = fl_show_colormap( obj->col1 );
-
-    fl_set_object_color( obj, col1, col1 );
-    auto_apply_cb( obj, 0 );
-}
+static void save_object( FL_OBJECT * obj );
+static void restore_object( FL_OBJECT * obj );
+static void attrib_init( FD_generic_attrib * ui );
+static int validate_attributes( void );
+static void readback_attributes( FL_OBJECT * obj );
+static void copy_shortcut( FL_OBJECT * dest,
+                           FL_OBJECT * src );
+static void cleanup_saved_object( void );
+static void show_attributes( const FL_OBJECT * obj );
+static int valid_c_identifier( const char * s );
+static void add_font_choice( const char * p );
+static int validate_cvar_name( FL_OBJECT * obj,
+                               const char * w );
 
 
-/***************************************
- * If we're to change attributes automatically
- ***************************************/
+/* Structuure for storing the initial state of the object */
 
-void
-auto_apply_cb( FL_OBJECT * ob,
-               long        arg )
-{
-    if ( auto_apply )
-        apply_cb( ob, arg );
-}
+static struct {
+	FL_OBJECT * obj;
+	char        name[ MAX_VAR_LEN ];
+	char        cbname[ MAX_VAR_LEN ];
+	char        argname[ MAX_VAR_LEN ];
+} saved_object;
 
 
-/***************************************
- * The auto-apply setting itself
- ***************************************/
-
-void
-autoapply_setting_cb( FL_OBJECT * ob,
-                      long        arg  FL_UNUSED_ARG )
-{
-    if ( ! ( auto_apply = fl_get_button( ob ) ) )
-        fl_show_object( fd_attrib->applyobj );
-    else
-        fl_hide_object( fd_attrib->applyobj );
-}
-
-
-/******* For cancel and restore operation *******{*/
-
-static FL_OBJECT *oldcopy = NULL,      /* object being changed */
-                 *curobj;
-static char oldname[ MAX_VAR_LEN ];
-static char oldcbname[ MAX_VAR_LEN ],
-            oldargname[ MAX_VAR_LEN ];
-
-
-/***************************************
- ***************************************/
-
-static void
-save_object( FL_OBJECT * obj )
-{
-    char *ol;
-    long *os;
-    FL_OBJECT *tmp;
-
-    get_object_name( obj, oldname, oldcbname, oldargname );
-
-    if ( ! oldcopy )
-        oldcopy = fl_make_object( 0, 0, 0, 0, 0, 0, NULL, NULL );
-
-    ol                = oldcopy->label;
-    os                = oldcopy->shortcut;
-    *oldcopy          = *obj;
-    oldcopy->label    = ol;
-    oldcopy->shortcut = os;
-
-    fl_set_object_label( oldcopy, obj->label );
-
-    for ( tmp = obj->child; tmp; tmp = tmp->nc )
-        tmp->parent = obj;
-}
-
-
-/***************************************
- * Duplicate everything in oldobj to obj
- ***************************************/
-
-static void
-restore_object( FL_OBJECT * obj )
-{
-    char *ol = obj->label;
-    long *os = obj->shortcut;
-    FL_OBJECT *tmp;
-    void *spec;
-    FL_OBJECT *child,
-              *prev,
-              *next;
-
-    if ( obj->type != oldcopy->type )
-        change_type( obj, oldcopy->type );
-
-    child = obj->child;
-    prev  = obj->prev;
-    next  = obj->next;
-    spec = obj->spec;
-
-    set_object_name( obj, oldname, oldcbname, oldargname );
-    *obj          = *oldcopy;
-    obj->child    = child;
-    for ( tmp = child; tmp; tmp = tmp->nc )
-        tmp->parent = obj;
-    obj->spec     = spec;
-    obj->prev     = prev;
-    obj->next     = next;
-    obj->label    = ol;
-    obj->shortcut = os;
-    fl_set_object_label( obj, oldcopy->label );
-
-    fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
-}
-
-
-/********** End of cancel/restore ********}***/
-
-
-/***************************************
- * Really change object attributes
- ***************************************/
-
-void
-apply_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
-          long        arg  FL_UNUSED_ARG )
-{
-    readback_attributes( curobj );
-    change_selected_objects( curobj );
-    redraw_the_form( 0 );
-}
-
-
-/***************************************
- * Restore from the original copy
- ***************************************/
-
-void
-restore_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-            long        data  FL_UNUSED_ARG )
-{
-    restore_object( curobj );
-    show_attributes( curobj );
-    change_selected_objects( curobj );
-    redraw_the_form( 0 );
-}
-
-
-/****************** GLOBAL INITIALIZATION  ************************/
+/* Font sizes, need to do this because of symbolic names */
 
 static FL_OBJECT *fnts;
-
-
-/***************************************
- ***************************************/
-
-static void
-add_font_choice( const char * p )
-{
-    fl_addto_choice( fnts, p );
-}
-
-
-/* Font sizes. Need to do this because of symbolic names */
 
 typedef struct {
     int    size;
@@ -233,8 +79,276 @@ static Fsizes fsizes[ ] =
 
 #define NFSIZE ( sizeof fsizes / sizeof *fsizes )
 
+/* Character used for newline */
+
+#define NL 0x0a
+
+
 
 /***************************************
+ * Displays and do interaction with the form for changing object attributes.
+ * 'all' indicates whether label, name, etc. should also be changed and is
+ * only set when only a single object is to selected for changing.
+ ***************************************/
+
+int
+change_object( FL_OBJECT * obj,
+               int         all )
+{
+    FL_OBJECT *retobj;
+    FD_generic_attrib *ui = fd_generic_attrib;
+    FL_FORM * spec_form = NULL;
+
+    attrib_init( ui );
+
+    /* Save current attributes for later restore */
+
+    curobj = obj;
+    save_object( obj );
+
+    /* Show only required parts */
+
+    if ( all )
+    {
+        fl_show_object( ui->labelobj  );
+        fl_show_object( ui->scobj     );
+        fl_show_object( ui->nameobj   );
+        fl_show_object( ui->cbnameobj );
+        fl_show_object( ui->argobj    );
+
+        if ( ( spec_form = create_spec_form( curobj ) ) )
+        {
+            FL_OBJECT *t;
+
+            t = fl_addto_tabfolder( fd_attrib->attrib_folder,
+                                    "Spec", spec_form );
+            fl_set_object_shortcut( t, "#S", 1 );
+        }
+    }
+    else
+    {
+        fl_hide_object( ui->labelobj  );
+        fl_hide_object( ui->scobj     );
+        fl_hide_object( ui->nameobj   );
+        fl_hide_object( ui->cbnameobj );
+        fl_hide_object( ui->argobj    );
+    }
+
+    /* Show attributes of the current object */
+
+    show_attributes( obj );
+
+    /* Do interaction */
+
+    fl_deactivate_all_forms( );
+
+    /* Disable selection */
+
+    no_selection = 1;
+
+    fl_show_form( fd_attrib->attrib, FL_PLACE_GEOMETRY, FL_FULLBORDER,
+                  "Attributes" );
+    fl_set_app_mainform( fd_attrib->attrib );
+
+    /* Both cancel and readyobj should have their own callbacks, so we don't
+       need to call fl_do_forms(), but since attribute editing can't be
+       invoked for more than one item at a time we need to block the
+       process_xevent. TODO */
+
+    do
+    {
+        XEvent xev;
+
+        retobj = fl_do_forms( );
+        if ( retobj == FL_EVENT )
+            fl_XNextEvent( &xev );
+    } while ( ! (    (    retobj == fd_attrib->readyobj
+                       && validate_attributes( ) )
+                  || retobj == fd_attrib->cancelobj ) );
+
+    if ( retobj == fd_attrib->cancelobj )
+    {
+        restore_object( obj );
+        redraw_the_form( 0 );
+    }
+    else
+    {
+        reread_spec_form( obj );
+        readback_attributes( obj );
+        spec_to_superspec( obj );
+    }
+
+    cleanup_saved_object( );
+
+    fl_set_app_mainform( fd_control->control );
+    fl_set_folder_bynumber( fd_attrib->attrib_folder, 1 );
+    if ( spec_form )
+        fl_delete_folder( fd_attrib->attrib_folder, spec_form );
+    fl_hide_form( fd_attrib->attrib );
+    fl_activate_all_forms( );
+
+    no_selection = 0;
+
+    return retobj == fd_attrib->readyobj;
+}
+
+
+/***************************************
+ * Called on switching between "Generic" and "Spec" folder
+ ***************************************/
+
+void
+folder_switch_cb( FL_OBJECT * obj,
+                  long        data  FL_UNUSED_ARG )
+{
+    int active = fl_get_active_folder_number(
+                        ( ( FD_attrib * ) obj->form->fdui )->attrib_folder );
+
+    if ( active == 1 )
+        reread_spec_form( curobj );
+    else
+    {
+        readback_attributes( curobj );
+        prepare_spec_form( curobj );
+    }
+}
+
+
+/***************************************
+ * Callback for most of the objects for setting generic attributes
+ * (instead of having one for each of them) - evaluates the settings
+ * from all the objects in the generic attributes form and sets the
+ * object accordingly.
+ ***************************************/
+
+void
+apply_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+          long        arg  FL_UNUSED_ARG )
+{
+    readback_attributes( curobj );
+	redraw_the_form( 0 );
+}
+
+
+/***************************************
+ * Callback for the "Restore" button
+ ***************************************/
+
+void
+restore_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+            long        data  FL_UNUSED_ARG )
+{
+    restore_object( curobj );
+    show_attributes( curobj );
+    redraw_the_form( 0 );
+}
+
+
+/***************************************
+ * Stores all information about the initial settings of the object
+ * being edited (for restoring it)
+ ***************************************/
+
+static void
+save_object( FL_OBJECT * obj )
+{
+	/* Get the objects name, name of the callback function and
+	   the argument string */
+
+    get_object_name( obj, saved_object.name, saved_object.cbname,
+					 saved_object.argname );
+
+	/* This also allocated memory for (empty) strings that we don't need
+	   (and the pointers will be overwritten in the next step) */
+
+	/* Copy the object */
+
+    saved_object.obj = fl_malloc( sizeof *saved_object.obj );
+    *saved_object.obj = *obj;
+    saved_object.obj->spec = NULL;
+
+	/* Now get memory for the saved object, store what it contains and
+       also save the label and the shortcut for real */
+
+	saved_object.obj->label = fl_strdup( obj->label );
+	copy_shortcut( saved_object.obj, obj );
+
+    /* Get a new superspec of the object to be stored with the saved
+       object. Since the process normally would return the objects
+       already existing superspec store the adress and fake a
+       not existing superspec, create a new one for the stored
+       object and finally make the object point to "its" original
+       version again. */
+
+    saved_object.obj->u_vdata = NULL;
+    copy_superspec( saved_object.obj, obj );
+}
+
+
+/***************************************
+ * Restores the object state to what it was when editing started
+ ***************************************/
+
+static void
+restore_object( FL_OBJECT * obj )
+{
+    void * spec = obj->spec;
+
+    /* The objects superspec can be thrown away */
+
+    free_superspec( obj );
+
+    set_object_name( obj, saved_object.name, saved_object.cbname,
+					 saved_object.argname );
+
+	fl_free( obj->label );
+	fl_free( obj->shortcut );
+
+    if ( obj->type != saved_object.obj->type )
+        spec_change_type( obj, saved_object.obj->type );
+
+	*obj = *saved_object.obj;
+
+	obj->label = fl_strdup( saved_object.obj->label );
+	copy_shortcut( obj, saved_object.obj );
+
+    obj->spec = spec;
+    superspec_to_spec( obj );
+
+    saved_object.obj->u_vdata = NULL;
+    copy_superspec( saved_object.obj, obj );
+
+    restore_spec( obj );
+
+    /* It the "Spec" folder is currently been shown set its content to
+       the restored object settings and redraw it */
+
+    if ( fl_get_active_folder_number( fd_attrib->attrib_folder ) == 2 )
+    {
+        prepare_spec_form( obj );
+        fl_redraw_object( fd_attrib->attrib_folder );
+    }
+}
+
+
+/***************************************
+ * Remove all data allocated in the structure for saving the objects
+ * initial state
+ ***************************************/
+
+static void
+cleanup_saved_object( void )
+{
+	fl_free( saved_object.obj->label );
+	fl_free( saved_object.obj->shortcut );
+    free_superspec( saved_object.obj );
+    fl_free( saved_object.obj );
+}
+
+
+/***************************************
+ * Initialize the form used for editing the objects attributes, needs to
+ * be run only once
  ***************************************/
 
 static void
@@ -260,14 +374,14 @@ attrib_init( FD_generic_attrib * ui )
     fl_set_object_return( ui->nameobj, FL_RETURN_END );
     fl_set_object_return( ui->cbnameobj, FL_RETURN_END );
 
-    /* resize */
+    /* Resize */
 
     fl_set_choice_fontsize( ui->resize, fd_align_fontsize );
     for ( vp = vn_resize; vp->val >= 0; vp++ )
         fl_addto_choice( ui->resize, vp->name + 3 );
 
-    /* gravity. Due to compatibilities issues, there are more than need in
-       vn_gravity */
+    /* Gravity. Due to compatibility issues there are more than is needed
+	   in vn_gravity */
 
     for ( i = 0, vp = vn_gravity; vp->val >= 0 && i < 9; vp++, i++ )
     {
@@ -275,22 +389,21 @@ attrib_init( FD_generic_attrib * ui )
         fl_addto_choice( ui->segravity, vp->name + 3 );
     }
 
-    /* align (only show the first 9 elements of 'vn_align' the rest is
-       in there only for backward compatibility reasons when reading in
-       a file) */
+    /* Align (only show the first 9 elements of 'vn_align' the rest is
+       in there for backward compatibility reasons when reading in a file) */
 
     fl_set_choice_fontsize( ui->align, fd_align_fontsize );
     for ( vp = vn_align, i = 0; vp->val >= 0 && i < 9; vp++, i++ )
         fl_addto_choice( ui->align, vp->name + 9 );
     fl_addto_choice( ui->inside, "Inside|Outside" );
 
-    /* font stuff */
+    /* Font stuff */
 
     fnts = ui->fontobj;
     fl_enumerate_fonts( add_font_choice, 1 );
     fl_addto_choice( ui->styleobj, "Normal|Shadow|Engraved|Embossed" );
 
-    /* size */
+    /* Size */
 
     for ( i = 0; i < ( int ) NFSIZE; i++ )
     {
@@ -304,184 +417,19 @@ attrib_init( FD_generic_attrib * ui )
         fl_addto_choice( ui->sizeobj, buf );
         fl_set_choice_item_shortcut( ui->sizeobj, i + 1, fsizes[ i ].sc );
     }
-
-}
-
-/* Check for obvious errors */
-
-#define OK_letter( c )    (    *c == '_'                       \
-                            || *c == '['                       \
-                            || *c == ']'                       \
-                            || * c== '.'                       \
-                            || ( *c == ':' && *++c == ':' )    \
-                            || ( *c == '-' && *++c == '>' ) )
-
-
-/***************************************
- ***************************************/
-
-static int
-valid_c_identifier( const char * s )
-{
-    if ( fdopt.lax )
-        return 1;
-
-    /* Empty is considered to be valid */
-
-    if ( ! s || ! *s || ( *s == ' ' && *( s + 1 ) == '\0' ) )
-        return 1;
-
-    if ( ! isalpha( ( unsigned char ) *s ) && *s != '_' )
-        return 0;
-
-    for ( s++; *s; s++ )
-        if ( ! isalnum( ( unsigned char ) *s ) && ! OK_letter( s ) )
-            return 0;
-
-    return 1;
 }
 
 
 /***************************************
- ***************************************/
-
-static int
-validate_cvar_name( FL_OBJECT * obj,
-                    const char * w )
-{
-    const char *s = fl_get_input( obj );
-
-    if ( ! valid_c_identifier( s ) )
-    {
-        char *m;
-
-        if ( ! w || ! *w )
-            m = fl_strdup( "Invalid C identifier:" );
-        else if ( ! ( asprintf( &m, "Invalid C identifier specified for %s:",
-                                w ) ) )
-            m = NULL;
-
-        if ( m )
-        {
-            fl_show_alert( "Error", m, s, 0 );
-            fl_free( m );
-        }
-
-        fl_set_focus_object( obj->form, obj );
-        return 0;
-    }
-
-    return 1;
-}
-
-
-/***************************************
- ***************************************/
-
-static int
-validate_attributes( void )
-{
-    return    validate_cvar_name( fd_generic_attrib->nameobj, "object name" )
-           && validate_cvar_name( fd_generic_attrib->cbnameobj, "callback" );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-validate_cvar_name_cb( FL_OBJECT * obj,
-                       long        data )
-{
-    validate_cvar_name( obj, data == 0 ? "object name" : "callback" );
-}
-
-
-/********************* THE ACTUAL ROUTINES ****************************/
-
-/***************************************
+ * Sets up the "Generic" attributes form with the properties of the
+ * object currently being edited
  ***************************************/
 
 static void
-readback_attributes( FL_OBJECT * obj )
-{
-    int spstyle;
-    char * name,
-         * cbname;
-    char tmpbuf[ 128 ];
-
-    obj->boxtype = fl_get_choice( fd_generic_attrib->boxobj ) - 1;
-
-    /* Label style consists of two parts */
-
-    obj->lstyle = fl_get_choice( fd_generic_attrib->fontobj ) - 1;
-    spstyle = fl_get_choice( fd_generic_attrib->styleobj ) - 1;
-    obj->lstyle +=
-              spstyle == 3 ? FL_EMBOSSED_STYLE : ( spstyle * FL_SHADOW_STYLE );
-    obj->col1 = fd_generic_attrib->col1obj->col1;
-    obj->col2 = fd_generic_attrib->col2obj->col1;
-    obj->lcol = fd_generic_attrib->lcolobj->col1;
-
-    fli_snprintf( tmpbuf, sizeof tmpbuf, "FL_ALIGN_%s",
-                  fl_get_choice_text( fd_generic_attrib->align ) );
-    obj->align = align_val( tmpbuf );
-
-    if (    fl_get_choice( fd_generic_attrib->inside ) == 1
-         && ! fl_is_center_lalign( obj->align ) )
-        obj->align = fl_to_inside_lalign( obj->align );
-    else
-        obj->align = fl_to_outside_lalign( obj->align );
-
-    fli_snprintf( tmpbuf, sizeof tmpbuf, "FL_%s",
-                  fl_get_choice_text( fd_generic_attrib->resize ) );
-    obj->resize = resize_val( tmpbuf );
-
-    fli_snprintf( tmpbuf, sizeof tmpbuf, "FL_%s",
-                  fl_get_choice_text( fd_generic_attrib->segravity ) );
-    obj->segravity = gravity_val( tmpbuf );
-
-    fli_snprintf( tmpbuf, sizeof tmpbuf, "FL_%s",
-                  fl_get_choice_text( fd_generic_attrib->nwgravity ) );
-    obj->nwgravity = gravity_val( tmpbuf );
-
-    obj->lsize = fsizes[ fl_get_choice( fd_generic_attrib->sizeobj ) - 1 ].size;
-
-    set_label( obj, fl_get_input( fd_generic_attrib->labelobj ) );
-    set_shortcut( obj, fl_get_input( fd_generic_attrib->scobj ) );
-
-    name = fl_strdup( fl_get_input( fd_generic_attrib->nameobj ) );
-    cbname = fl_strdup( fl_get_input( fd_generic_attrib->cbnameobj ) );
-
-    if ( ! valid_c_identifier( name ) )
-        *name = '\0';
-
-    if ( ! valid_c_identifier( cbname ) )
-        *cbname = '\0';
-
-    set_object_name( obj, name, cbname,
-                     fl_get_input( fd_generic_attrib->argobj ) );
-
-    fl_free( cbname );
-    fl_free( name );
-
-    /* Type change needs to be the last call as it may create objects based on
-       the current object, which need to have the latest attributes */
-
-    if ( obj->objclass == FL_BOX )
-        change_type( obj, obj->boxtype );
-    else
-        change_type( obj, fl_get_choice( fd_generic_attrib->typeobj ) - 1 );
-}
-
-
-/***************************************
- ***************************************/
-
-void
 show_attributes( const FL_OBJECT * obj )
 {
     char objname[ MAX_VAR_LEN ],
-         cbname[ MAX_VAR_LEN ],
+         cbname[  MAX_VAR_LEN ],
          argname[ MAX_VAR_LEN ];
     char buf[ MAX_VAR_LEN ];
     char *label;
@@ -512,11 +460,18 @@ show_attributes( const FL_OBJECT * obj )
 
     /* Fill in settings */
 
+	/* a. boxtype */
+
     fl_set_choice( fd_generic_attrib->boxobj, obj->boxtype + 1 );
+
+	/* b. label alignment */
+
     fl_set_choice_text( fd_generic_attrib->align, align_name( align, 0 ) + 9 );
     fl_set_choice( fd_generic_attrib->inside, ( obj->align == align ) + 1 );
 
-    lstyle = obj->lstyle % FL_SHADOW_STYLE;
+	/* c. label font and style */
+
+    lstyle  = obj->lstyle % FL_SHADOW_STYLE;
     spstyle = obj->lstyle / FL_SHADOW_STYLE;
 
     if ( spstyle >= 3 )
@@ -525,7 +480,9 @@ show_attributes( const FL_OBJECT * obj )
     fl_set_choice( fd_generic_attrib->fontobj, lstyle + 1 );
     fl_set_choice( fd_generic_attrib->styleobj, spstyle + 1 );
 
-    for ( oksize = i = 0; !oksize && i < ( int ) NFSIZE; i++ )
+	/* d. label font size */
+
+    for ( oksize = i = 0; ! oksize && i < ( int ) NFSIZE; i++ )
         if ( ( oksize = obj->lsize == fsizes[ i ].size ))
             fl_set_choice( fd_generic_attrib->sizeobj, i + 1 );
 
@@ -538,218 +495,122 @@ show_attributes( const FL_OBJECT * obj )
         fl_set_choice( fd_generic_attrib->sizeobj, NFSIZE );
     }
 
-    /* gravity stuff */
+    /* e. gravity settings */
 
-    fl_set_choice_text( fd_generic_attrib->resize,
-                        resize_name( obj->resize ) + 3 );
     fl_set_choice_text( fd_generic_attrib->nwgravity,
                         gravity_name( obj->nwgravity ) + 3 );
     fl_set_choice_text( fd_generic_attrib->segravity,
                         gravity_name( obj->segravity ) + 3 );
 
-    get_object_name( obj, objname, cbname, argname );
+	/* f. resize behaviour */
+
+    fl_set_choice_text( fd_generic_attrib->resize,
+                        resize_name( obj->resize ) + 3 );
+
+	/* g. Label string */
+
     label = get_label( obj, 0 );
     fl_set_input( fd_generic_attrib->labelobj, label );
     fl_free( label );
+
+	/* h. name, callback function name and argument */
+
+    get_object_name( obj, objname, cbname, argname );
+
     fl_set_input( fd_generic_attrib->nameobj, objname );
     fl_set_input( fd_generic_attrib->cbnameobj, cbname );
     fl_set_input( fd_generic_attrib->argobj, argname );
 
+	/* h. shortcut */
+
     fl_set_input( fd_generic_attrib->scobj, get_shortcut_string( obj ) );
+
+	/* i. object and label colors */
 
     fl_set_object_color( fd_generic_attrib->col1obj, obj->col1, obj->col1 );
     fl_set_object_color( fd_generic_attrib->col2obj, obj->col2, obj->col2 );
     fl_set_object_color( fd_generic_attrib->lcolobj, obj->lcol, obj->lcol );
+
     fl_unfreeze_form( fd_generic_attrib->generic_attrib );
 }
 
 
 /***************************************
- * Displays the form to change the attributes. 'all' indicates
- * whether all label, name, etc. should also be changed
+ * Sets the objects attributes from  the content of the "Generic" attributes
+ * form
  ***************************************/
 
-int
-change_object( FL_OBJECT * obj,
-               int         all )
+static void
+readback_attributes( FL_OBJECT * obj )
 {
-    FL_OBJECT *retobj;
-    FD_generic_attrib *ui = fd_generic_attrib;
-    FL_FORM * spec_form = NULL;
+    int spstyle;
+    char * name,
+         * cbname;
+    char tmpbuf[ 128 ];
 
-    attrib_init( fd_generic_attrib );
+    obj->boxtype = fl_get_choice( fd_generic_attrib->boxobj ) - 1;
 
-    /* Save current attributes for later restore */
+    /* Label style consists of two parts */
 
-    curobj = obj;
-    save_object( obj );
+    obj->lstyle = fl_get_choice( fd_generic_attrib->fontobj ) - 1;
+    spstyle = fl_get_choice( fd_generic_attrib->styleobj ) - 1;
+    obj->lstyle +=
+              spstyle == 3 ? FL_EMBOSSED_STYLE : ( spstyle * FL_SHADOW_STYLE );
+    obj->col1 = fd_generic_attrib->col1obj->col1;
+    obj->col2 = fd_generic_attrib->col2obj->col1;
+    obj->lcol = fd_generic_attrib->lcolobj->col1;
 
-    /* Show only required parts */
+    sprintf( tmpbuf, "FL_ALIGN_%s",
+             fl_get_choice_text( fd_generic_attrib->align ) );
+    obj->align = align_val( tmpbuf );
 
-    if ( all )
-    {
-        fl_show_object( ui->labelobj  );
-        fl_show_object( ui->scobj     );
-        fl_show_object( ui->nameobj   );
-        fl_show_object( ui->cbnameobj );
-        fl_show_object( ui->argobj    );
-    }
+    if (    fl_get_choice( fd_generic_attrib->inside ) == 1
+         && ! fl_is_center_lalign( obj->align ) )
+        obj->align = fl_to_inside_lalign( obj->align );
     else
-    {
-        fl_hide_object( ui->labelobj  );
-        fl_hide_object( ui->scobj     );
-        fl_hide_object( ui->nameobj   );
-        fl_hide_object( ui->cbnameobj );
-        fl_hide_object( ui->argobj    );
-        spec_form = fl_get_tabfolder_folder_bynumber( fd_attrib->attrib_folder,
-                                                      2 );
-        fl_delete_folder( fd_attrib->attrib_folder, spec_form );
-    }
-
-    /* Show attributes of the current object */
-
-    show_attributes( obj );
-
-    /* Do interaction */
-
-    fl_deactivate_all_forms( );
-
-    /* Disable selection */
-
-    no_selection = 1;
-
-    /* Always come up with Generic */
-
-    fl_set_folder_bynumber( fd_attrib->attrib_folder, 1 );
-
-    if ( fd_attrib->attrib->y < 55 )
-        fd_attrib->attrib->y = 25;
-
-    fl_show_form( fd_attrib->attrib, FL_PLACE_GEOMETRY, FL_FULLBORDER,
-                  "Attributes" );
-    fl_set_app_mainform( fd_attrib->attrib );
-
-    /* Both cancel and readyobj should have their own callbacks, so we don't
-       need to call fl_do_forms(), but since attribute editing can't be
-       invoked for more than one item at a time we need to block the
-       proces_xevent. TODO */
-
-    do
-    {
-        XEvent xev;
-
-        retobj = fl_do_forms( );
-        if ( retobj == FL_EVENT )
-            fl_XNextEvent( &xev );
-    } while ( ! (    (    retobj == fd_attrib->readyobj
-                       && validate_attributes( ) )
-                  || retobj == fd_attrib->cancelobj ) );
-
-    if ( spec_form )
-        fl_addto_tabfolder( fd_attrib->attrib_folder, "Spec", spec_form );
-    fl_set_app_mainform( fd_control->control );
-    fl_hide_form( fd_attrib->attrib );
-    fl_activate_all_forms( );
-
-    no_selection = 0;
-
-    if ( retobj == fd_attrib->cancelobj )
-    {
-        restore_object( obj );
-        obj_spec_restore( obj );
-        cleanup_spec( obj );
-        redraw_the_form( 0 );
-        return FL_FALSE;
-    }
-    else
-    {
-        readback_attributes( obj );
-        cleanup_spec( obj );
-        return FL_TRUE;
-    }
-}
-
-
-/***************************************
- * Sets the attributes of an object
- ***************************************/
-
-void
-set_attribs( FL_OBJECT  * obj,
-             int          boxtype,
-             int          col1,
-             int          col2,
-             int          lcol,
-             int          align,
-             int          lsize,
-             int          lstyle,
-             const char * label )
-{
-    char *s;
-
-    obj->boxtype = boxtype;
-    obj->col1    = col1;
-    obj->col2    = col2;
-    obj->lcol    = lcol;
-    obj->lsize   = lsize;
-    obj->lstyle  = lstyle;
-
-    if (    obj->objclass == FL_SLIDER
-         && ! ( obj->type & FL_VERT_PROGRESS_BAR ) )
-    {
         obj->align = fl_to_outside_lalign( obj->align );
-        if ( fl_is_center_lalign( obj->align ) )
-            obj->align = FL_SLIDER_ALIGN;
-    }
-    else
-        obj->align   = align;
 
-    if ( ( s = strchr( label, '\010' ) ) )
-        memmove( s, s + 1, strlen( s ) + 1 );
-        
-    fl_set_object_label( obj, label );
+    sprintf( tmpbuf, "FL_%s", fl_get_choice_text( fd_generic_attrib->resize ) );
+    obj->resize = resize_val( tmpbuf );
 
-    fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+    sprintf( tmpbuf, "FL_%s",
+             fl_get_choice_text( fd_generic_attrib->segravity ) );
+    obj->segravity = gravity_val( tmpbuf );
 
-    /* Some extra adjustments for spinner objects (this is a hack but
-       avoiding it would require a complete change of how fdesign works) */
+    sprintf( tmpbuf, "FL_%s",
+             fl_get_choice_text( fd_generic_attrib->nwgravity ) );
+    obj->nwgravity = gravity_val( tmpbuf );
 
-    if ( obj->objclass == FL_SPINNER )
-    {
-        FL_OBJECT *subobj = fl_get_spinner_input( obj );
+    obj->lsize = fsizes[ fl_get_choice( fd_generic_attrib->sizeobj ) - 1 ].size;
 
-        subobj->col1 = col1;
-        subobj->col2 = col2;
+    set_label( obj, fl_get_input( fd_generic_attrib->labelobj ) );
+    set_shortcut( obj, fl_get_input( fd_generic_attrib->scobj ) );
 
-        subobj->lstyle = lstyle;
-        subobj->lsize  = lsize; 
+    name = fl_strdup( fl_get_input( fd_generic_attrib->nameobj ) );
+    cbname = fl_strdup( fl_get_input( fd_generic_attrib->cbnameobj ) );
 
-        fli_handle_object( subobj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
-   }
+    if ( ! valid_c_identifier( name ) )
+        *name = '\0';
+
+    if ( ! valid_c_identifier( cbname ) )
+        *cbname = '\0';
+
+    set_object_name( obj, name, cbname,
+                     fl_get_input( fd_generic_attrib->argobj ) );
+
+    fl_free( cbname );
+    fl_free( name );
+
+	spec_change_type( obj, fl_get_choice( fd_generic_attrib->typeobj ) - 1 );
+
+    redraw_the_form( 0 );
 }
 
 
 /***************************************
- * More attributes
- ***************************************/
-
-void
-set_miscattribs( FL_OBJECT    * obj,
-                 unsigned int   nw,
-                 unsigned int   se,
-                 unsigned int   re )
-{
-    obj->nwgravity = nw;
-    obj->segravity = se;
-    obj->resize    = re;
-}
-
-
-#define NL  10
-
-
-/***************************************
- * Sets the label, turning \n into NL
+ * Turns the string from the label input field into a string suitable for
+ * an object label (taking care of newlines and shortcut markers) and
+ * the sets the label of the object being edited.
  ***************************************/
 
 void
@@ -785,6 +646,7 @@ set_label( FL_OBJECT  * obj,
 
 
 /***************************************
+ * Sets the shortcut of the object being edited.
  ***************************************/
 
 void
@@ -805,7 +667,7 @@ set_shortcut( FL_OBJECT  * obj,
 
 
 /***************************************
- * Decide if label need quotes ('\')
+ * Decides if label need quotes ('\')
  ***************************************/
 
 static int
@@ -813,11 +675,8 @@ need_quote( const char * s,
             int          i )
 {
     int c = s[ i ],
-        p,
-        n;
-
-    p =  i ? s[ i - 1 ] : 0;    /* prev char */
-    n = *s ? s[ i + 1 ] : 0;    /* next char */
+        p =  i ? s[ i - 1 ] : 0,     /* prev char */
+        n = *s ? s[ i + 1 ] : 0;     /* next char */
 
     if ( c == '"' && p != '\\' )
         return 1;
@@ -829,7 +688,8 @@ need_quote( const char * s,
 
 
 /***************************************
- * Read the label, turning NL into \n
+ * Takes an objects label string and converts it into a string suitable
+ * for setting as the content of the label input field
  ***************************************/
 
 char *
@@ -929,6 +789,8 @@ special_key( int    key,
 
 
 /***************************************
+ * Converts the objects shortcut string into a string suitable for
+ * setting as the content of the shortcut input object
  ***************************************/
 
 char *
@@ -976,137 +838,123 @@ get_shortcut_string( const FL_OBJECT * obj )
 
 
 /***************************************
- * Makes a copy of the object. Only if 'exact' is set
- * the objects name is copied.
+ * Callback for fl_enumerate_fonts() used in intializing the form
  ***************************************/
 
-FL_OBJECT *
-copy_object( FL_OBJECT * obj,
-             int         exact )
+static void
+add_font_choice( const char * p )
 {
-    char name[ MAX_VAR_LEN ],
-         cbname[ MAX_VAR_LEN ],
-         argname[ MAX_VAR_LEN ];
-    FL_OBJECT *obj2;
-
-    obj2 = add_an_object( obj->objclass, obj->type, obj->x, obj->y,
-                          obj->w, obj->h );
-    get_object_name( obj, name, cbname, argname );
-    set_object_name( obj2, exact ? name : "", cbname, argname );
-
-    set_attribs( obj2, obj->boxtype, obj->col1, obj->col2,
-                 obj->lcol, obj->align, obj->lsize, obj->lstyle, obj->label );
-
-    set_miscattribs( obj2, obj->nwgravity, obj->segravity, obj->resize );
-
-    /* Also copy the object specific info */
-
-    copy_superspec( obj2, obj );
-
-    fl_delete_object( obj2 );
-
-    return obj2;
+    fl_addto_choice( fnts, p );
 }
 
 
 /***************************************
- * Changes the type of an object by reconstructing it. A quite nasty
- * procedure that delves into the form structure in a bad way.
- * And it looks a lot like a memory leak...
+ * Callback routine for getting a color from the user
  ***************************************/
 
 void
-change_type( FL_OBJECT * obj,
-             int         type )
+setcolor_cb( FL_OBJECT * obj,
+             long        arg  FL_UNUSED_ARG )
 {
-    FL_OBJECT *ttt,
-              *defobj,
-              *prev;
-    FL_FORM *form;
-    int boxtype,
-        is_focus;
-    SuperSPEC *sp = obj->u_vdata;
-    long int *shct = NULL;
+    int col1 = fl_show_colormap( obj->col1 );
 
-    if ( obj->type == type )
-        return;
+    fl_set_object_color( obj, col1, col1 );
+    readback_attributes( curobj );
+}
 
-    if ( obj->shortcut )
-    {
-        size_t i = 0;
 
-        while ( obj->shortcut[ i++ ] )
-            /* empty */ ;
+/***************************************
+ * Validates the name of the object and the callback function
+ ***************************************/
 
-        if ( i )
-        {
-            shct = malloc( i * sizeof *shct );
-            memcpy( shct, obj->shortcut, i * sizeof *shct );
-        }
-    }
+static int
+validate_attributes( void )
+{
+    return    validate_cvar_name( fd_generic_attrib->nameobj, "object name" )
+           && validate_cvar_name( fd_generic_attrib->cbnameobj, "callback" );
+}
 
-    /* Create a new object. */
 
-    ttt = add_an_object( obj->objclass, type, obj->x, obj->y, obj->w, obj->h );
+/***************************************
+ ***************************************/
 
-    /* Remove it from the form */
+void
+validate_cvar_name_cb( FL_OBJECT * obj,
+                       long        data )
+{
+    validate_cvar_name( obj, data == 0 ? "object name" : "callback" );
+}
 
-    fl_delete_object( ttt );
 
-    /* Create a default object from which we can test if the user has changed
-       boxtype and other attributes. This is done primarily to get around the
-       type change problem with types having different default boxtype. Don't
-       need to free the defobj as it is managed by find_class_default */
+/***************************************
+ * Checks if the string of an iinput field  is a valid C indentifier
+ ***************************************/
 
-    defobj = find_class_default( obj->objclass, obj->type );
+static int
+validate_cvar_name( FL_OBJECT * obj,
+                    const char * w )
+{
+    const char *s = fl_get_input( obj );
+	char *m;
 
-    if ( defobj->boxtype != obj->boxtype )
-        boxtype = obj->boxtype;
-    else
-        boxtype = ttt->boxtype;
+    if ( valid_c_identifier( s ) )
+		return 1;
 
-    /* Set the attributes */
+	/* If something's wrong switch to the form with the generic attributs,
+	   since there's were the input fields with the name and the callback
+	   function are */
 
-    set_attribs( ttt, boxtype, obj->col1, obj->col2,
-                 obj->lcol, obj->align, obj->lsize, obj->lstyle, obj->label );
+	fl_set_folder_bynumber( fd_attrib->attrib_folder, 1 );
 
-    set_miscattribs( ttt, obj->nwgravity, obj->segravity, obj->resize );
+	if ( ! w || ! *w )
+		m = fl_strdup( "Invalid C identifier:" );
+	else if ( ! ( asprintf( &m, "Invalid C identifier specified for %s:",
+							w ) ) )
+		m = NULL;
 
-    is_focus = obj->focus;
+	if ( m )
+	{
+		fl_show_alert( "Error", m, s, 0 );
+		fl_free( m );
+	}
 
-    prev = obj->prev;
-    form = obj->form;
+	fl_set_focus_object( obj->form, obj );
+	return 0;
+}
 
-    clear_selection( );
 
-    fl_delete_object( obj );
-    fli_handle_object( obj, FL_FREEMEM, 0, 0, 0, NULL, 0 );
-    if ( obj->child )
-        fli_free_composite( obj );
+/* Check for obvious errors */
 
-    *obj = *ttt;
-    obj->u_vdata = sp;
-    obj->form = NULL;
-    if ( prev->next )
-        fli_insert_object( obj, prev->next );
-    else
-        fl_add_object( form, obj );
+#define OK_letter( c )    (    *c == '_'                       \
+                            || *c == '['                       \
+                            || *c == ']'                       \
+                            || * c== '.'                       \
+                            || ( *c == ':' && *++c == ':' )    \
+                            || ( *c == '-' && *++c == '>' ) )
 
-    addto_selection( obj );
 
-    superspec_to_spec( obj );
+/***************************************
+ ***************************************/
 
-    fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+static int
+valid_c_identifier( const char * s )
+{
+    if ( fdopt.lax )
+        return 1;
 
-    /* Correct the object focus if required. */
+    /* Empty is considered to be valid */
 
-    if ( is_focus )
-        fl_set_object_focus( obj->form, obj );
+    if ( ! s || ! *s || ( *s == ' ' && *( s + 1 ) == '\0' ) )
+        return 1;
 
-    obj->shortcut = shct;
+    if ( ! isalpha( ( unsigned char ) *s ) && *s != '_' )
+        return 0;
 
-    redraw_the_form( 0 );
-    show_attributes( obj );
+    for ( s++; *s; s++ )
+        if ( ! isalnum( ( unsigned char ) *s ) && ! OK_letter( s ) )
+            return 0;
+
+    return 1;
 }
 
 
@@ -1114,53 +962,24 @@ change_type( FL_OBJECT * obj,
  ***************************************/
 
 static void
-accept_spec( FL_OBJECT * ob    FL_UNUSED_ARG,
-             long        data  FL_UNUSED_ARG )
+copy_shortcut( FL_OBJECT * dest,
+			   FL_OBJECT * src )
 {
-    long tmp;
-
-    fl_call_object_callback( fd_attrib->applyobj );
-
-    fl_set_folder_bynumber( fd_attrib->attrib_folder, 1 );
-    tmp = fd_attrib->attrib_folder->argument;
-    fd_attrib->attrib_folder->argument = -1;
-    fl_call_object_callback( fd_attrib->attrib_folder );
-    fd_attrib->attrib_folder->argument = tmp;
-}
-
-
-/***************************************
- * Switch between "Generic" and "Spec" folder
- ***************************************/
-
-void
-folder_switch_cb( FL_OBJECT * ob,
-                  long        data )
-{
-    FD_attrib *ui = ob->form->fdui;
-
-    int active = fl_get_active_folder_number( ui->attrib_folder );
-
-    if ( active == 1 )
+	if ( src->shortcut )
     {
-        if ( data != -1 )       /* -1 indicates manual call */
-            fl_call_object_callback( fd_attrib->readyobj );
+        size_t i = 0;
 
-        fd_attrib->readyobj->type = FL_RETURN_BUTTON;     /* yuk! */
-        fl_set_object_shortcut( fd_attrib->readyobj, "^M", 0 );
-        fl_redraw_object( fd_attrib->readyobj );
-        fl_set_object_callback( fd_attrib->readyobj, NULL, 0 );
-        fl_set_object_callback( fd_attrib->applyobj, apply_cb, 0 );
-        fl_set_object_callback( fd_attrib->restoreobj, restore_cb, 0 );
+        while ( src->shortcut[ i++ ] )
+            /* empty */ ;
+
+        if ( i )
+        {
+            dest->shortcut = malloc( i * sizeof *dest->shortcut );
+            memcpy( dest->shortcut, src->shortcut, i * sizeof *dest->shortcut );
+        }
     }
-    else
-    {
-        fd_attrib->readyobj->type = FL_NORMAL_BUTTON;   /* yuk! */
-        fl_set_object_shortcut( fd_attrib->readyobj, "", 0 );
-        fl_redraw_object( fd_attrib->readyobj );
-        fl_set_object_callback( fd_attrib->readyobj, accept_spec, 0 );
-        set_objclass_spec_attributes( curobj, 0 );
-    }
+	else
+		dest->shortcut = NULL;
 }
 
 

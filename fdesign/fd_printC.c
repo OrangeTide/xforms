@@ -30,16 +30,17 @@
 #include <config.h>
 #endif
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
 #include "include/forms.h"
 #include "private/flsnprintf.h"
 #include "flinternal.h"
 #include "fd_main.h"
 #include "fd_spec.h"
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
+#include "sp_menu.h"
 
 #ifdef WIN32
 #include <io.h>
@@ -189,7 +190,7 @@ C_output( const char * filename,
 
     if ( fdopt.altformat )
         fprintf( fn, "\n/* Creation Routine */\n\n"
-                     "extern void %s( void );\n", main_name );
+                     "void %s( void );\n", main_name );
 
     fprintf( fn, "\n#endif /* %s_h_ */\n", get_fd_name( forms[ 0 ].fname ) );
     fclose( fn );
@@ -221,8 +222,6 @@ C_output( const char * filename,
                  "#include <stdlib.h>\n"
                  "#include \"%s.h\"\n", fl_now( ), name_only );
 
-    reset_dupinfo_cache( );
-
     for ( i = 0; i < fnumb; i++ )
         print_form( fn, forms[ i ].form, forms[ i ].fname );
 
@@ -248,6 +247,7 @@ C_output( const char * filename,
             else
                 M_err( "C_output", "Can't create C file for main() function, "
                        "filename is too long" );
+            reset_dupinfo_cache( );
             return 0;
         }
 
@@ -260,6 +260,7 @@ C_output( const char * filename,
                                "", "", 1 );
             else
                 M_err( "C_output", "Can't open file for main() function!" );
+            reset_dupinfo_cache( );
             return 0;
         }
 
@@ -283,6 +284,7 @@ C_output( const char * filename,
             else
                 M_err( "C_output", "Can't create C file for callbacks, "
                        "filename is too long" );
+            reset_dupinfo_cache( );
             return 0;
         }
 
@@ -295,6 +297,7 @@ C_output( const char * filename,
             else
                 M_err( "C_output",
                        "Can't open C file for callbacks '%s'", fname );
+            reset_dupinfo_cache( );
             return 0;
         }
 
@@ -306,6 +309,7 @@ C_output( const char * filename,
         fclose( fn );
     }
 
+    reset_dupinfo_cache( );
     return 1;
 }
 
@@ -1217,7 +1221,7 @@ print_callbacks_and_globals( FILE    * fn,
         {
             if ( ! code )
             {
-                fprintf( fn, "extern int %s( FL_OBJECT *, int, FL_Coord, "
+                fprintf( fn, "int %s( FL_OBJECT *, int, FL_Coord, "
                          "FL_Coord, int, void * );\n",
                          get_free_handle( obj, name ) );
             }
@@ -1244,7 +1248,7 @@ print_callbacks_and_globals( FILE    * fn,
              && ! already_emitted( form->first, obj, cbname ) )
         {
             if ( ! code )
-                fprintf( fn, "extern void %s( FL_OBJECT *, long );\n", cbname );
+                fprintf( fn, "void %s( FL_OBJECT *, long );\n", cbname );
             else
                 fprintf( fn, "/***************************************\n"
                              " ***************************************/\n\n"
@@ -1256,7 +1260,7 @@ print_callbacks_and_globals( FILE    * fn,
         }
 
         if ( obj->objclass == FL_MENU )
-            emit_menu_item_callback_headers( fn, obj, code );
+            menu_emit_item_callback_headers( fn, obj, code );
 
         if ( ! code )
             emit_objclass_spec_global( fn, obj );
@@ -1300,7 +1304,7 @@ print_header_newformat( FILE       * fn,
 
     fprintf( fn, "} %s;\n", fdtname );
 
-    fprintf( fn, "\nextern %s * create_form_%s( void );\n",
+    fprintf( fn, "\n%s * create_form_%s( void );\n",
              fdtname, fname );
 }
 

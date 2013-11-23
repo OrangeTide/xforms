@@ -221,6 +221,14 @@ change the attributes after all press the button labeled "Cancel". You
 may also reset the values to their initial settings by clicking on the
 "Restore" button.
 
+@ifhtml
+@center @image{xforms_images/genattr}
+@end ifhtml
+@ifnothtml
+@center @image{xforms_images/genattr,15cm}
+@end ifnothtml
+
+
 @ifnottex
 
 @menu

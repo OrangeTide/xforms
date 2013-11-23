@@ -254,7 +254,7 @@ fl_set_bitmap_data( FL_OBJECT     * obj,
     if ( obj == NULL || obj->objclass != FL_BITMAP )
         return;
 
-    /* only occurs with fdesign -convert */
+    /* Only occurs with fdesign -convert */
 
     if ( ! flx->display )
         return;

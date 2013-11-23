@@ -700,7 +700,7 @@ test_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int i;
     FL_OBJECT *ob;
-    GEOM *p;
+    GEOM *p = oldgeom;
     int resizeable;
 
     if ( cur_form == NULL )
@@ -721,6 +721,7 @@ test_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     for ( ob = cur_form->first; ob; ob = ob->next, i++, p++ )
     {
+        spec_to_superspec( ob );
         p->x = ob->x;
         p->y = ob->y;
         p->w = ob->w;
@@ -787,18 +788,16 @@ stoptest_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     fl_set_form_size( cur_form, formw, formh );
 
-    if ( p )
+    for ( ob = cur_form->first; ob; ob = ob->next, p++ )
     {
-        for ( ob = cur_form->first; ob; ob = ob->next, p++ )
-        {
-            ob->x = p->x;
-            ob->y = p->y;
-            ob->w = p->w;
-            ob->h = p->h;
-        }
-
-        fli_safe_free( oldgeom );
+        superspec_to_spec( ob );
+        ob->x = p->x;
+        ob->y = p->y;
+        ob->w = p->w;
+        ob->h = p->h;
     }
+
+    fli_safe_free( oldgeom );
 
     redraw_the_form( 0 );
     fl_activate_form( fd_control->control );

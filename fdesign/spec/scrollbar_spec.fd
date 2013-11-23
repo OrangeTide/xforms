@@ -11,7 +11,7 @@ Border Width: -1
 Name: scrollbarattrib
 Width: 525
 Height: 280
-Number of Objects: 10
+Number of Objects: 9
 
 --------------------
 class: FL_BOX
@@ -52,7 +52,7 @@ argument:
 --------------------
 class: FL_INPUT
 type: FL_FLOAT_INPUT
-box: 190 35 82 25
+box: 190 45 82 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
 alignment: FL_ALIGN_LEFT
@@ -71,7 +71,7 @@ return: FL_RETURN_END_CHANGED
 --------------------
 class: FL_INPUT
 type: FL_FLOAT_INPUT
-box: 190 64 82 25
+box: 190 74 82 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
 alignment: FL_ALIGN_LEFT
@@ -108,7 +108,7 @@ argument: 0
 --------------------
 class: FL_INPUT
 type: FL_FLOAT_INPUT
-box: 190 94 82 25
+box: 190 114 82 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
 alignment: FL_ALIGN_LEFT
@@ -127,7 +127,7 @@ return: FL_RETURN_END_CHANGED
 --------------------
 class: FL_INPUT
 type: FL_FLOAT_INPUT
-box: 190 123 82 26
+box: 190 153 82 26
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
 alignment: FL_ALIGN_LEFT
@@ -146,26 +146,7 @@ return: FL_RETURN_END_CHANGED
 --------------------
 class: FL_INPUT
 type: FL_FLOAT_INPUT
-box: 190 154 82 27
-boxtype: FL_DOWN_BOX
-colors: FL_COL1 FL_MCOL
-alignment: FL_ALIGN_LEFT
-style: FL_NORMAL_STYLE
-size: FL_NORMAL_SIZE
-lcol: FL_BLACK
-label: Step Size
-shortcut: 
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
-name: step
-callback: scb_step_change
-argument: 0
-return: FL_RETURN_END_CHANGED
-
---------------------
-class: FL_INPUT
-type: FL_FLOAT_INPUT
-box: 191 185 82 25
+box: 191 195 82 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
 alignment: FL_ALIGN_LEFT
@@ -184,7 +165,7 @@ return: FL_RETURN_END_CHANGED
 --------------------
 class: FL_INPUT
 type: FL_FLOAT_INPUT
-box: 191 215 82 25
+box: 191 225 82 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
 alignment: FL_ALIGN_LEFT

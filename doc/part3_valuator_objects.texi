@@ -292,6 +292,13 @@ covers the box completely and can no longer be moved. This function
 does nothing if applied to sliders of type @code{NICE_SLIDER} and
 @code{FILL_SLIDER}.
 
+To obtain the current setting of the slider size use
+@findex fl_get_slider_size
+@anchor{fl_get_slider_size}
+@example
+double fl_get_slider_size(FL_OBJECT *obj);
+@end example
+
 The routine
 @findex fl_set_slider_precision()
 @anchor{fl_set_slider_precision()}
@@ -300,7 +307,11 @@ void fl_set_slider_precision(FL_OBJECT *obj, int prec);
 @end example
 @noindent
 sets the precision with which the value of the slider is shown. This
-only applies to sliders showing their value, i.e.@: valsliders.
+only applies to sliders showing their value, i.e.@: valsliders. The
+argument must be between 0 and
+@tindex FL_SLIDER_MAX_PREC
+@code{FL_SLIDER_MAX_PREC}
+(currently set to 10).
 
 By default, the value shown by a valslider is the slider value in
 floating point format. You can override the default by registering a
@@ -616,6 +627,14 @@ void fl_set_scrollbar_size(FL_OBJECT *obj, double size);
 can no longer be moved. This function does nothing if applied to
 scrollbars of type @code{FL_NICE_SCROLLBAR}.
 
+The function
+@findex fl_get_scrollbar_size
+@anchor{fl_get_scrollbar_size}
+@example
+double fl_get_scrollbar_size(FL_OBJECT *obj);
+@end example
+@noindent
+returns the current setting of the scrollbar size.
 
 @node Scrollbar Remarks
 @subsection Remarks

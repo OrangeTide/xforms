@@ -177,7 +177,7 @@ fli_handle_timeouts( long * msec )
  ***************************************/
 
 void
-fl_remove_all_timeouts( void )
+fli_remove_all_timeouts( void )
 {
     while ( fli_context->timeout_rec )
         fl_remove_timeout( fli_context->timeout_rec->id );

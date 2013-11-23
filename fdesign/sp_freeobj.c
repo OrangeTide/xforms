@@ -32,10 +32,11 @@
 #include <config.h>
 #endif
 
+#include <ctype.h>
 #include "include/forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
-#include <ctype.h>
+#include "sp_freeobj.h"
 #include "spec/freeobj_spec.h"
 
 static char *get_free_handle( FL_OBJECT  * ob,
@@ -43,23 +44,20 @@ static char *get_free_handle( FL_OBJECT  * ob,
 
 static char ori_handle_name[ 128 ];
 
-extern FD_freeobjattrib *create_form_freeobjattrib( void );
-
 static FD_freeobjattrib *fo_attrib;
-static SuperSPEC *freeobj_spec;
-static void show_spec( SuperSPEC * );
-static FL_OBJECT *edited;
+static FL_OBJECT *curobj;
 
 
 /***************************************
  ***************************************/
 
-void *
-get_freeobj_spec_fdform( void )
+FL_FORM *
+freeobj_create_spec_form( void )
 {
     if ( ! fo_attrib )
         fo_attrib = create_form_freeobjattrib( );
-    return fo_attrib;
+
+    return fo_attrib->freeobjattrib;
 }
 
 
@@ -67,40 +65,57 @@ get_freeobj_spec_fdform( void )
  ***************************************/
 
 void
-freeobj_spec_restore( FL_OBJECT * ob,
-                      long        data  FL_UNUSED_ARG )
+freeobj_adjust_spec_form( FL_OBJECT * obj )
 {
-    if ( ob->c_vdata )
-        fl_free( ob->c_vdata );
-    ob->c_vdata = fl_strdup( ori_handle_name );
-
-}
-
-
-/***************************************
- ***************************************/
-
-static void
-show_spec( SuperSPEC * spec  FL_UNUSED_ARG )
-{
-    fl_set_input( fo_attrib->hname, get_free_handle( edited, 0 ) );
-}
-
-
-/***************************************
- ***************************************/
-
-int
-set_freeobj_attrib( FL_OBJECT * ob )
-{
-    fo_attrib->vdata = edited = ob;
+    curobj = obj;
 
     *ori_handle_name = '\0';
-    if ( ob->c_vdata )
-        strcpy( ori_handle_name, ob->c_vdata );
+    if ( obj->c_vdata )
+        strcpy( ori_handle_name, obj->c_vdata );
+}
 
-    show_spec( freeobj_spec );
-    return 0;
+
+/***************************************
+ ***************************************/
+
+void
+freeobj_fill_in_spec_form( FL_OBJECT * obj )
+{
+    fl_set_input( fo_attrib->hname, get_free_handle( obj, 0 ) );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+freeobj_reread_spec_form( FL_OBJECT * obj  FL_UNUSED_ARG )
+{
+    handler_name_change_cb( fo_attrib->hname, 0 );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+freeobj_spec_restore( FL_OBJECT * obj,
+                      long        data  FL_UNUSED_ARG )
+{
+    fli_safe_free( obj->c_vdata );
+    obj->c_vdata = fl_strdup( ori_handle_name );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+freeobj_emit_spec_fd_code( FILE      * fp,
+                           FL_OBJECT * obj )
+{
+    if ( obj->c_vdata )
+        fprintf( fp, "    handler: %s\n", ( char * ) obj->c_vdata );
 }
 
 
@@ -108,7 +123,7 @@ set_freeobj_attrib( FL_OBJECT * ob )
  ***************************************/
 
 int
-noop_handle( FL_OBJECT * ob,
+noop_handle( FL_OBJECT * obj,
              int         e,
              FL_Coord    mx   FL_UNUSED_ARG,
              FL_Coord    my   FL_UNUSED_ARG,
@@ -117,14 +132,16 @@ noop_handle( FL_OBJECT * ob,
 {
     if ( e == FL_DRAW )
     {
-        fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
+        fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
+                    obj->col1, obj->bw );
         return 0;
     }
 
-    if ( ob->type == FL_INACTIVE_FREE )
+    if ( obj->type == FL_INACTIVE_FREE )
         return 0;
-    if ( ob->type == FL_INPUT_FREE )
+    else if ( obj->type == FL_INPUT_FREE )
         return e == FL_KEYPRESS;
+
     return 1;
 }
 
@@ -132,50 +149,12 @@ noop_handle( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
-#if 0
-static FL_OBJECT *
-create_a_freeobj( FL_OBJECT * ob )
-{
-    FL_OBJECT *defobj = 0;
-
-    defobj = fl_create_free( ob->type, ob->x, ob->y, ob->w, ob->h,
-                             ob->label, noop_handle );
-    return defobj;
-}
-#endif
-
-
-
-/***************************************
- ***************************************/
-
 void
-emit_freeobj_code( FILE      * fp  FL_UNUSED_ARG,
-                   FL_OBJECT * ob  FL_UNUSED_ARG )
-{
-}
-
-
-/***************************************
- ***************************************/
-
-void
-save_freeobj_attrib( FILE      * fp,
-                     FL_OBJECT * ob )
-{
-    if ( ob->c_vdata )
-        fprintf( fp, "    handler: %s\n", ( char * ) ob->c_vdata );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-handler_name_change_cb( FL_OBJECT * ob,
+handler_name_change_cb( FL_OBJECT * obj,
                         long        data  FL_UNUSED_ARG )
 {
-    edited->c_vdata = fl_strdup( fl_get_input( ob ) );
+    fli_safe_free( curobj->c_vdata );
+    curobj->c_vdata = fl_strdup( fl_get_input( obj ) );
 }
 
 
@@ -187,7 +166,7 @@ handler_name_change_cb( FL_OBJECT * ob,
  ***************************************/
 
 static char *
-get_free_handle( FL_OBJECT  * ob,
+get_free_handle( FL_OBJECT  * obj,
                  const char * name )
 {
     static int n;
@@ -195,22 +174,22 @@ get_free_handle( FL_OBJECT  * ob,
     static FL_OBJECT *freeobj[ MAXFREEOBJ ];
     int i, k;
 
-    if ( ob->c_vdata )
-        strcpy( buf, ob->c_vdata );
+    if ( obj->c_vdata )
+        strcpy( buf, obj->c_vdata );
     else if ( name && *name )
         sprintf( buf, "freeobj_%s_handle", name );
-    else if ( *ob->label )
-        sprintf( buf, "freeobj_%s_handle", ob->label );
+    else if ( *obj->label )
+        sprintf( buf, "freeobj_%s_handle", obj->label );
     else
     {
         for ( k = -1, i = 0; i < MAXFREEOBJ && k < 0; i++ )
-            if ( freeobj[ i ] == ob )
+            if ( freeobj[ i ] == obj )
                 k = i;
 
         if ( k < 0 )
         {
             k = ++n;
-            freeobj[ k ] = ob;
+            freeobj[ k ] = obj;
         }
 
         sprintf( buf, "freeobj%d_handle", k );

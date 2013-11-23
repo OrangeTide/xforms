@@ -6,6 +6,7 @@ EXTRA_DIST = allbutton.fd \
 	box.xpm \
 	br.xpm \
 	broken.xpm \
+	broken.xbm \
 	butt.xpm \
 	chart.xpm \
 	check.xpm \

@@ -84,6 +84,8 @@ typedef enum {
 #define FL_SLIDER_FINE      0.25
 #define FL_SLIDER_WIDTH     0.10
 
+#define FL_SLIDER_MAX_PREC  10
+
 /***** Routines *****/
 
 FL_EXPORT FL_OBJECT * fl_create_slider( int          type,
@@ -143,6 +145,8 @@ FL_EXPORT void fl_get_slider_increment( FL_OBJECT * ob,
 
 FL_EXPORT void fl_set_slider_size( FL_OBJECT * ob,
                                    double      size );
+
+FL_EXPORT double fl_get_slider_size( FL_OBJECT * obj );
 
 FL_EXPORT void fl_set_slider_precision( FL_OBJECT * ob,
                                         int         prec );
