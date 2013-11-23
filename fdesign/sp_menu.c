@@ -78,9 +78,11 @@ void
 menu_fill_in_spec_form( FL_OBJECT * obj )
 {
     FLI_MENU_SPEC *sp = obj->spec;
-    SuperSPEC *ssp = obj->u_vdata;
+    SuperSPEC *ssp = get_superspec( obj );
     int i;
     int mval = sp->numitems + 1;
+
+    curobj = obj;
 
     fl_freeze_form( menu_attrib->content_br->form );
 

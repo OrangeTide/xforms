@@ -78,13 +78,11 @@ choice_create_spec_form( void )
 void
 choice_fill_in_spec_form( FL_OBJECT  * obj )
 {
-    FLI_CHOICE_SPEC *sp;
-    SuperSPEC *ssp;
+    FLI_CHOICE_SPEC *sp = obj->spec;
+    SuperSPEC *ssp = get_superspec( obj );
     int i;
 
     curobj = obj;
-    sp = obj->spec;
-    ssp = obj->u_vdata;
 
     fl_freeze_form( choice_attrib->content_br->form );
 

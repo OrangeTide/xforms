@@ -47,7 +47,7 @@ static FL_OBJECT *curobj;
 FL_FORM *
 xyplot_create_spec_form( void )
 {
-    if ( ! xyplot_attrib )
+    if ( xyplot_attrib )
         return xyplot_attrib->xyplotattrib;
 
     xyplot_attrib = create_form_xyplotattrib( );

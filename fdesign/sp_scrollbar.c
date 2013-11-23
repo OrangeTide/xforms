@@ -122,8 +122,6 @@ scrollbar_reread_spec_form( FL_OBJECT * obj )
 {
     double r1, r2;
 
-    obj = scb_attrib->vdata;
-
     if (    get_checked_float( fl_get_input( scb_attrib->minval ), &r1 )
          && get_checked_float( fl_get_input( scb_attrib->maxval ), &r2 ) )
         fl_set_scrollbar_bounds( obj, r1, r2 );
