@@ -102,7 +102,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: input
 callback: 
 argument: 
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_BUTTON

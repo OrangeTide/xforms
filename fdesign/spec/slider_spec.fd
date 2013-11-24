@@ -88,7 +88,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: minval
 callback: minmax_change
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -107,7 +106,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: maxval
 callback: minmax_change
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_MENU
@@ -144,7 +142,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: initial_val
 callback: initialvalue_change
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -163,7 +160,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: slsize
 callback: slsize_change
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -182,7 +178,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: step
 callback: step_change
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -201,7 +196,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: ldelta
 callback: increment_change
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -220,7 +214,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: rdelta
 callback: increment_change
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 ==============================
 create_the_forms

@@ -66,7 +66,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: minval
 callback: dial_minmax_change
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -85,7 +84,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: maxval
 callback: dial_minmax_change
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -104,7 +102,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: initialval
 callback: dial_initialvalue_change
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -123,7 +120,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: step
 callback: dial_stepchange_cb
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -142,7 +138,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: thetai
 callback: dial_thetachange_cb
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -161,7 +156,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: thetaf
 callback: dial_thetachange_cb
 argument: 1
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_CHOICE

@@ -84,7 +84,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: filename
 callback: iconbutton_filename_change
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_CHOICE
@@ -194,7 +193,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: focus_filename
 callback: focusiconbutton_filename_change
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_BUTTON

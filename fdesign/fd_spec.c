@@ -52,7 +52,7 @@
 #include "sp_freeobj.h"
 
 
-#define MAXOBJCLASS 8
+#define MAXOBJCLASS 9
 
 typedef struct
 {
@@ -196,6 +196,7 @@ static ObjSPEC objspec[ ] =
 		  FL_BITMAPBUTTON,
 		  FL_BUTTON,
 		  FL_CHECKBUTTON,
+		  FL_SCROLLBUTTON,
           FL_ROUNDBUTTON,
 		  FL_LIGHTBUTTON,
 		  FL_ROUND3DBUTTON,

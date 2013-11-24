@@ -107,8 +107,11 @@ pixmap_fill_in_spec_form( FL_OBJECT * obj )
 void
 pixmap_reread_spec_form( FL_OBJECT * obj  FL_UNUSED_ARG )
 {
-    pixmap_filename_change( px_attrib->filename, 0 );
-    redraw_the_form( 0 );
+    if ( curobj )
+    {
+        pixmap_filename_change( px_attrib->filename, 0 );
+        redraw_the_form( 0 );
+    }
 }
 
 

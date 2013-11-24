@@ -148,6 +148,9 @@ fl_make_object( int            objclass,
     obj->w         = w;
     obj->h         = h;
 
+    obj->u_vdata = NULL;
+    obj->u_cdata = NULL;
+
     switch ( fli_cntl.coordUnit )
     {
         case FL_COORD_PIXEL :

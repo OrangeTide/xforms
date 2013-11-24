@@ -158,7 +158,7 @@ button_fill_in_spec_form( FL_OBJECT * obj )
 void
 button_reread_spec_form( FL_OBJECT * obj )
 {
-    if ( ! IsIconButton( obj ) )
+    if ( ! IsIconButton( obj ) || ! curobj )
         return;
 
     iconbutton_filename_change( bt_attrib->filename, 0 );

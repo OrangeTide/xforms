@@ -84,7 +84,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: minval
 callback: cnt_minmax_change
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -103,7 +102,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: maxval
 callback: cnt_minmax_change
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_MENU
@@ -140,7 +138,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: initialval
 callback: cnt_initialvalue_change
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -159,7 +156,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: step1
 callback: cnt_stepchange_cb
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -178,7 +174,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: step2
 callback: cnt_stepchange_cb
 argument: 1
-return: FL_RETURN_END_CHANGED
 
 ==============================
 create_the_forms

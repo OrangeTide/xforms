@@ -24,8 +24,8 @@
  *  All rights reserved.
  *
  * Settting free object class specific attributes, in this
- * case, the handler name.  We store this piece of into
- * in ob->c_vdata;
+ * case, the handler name. We store this piece of into in
+ * ob->c_vdata.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -91,7 +91,8 @@ freeobj_fill_in_spec_form( FL_OBJECT * obj )
 void
 freeobj_reread_spec_form( FL_OBJECT * obj  FL_UNUSED_ARG )
 {
-    handler_name_change_cb( fo_attrib->hname, 0 );
+    if ( curobj )
+        handler_name_change_cb( fo_attrib->hname, 0 );
 }
 
 

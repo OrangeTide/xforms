@@ -35,7 +35,7 @@ argument:
 --------------------
 class: FL_FRAME
 type: FL_UP_FRAME
-box: 2 2 576 26
+box: 2 2 495 28
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -71,7 +71,7 @@ argument:
 --------------------
 class: FL_TEXT
 type: FL_NORMAL_TEXT
-box: 345 0 125 22
+box: 353 0 126 23
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_MCOL
 alignment: FL_ALIGN_CENTER
@@ -420,7 +420,7 @@ argument:
 --------------------
 class: FL_TEXT
 type: FL_NORMAL_TEXT
-box: 320 15 150 15
+box: 346 16 149 16
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_MCOL
 alignment: FL_ALIGN_CENTER

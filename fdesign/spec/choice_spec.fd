@@ -120,7 +120,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: input
 callback: 
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_BUTTON
@@ -266,7 +265,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: shortcut
 callback: 
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_CHOICE
