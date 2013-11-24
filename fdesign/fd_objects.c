@@ -38,15 +38,15 @@
 #include <config.h>
 #endif
 
+#include <string.h>
+#include <stdio.h>
+#include <math.h>
+
 #include "include/forms.h"
 #include "fd_main.h"
 #include "sp_freeobj.h"
 #include "xpm/broken.xpm"
 #include "xpm/broken.xbm"
-
-#include <string.h>
-#include <stdio.h>
-#include <math.h>
 
 #define VN( a )        a,#a
 #define OBJNAME( a )   #a,fl_create_##a,fl_add_##a
@@ -836,7 +836,7 @@ set_testing_pixmap( FL_OBJECT * ob )
 void
 set_testing_bitmap( FL_OBJECT * obj )
 {
-    if ( obj->type == FL_BITMAP )
+    if ( obj->objclass == FL_BITMAP )
         fl_set_bitmap_data( obj, broken_width, broken_height,
                             ( unsigned char * ) broken_bits );
     else

@@ -36,14 +36,14 @@
 #include <config.h>
 #endif
 
-#include "include/forms.h"
-#include "flinternal.h"
-#include "fd_main.h"
-
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+
+#include "include/forms.h"
+#include "flinternal.h"
+#include "fd_main.h"
 
 static FRM *forms = NULL;   /* The list of forms */
 static int fnumb = 0;       /* number of forms */
@@ -64,6 +64,22 @@ get_form_numb( FL_FORM * form )
         if ( forms[ i ].form == form )
             return i;
     return -1;
+}
+
+
+/***************************************
+ ***************************************/
+
+const char *
+get_form_name( FL_FORM * form )
+{
+    int i;
+
+    for ( i = 0; i < fnumb; i++ )
+        if ( forms[ i ].form == form )
+            return *forms[ i ].fname ? forms[ i ].fname : NULL;
+
+    return NULL;
 }
 
 
@@ -252,8 +268,9 @@ changename_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
                long        arg  FL_UNUSED_ARG )
 {
     int fn = get_form_numb( cur_form );
-    const char *s;
+    const char *s, *cn;
     int i;
+    FL_OBJECT *o;
 
     if ( cur_form == NULL || fn == -1 )
         return;
@@ -285,6 +302,13 @@ changename_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
         }
     }
 
+    for ( o = forms[ fn ].form->first; o; o = o->next )
+        if ( ( cn = get_object_c_name( o ) ) && ! strcmp( s, cn ) )
+        {
+            fl_show_alert( "Error", "New name is already used for one of the ",
+                           "forms objects", 0 );
+            goto get_changed_form_name;
+        }
 
     fli_sstrcpy( forms[ fn ].fname, s, MAX_VAR_LEN );
 

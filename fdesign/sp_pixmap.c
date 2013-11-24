@@ -237,7 +237,7 @@ void
 pixmapusedata_change( FL_OBJECT * obj,
                       long        data  FL_UNUSED_ARG )
 {
-    ( ( IconInfo * ) get_superspec( obj )->cspecv )->use_data =
+    ( ( IconInfo * ) get_superspec( curobj )->cspecv )->use_data =
                                                           fl_get_button( obj );
 }
 
@@ -249,7 +249,7 @@ void
 pixmapfullpath_cb( FL_OBJECT * obj,
                    long        data  FL_UNUSED_ARG )
 {
-    ( ( IconInfo * ) get_superspec( obj )->cspecv )->fullpath =
+    ( ( IconInfo * ) get_superspec( curobj )->cspecv )->fullpath =
                                                           fl_get_button( obj );
 }
 
@@ -261,7 +261,7 @@ void
 pixmap_filename_change( FL_OBJECT * obj,
                         long        data  FL_UNUSED_ARG )
 {
-    IconInfo *info = get_superspec( obj )->cspecv;
+    IconInfo *info = get_superspec( curobj )->cspecv;
 
     strcpy( info->filename, fl_get_input( obj ) );
 
@@ -318,15 +318,10 @@ void
 pixmapalign_change( FL_OBJECT * obj,
                     long        data  FL_UNUSED_ARG )
 {
-    IconInfo *info = get_superspec( obj )->cspecv;
-    const char *s = fl_get_choice_text( obj );
+    IconInfo *info = get_superspec( curobj )->cspecv;
 
-    info->align = align_val( s );
-
-    /* Don't allow outside align */
-
-    fl_set_pixmap_align( curobj, fl_to_inside_lalign( info->align ),
-                         info->dx, info->dy );
+    info->align = fl_to_inside_lalign( align_val( fl_get_choice_text( obj ) ) );
+    fl_set_pixmap_align( curobj, info->align, info->dx, info->dy );
     redraw_the_form( 0 );
 }
 

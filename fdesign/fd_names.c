@@ -164,6 +164,18 @@ set_object_name( FL_OBJECT  * obj,
 }
 
 
+/***************************************
+ ***************************************/
+
+const char *
+get_object_c_name( FL_OBJECT * obj )
+{
+    int on = get_object_numb( obj );
+
+    return on == -1 ? NULL : objects[ on ].name;
+}
+
+
 /*
  * Local variables:
  * tab-width: 4

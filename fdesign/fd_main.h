@@ -301,6 +301,8 @@ void output_callbacks( FILE *,
 
 extern FL_FORM *cur_form;
 
+const char * get_form_name( FL_FORM * form );
+
 /* The current form under construction */
 
 void redraw_the_form( int );
@@ -332,21 +334,19 @@ void fillin_groups( void );
 
 /******** fd_names.c  **********/
 
-/* Contains the routines that keep track of the object names */
+/* Routines that keep track of the object names */
 
 void get_object_name( const FL_OBJECT *,
                       char *,
                       char *,
                       char * );
 
-/* returns the names of an object */
-
 void set_object_name( FL_OBJECT *,
                       const char *,
                       const char *,
                       const char * );
 
-/* returns the names of an object */
+const char * get_object_c_name( FL_OBJECT * obj );
 
 /******** fd_objects.c *********/
 

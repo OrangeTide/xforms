@@ -34,7 +34,7 @@ static FL_OBJECT * curobj;
 static void save_object( FL_OBJECT * obj );
 static void restore_object( FL_OBJECT * obj );
 static void attrib_init( FD_generic_attrib * ui );
-static int validate_attributes( void );
+static int validate_attributes( FL_OBJECT * obj );
 static void readback_attributes( FL_OBJECT * obj );
 static void copy_shortcut( FL_OBJECT * dest,
                            FL_OBJECT * src );
@@ -163,7 +163,7 @@ change_object( FL_OBJECT * obj,
         if ( retobj == FL_EVENT )
             fl_XNextEvent( &xev );
     } while ( ! (    (    retobj == fd_attrib->readyobj
-                       && validate_attributes( ) )
+                       && validate_attributes( curobj ) )
                   || retobj == fd_attrib->cancelobj ) );
 
     if ( retobj == fd_attrib->cancelobj )
@@ -544,6 +544,7 @@ static void
 readback_attributes( FL_OBJECT * obj )
 {
     int spstyle;
+    int type;
     char * name,
          * cbname;
     char tmpbuf[ 128 ];
@@ -601,7 +602,10 @@ readback_attributes( FL_OBJECT * obj )
     fl_free( cbname );
     fl_free( name );
 
-	spec_change_type( obj, fl_get_choice( fd_generic_attrib->typeobj ) - 1 );
+    /* Take care: for some objects the "Type" choice is empty! */
+
+    if ( ( type = fl_get_choice( fd_generic_attrib->typeobj ) ) )
+        spec_change_type( obj, type - 1 );
 
     redraw_the_form( 0 );
 }
@@ -868,10 +872,48 @@ setcolor_cb( FL_OBJECT * obj,
  ***************************************/
 
 static int
-validate_attributes( void )
+validate_attributes( FL_OBJECT * obj )
 {
-    return    validate_cvar_name( fd_generic_attrib->nameobj, "object name" )
-           && validate_cvar_name( fd_generic_attrib->cbnameobj, "callback" );
+    FL_OBJECT *o;
+    const char *name,
+               *cn;
+
+    if (    ! validate_cvar_name( fd_generic_attrib->nameobj, "object name" )
+         || ! validate_cvar_name( fd_generic_attrib->cbnameobj, "callback" ) )
+        return 0;
+
+    name = fl_get_input( fd_generic_attrib->nameobj );
+
+    if ( ! name || ! *name )
+        return 1;
+
+    /* Make sure the name diesn't clash with its forms name */
+
+    if ( ( cn = get_form_name( obj->form ) ) && ! strcmp( name, cn ) )
+    {
+        fl_show_alert( "Error", "Invalid C identifier:",
+                       "Object has same name as the form it belongs to!", 0 );
+        fl_set_focus_object( fd_generic_attrib->nameobj->form,
+                             fd_generic_attrib->nameobj );
+        return 0;
+    }
+
+    /* Make sure the name doesn clash with the name of another object in
+       the form it belongs to */
+
+    for ( o = obj->form->first; o; o = o->next )
+        if (    o != obj
+             && ( cn = get_object_c_name( o ) )
+             && ! strcmp( name, cn ) )
+        {
+            fl_show_alert( "Error", "Invalid C identifier:",
+                           "Object has name as another one!", 0 );
+            fl_set_focus_object( fd_generic_attrib->nameobj->form,
+                                 fd_generic_attrib->nameobj );
+            return 0;
+        }
+
+	return 1;
 }
 
 
@@ -891,7 +933,7 @@ validate_cvar_name_cb( FL_OBJECT * obj,
  ***************************************/
 
 static int
-validate_cvar_name( FL_OBJECT * obj,
+validate_cvar_name( FL_OBJECT  * obj,
                     const char * w )
 {
     const char *s = fl_get_input( obj );

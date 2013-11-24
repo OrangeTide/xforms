@@ -10,14 +10,14 @@ SnapGrid: 1
 
 =============== FORM ===============
 Name: attrib
-Width: 630
-Height: 310
-Number of Objects: 6
+Width: 540
+Height: 346
+Number of Objects: 5
 
 --------------------
 class: FL_BOX
 type: FL_FLAT_BOX
-box: 0 0 630 310
+box: 0 0 540 346
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -33,29 +33,11 @@ callback:
 argument: 
 
 --------------------
-class: FL_BOX
-type: FL_UP_BOX
-box: 541 0 89 310
-boxtype: FL_UP_BOX
-colors: FL_COL1 FL_COL1
-alignment: FL_ALIGN_CENTER
-style: FL_NORMAL_STYLE
-size: FL_DEFAULT_SIZE
-lcol: FL_BLACK
-label: 
-shortcut: 
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
-
---------------------
 class: FL_BUTTON
 type: FL_RETURN_BUTTON
-box: 550 200 70 25
+box: 464 315 70 25
 boxtype: FL_UP_BOX
-colors: FL_COL1 FL_COL1
+colors: FL_CHARTREUSE FL_GREEN
 alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
@@ -71,9 +53,9 @@ argument: 0
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 550 240 70 25
+box: 338 315 70 25
 boxtype: FL_UP_BOX
-colors: FL_COL1 FL_COL1
+colors: FL_TOMATO FL_RED
 alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
@@ -89,14 +71,14 @@ argument:
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 550 280 70 25
+box: 6 315 70 25
 boxtype: FL_UP_BOX
-colors: FL_COL1 FL_COL1
+colors: FL_ANTIQUEWHITE FL_YELLOW
 alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label:    Restore   
+label: Undo
 shortcut: #R
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
@@ -257,7 +239,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: nameobj
 callback: validate_cvar_name_cb
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -276,7 +257,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: cbnameobj
 callback: validate_cvar_name_cb
 argument: 1
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -295,7 +275,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: argobj
 callback: 
 argument: 
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -314,7 +293,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: scobj
 callback: apply_cb
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -333,7 +311,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: labelobj
 callback: apply_cb
 argument: 0
-return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_CHOICE

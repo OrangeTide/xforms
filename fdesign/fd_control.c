@@ -195,7 +195,7 @@ groupmenu_callback( FL_OBJECT * ob,
 }
 
 
-/* object menu entry */
+/* Object menu entry */
 
 static MenuEntry obmenu[ ] =
 {
@@ -795,6 +795,7 @@ stoptest_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
         ob->y = p->y;
         ob->w = p->w;
         ob->h = p->h;
+        free_superspec( ob );
     }
 
     fli_safe_free( oldgeom );
