@@ -133,7 +133,7 @@ void
 button_fill_in_spec_form( FL_OBJECT * obj )
 {
     FL_BUTTON_SPEC *sp = obj->spec;
-    IconInfo *info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
+    IconInfo *info = get_superspec( obj )->cspecv;
 
     fl_set_button( bt_attrib->react_left,   sp->react_to[ 0 ] );
     fl_set_button( bt_attrib->react_middle, sp->react_to[ 1 ] );
@@ -176,7 +176,7 @@ button_reread_spec_form( FL_OBJECT * obj )
 void
 button_restore_spec( FL_OBJECT * obj )
 {
-    IconInfo *info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
+    IconInfo *info = get_superspec( obj )->cspecv;
 
     if ( ! IsIconButton( obj ) )
         return;
@@ -237,11 +237,8 @@ button_emit_spec_fd_code( FILE      * fp,
         return;
     }
 
-    get_superspec( obj );
-    info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
-
-    get_superspec( defobj );
-    definfo = ( ( SuperSPEC * ) defobj->u_vdata )->cspecv;
+    info = get_superspec( obj )->cspecv;
+    definfo = get_superspec( defobj )->cspecv;
 
     get_data_name( obj, info );
 
@@ -311,11 +308,8 @@ button_emit_spec_c_code( FILE      * fp,
         return;
     }
 
-    get_superspec( obj );
-    info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
-
-    get_superspec( defobj );
-    definfo = ( ( SuperSPEC * ) defobj->u_vdata )->cspecv;
+    info = get_superspec( obj )->cspecv;
+    definfo = get_superspec( defobj )->cspecv;
 
     if (    obj->objclass == FL_PIXMAPBUTTON
          && info->align != definfo->align )
@@ -373,8 +367,7 @@ button_emit_spec_header( FILE      * fp,
     if ( ! IsIconButton( obj ) )
         return;
 
-    get_superspec( obj );
-    info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
+    info = get_superspec( obj )->cspecv;
 
     if ( info->use_data && *info->data && *info->filename )
     {
@@ -403,9 +396,8 @@ void
 usedata_change( FL_OBJECT * obj,
                 long        data  FL_UNUSED_ARG )
 {
-    IconInfo *info = ( ( SuperSPEC * ) curobj->u_vdata )->cspecv;
-
-    info->use_data = fl_get_button( obj );
+    ( ( IconInfo * ) get_superspec( curobj )->cspecv )->use_data =
+                                                           fl_get_button( obj );
 }
 
 
@@ -416,9 +408,8 @@ void
 fullpath_cb( FL_OBJECT * ob,
              long        data  FL_UNUSED_ARG )
 {
-    IconInfo *info = ( ( SuperSPEC * ) curobj->u_vdata )->cspecv;
-
-    info->fullpath = fl_get_button( ob );
+    ( ( IconInfo * ) get_superspec( curobj )->cspecv )->fullpath =
+                                                            fl_get_button( ob );
 }
 
 
@@ -461,7 +452,7 @@ void
 showfocus_change( FL_OBJECT * obj,
                   long        data  FL_UNUSED_ARG )
 {
-    IconInfo *info = ( ( SuperSPEC * ) curobj->u_vdata )->cspecv;
+    IconInfo *info = get_superspec( curobj )->cspecv;
 
     info->show_focus = fl_get_button( obj );
     fl_set_pixmapbutton_focus_outline( curobj, info->show_focus );
@@ -475,7 +466,7 @@ void
 iconbutton_filename_change( FL_OBJECT * ob,
                             long        data  FL_UNUSED_ARG )
 {
-    IconInfo *info = ( ( SuperSPEC * ) curobj->u_vdata )->cspecv;
+    IconInfo *info = get_superspec( curobj )->cspecv;
 
     if ( ! IsIconButton( curobj ) )
         return;
@@ -510,7 +501,7 @@ void
 focusiconbutton_filename_change( FL_OBJECT * obj,
                                  long        data  FL_UNUSED_ARG )
 {
-    IconInfo *info = ( ( SuperSPEC * ) curobj->u_vdata )->cspecv;
+    IconInfo *info = get_superspec( curobj )->cspecv;
 
     strcpy( info->focus_filename, fl_get_input( obj ) );
 
@@ -526,7 +517,7 @@ void
 pixalign_change( FL_OBJECT * obj,
                  long        data  FL_UNUSED_ARG )
 {
-    IconInfo *info = ( ( SuperSPEC * ) curobj->u_vdata )->cspecv;
+    IconInfo *info = get_superspec( curobj )->cspecv;
     const char *s = fl_get_choice_text( obj );
 
     if ( ! s )

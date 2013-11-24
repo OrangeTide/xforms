@@ -92,7 +92,7 @@ pixmap_adjust_spec_form( FL_OBJECT * obj )
 void
 pixmap_fill_in_spec_form( FL_OBJECT * obj )
 {
-    IconInfo *info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
+    IconInfo *info = get_superspec( obj )->cspecv;
 
     fl_set_button( px_attrib->use_data, info->use_data );
     fl_set_button( px_attrib->fullpath, info->fullpath );
@@ -118,7 +118,7 @@ pixmap_reread_spec_form( FL_OBJECT * obj  FL_UNUSED_ARG )
 void
 pixmap_restore_spec( FL_OBJECT * obj )
 {
-    IconInfo *info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
+    IconInfo *info = get_superspec( obj )->cspecv;
 
     if ( *info->filename )
         ( obj->objclass == FL_PIXMAP ?
@@ -144,14 +144,8 @@ pixmap_emit_spec_fd_code( FILE      * fp,
                           FL_OBJECT * obj )
 {
     FL_OBJECT *defobj = create_default_pixmap( obj );
-    IconInfo *info,
-             *definfo;
-
-    get_superspec( obj );
-    info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
-
-    get_superspec( defobj );
-    definfo = ( ( SuperSPEC * ) defobj->u_vdata )->cspecv;
+    IconInfo *info     = get_superspec( obj )->cspecv,
+             *definfo = get_superspec( defobj )->cspecv;
 
     get_data_name( obj, info );
 
@@ -187,14 +181,8 @@ pixmap_emit_spec_c_code( FILE      * fp,
                          FL_OBJECT * obj )
 {
     FL_OBJECT *defobj = create_default_pixmap( obj );
-    IconInfo *info,
-             *definfo;
-
-    get_superspec( obj );
-    info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
-
-    get_superspec( defobj );
-    definfo = ( ( SuperSPEC * ) defobj->u_vdata )->cspecv;
+    IconInfo *info    = get_superspec( obj )->cspecv,
+             *definfo = get_superspec( defobj )->cspecv;
 
     if ( *info->filename && ! info->use_data )
         fprintf( fp, "    fl_set_%s_file( obj, \"%s\" );\n",
@@ -229,10 +217,7 @@ void
 pixmap_emit_spec_header( FILE      * fp,
                          FL_OBJECT * obj )
 {
-    IconInfo *info;
-
-    get_superspec( obj );
-    info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
+    IconInfo *info = get_superspec( obj )->cspecv;
 
     if ( info->use_data && *info->data && *info->filename )
     {
@@ -252,9 +237,8 @@ void
 pixmapusedata_change( FL_OBJECT * obj,
                       long        data  FL_UNUSED_ARG )
 {
-    IconInfo *info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
-
-    info->use_data = fl_get_button( obj );
+    ( ( IconInfo * ) get_superspec( obj )->cspecv )->use_data =
+                                                          fl_get_button( obj );
 }
 
 
@@ -265,9 +249,8 @@ void
 pixmapfullpath_cb( FL_OBJECT * obj,
                    long        data  FL_UNUSED_ARG )
 {
-    IconInfo *info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
-
-    info->fullpath = fl_get_button( obj );
+    ( ( IconInfo * ) get_superspec( obj )->cspecv )->fullpath =
+                                                          fl_get_button( obj );
 }
 
 
@@ -278,7 +261,7 @@ void
 pixmap_filename_change( FL_OBJECT * obj,
                         long        data  FL_UNUSED_ARG )
 {
-    IconInfo *info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
+    IconInfo *info = get_superspec( obj )->cspecv;
 
     strcpy( info->filename, fl_get_input( obj ) );
 
@@ -335,7 +318,7 @@ void
 pixmapalign_change( FL_OBJECT * obj,
                     long        data  FL_UNUSED_ARG )
 {
-    IconInfo *info = ( ( SuperSPEC * ) obj->u_vdata )->cspecv;
+    IconInfo *info = get_superspec( obj )->cspecv;
     const char *s = fl_get_choice_text( obj );
 
     info->align = align_val( s );
