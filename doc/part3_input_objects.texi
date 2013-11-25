@@ -244,7 +244,7 @@ been reported back to the caller. On the other hand, some programs
 rely on the "old" behaviour. These programs can switch back to the
 traditional behaviour by calling the new function (available since
 1.0.93)
-@findex fl_input_end_return_handling
+@findex fl_input_end_return_handling()
 @anchor{fl_input_end_return_handling()}
 @example
 fl_input_end_return_handling(int type);

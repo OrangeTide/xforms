@@ -2,7 +2,7 @@ include $(top_srcdir)/config/common.am
 
 CLEANFILES = fdesign.1
 
-EXTRA_DIST = Change Readme fdesign.man
+EXTRA_DIST = Readme fdesign.man
 
 SUBDIRS = fd spec xpm
 

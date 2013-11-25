@@ -293,8 +293,8 @@ does nothing if applied to sliders of type @code{NICE_SLIDER} and
 @code{FILL_SLIDER}.
 
 To obtain the current setting of the slider size use
-@findex fl_get_slider_size
-@anchor{fl_get_slider_size}
+@findex fl_get_slider_size()
+@anchor{fl_get_slider_size()}
 @example
 double fl_get_slider_size(FL_OBJECT *obj);
 @end example
@@ -628,8 +628,8 @@ can no longer be moved. This function does nothing if applied to
 scrollbars of type @code{FL_NICE_SCROLLBAR}.
 
 The function
-@findex fl_get_scrollbar_size
-@anchor{fl_get_scrollbar_size}
+@findex fl_get_scrollbar_size()
+@anchor{fl_get_scrollbar_size()}
 @example
 double fl_get_scrollbar_size(FL_OBJECT *obj);
 @end example

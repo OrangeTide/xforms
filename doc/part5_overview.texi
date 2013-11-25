@@ -1803,13 +1803,12 @@ void fl_activate_all_forms(void)
 @end example
 
 To find out if a form is currently active call
-@findex fl_form_is_activated
-@anchor{fl_form_is_activated}
+@findex fl_form_is_activated()
+@anchor{fl_form_is_activated()}
 @example
 int fl_form_is_activated(FL_FORM *form);
 @end example
-A return value of @code{0} tells you that the form is currently
-deactivated.
+A return value of 0 tells you that the form is currently deactivated.
 
 You can also register callbacks for a form that are invoked whenever
 the activation status of the form is changed:

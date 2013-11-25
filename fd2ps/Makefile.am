@@ -2,7 +2,7 @@ include $(top_srcdir)/config/common.am
 
 CLEANFILES = fd2ps.1
 
-EXTRA_DIST = Change Readme fd2ps.man
+EXTRA_DIST = Readme fd2ps.man
 
 SUBDIRS = test
 

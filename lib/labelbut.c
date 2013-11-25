@@ -22,9 +22,6 @@
  *  This file is part of the XForms library package.
  *  Copyright (c) 1997-2002  T.C. Zhao
  *  All rights reserved.
- *
- *  All Buttons. Additional button class can be added via
- *  fl_add_button_class and fl_create_generic_button
  */
 
 #ifdef HAVE_CONFIG_H

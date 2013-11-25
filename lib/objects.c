@@ -1131,8 +1131,8 @@ fl_get_object_label( FL_OBJECT * obj )
  ***************************************/
 
 void
-fl_set_object_lcolor( FL_OBJECT * obj,
-                      FL_COLOR    lcol )
+fl_set_object_lcol( FL_OBJECT * obj,
+                    FL_COLOR    lcol )
 {
     FL_FORM * form;
 
@@ -1176,7 +1176,7 @@ fl_set_object_lcolor( FL_OBJECT * obj,
  ***************************************/
 
 FL_COLOR
-fl_get_object_lcolor( FL_OBJECT * obj )
+fl_get_object_lcol( FL_OBJECT * obj )
 {
     if ( ! obj )
     {

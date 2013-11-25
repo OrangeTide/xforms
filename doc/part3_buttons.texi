@@ -1,12 +1,17 @@
 @node Part III Button-like Objects
 @chapter Button-like Objects
 
-A very important class of objects are the buttons. Buttons are placed
-on the form such that the user can push them with the mouse. Different
-types of buttons exist: buttons that return to their normal position
-when the user releases the mouse, buttons that stay pushed until the
-user pushes them again and radio buttons that make other buttons be
-released.
+A very important set of object classes are those for buttons. Buttons
+are placed on the form such that the user can push them with the
+mouse. The different button classes mostly are distinguished by the
+way they are displayed. Differences in behaviour can be achieved by
+using different types for a button: there exist button types that make
+them return to their normal state when the user releases the mouse,
+types for buttons that stay pushed until the user pushes them again,
+a radio button type for buttons that are grouped with other radio
+buttons and of which only one can be in the on state at a time and
+a touch button type for buttons that "fire" repeatedly while being
+pressed.
 
 @ifhtml
 @center @image{xforms_images/buttontypes}
@@ -19,10 +24,10 @@ released.
 Also different shapes of buttons exist. Normal buttons are rectangles
 that come out of the background. When the user pushes them they go
 into the background (and possibly change color). Lightbuttons have a
-small light inside them. Pushing the button switches the light on.
-Round buttons are simple circles. When pushed, a colored circle
-appears inside them. Bitmap and pixmap buttons are buttons whose
-labels are graphics rather than text.
+small light inside them. Pushing these buttons switches the light on.
+Round buttons are simple circles and, when pushed, a colored circle
+appears inside of them. Bitmap and pixmap buttons are buttons with
+an image in addition to a text label.
 
 @ifnottex
 
@@ -65,30 +70,90 @@ FL_OBJECT *fl_add_button(int type, FL_Coord x, FL_Coord y,
                          FL_Coord w, FL_Coord h,
                          const char *label);
 FL_OBJECT *fl_add_lightbutton(int type, FL_Coord x, FL_Coord y,
-                              FL_Coord w,FL_Coord h,
+                              FL_Coord w, FL_Coord h,
                               const char *label);
 FL_OBJECT *fl_add_roundbutton(int type, FL_Coord x, FL_Coord y,
-                              FL_Coord w,FL_Coord h,
+                              FL_Coord w, FL_Coord h,
                               const char *label);
 FL_OBJECT *fl_add_round3dbutton(int type, FL_Coord x, FL_Coord y,
-                                FL_Coord w,FL_Coord h,
+                                FL_Coord w, FL_Coord h,
                                 const char *label);
 FL_OBJECT *fl_add_checkbutton(int type, FL_Coord x, FL_Coord y,
-                              FL_Coord w,FL_Coord h,
+                              FL_Coord w, FL_Coord h,
                               const char *label);
 FL_OBJECT *fl_add_bitmapbutton(int type, FL_Coord x, FL_Coord y,
-                               FL_Coord w,FL_Coord h,
+                               FL_Coord w, FL_Coord h,
                                const char *label);
 FL_OBJECT *fl_add_pixmapbutton(int type, FL_Coord x, FL_Coord y,
-                               FL_Coord w,FL_Coord h,
+                               FL_Coord w, FL_Coord h,
                                const char *label);
 FL_OBJECT *fl_add_labelbutton(int type, FL_Coord x, FL_Coord y,
-                              FL_Coord w,FL_Coord h,
+                              FL_Coord w, FL_Coord h,
                               const char *label);
 FL_OBJECT *fl_add_scrollbutton(int type, FL_Coord x, FL_Coord y,
-                               FL_Coord w,FL_Coord h,
+                               FL_Coord w, FL_Coord h,
                                const char *label);
 @end example
+
+These finctions create buttons of the following classes:
+
+@table @code
+@tindex FL_BUTTON
+@anchor{FL_BUTTON}
+@item FL_BUTTON
+A standard normal button.
+
+@tindex FL_LIGHTBUTTON
+@anchor{FL_LIGHTBUTTON}
+@item FL_LIGHTBUTTON
+A button with a small embedded, colored area that changes color when
+the button is in the on state.
+
+@tindex FL_ROUNDBUTTON
+@anchor{FL_ROUNDBUTTON}
+@item FL_ROUNDBUTTON
+A circular button (with a label beside). The inner area of the circle
+changes color when the button is on. Often used for radio buttons.
+
+@tindex FL_ROUND3DBUTTON
+@anchor{FL_ROUND3DBUTTON}
+@item FL_ROUND3DBUTTON
+Just like the @code{@ref{FL_ROUNDBUTTON}} but the circle is dran in
+a 3D-fashion.
+
+@tindex FL_CHECKBUTTON
+@anchor{FL_CHECKBUTTON}
+@item FL_CHECKBUTTON
+Button shaped in the form of a rhombus slightly raised above the
+forms plane when off and slightly embossed (ypically with a different
+color) when on.
+
+@tindex FL_BITMAPBUTTON
+@anchor{FL_BITMAPBUTTON}
+@item FL_BITMAPBUTTON
+Button decorated with a bitmap (often read in from an X bitmap file
+with extension @code{xbm}) in additional to a label.
+
+@tindex FL_PIXMAPBUTTON
+@anchor{FL_PIXMAPBUTTON}
+@item FL_PIXMAPBUTTON
+Button decorated with a pixmap (often read in from an X pixmap file
+with extension @code{xpm}) in additional to a label. An additonal
+pixmap can be set for the case that the mouse hoovers over the
+button.
+
+@tindex FL_LABELBUTTON
+@anchor{FL_LABELBUTTON}
+@item FL_LABELBUTTON
+A button that does not appear to be a button, only its label is
+shown, can be used e.g.@: for hyperlinks.
+
+@tindex FL_SCROLLBARBUTTON
+@anchor{FL_SCROLLBARBUTTON}
+@item FL_SCROLLBARBUTTON
+A button mostly used at the ends of scrollbars - instead of a label it
+can only contain a triangle pointing up, down, left or right.
+@end table
 
 The meaning of the parameters is as usual. The label is by default
 placed inside the button for button and lightbutton. For roundbutton,
@@ -106,7 +171,8 @@ The following types of buttons are available:
 @tindex FL_NORMAL_BUTTON
 @anchor{FL_NORMAL_BUTTON}
 @item FL_NORMAL_BUTTON
-Returns value when released.
+Returned to @code{@ref{fl_do_forms()}} (or having its callback
+funtion invoked) when released.
 
 @tindex FL_PUSH_BUTTON
 @anchor{FL_PUSH_BUTTON}
@@ -116,13 +182,13 @@ Stays pushed until user pushes it again.
 @tindex FL_MENU_BUTTON
 @anchor{FL_MENU_BUTTON}
 @item FL_MENU_BUTTON
-Returns value when pushed, useful e.g.@: for opening a popup when
+Returned when pushed, useful e.g.@: for opening a popup when
 pushed.
 
 @tindex FL_TOUCH_BUTTON
 @anchor{FL_TOUCH_BUTTON}
 @item FL_TOUCH_BUTTON
-Returns value as long as the user pushes it.
+Returned at regulat intervals as long as the user pushes it.
 
 @tindex FL_RADIO_BUTTON
 @anchor{FL_RADIO_BUTTON}
@@ -137,12 +203,12 @@ Invisible normal button.
 @tindex FL_INOUT_BUTTON
 @anchor{FL_INOUT_BUTTON}
 @item FL_INOUT_BUTTON
-Returns value both when pushed and when released.
+Returned both when pushed and when released.
 
 @tindex FL_RETURN_BUTTON
 @anchor{FL_RETURN_BUTTON}
 @item FL_RETURN_BUTTON
-Like a normal button but reacts on the @code{<Return>} key.
+Like a normal button but also reacts to the @code{<Return>} key.
 
 @tindex FL_HIDDEN_RET_BUTTON
 @anchor{FL_HIDDEN_RET_BUTTON}
@@ -151,11 +217,11 @@ Invisible return button.
 @end table
 
 Except for the @code{@ref{FL_HIDDEN_BUTTON}} and
-@code{@ref{FL_HIDDEN_RET_BUTTON}}, which are invisible, all types of
-button look similar on the screen but their function is quite
-different. Each of these buttons gets pushed down when the user
-presses the mouse on top of it. What actually happens when the user
-does so depends on the type of the button. An
+@code{@ref{FL_HIDDEN_RET_BUTTON}}, which are invisible, there's not
+much visible indication of the button type but the function is quite
+different. For each of the types the button gets pushed down when the
+user presses the mouse on top of it. What actually happens when the
+user does so then depends on the type of the button. An
 @code{@ref{FL_NORMAL_BUTTON}}, @code{@ref{FL_TOUCH_BUTTON}} and
 @code{@ref{FL_INOUT_BUTTON}} gets released when the user releases the
 mouse button. Their difference lies in the moment at which the
@@ -282,8 +348,9 @@ as its shortcut the button number returned upon activation of the
 shortcut will be @code{FL_SHORTCUT + 3} (the ASCII value of
 @code{<Ctrl>-C} is 3).
 
-It can also be controlled which mouse buttons a buttons reacts to at
-all. To set which mouse buttons the button reacts to use
+It can also be controlled which mouse buttons a buttons reacts to (per
+default a button reacts to all mouse buttons, including the scroll
+wheel). To set which mouse buttons the button reacts to use
 @findex fl_set_button_mouse_buttons()
 @anchor{fl_set_button_mouse_buttons()}
 @example
@@ -448,8 +515,8 @@ See also @ref{Pixmap Object}, for pixmap color and transparency
 handling.
 
 To get rid of a focus pixmap of a pixmap button use the function
-@findex fl_free_pixmap_focus_pixmap
-@anchor{fl_free_pixmap_focus_pixmap}
+@findex fl_free_pixmap_focus_pixmap()
+@anchor{fl_free_pixmap_focus_pixmap()}
 @example
 void fl_free_pixmap_focus_pixmap(FL_OBJECT *obj);
 @end example

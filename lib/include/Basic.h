@@ -1185,10 +1185,10 @@ FL_EXPORT void fl_set_object_lstyle( FL_OBJECT * obj,
 
 FL_EXPORT int fl_get_object_lstyle( FL_OBJECT * obj );
 
-FL_EXPORT void fl_set_object_lcolor( FL_OBJECT * ob,
-									 FL_COLOR    lcol );
+FL_EXPORT void fl_set_object_lcol( FL_OBJECT * ob,
+								   FL_COLOR    lcol );
 
-FL_EXPORT FL_COLOR fl_get_object_lcolor( FL_OBJECT * obj );
+FL_EXPORT FL_COLOR fl_get_object_lcol( FL_OBJECT * obj );
 
 FL_EXPORT int fl_set_object_return( FL_OBJECT    * ob,
                                     unsigned int   when );
@@ -1275,8 +1275,8 @@ FL_EXPORT void fl_move_object( FL_OBJECT * obj,
                                FL_Coord    dx,
                                FL_Coord    dy );
 
-#define fl_set_object_lcol  fl_set_object_lcolor
-#define fl_get_object_lcol  fl_get_object_lcolor
+#define fl_set_object_lcolor  fl_set_object_lcol
+#define fl_get_object_lcolor  fl_get_object_lcol
 
 FL_EXPORT void fl_fit_object_label( FL_OBJECT * obj,
                                     FL_Coord    xmargin,

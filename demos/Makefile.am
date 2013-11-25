@@ -1,6 +1,6 @@
 include $(top_srcdir)/config/common.am
 
-EXTRA_DIST = 01Readme iconvert.1 demo.menu crossbut.h \
+EXTRA_DIST = Readme iconvert.1 demo.menu crossbut.h \
 	bm1.xbm bm2.xbm newmail.xbm nomail.xbm picture.xbm srs.xbm \
 	crab45.xpm crab_tran.xpm crab.xpm porsche.xpm \
 	test.xpm xconq.xpm xterm.xpm
