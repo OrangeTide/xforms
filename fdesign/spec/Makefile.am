@@ -18,9 +18,6 @@ EXTRA_DIST = browser_spec.c \
 	freeobj_spec.c \
 	freeobj_spec.fd \
 	freeobj_spec.h \
-	free_spec.c \
-	free_spec.fd \
-	free_spec.h \
 	menu_spec.c \
 	menu_spec.fd \
 	menu_spec.h \
