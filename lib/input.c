@@ -41,11 +41,10 @@
 #include <sys/types.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include "private/pinput.h"
 #include "private/flvasprintf.h"
 
 #define H_PAD  ( sp->charh )    /* how much to scroll each time */
-
-#define FL_VALIDATE    FL_INPUTVALIDATOR
 
 enum {
     COMPLETE,
@@ -53,66 +52,6 @@ enum {
     VSLIDER,
     HSLIDER = 4
 };
-
-
-/* Extra information need for input boxes. */
-
-typedef struct {
-    char        * str;              /* the input text                  */
-    FL_COLOR      textcol;          /* text color                      */
-    FL_COLOR      curscol;          /* cursor color                    */
-    int           position;         /* cursor position (in chars)      */
-    int           beginrange;       /* start of the range              */
-    int           endrange;         /* end of the range                */
-    int           size;             /* size of the string              */
-    int           changed;          /* whether the field has changed   */
-    int           drawtype;         /* if to draw text with background */
-    int           noscroll;         /* true if no scrollis allowed     */
-    int           maxchars;         /* limit for normal_input          */
-    int           attrib1;
-    int           attrib2;
-    FL_VALIDATE   validate;
-
-    /* scroll stuff. */
-
-    FL_OBJECT     * dummy;          /* only for the size of composite */
-    FL_OBJECT     * hscroll;
-    FL_OBJECT     * vscroll;
-    FL_OBJECT     * input;
-    int             xoffset;
-    int             yoffset;
-    int             screenlines;
-    int             topline;
-    int             lines;          /* total number of lines in the field   */
-    int             xpos,           /* current cursor position in char,line */
-                    ypos;
-    int             cur_pixels;     /* current line length in pixels        */
-    int             max_pixels;     /* max length of all lines              */
-    int             max_pixels_line;
-    int             charh;          /* character height                     */
-    int             h,              /* text area                            */
-                    w;
-    double          hsize,
-                    vsize;
-    double          hval,
-                    vval;
-    double          hinc1,
-                    hinc2;
-    double          vinc1,
-                    vinc2;
-    int             h_pref,         /* scrollbar preference                 */
-                    v_pref;
-    int             vw,
-                    vw_def;
-    int             hh,
-                    hh_def;
-    int             h_on,
-                    v_on;
-    int             dead_area,
-                    attrib;
-    int             cursor_visible;
-    int             field_char;
-} FLI_INPUT_SPEC;
 
 
 static void correct_topline( FLI_INPUT_SPEC *,
@@ -200,7 +139,12 @@ check_scrollbar_size( FL_OBJECT * obj )
         v_on = sp->v_on;
     int max_pixels = sp->max_pixels + H_PAD;
 
-    if ( sp->input->type != FL_MULTILINE_INPUT )
+    /* The test for sp->vscroll and sp->hscroll being set is only for
+       fdesign which might change the object type of a normal input to
+       a multiline input without creating them */
+
+    if (    sp->input->type != FL_MULTILINE_INPUT
+         || ! ( sp->vscroll && sp->hscroll ) )
         return;
 
     /* Compute the real input box size */
@@ -1502,6 +1446,11 @@ handle_input( FL_OBJECT * obj,
     switch ( event )
     {
         case FL_ATTRIB :
+            if ( ! ( obj->align & ~ FL_ALIGN_INSIDE ) )
+                obj->align = FL_ALIGN_LEFT;
+            else
+                obj->align = fl_to_outside_lalign( obj->align );
+
         case FL_RESIZED :
             check_scrollbar_size( obj );
             break;

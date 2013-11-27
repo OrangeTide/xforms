@@ -10,6 +10,7 @@ EXTRA_DIST = \
 	pdial.h \
 	pflps.h \
 	pformbrowser.h \
+	pinput.h \
 	pmenu.h \
 	pnmenu.h \
 	ppositioner.h \

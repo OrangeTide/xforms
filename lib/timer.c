@@ -50,9 +50,6 @@ typedef struct
 } SPEC;
 
 
-static int update_only;
-
-
 /***************************************
  ***************************************/
 
@@ -137,26 +134,30 @@ handle_timer( FL_OBJECT * ob,
          usec;
     double lasttime_left;
     int ret = FL_RETURN_NONE;
+    static int update_only;
 
     switch ( event )
     {
+        case FL_ATTRIB :
+            if ( ob->type == FL_VALUE_TIMER )
+            {
+                if ( fl_is_center_lalign( ob->align ) )
+                    ob->align = FL_ALIGN_LEFT;
+                else
+                    ob->align = fl_to_outside_lalign( ob->align );
+            }
+            break;
+
         case FL_DRAW:
             draw_timer( ob );
             /* fall through */
 
         case FL_DRAWLABEL:
-            if ( ob->type != FL_HIDDEN_TIMER && ! update_only )
-            {
-                if (    ob->type == FL_VALUE_TIMER
-                     && fl_is_center_lalign( ob->align ) )
-                    fl_drw_text_beside( FL_ALIGN_LEFT, ob->x, ob->y,
-                                        ob->w, ob->h, ob->lcol, ob->lstyle,
-                                        ob->lsize, ob->label );
-                else
-                    fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
-                                        ob->lcol, ob->lstyle, ob->lsize,
-                                        ob->label );
-            }
+            if (    ob->type != FL_HIDDEN_TIMER
+                 && ! ( ob->type == FL_VALUE_TIMER && update_only ) )
+                fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
+                                    ob->lcol, ob->lstyle, ob->lsize,
+                                    ob->label );
             break;
 
         case FL_RELEASE:
@@ -229,7 +230,10 @@ fl_create_timer( int          type,
     ob->boxtype   = FL_TIMER_BOXTYPE;
     ob->col1      = FL_TIMER_COL1;
     ob->col2      = FL_TIMER_COL2;
-    ob->align     = FL_TIMER_ALIGN;
+    if ( type != FL_VALUE_TIMER )
+        ob->align     = FL_TIMER_ALIGN;
+    else
+        ob->align     = FL_ALIGN_LEFT;
     ob->lcol      = FL_TIMER_LCOL;
     ob->spec = sp = fl_calloc( 1, sizeof *sp );
 

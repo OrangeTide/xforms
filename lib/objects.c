@@ -1340,9 +1340,6 @@ fl_set_object_lalign( FL_OBJECT * obj,
         return;
     }
 
-    if ( obj->align == align )
-        return;
-
     if ( fl_is_center_lalign( align ) )
         align = FL_ALIGN_CENTER;
 

@@ -44,6 +44,7 @@
 #include "private/pxyplot.h"
 #include "private/pchoice.h"
 #include "private/pmenu.h"
+#include "private/pinput.h"
 
 
 /***************************************
@@ -101,7 +102,7 @@ spec_to_superspec( FL_OBJECT * obj )
             fli_safe_free( spp->callback[ i ] );
         }
 
-        n = fl_get_browser_maxline( obj );
+        n = spp->nlines = fl_get_browser_maxline( obj );
 
         spp->content  = fl_realloc( spp->content,
                                     ( n + 1 ) * sizeof *spp->content );
@@ -114,7 +115,6 @@ spec_to_superspec( FL_OBJECT * obj )
         spp->mval     = fl_realloc( spp->mval,
                                     ( n + 1 ) * sizeof *spp->mval );
 
-        spp->nlines = n;
         for ( i = 1; i <= n; i++ )
         {
             spp->content[ i ] = fl_strdup( fl_get_browser_line( obj, i ) );
@@ -128,6 +128,7 @@ spec_to_superspec( FL_OBJECT * obj )
         for ( i = 1; i <= spp->nlines; i++ )
         {
             fli_safe_free( spp->content[ i ] );
+            fli_safe_free( spp->shortcut[ i ] );
             fli_safe_free( spp->shortcut[ i ] );
         }
 
@@ -156,6 +157,8 @@ spec_to_superspec( FL_OBJECT * obj )
                 spp->shortcut[ i ] = fl_strdup( sp->shortcut[ i ] );
             else
                 spp->shortcut[ i ] = NULL;
+
+            spp->callback[ i ] = NULL;
         }
     }
     else if ( obj->objclass == FL_MENU )
@@ -577,6 +580,19 @@ superspec_to_spec( FL_OBJECT * obj )
         sp->orient = spp->orient;
         sp->prec   = spp->prec;
     }
+    else if ( obj->objclass == FL_INPUT )
+    {
+        /* Simply reset some attributes of the object to the defaults -
+           this makes only sense when during testing text was entered
+           into the input field to get rid of it */
+
+        FLI_INPUT_SPEC *sp = obj->spec;
+
+        sp->position       = -1;
+        sp->endrange       = -1;
+        sp->lines          = sp->ypos = 1;
+        *sp->str           = '\0';
+    }
 
     return v;
 }
@@ -612,8 +628,9 @@ free_superspec( FL_OBJECT * obj )
     if ( ! ssp )
         return;
 
-    for ( i = 1; i < ssp->nlines; ++i )
+    for ( i = 1; i <= ssp->nlines; ++i )
     {
+        printf( stderr, "N %d %d\n", i, ssp->nlines );
         fl_free( ssp->content[ i ] );
         fl_free( ssp->shortcut[ i ] );
         fl_free( ssp->callback[ i ] );

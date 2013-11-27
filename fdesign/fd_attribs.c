@@ -226,7 +226,7 @@ apply_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
           long        arg  FL_UNUSED_ARG )
 {
     readback_attributes( curobj );
-	redraw_the_form( 0 );
+    show_attributes( curobj );
 }
 
 
@@ -467,7 +467,8 @@ show_attributes( const FL_OBJECT * obj )
 	/* b. label alignment */
 
     fl_set_choice_text( fd_generic_attrib->align, align_name( align, 0 ) + 9 );
-    fl_set_choice( fd_generic_attrib->inside, ( obj->align == align ) + 1 );
+    fl_set_choice( fd_generic_attrib->inside,
+                   fl_is_outside_lalign( obj->align ) + 1 );
 
 	/* c. label font and style */
 
@@ -543,7 +544,7 @@ show_attributes( const FL_OBJECT * obj )
 static void
 readback_attributes( FL_OBJECT * obj )
 {
-    int spstyle;
+    int v1, v2;
     int type;
     char * name,
          * cbname;
@@ -551,38 +552,50 @@ readback_attributes( FL_OBJECT * obj )
 
     obj->boxtype = fl_get_choice( fd_generic_attrib->boxobj ) - 1;
 
+    /* Take care: for some objects the "Type" choice is empty! */
+
+    if (    ( v1 = fl_get_choice( fd_generic_attrib->typeobj ) - 1 ) >= 0
+         && v1 != obj->type )
+        spec_change_type( obj, v1 );
+
     /* Label style consists of two parts */
 
-    obj->lstyle = fl_get_choice( fd_generic_attrib->fontobj ) - 1;
-    spstyle = fl_get_choice( fd_generic_attrib->styleobj ) - 1;
-    obj->lstyle +=
-              spstyle == 3 ? FL_EMBOSSED_STYLE : ( spstyle * FL_SHADOW_STYLE );
-    obj->col1 = fd_generic_attrib->col1obj->col1;
-    obj->col2 = fd_generic_attrib->col2obj->col1;
-    obj->lcol = fd_generic_attrib->lcolobj->col1;
+    v1 = fl_get_choice( fd_generic_attrib->fontobj ) - 1;
+    v2 = fl_get_choice( fd_generic_attrib->styleobj ) - 1;
+    v1 += v2 == 3 ? FL_EMBOSSED_STYLE : ( v2 * FL_SHADOW_STYLE );
+    fl_set_object_lstyle( obj, v1 );
+
+    fl_set_object_color( obj, fd_generic_attrib->col1obj->col1,
+                         fd_generic_attrib->col2obj->col1 );
+
+    fl_set_object_lcol( obj, fd_generic_attrib->lcolobj->col1 );
 
     sprintf( tmpbuf, "FL_ALIGN_%s",
              fl_get_choice_text( fd_generic_attrib->align ) );
-    obj->align = align_val( tmpbuf );
+    v1 = align_val( tmpbuf );
 
-    if (    fl_get_choice( fd_generic_attrib->inside ) == 1
-         && ! fl_is_center_lalign( obj->align ) )
-        obj->align = fl_to_inside_lalign( obj->align );
+    if ( fl_get_choice( fd_generic_attrib->inside ) == 1 )
+        v1 = fl_to_inside_lalign( v1 );
     else
-        obj->align = fl_to_outside_lalign( obj->align );
+        v1 = fl_to_outside_lalign( v1 );
+
+    fl_set_object_lalign( obj, v1 );
 
     sprintf( tmpbuf, "FL_%s", fl_get_choice_text( fd_generic_attrib->resize ) );
-    obj->resize = resize_val( tmpbuf );
-
-    sprintf( tmpbuf, "FL_%s",
-             fl_get_choice_text( fd_generic_attrib->segravity ) );
-    obj->segravity = gravity_val( tmpbuf );
+    fl_set_object_resize( obj, resize_val( tmpbuf ) );
 
     sprintf( tmpbuf, "FL_%s",
              fl_get_choice_text( fd_generic_attrib->nwgravity ) );
-    obj->nwgravity = gravity_val( tmpbuf );
+    v1 = gravity_val( tmpbuf );
 
-    obj->lsize = fsizes[ fl_get_choice( fd_generic_attrib->sizeobj ) - 1 ].size;
+    sprintf( tmpbuf, "FL_%s",
+             fl_get_choice_text( fd_generic_attrib->segravity ) );
+    v2 = gravity_val( tmpbuf );
+
+    fl_set_object_gravity( obj, v1, v2 );
+       
+    fl_set_object_lsize( obj, fsizes[ fl_get_choice(
+                                      fd_generic_attrib->sizeobj ) - 1 ].size );
 
     set_label( obj, fl_get_input( fd_generic_attrib->labelobj ) );
     set_shortcut( obj, fl_get_input( fd_generic_attrib->scobj ) );
@@ -601,11 +614,6 @@ readback_attributes( FL_OBJECT * obj )
 
     fl_free( cbname );
     fl_free( name );
-
-    /* Take care: for some objects the "Type" choice is empty! */
-
-    if ( ( type = fl_get_choice( fd_generic_attrib->typeobj ) ) )
-        spec_change_type( obj, type - 1 );
 
     redraw_the_form( 0 );
 }
