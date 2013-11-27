@@ -233,3 +233,19 @@ operates.
 
 `configure' also accepts some other, not widely useful, options.  Run
 `configure --help' for more details.
+
+Problems
+========
+
+When running `configure' you may receive either error messages or
+warnings at the end that tell you about problems encountered.
+
+Error messages are about programs or libraries that are necessary
+for building the XForms library. You need to locate and install
+these programs before running `configure' again and then compiling
+the library by running 'make'. 
+
+Warnings don't indicate that the library can't be huild, just that
+one or more programs aren't available that are needed for building
+additional stuff like the documentation. You can disregard them
+or install the missing program(s) and run `configure' again.

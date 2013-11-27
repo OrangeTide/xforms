@@ -2192,12 +2192,8 @@ handle_mouse( FL_OBJECT * obj,
 
         if ( ev == FL_PUSH )
         {
-            if ( ! sp->lines[ line ]->selected )
-            {
-                fli_tbox_select_line( obj, line );
-                ret |= FL_RETURN_SELECTION;
-            }
-            else  if ( line != sp->select_line )   
+#if 0  /* still under discussion with Serge Bromow */
+            if ( line != sp->select_line )   
             {
                 fli_tbox_select_line( obj, line );
                 ret |= FL_RETURN_SELECTION;
@@ -2206,6 +2202,18 @@ handle_mouse( FL_OBJECT * obj,
                        && obj->type == FL_DESELECTABLE_HOLD_BROWSER )
             {
                 fli_tbox_deselect_line( obj, line );
+                ret |= FL_RETURN_DESELECTION;
+            }
+#endif
+            if (    line == sp->select_line
+                 && obj->type == FL_DESELECTABLE_HOLD_BROWSER )
+            {
+                fli_tbox_deselect_line( obj, line );
+                ret |= FL_RETURN_DESELECTION;
+            }
+            else
+            {
+                fli_tbox_select_line( obj, line );
                 ret |= FL_RETURN_SELECTION;
             }
         }

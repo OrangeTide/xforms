@@ -71,6 +71,14 @@ install-data-local:
 	$(install_sh) -d $(infodir)/xforms_images
 	$(install_sh) -m 644 $(figures_png) $(infodir)/xforms_images
 
+create_eps_files:
+	for i in $(figures_png); do \
+		$(MAKE) $${i%png}eps; \
+	done
+
+.png.eps:
+	convert $< $@
+
 # On uninstall remove the subdirectory with the images from the directory
 # for the info documentation (the corresponding subdirectory in the HTML
 # documentation directory is taken care of by the Makefile in the 'doc'
@@ -83,4 +91,4 @@ uninstall-local:
 # Get of junk
 
 clean-local:
-	-rm -f *~
+	-rm -f *~ *.eps

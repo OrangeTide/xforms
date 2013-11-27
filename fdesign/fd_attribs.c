@@ -545,7 +545,6 @@ static void
 readback_attributes( FL_OBJECT * obj )
 {
     int v1, v2;
-    int type;
     char * name,
          * cbname;
     char tmpbuf[ 128 ];

@@ -630,7 +630,6 @@ free_superspec( FL_OBJECT * obj )
 
     for ( i = 1; i <= ssp->nlines; ++i )
     {
-        printf( stderr, "N %d %d\n", i, ssp->nlines );
         fl_free( ssp->content[ i ] );
         fl_free( ssp->shortcut[ i ] );
         fl_free( ssp->callback[ i ] );

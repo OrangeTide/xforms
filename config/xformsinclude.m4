@@ -4,6 +4,7 @@ dnl         Lars Gullik Bjønnes (larsbj@lyx.org)
 dnl         Allan Rae (rae@lyx.org)
 
 
+### Check for version and warn when a development version is used
 dnl Usage XFORMS_CHECK_VERSION
 dnl Sets variables VERSION, FL_VERSION, FL_REVISION, FL_FIXLEVEL and 
 dnl xforms_devel_version.
@@ -16,12 +17,12 @@ AC_SUBST(FL_REVISION)
 AC_SUBST(FL_FIXLEVEL)
 echo "configuring xforms version $VERSION"
 xforms_devel_version=no
-case $VERSION in
-dnl (
-  *.[[5-9]][[0-9]]) xforms_devel_version=yes
-         AC_DEFINE(DEVEL_VERSION, 1, Define if you are building a development version of xforms)
-         echo "WARNING: This is a development version. Expect bugs." ;;
-esac])
+case $FL_REVISION in
+	*[[13579]])  xforms_devel_version=yes
+          AC_DEFINE(DEVEL_VERSION, 1, Define if you are building a development version of xforms)
+          echo "WARNING: This is a development version. Expect bugs." ;;
+esac
+])
 
 dnl Usage XFORMS_CHECK_LIB_JPEG: Checks for jpeg library
 AC_DEFUN([XFORMS_CHECK_LIB_JPEG],[
@@ -90,6 +91,38 @@ changequote([,])
 fi])
 
 
+dnl Macro tests if texi2dvi and pdflatex or pdftex is installed.
+dnl
+AC_DEFUN([XFORMS_CHECK_TEXI2DVI],[
+AC_CHECK_PROGS(TEXI2DVI,[texi2dvi],no)
+AC_CHECK_PROGS(PDFTEX,[pdftex],no)
+AC_CHECK_PROGS(PDFLATEX,[pdflatex],no)
+export TEXI2DVI
+export PDFTEX;
+export PDFTEX;
+if test $PDFTEX = "no" -a $PDFLATEX = "no" -o $TEXI2DVI = "no";
+then
+	XFORMS_WARNING([Unable to find either application 'texi2dvi' or one of 'pdftex' or 'pdflatex', PDF documentation won't be built]);
+fi
+AC_SUBST(TEXI2DVI)
+AC_SUBST(PDFTEX)
+AC_SUBST(PDFLATEX)
+])
+
+
+dnl Macro tests if texi2html is installed.
+dnl
+AC_DEFUN([XFORMS_CHECK_TEXI2HTML],[
+AC_CHECK_PROGS(TEXI2HTML,[texi2html],no)
+export TEXI2HTML;
+if test $TEXI2HTML = "no" ;
+then
+	XFORMS_WARNING([Unable to find a 'texi2html' application, HTML documentation  won't be built]);
+fi
+AC_SUBST(TEXI2HTML)
+])
+
+
 dnl Usage: XFORMS_ERROR(message)  Displays the warning "message" and sets the
 dnl flag xforms_error to yes.
 AC_DEFUN([XFORMS_ERROR],[
@@ -130,7 +163,7 @@ else
 
 if test x$xforms_warning = xyes; then
 cat <<EOF
-=== The following minor problems have been detected by configure.
+=== The following minor issues have been detected by configure.
 === Please check the messages below before running 'make'.
 === (see the section 'Problems' in the INSTALL file)
 $xforms_warning_txt

@@ -6,13 +6,11 @@ EXTRA_DIST = xforms.man xforms.css xforms.init
 # impossible to build since the required tools are unavailable)
 
 if BUILD_HTML_DOCS
-html_file = xforms.html
+html_docs = xforms.html
 endif
 if BUILD_PDF_DOCS
-pdf_file = xforms.pdf
+pdf_docs = xforms.pdf
 endif
-doc_DATA = $(pdf_file)
-html_docs = $(html_file)
 man_MANS = xforms.5
 
 info_TEXINFOS = xforms.texi
@@ -63,12 +61,17 @@ xforms_TEXINFOS = part0_preface.texi \
 
 SUBDIRS = xforms_images
 
-all-local: $(html_docs)
+all-local: $(html_docs) $(pdf_docs)
 
 install-data-local:
 	@$(NORMAL_INSTALL)
-	$(install_sh) -d p $(htmldir)
-	$(install_sh) -m 644 xforms.html/*.html $(htmldir)
+	if [ -e xforms.pdf ]; then \
+		$(install_sh) -m 644 xforms.pdf $(docdir); \
+	fi
+	if [ -e xforms.html ]; then \
+		$(install_sh) -d $(htmldir); \
+		$(install_sh) -m 644 xforms.html/*.html $(htmldir); \
+	fi
 
 
 uninstall-local:
@@ -84,10 +87,17 @@ xforms.5:
 # Makefile in 'xforms_images' will also copy the required figures into it
 
 .texi.html:
-	$(TEXI2HTML) --init-file xforms.init xforms.texi
+	texi2html --init-file xforms.init xforms.texi
 	/bin/mkdir -p xforms.html
 	mv index.html xforms_*.html xforms.html
 	cp -r xforms_images xforms.html
+
+.texi.pdf:
+	texi2dvi --pdf --batch xforms.texi
+
+.texi.dvi:
+	$(MAKE) -C xforms_images create_eps_files
+	texi2dvi --batch xforms.texi
 
 clean-local:
 	-rm -rf xforms.5 xforms.info* xforms.html *~

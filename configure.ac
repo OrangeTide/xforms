@@ -1,7 +1,7 @@
 dnl Process with autoconf to generate configure script   -*- sh -*-
 
 AC_PREREQ(2.52)
-AC_INIT([xforms],[1.0.94pre23],[xforms-development@nongnu.org])
+AC_INIT([xforms],[1.0.94pre24],[xforms-development@nongnu.org])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(lib/forms.c)
 XFORMS_CHECK_VERSION
@@ -41,23 +41,16 @@ AM_CONDITIONAL(BUILD_DEMOS, test x$enable_demos = xyes)
 AC_ARG_ENABLE(docs, [AS_HELP_STRING([--enable-docs],[build documentation (needs makeinfo)])])
 AM_CONDITIONAL(BUILD_DOCS, test x$enable_docs = xyes)
 
-# If docs are to be build check for presence of texi2html and pdftex, needed
+# If docs are to be built check for presence of texi2html and pdftex, needed
 # for building the html and pdf versions of the docs, respectively
 
 if test BUILD_DOCS; then
-  AC_CHECK_PROG(TEXI2HTML, texi2html, texi2html)
-  if test -z "$TEXI2HTML"; then
-     AC_MSG_WARN([Unable to create HTML version of the user manual, please install 'html2texi'.])
-  fi
-
-  AC_CHECK_PROG(PDFTEX, pdftex, pdftex)
-  if test -z "$PDFTEX"; then
-     AC_MSG_WARN([Unable to create PDF version of the user manual, please install 'pdftex'.])
-  fi
+  XFORMS_CHECK_TEXI2HTML
+  XFORMS_CHECK_TEXI2DVI
 fi
 
-AM_CONDITIONAL([BUILD_HTML_DOCS], test -n "$TEXI2HTML")
-AM_CONDITIONAL([BUILD_PDF_DOCS], test -n "$PDFTEX")
+AM_CONDITIONAL([BUILD_HTML_DOCS],[test x$TEXI2HTML != xno])
+AM_CONDITIONAL([BUILD_PDF_DOCS],[test x$PDFTEX != x"no" -o x$PDFLATEX != x"no" -a x$TEXI2DVI != x"no"])
 
 ### Check for programs
 XFORMS_PROG_CC
