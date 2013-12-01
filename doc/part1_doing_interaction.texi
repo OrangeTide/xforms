@@ -348,7 +348,7 @@ distance to the lower-right corner of the form, then,
 @anchor{FL_NoGravity}
 @tindex FL_NoGravity
 @item @code{FL_NoGravity}
-@tab @tie{}
+@tab
 @tab Default linear scaling, see below
 
 @anchor{FL_NorthWest}

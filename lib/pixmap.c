@@ -71,7 +71,7 @@ static XpmAttributes *xpmattrib;
 static void
 cleanup_xpma_struct( XpmAttributes * xpma )
 {
-    /* only versions >= 3.4g have alloc_pixels. We always compile with 3.4g
+    /* Only versions >= 3.4g have alloc_pixels. We always compile with 3.4g
        but have to re-act to dynamic libraries, which may be older */
 
     if ( ! xpma || ! xpma->colormap )

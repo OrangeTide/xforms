@@ -40,7 +40,8 @@ IconInfo * get_iconinfo( FL_OBJECT * obj );
 void copy_iconinfo( FL_OBJECT * target,
                     FL_OBJECT * src );
 void free_iconinfo( FL_OBJECT * obj );
-void get_xbm_stuff( IconInfo * info );
+void get_xbm_stuff( IconInfo * info,
+                    FILE     * fp );
 void get_xpm_stuff( char * in,
                     FILE * fp );
 

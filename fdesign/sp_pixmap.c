@@ -133,9 +133,12 @@ pixmap_restore_spec( FL_OBJECT * obj )
     IconInfo *info = get_iconinfo( obj );
 
     if ( *info->filename )
-        ( obj->objclass == FL_PIXMAP ?
-          fl_set_pixmap_file : fl_set_bitmap_file )
-            ( obj, info->filename );
+    {
+        if ( obj->objclass == FL_PIXMAP )
+            fl_set_pixmap_file( obj, info->filename );
+        else
+            fl_set_bitmap_file( obj, info->filename );
+    }
     else
     {
         /* Show the default broken image link image */
@@ -387,7 +390,7 @@ get_data_name( FL_OBJECT * ob,
         if ( ob->objclass == FL_PIXMAP )
             get_xpm_stuff( info->data, fp );
         else
-            get_xbm_stuff( info );
+            get_xbm_stuff( info, fp );
 
         fclose( fp );
     }

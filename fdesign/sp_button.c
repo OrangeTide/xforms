@@ -189,9 +189,12 @@ button_restore_spec( FL_OBJECT * obj )
     info = get_iconinfo( obj );
 
     if ( *info->filename )
-        ( obj->objclass == FL_PIXMAPBUTTON ?
-          fl_set_pixmapbutton_file : fl_set_bitmapbutton_file )
-            ( obj, info->filename );
+    {
+        if ( obj->objclass == FL_PIXMAPBUTTON )
+            fl_set_pixmapbutton_file( obj, info->filename );
+        else
+            fl_set_bitmapbutton_file( obj, info->filename );
+    }
     else
     {
         /* Show the default broken image link image */
@@ -202,16 +205,14 @@ button_restore_spec( FL_OBJECT * obj )
             set_testing_bitmap( obj );
     }
 
-    if ( obj->objclass == FL_PIXMAPBUTTON && *info->focus_filename )
-    {
-        ( curobj->objclass == FL_PIXMAPBUTTON ?
-          fl_set_pixmapbutton_focus_file : fl_set_bitmapbutton_file )
-            ( curobj, info->focus_filename );
-    }
-
     if ( obj->objclass == FL_PIXMAPBUTTON )
+    {
+        if ( *info->focus_filename )
+            fl_set_pixmapbutton_focus_file( obj, info->focus_filename );
+
         fl_set_pixmap_align( obj, fl_to_inside_lalign( info->align ),
                              info->dx, info->dy );
+    }
 }
 
 
@@ -630,7 +631,7 @@ get_data_name( FL_OBJECT * obj,
             if ( obj->objclass == FL_PIXMAPBUTTON )
                 get_xpm_stuff( info->data, fp );
             else
-                get_xbm_stuff( info );
+                get_xbm_stuff( info, fp );
 
             fclose( fp );
         }

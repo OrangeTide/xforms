@@ -124,12 +124,13 @@ EOF
 	$TEXI2DVI --pdf --batch texi2dvi_test.texi > /dev/null 2>&1;
 	if test $? != 0;
 	then
-		grep "ould not find image file" texi2dvi_test.log > /dev/null 2>&1
+		grep "cannot find image file" texi2dvi_test.log > /dev/null 2>&1
 		if test $? = 0;
 		then
 			if test $CONVERT = "no";
 			then
-				XFORMS_WARNING(['tesi2dvi' requires the 'convert' application but which doesn't exist, so PDF documentation won't be built])
+				TEXI2DVI="no"
+				XFORMS_WARNING(['texi2dvi' requires the 'convert' application but which doesn't exist, so PDF documentation won't be built])
 	        else
 	           TEXI2DVI_NEEDS_PDF="yes"
 			   export TEXI2DVI_NEEDS_PDF
