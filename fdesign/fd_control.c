@@ -721,7 +721,6 @@ test_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     for ( ob = cur_form->first; ob; ob = ob->next, i++, p++ )
     {
-        spec_to_superspec( ob );
         p->x = ob->x;
         p->y = ob->y;
         p->w = ob->w;
@@ -795,7 +794,6 @@ stoptest_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
         ob->y = p->y;
         ob->w = p->w;
         ob->h = p->h;
-        free_superspec( ob );
     }
 
     fli_safe_free( oldgeom );

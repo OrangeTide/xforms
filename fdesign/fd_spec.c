@@ -30,11 +30,13 @@
 #include <config.h>
 #endif
 
+#include <string.h>
+#include <ctype.h>
+
 #include "include/forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
-#include <string.h>
-#include <ctype.h>
+#include "fd_iconinfo.h"
 
 #include "sp_slider.h"
 #include "sp_counter.h"
@@ -451,6 +453,8 @@ restore_spec( FL_OBJECT * obj )
 
 
 /***************************************
+ * Function called for writing out object class specific
+ * information for an object to an .fd file
  ***************************************/
 
 void
@@ -465,6 +469,8 @@ save_objclass_spec_info( FILE      * fp,
 
 
 /***************************************
+ * Function called for writing out object class specific
+ * information for an object to a .c file
  ***************************************/
 
 void
@@ -1045,19 +1051,23 @@ ff_read_sp_id( FL_OBJECT * obj  FL_UNUSED_ARG,
  ***************************************/
 
 static int 
-ff_read_sp_file( FL_OBJECT * obj  FL_UNUSED_ARG,
-                 SuperSPEC * sp )
+ff_read_sp_file( FL_OBJECT * obj,
+                 SuperSPEC * sp  FL_UNUSED_ARG )
 {
     int r;
     char *p;
+    IconInfo *info = get_iconinfo( obj );
+
+    if ( ! info )
+        return ff_err( "Invalid \"file\" attribute for object type found" );
 
     if ( ( r = ff_read( "%S", &p ) ) < 0 )
         return ff_err( "Can't read expected object \"file\" attribute" );
 
-    if ( strlen( p ) >= sizeof sp->filename )
+    if ( strlen( p ) >= sizeof info->filename )
         return ff_err( "Filename for \"file\" key too long" );
 
-    strcpy( sp->filename, p );
+    strcpy( info->filename, p );
  
     fli_safe_free( p );
 
@@ -1069,19 +1079,23 @@ ff_read_sp_file( FL_OBJECT * obj  FL_UNUSED_ARG,
  ***************************************/
 
 static int
-ff_read_sp_focus_file( FL_OBJECT * obj  FL_UNUSED_ARG,
-                       SuperSPEC * sp )
+ff_read_sp_focus_file( FL_OBJECT * obj,
+                       SuperSPEC * sp  FL_UNUSED_ARG )
 {
     int r;
     char *p;
+    IconInfo *info = get_iconinfo( obj );
+
+    if ( ! info )
+        return ff_err( "Invalid \"focus\" attribute for object type found" );
 
     if ( ( r = ff_read( "%S", &p ) ) < 0 )
         return ff_err( "Can't read expected object \"focus\" attribute" );
 
-    if ( strlen( p ) >= sizeof sp->focus_filename )
+    if ( strlen( p ) >= sizeof info->focus_filename )
         return ff_err( "Filename for \"focus_file\" key too long" );
 
-    strcpy( sp->focus_filename, p );
+    strcpy( info->focus_filename, p );
  
     fli_safe_free( p );
 
@@ -1115,18 +1129,25 @@ ff_read_sp_handler( FL_OBJECT * obj,
  ***************************************/
 
 static int 
-ff_read_sp_data( FL_OBJECT * obj  FL_UNUSED_ARG,
-                 SuperSPEC * sp )
+ff_read_sp_data( FL_OBJECT * obj,
+                 SuperSPEC * sp  FL_UNUSED_ARG )
 {
     int r;
     char *p;
+    IconInfo *info = get_iconinfo( obj );
+
+    if ( ! info )
+        return ff_err( "Invalid data structrure for object type found" );
 
     if ( ( r = ff_read( "%v", &p ) ) < 0 )
         return ff_err( "Can't read expected object data attribute" );
 
-    strcpy( sp->data, p );
+    strcpy( info->data, p );
 
     fli_safe_free( p );
+
+    if ( *info->data )
+        info->use_data = 1;
 
     return 0;
 }
@@ -1136,16 +1157,21 @@ ff_read_sp_data( FL_OBJECT * obj  FL_UNUSED_ARG,
  ***************************************/
 
 static int 
-ff_read_sp_focus_data( FL_OBJECT * obj  FL_UNUSED_ARG,
-                       SuperSPEC * sp )
+ff_read_sp_focus_data( FL_OBJECT * obj,
+                       SuperSPEC * sp  FL_UNUSED_ARG )
 {
     int r;
     char *p;
+    IconInfo *info = get_iconinfo( obj );
+
+    if ( ! info )
+        return ff_err( "Invalid \"focus_data\" attribute for object type "
+                       "found" );
 
     if ( ( r = ff_read( "%v", &p ) ) < 0 )
-        return ff_err( "Can't read expected object focus_data attribute" );
+        return ff_err( "Can't read expected object \"focus_data\" attribute" );
 
-    strcpy( sp->focus_data, p );
+    strcpy( info->focus_data, p );
 
     fli_safe_free( p );
 
@@ -1157,13 +1183,17 @@ ff_read_sp_focus_data( FL_OBJECT * obj  FL_UNUSED_ARG,
  ***************************************/
 
 static int 
-ff_read_sp_fullpath( FL_OBJECT * obj  FL_UNUSED_ARG,
-                     SuperSPEC * sp )
+ff_read_sp_fullpath( FL_OBJECT * obj,
+                     SuperSPEC * sp  FL_UNUSED_ARG )
 {
     int r;
+    IconInfo *info = get_iconinfo( obj );
 
-    if ( ( r = ff_read( "%d", &sp->fullpath) ) < 0 )
-        return ff_err( "Can't read expected object fullpath attribute" );
+    if ( ! info )
+        return ff_err( "Invalid \"fullpath\" attribute for object type found" );
+
+    if ( ( r = ff_read( "%d", &info->fullpath) ) < 0 )
+        return ff_err( "Can't read expected object \"fullpath\" attribute" );
 
     if ( r == 0 )
         return ff_err( "\"fullpath\" key with no or invalid value" );
@@ -1176,16 +1206,20 @@ ff_read_sp_fullpath( FL_OBJECT * obj  FL_UNUSED_ARG,
  ***************************************/
 
 static int 
-ff_read_sp_width( FL_OBJECT * obj  FL_UNUSED_ARG,
-                  SuperSPEC * sp )
+ff_read_sp_width( FL_OBJECT * obj,
+                  SuperSPEC * sp  FL_UNUSED_ARG )
 {
     int r;
     char *p;
+    IconInfo *info = get_iconinfo( obj );
+
+    if ( ! info )
+        return ff_err( "Invalid \"width\" attribute for object type found" );
 
     if ( ( r = ff_read( "%v", &p ) ) < 0 )
-        return ff_err( "Can't read expected object width attribute" );
+        return ff_err( "Can't read expected object \"width\" attribute" );
 
-    strcpy( sp->width, p );
+    strcpy( info->width, p );
 
     fli_safe_free( p );
 
@@ -1197,16 +1231,20 @@ ff_read_sp_width( FL_OBJECT * obj  FL_UNUSED_ARG,
  ***************************************/
 
 static int 
-ff_read_sp_height( FL_OBJECT * obj  FL_UNUSED_ARG,
-                   SuperSPEC * sp )
+ff_read_sp_height( FL_OBJECT * obj,
+                   SuperSPEC * sp  FL_UNUSED_ARG )
 {
     int r;
     char *p;
+    IconInfo *info = get_iconinfo( obj );
+
+    if ( ! info )
+        return ff_err( "Invalid \"height\" attribute for object type found" );
 
     if ( ( r = ff_read( "%v", &p ) ) < 0 )
-        return ff_err( "Can't read expected object height attribute" );
+        return ff_err( "Can't read expected object \"height\" attribute" );
 
-    strcpy( sp->height, p );
+    strcpy( info->height, p );
 
     fli_safe_free( p );
 
@@ -1218,18 +1256,25 @@ ff_read_sp_height( FL_OBJECT * obj  FL_UNUSED_ARG,
  ***************************************/
 
 static int 
-ff_read_sp_align( FL_OBJECT * obj  FL_UNUSED_ARG,
+ff_read_sp_align( FL_OBJECT * obj,
                   SuperSPEC * sp )
 {
     int r;
+    IconInfo *info = get_iconinfo( obj );
+    int align;
 
-    if ( ( r = ff_read( "%a", &sp->align ) ) < 0 )
+    if ( ( r = ff_read( "%a", &align ) ) < 0 )
         return ff_err( "Can't read expected object align attribute" );
 
-    if ( r == 0 )
-        return ff_err( "\"align\" key with no or invalid value" );
+    align &= ~FL_ALIGN_INSIDE;
 
-    sp->align &= ~FL_ALIGN_INSIDE;
+    if ( r == 0 )
+        return ff_err( "Invalid value for \"align\" attribute" );
+
+    if ( info )
+        info->align = align;
+    else
+        sp->align = align;
 
     return 0;
 }
@@ -1529,7 +1574,7 @@ ff_read_sp_dir( FL_OBJECT * obj  FL_UNUSED_ARG,
 
 static int 
 ff_read_sp_return( FL_OBJECT * obj,
-                   SuperSPEC * sp )
+                   SuperSPEC * sp  FL_UNUSED_ARG )
 {
     int r;
     char *return_name;
@@ -1549,7 +1594,6 @@ ff_read_sp_return( FL_OBJECT * obj,
         return ff_err( "Invalid value for \"return\" key" );
 
     fl_set_object_return( obj, ret );
-    sp->how_return = obj->how_return;
 
     return 0;
 }
@@ -1725,10 +1769,8 @@ load_objclass_spec_info( FL_OBJECT * obj,
 
     } while ( r != 0 && strcmp( key, "Name" ) && strcmp( key, "class" ) );
 
-    if ( *sp->data )
-        sp->use_data = 1;
-
     superspec_to_spec( obj );
+    restore_spec( obj );
 
     /* Check if we should be at the last line of the file and then read
        name of main function */

@@ -45,7 +45,7 @@ label: Pixmap Attributes
 shortcut: 
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
+name: frame
 callback: 
 argument: 
 
@@ -106,14 +106,14 @@ argument: 0
 --------------------
 class: FL_CHECKBUTTON
 type: FL_PUSH_BUTTON
-box: 175 155 30 30
+box: 215 155 30 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW
 alignment: FL_ALIGN_LEFT
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: Use Data
+label: '#include' image file
 shortcut: 
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
@@ -124,14 +124,14 @@ argument: 0
 --------------------
 class: FL_CHECKBUTTON
 type: FL_PUSH_BUTTON
-box: 275 155 30 30
+box: 355 155 30 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW
 alignment: FL_ALIGN_LEFT
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: Full Path
+label: Use full path
 shortcut: 
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity

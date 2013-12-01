@@ -78,15 +78,13 @@ spec_to_superspec( FL_OBJECT * obj )
         spp->callback   = NULL;
         spp->mode       = NULL;
         spp->mval       = NULL;
-        spp->cspecv     = NULL;
+        spp->misc_char  = NULL;
 
         spp->new_menuapi = 0;
-        spp->nlines = 0;
+        spp->nlines      = 0;
     }
     else
         spp = obj->u_vdata;
-
-    spp->how_return = obj->how_return;
 
     if ( obj->objclass == FL_BROWSER )
     {
@@ -223,7 +221,6 @@ spec_to_superspec( FL_OBJECT * obj )
               || obj->objclass == FL_BITMAP )
     {
         FL_BUTTON_SPEC *sp = obj->spec;
-        IconInfo *info;
 
         spp->mbuttons = 0;
         for ( i = 0; i < 5; i++ )
@@ -231,37 +228,6 @@ spec_to_superspec( FL_OBJECT * obj )
                 spp->mbuttons |= 1 << i; 
 
         spp->int_val = sp->val;
-
-        if ( ! spp->cspecv )
-        {
-            info = spp->cspecv = fl_calloc( 1, sizeof *info );
-
-            info->show_focus = 1;
-            info->dx         = info->dy = 3;
-            info->align      = FL_ALIGN_CENTER;
-            info->fullpath   = 1;
-        }
-
-        info = spp->cspecv;
-
-        if (    obj->objclass == FL_PIXMAPBUTTON
-             || obj->objclass == FL_BITMAPBUTTON
-             || obj->objclass == FL_PIXMAP
-             || obj->objclass == FL_BITMAP )
-        {
-            spp->align = info->align;
-            spp->dx = info->dx;
-            spp->dy = info->dy;
-            spp->show_focus = info->show_focus;
-            spp->use_data = info->use_data;
-            spp->fullpath = info->fullpath;
-            strcpy( spp->filename, info->filename );
-            strcpy( spp->data, info->data );
-            strcpy( spp->focus_filename, info->focus_filename );
-            strcpy( spp->focus_data, info->focus_data );
-            strcpy( spp->width, info->width );
-            strcpy( spp->height, info->height );
-        }
     }
     else if ( obj->objclass == FL_POSITIONER )
     {
@@ -370,8 +336,6 @@ superspec_to_spec( FL_OBJECT * obj )
     if ( ! spp )
         return v;
 
-    obj->how_return = spp->how_return;
-
     if ( obj->objclass == FL_BROWSER )
     {
         FLI_BROWSER_SPEC *sp = obj->spec;
@@ -438,7 +402,6 @@ superspec_to_spec( FL_OBJECT * obj )
               || obj->objclass == FL_BITMAP )
     {
         FL_BUTTON_SPEC *sp = obj->spec;
-        IconInfo *info = spp->cspecv;
 
         for ( i = 0; i < 5; i++ )
             sp->react_to[ i ] = ( spp->mbuttons & ( 1 << i ) ) != 0;
@@ -446,50 +409,9 @@ superspec_to_spec( FL_OBJECT * obj )
             fl_set_button_mouse_buttons( obj, spp->mbuttons );
 
         sp->val = spp->int_val;
+
         if ( ISBUTTON( obj->objclass ) )
             fl_set_button( obj, sp->val );
-
-        if (    obj->objclass == FL_PIXMAPBUTTON
-             || obj->objclass == FL_BITMAPBUTTON
-             || obj->objclass == FL_PIXMAP
-             || obj->objclass == FL_BITMAP )
-        {
-            info->align      = spp->align;
-            info->dx         = spp->dx;
-            info->dy         = spp->dy;
-            info->show_focus = spp->show_focus;
-            info->use_data   = spp->use_data;
-            info->fullpath   = spp->fullpath;
-
-            strcpy( info->filename, spp->filename );
-            strcpy( info->data, spp->data );
-            strcpy( info->focus_filename, spp->focus_filename );
-            strcpy( info->focus_data, spp->focus_data );
-            strcpy( info->width, spp->width );
-            strcpy( info->height, spp->height );
-
-            if (    obj->objclass == FL_PIXMAPBUTTON
-                 || obj->objclass == FL_PIXMAP )
-            {
-                fl_set_pixmap_align( obj, info->align | FL_ALIGN_INSIDE,
-                                     info->dx, info->dy );
-                fl_set_pixmapbutton_focus_outline( obj, info->show_focus );
-            }
-
-            if ( *info->filename )
-            {
-                if (    obj->objclass == FL_PIXMAPBUTTON
-                     || obj->objclass == FL_PIXMAP )
-                {
-                    fl_set_pixmap_file( obj, info->filename );
-                    if ( *info->focus_filename )
-                        fl_set_pixmapbutton_focus_file( obj,
-                                                        info->focus_filename );
-                }
-                else
-                    fl_set_bitmap_file( obj, info->filename );
-            }
-        }
     }
     else if ( obj->objclass == FL_POSITIONER )
     {
@@ -583,15 +505,15 @@ superspec_to_spec( FL_OBJECT * obj )
     else if ( obj->objclass == FL_INPUT )
     {
         /* Simply reset some attributes of the object to the defaults -
-           this makes only sense when during testing text was entered
-           into the input field to get rid of it */
+           this makes only sense when, during testing, text was entered
+           into the input field and new we need to get rid of it */
 
         FLI_INPUT_SPEC *sp = obj->spec;
 
-        sp->position       = -1;
-        sp->endrange       = -1;
-        sp->lines          = sp->ypos = 1;
-        *sp->str           = '\0';
+        sp->position = -1;
+        sp->endrange = -1;
+        sp->lines    = sp->ypos = 1;
+        *sp->str     = '\0';
     }
 
     return v;
@@ -605,14 +527,65 @@ void
 copy_superspec( FL_OBJECT * target,
                 FL_OBJECT * src )
 {
-    void *tmp;
+    SuperSPEC *t = fl_malloc( sizeof *t ),
+              *s = get_superspec( src );
+    int i;
+
+    t->mode      = NULL;
+    t->content   = NULL;;
+    t->shortcut  = NULL;
+    t->callback  = NULL;
+    t->misc_char = NULL;
+
+    *t = *s;
+
+    /* Take care of pointers in the SuperSPEC */
+
+    if ( s->nlines )
+    {
+        int cnt = s->nlines + 1;
+
+        t->mode = s->mode ? fl_malloc( cnt * sizeof *t->mode ) : NULL;
+
+        t->mval = s->mval ?
+                  fl_malloc( cnt * sizeof *t->mval ) : NULL;
+
+        t->content = s->content ?
+                     fl_malloc( cnt * sizeof * t->content) : NULL;
+
+        t->shortcut = s->shortcut ?
+                      fl_malloc( cnt * sizeof *t->shortcut ) : NULL;
+
+        t->callback = s->callback ?
+                      fl_malloc( cnt * sizeof *t->callback ) : NULL;
+    }
+
+    for ( i = 1; i <= s->nlines; i++ )
+    {
+        if ( t->mode )
+            t->mode[ i ] = s->mode[ i ];
+
+        if ( t->mval )
+            t->mval[ i ] = s->mval[ i ];
+
+        if ( t->content )
+            t->content[ i ] = s->content[ i ] ?
+                              fl_strdup( s->content[ i ] ) : NULL;
+
+        if ( t->shortcut )
+            t->shortcut[ i ] = s->shortcut[ i ] ?
+                               fl_strdup( s->shortcut[ i ] ) : NULL;
+
+        if ( t->callback )
+            t->callback[ i ] = s->callback[ i ] ?
+                               fl_strdup( s->callback[ i ] ) : NULL;
+    }
+
+    if ( t->misc_char )
+        t->misc_char = fl_strdup( s->misc_char );
 
     free_superspec( target );
-
-    tmp = get_superspec( src );
-    src->u_vdata = NULL;
-    target->u_vdata = get_superspec( src );
-    src->u_vdata = tmp;
+    target->u_vdata = t;
 }
 
 
@@ -622,24 +595,28 @@ copy_superspec( FL_OBJECT * target,
 void
 free_superspec( FL_OBJECT * obj )
 {
-    int i;
     SuperSPEC *ssp = obj->u_vdata;
+    int i;
 
     if ( ! ssp )
         return;
 
     for ( i = 1; i <= ssp->nlines; ++i )
     {
-        fl_free( ssp->content[ i ] );
-        fl_free( ssp->shortcut[ i ] );
-        fl_free( ssp->callback[ i ] );
+        if ( ssp->content )
+            fl_free( ssp->content[ i ] );
+        if ( ssp->shortcut )
+            fl_free( ssp->shortcut[ i ] );
+        if ( ssp->callback )
+            fl_free( ssp->callback[ i ] );
     }
 
+    fl_free( ssp->misc_char );
     fl_free( ssp->mode );
     fl_free( ssp->mval );
-
-    fl_free( ssp->cspecv );
-    fli_safe_free( obj->u_vdata );
+    fl_free( ssp->content );
+    fl_free( ssp->shortcut );
+    fl_free( ssp->callback );
 }
 
 

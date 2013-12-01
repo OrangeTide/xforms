@@ -246,59 +246,6 @@ get_how_return_name( unsigned int how_return,
 
 
 /***************************************
- * Read the specified xpm/xbm filename, and return the data name
- * and size
- ***************************************/
-
-void
-get_xpm_stuff( char * in,
-               FILE * fp )
-{
-    char buf[ 128 ],
-         *p;
-
-    while ( fgets( buf, sizeof buf - 1, fp ) )
-        if ( ( p = strstr( buf, "static char" ) ) )
-        {
-            *p += 11;
-            while ( *p && *++p != '*' )
-                /* empty */ ;
-
-            while ( *p && *++p != '[' ) /* ] */
-                if ( ! isspace( ( unsigned char ) *p ) )
-                    *in++ = *p;
-
-            *in = '\0';
-            break;
-        }
-}
-
-
-/***************************************
- ***************************************/
-
-void
-get_xbm_stuff( IconInfo * in )
-{
-    const char *start,
-               *end;
-    size_t len;
-
-    if ( ! ( start = strrchr( in->filename, '/' ) ) )
-        start = in->filename;
-
-    if ( ( end = strrchr( start, '.' ) ) )
-        len = end - start;
-    else
-        len = strlen( start );
-
-    strcpy( strncpy( in->width,  start, len ) + len, "_width"  );
-    strcpy( strncpy( in->height, start, len ) + len, "_height" );
-    strcpy( strncpy( in->data,   start, len ) + len, "_bits"   );
-}
-
-
-/***************************************
  ***************************************/
 
 const char *

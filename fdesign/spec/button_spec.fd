@@ -34,7 +34,7 @@ argument:
 --------------------
 class: FL_LABELFRAME
 type: FL_ENGRAVED_FRAME
-box: 20 20 490 240
+box: 50 20 490 240
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
 alignment: FL_ALIGN_LEFT_TOP
@@ -143,14 +143,14 @@ argument: 0
 --------------------
 class: FL_CHECKBUTTON
 type: FL_PUSH_BUTTON
-box: 180 210 30 30
+box: 220 210 30 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW
 alignment: FL_ALIGN_LEFT
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: '#include' file
+label: '#include' image file
 shortcut: 
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
@@ -161,7 +161,7 @@ argument: 0
 --------------------
 class: FL_CHECKBUTTON
 type: FL_PUSH_BUTTON
-box: 310 210 30 30
+box: 360 210 30 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW
 alignment: FL_ALIGN_LEFT

@@ -42,6 +42,52 @@ static size_t n_dup_info = 0;
 /***************************************
  ***************************************/
 
+unsigned int
+check_resize( unsigned int what,
+              int          nw,
+              int          se )
+{
+    if (    what & FL_RESIZE_X
+         && (    nw == FL_NorthWest
+              || nw == FL_West
+              || nw == FL_SouthWest )
+         && (    se == FL_NorthWest
+              || se == FL_West
+              || se == FL_SouthWest ) )
+        what &= ~ FL_RESIZE_X;
+    else if (    ! ( what & FL_RESIZE_X )
+              && (    nw == FL_NorthWest
+                   || nw == FL_West
+                   || nw == FL_SouthWest )
+              && (    se == FL_NorthEast
+                   || se == FL_East
+                   || se == FL_SouthEast ) )
+        what |= ~ FL_RESIZE_X;
+
+    if (    what & FL_RESIZE_Y
+         && (    nw == FL_NorthWest
+              || nw == FL_North
+              || nw == FL_NorthEast )
+         && (    se == FL_NorthWest
+              || se == FL_North
+              || se == FL_NorthEast ) )
+        what &= ~ FL_RESIZE_Y;
+    else if (    ! ( what & FL_RESIZE_Y )
+              && (    nw == FL_NorthWest
+                   || nw == FL_North
+                   || nw == FL_NorthEast )
+              && (    se == FL_SouthWest
+                   || se == FL_South
+                   || se == FL_SouthEast ) )
+        what |= ~ FL_RESIZE_Y;
+
+    return what;
+}
+
+
+/***************************************
+ ***************************************/
+
 void
 reset_dupinfo_cache( void )
 {
@@ -100,6 +146,8 @@ rel2abs( const char * rel_path )
 
         if ( path_max == -1 )
             size = 1024;
+        else
+            size = path_max;
 
         while ( 1 )
         {

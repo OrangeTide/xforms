@@ -60,7 +60,7 @@ static int read_dummy_type( void );
  ***************************************/
 
 static void
-save_object( FILE      * fl,
+save_object( FILE      * fp,
              FL_OBJECT * obj )
 {
     char name[ MAX_VAR_LEN ],
@@ -78,51 +78,51 @@ save_object( FILE      * fl,
 
     get_object_name( obj, name, cbname, argname );
 
-    fprintf( fl, "\n--------------------\n" );
-    fprintf( fl, "class: %s\n", class_name( obj->objclass ) );
+    fprintf( fp, "\n--------------------\n" );
+    fprintf( fp, "class: %s\n", class_name( obj->objclass ) );
 
     if ( obj->objclass != FL_BEGIN_GROUP && obj->objclass != FL_END_GROUP )
     {
-        fprintf( fl, "type: FL_%s\n",
+        fprintf( fp, "type: FL_%s\n",
                  find_type_name( obj->objclass, obj->type ) );
         fake_obj.x = obj->x;
         fake_obj.y = obj->y;
         fake_obj.w = obj->w;
         fake_obj.h = obj->h;
         fli_scale_object( &fake_obj, sc, sc );
-        fprintf( fl, "box: %d %d %d %d\n", fake_obj.x, fake_obj.y,
+        fprintf( fp, "box: %d %d %d %d\n", fake_obj.x, fake_obj.y,
                  fake_obj.w, fake_obj.h );
 
-        fprintf( fl, "boxtype: %s\n", boxtype_name( obj->boxtype ) );
-        fprintf( fl, "colors: %s %s\n", fli_query_colorname( obj->col1 ),
+        fprintf( fp, "boxtype: %s\n", boxtype_name( obj->boxtype ) );
+        fprintf( fp, "colors: %s %s\n", fli_query_colorname( obj->col1 ),
                  fli_query_colorname( obj->col2 ) );
-        fprintf( fl, "alignment: %s\n", align_name( obj->align, 0 ) );
-        fprintf( fl, "style: %s\n", style_name( obj->lstyle ) );
-        fprintf( fl, "size: %s\n", lsize_name( obj->lsize ) );
-        fprintf( fl, "lcol: %s\n", fli_query_colorname( obj->lcol ) );
+        fprintf( fp, "alignment: %s\n", align_name( obj->align, 0 ) );
+        fprintf( fp, "style: %s\n", style_name( obj->lstyle ) );
+        fprintf( fp, "size: %s\n", lsize_name( obj->lsize ) );
+        fprintf( fp, "lcol: %s\n", fli_query_colorname( obj->lcol ) );
         label = get_label( obj, 0 );
-        fprintf( fl, "label: %s\n", label );
+        fprintf( fp, "label: %s\n", label );
         fl_free( label );
-        fprintf( fl, "shortcut: %s\n", get_shortcut_string( obj ) );
-        fprintf( fl, "resize: %s\n", resize_name( obj->resize ) );
-        fprintf( fl, "gravity: %s %s\n",
+        fprintf( fp, "shortcut: %s\n", get_shortcut_string( obj ) );
+        fprintf( fp, "resize: %s\n", resize_name( obj->resize ) );
+        fprintf( fp, "gravity: %s %s\n",
                  gravity_name( obj->nwgravity ),
                  gravity_name( obj->segravity ) );
     }
 
     if (    ( obj->objclass != FL_END_GROUP && obj->objclass != FL_BEGIN_GROUP )
          || *name )
-        fprintf( fl, "name: %s\n", name );
+        fprintf( fp, "name: %s\n", name );
 
     if ( obj->objclass != FL_BEGIN_GROUP && obj->objclass != FL_END_GROUP )
     {
-        fprintf( fl, "callback: %s\n", cbname );
-        fprintf( fl, "argument: %s\n", argname );
+        fprintf( fp, "callback: %s\n", cbname );
+        fprintf( fp, "argument: %s\n", argname );
         if ( ! defobj || obj->how_return != defobj->how_return )
-            fprintf( fl, "return: %s\n",
+            fprintf( fp, "return: %s\n",
                      get_how_return_name( obj->how_return, 0 ) );
 
-        save_objclass_spec_info( fl, obj );
+        save_objclass_spec_info( fp, obj );
     }
 }
 
@@ -815,29 +815,32 @@ read_dummy_box( void )
  ***************************************/
 
 void
-write_form( FILE    * fl,
+write_form( FILE    * fp,
             FL_FORM * form,
             char      fname[ ] )
 {
-    int onumb;
+    int obj_cnt;
     FL_OBJECT *obj;
 
-    fprintf( fl, "\n=============== FORM ===============\n" );
-    fprintf( fl, "Name: %s\n", fname );
-    fprintf( fl, "Width: %d\n", convert_u( form->w ) );
-    fprintf( fl, "Height: %d\n", convert_u( form->h ) );
+    fprintf( fp, "\n=============== FORM ===============\n"
+                 "Name: %s\n"
+                 "Width: %d\n"
+                 "Height: %d\n",
+             fname, convert_u( form->w ), convert_u( form->h ) );
 
-    /* Print the object number */
+    /* Print the number of objects in the form (don't count those that are
+       subobjects) */
 
-    for ( onumb = 0, obj = form->first->next; obj; obj = obj->next )
-        onumb += obj->parent == NULL;
+    for ( obj_cnt = 0, obj = form->first->next; obj; obj = obj->next )
+        if ( ! obj->parent )
+            obj_cnt++;
 
-    fprintf( fl, "Number of Objects: %d\n", onumb );
+    fprintf( fp, "Number of Objects: %d\n", obj_cnt );
 
-    /* Print the objects */
+    /* Print all objects */
 
     for ( obj = form->first->next; obj; obj = obj->next )
-        save_object( fl, obj );
+        save_object( fp, obj );
 }
 
 

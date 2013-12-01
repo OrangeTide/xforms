@@ -71,13 +71,27 @@ install-data-local:
 	$(install_sh) -d $(infodir)/xforms_images
 	$(install_sh) -m 644 $(figures_png) $(infodir)/xforms_images
 
+# Creates eps files from all pngs for inclusion in info documentation
+# (as used by emacs info mode)
+
 create_eps_files:
 	for i in $(figures_png); do \
 		$(MAKE) $${i%png}eps; \
 	done
 
+# Creates pdf files from all pngs, needed with some older versions of texi2dvi
+# to create the PDF documentation successfully
+
+create_pdf_files:
+	for i in $(figures_png); do \
+		$(MAKE) $${i%png}pdf; \
+	done
+
 .png.eps:
-	convert $< $@
+	$(CONVERT) $< $@
+
+.png.pdf:
+	$(CONVERT) $< $@
 
 # On uninstall remove the subdirectory with the images from the directory
 # for the info documentation (the corresponding subdirectory in the HTML
@@ -91,4 +105,4 @@ uninstall-local:
 # Get of junk
 
 clean-local:
-	-rm -f *~ *.eps
+	-rm -f *~ *.eps *.pdf

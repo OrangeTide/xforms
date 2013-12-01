@@ -20,19 +20,21 @@
 #include <config.h>
 #endif
 
+#include <string.h>
+#include <ctype.h>
+
 #include "include/forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
-#include <string.h>
-#include <ctype.h>
+#include "fd_iconinfo.h"
 
 
 /* Pointer to object currently being edited */
 
 static FL_OBJECT * curobj;
 
-static void save_object( FL_OBJECT * obj );
-static void restore_object( FL_OBJECT * obj );
+static void save_edited_object( FL_OBJECT * obj );
+static void restore_edited_object( FL_OBJECT * obj );
 static void attrib_init( FD_generic_attrib * ui );
 static int validate_attributes( FL_OBJECT * obj );
 static void readback_attributes( FL_OBJECT * obj );
@@ -104,7 +106,7 @@ change_object( FL_OBJECT * obj,
     /* Save current attributes for later restore */
 
     curobj = obj;
-    save_object( obj );
+    save_edited_object( obj );
 
     /* Show only required parts */
 
@@ -168,14 +170,14 @@ change_object( FL_OBJECT * obj,
 
     if ( retobj == fd_attrib->cancelobj )
     {
-        restore_object( obj );
+        restore_edited_object( obj );
         redraw_the_form( 0 );
     }
     else
     {
         reread_spec_form( obj );
         readback_attributes( obj );
-        spec_to_superspec( obj );
+//        spec_to_superspec( obj );
     }
 
     cleanup_saved_object( );
@@ -238,7 +240,7 @@ void
 restore_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
             long        data  FL_UNUSED_ARG )
 {
-    restore_object( curobj );
+    restore_edited_object( curobj );
     show_attributes( curobj );
     redraw_the_form( 0 );
 }
@@ -250,22 +252,19 @@ restore_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 static void
-save_object( FL_OBJECT * obj )
+save_edited_object( FL_OBJECT * obj )
 {
-	/* Get the objects name, name of the callback function and
-	   the argument string */
-
-    get_object_name( obj, saved_object.name, saved_object.cbname,
-					 saved_object.argname );
-
-	/* This also allocated memory for (empty) strings that we don't need
-	   (and the pointers will be overwritten in the next step) */
-
-	/* Copy the object */
+    /* Get memory for the object to save and copy everything */
 
     saved_object.obj = fl_malloc( sizeof *saved_object.obj );
     *saved_object.obj = *obj;
     saved_object.obj->spec = NULL;
+
+	/* Get the objects name, name of the callback function and
+	   the argument string and store them */
+
+    get_object_name( obj, saved_object.name, saved_object.cbname,
+					 saved_object.argname );
 
 	/* Now get memory for the saved object, store what it contains and
        also save the label and the shortcut for real */
@@ -273,15 +272,10 @@ save_object( FL_OBJECT * obj )
 	saved_object.obj->label = fl_strdup( obj->label );
 	copy_shortcut( saved_object.obj, obj );
 
-    /* Get a new superspec of the object to be stored with the saved
-       object. Since the process normally would return the objects
-       already existing superspec store the adress and fake a
-       not existing superspec, create a new one for the stored
-       object and finally make the object point to "its" original
-       version again. */
+    saved_object.obj->u_vdata = saved_object.obj->c_vdata = NULL;
 
-    saved_object.obj->u_vdata = NULL;
     copy_superspec( saved_object.obj, obj );
+    copy_iconinfo( saved_object.obj, obj );
 }
 
 
@@ -290,35 +284,32 @@ save_object( FL_OBJECT * obj )
  ***************************************/
 
 static void
-restore_object( FL_OBJECT * obj )
+restore_edited_object( FL_OBJECT * obj )
 {
-    void * spec = obj->spec;
+    void *sp = obj->spec;
 
-    /* The objects superspec can be thrown away */
+    fl_free( obj->label );
+    fl_free( obj->shortcut );
 
     free_superspec( obj );
-
-    set_object_name( obj, saved_object.name, saved_object.cbname,
-					 saved_object.argname );
-
-	fl_free( obj->label );
-	fl_free( obj->shortcut );
-
-    if ( obj->type != saved_object.obj->type )
-        spec_change_type( obj, saved_object.obj->type );
+    free_iconinfo( obj );
 
 	*obj = *saved_object.obj;
+    obj->spec = sp;
 
 	obj->label = fl_strdup( saved_object.obj->label );
 	copy_shortcut( obj, saved_object.obj );
 
-    obj->spec = spec;
+    obj->u_vdata = obj->c_vdata = NULL;
+
+    copy_superspec( obj, saved_object.obj );
     superspec_to_spec( obj );
 
-    saved_object.obj->u_vdata = NULL;
-    copy_superspec( saved_object.obj, obj );
-
+    copy_iconinfo( obj, saved_object.obj );
     restore_spec( obj );
+
+    set_object_name( obj, saved_object.name, saved_object.cbname,
+					 saved_object.argname );
 
     /* It the "Spec" folder is currently been shown set its content to
        the restored object settings and redraw it */
@@ -339,10 +330,14 @@ restore_object( FL_OBJECT * obj )
 static void
 cleanup_saved_object( void )
 {
+    if ( ! saved_object.obj )
+        return;
+
 	fl_free( saved_object.obj->label );
 	fl_free( saved_object.obj->shortcut );
     free_superspec( saved_object.obj );
-    fl_free( saved_object.obj );
+    free_iconinfo( saved_object.obj );
+    fli_safe_free( saved_object.obj );
 }
 
 
@@ -580,9 +575,6 @@ readback_attributes( FL_OBJECT * obj )
 
     fl_set_object_lalign( obj, v1 );
 
-    sprintf( tmpbuf, "FL_%s", fl_get_choice_text( fd_generic_attrib->resize ) );
-    fl_set_object_resize( obj, resize_val( tmpbuf ) );
-
     sprintf( tmpbuf, "FL_%s",
              fl_get_choice_text( fd_generic_attrib->nwgravity ) );
     v1 = gravity_val( tmpbuf );
@@ -593,6 +585,13 @@ readback_attributes( FL_OBJECT * obj )
 
     fl_set_object_gravity( obj, v1, v2 );
        
+    /* Set resize property after making sure it fits with the gravity
+       settings */
+
+    sprintf( tmpbuf, "FL_%s", fl_get_choice_text( fd_generic_attrib->resize ) );
+    fl_set_object_resize( obj, check_resize( resize_val( tmpbuf ),
+                                             obj->nwgravity, obj->segravity ) );
+
     fl_set_object_lsize( obj, fsizes[ fl_get_choice(
                                       fd_generic_attrib->sizeobj ) - 1 ].size );
 

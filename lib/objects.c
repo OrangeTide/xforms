@@ -807,7 +807,7 @@ fl_set_object_resize( FL_OBJECT    * obj,
         return;
     }
 
-    obj->resize = what ? 1 : 0;
+    obj->resize = what & FL_RESIZE_ALL;
 
     /* Check if thr object has childs, if so also change all of them */
 

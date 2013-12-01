@@ -717,7 +717,7 @@ save_forms( const char *str )
 {
     int i,
         snap;
-    FILE *fn;
+    FILE *fp;
     char fname[ 1024 ],
          filename[ 1024 ];
     Conv *conv;
@@ -759,31 +759,31 @@ save_forms( const char *str )
     strcat( fname, ".fd" );
     make_backup( fname );
 
-    if ( ( fn = fopen( fname, "w" ) ) == 0 )
+    if ( ( fp = fopen( fname, "w" ) ) == 0 )
     {
         fl_show_alert( "Cannot create definition file!", "", "", 1 );
         return 0;
     }
 
     snap = get_step_size( ) + 0.1;
-    fprintf( fn, "Magic: %d\n\n", MAGIC6 );
-    fprintf( fn, "Internal Form Definition File\n" );
-    fprintf( fn, "    (do not change)\n\n" );
-    fprintf( fn, "Number of forms: %d\n", fnumb );
-
-    fprintf( fn, "Unit of measure: %s\n", unit_name( fdopt.unit ) );
+    fprintf( fp, "Magic: %d\n\n"
+                 "Internal Form Definition File\n"
+                 "    (do not change)\n\n"
+                 "Number of forms: %d\n"
+                 "Unit of measure: %s\n",
+             MAGIC6, fnumb, unit_name( fdopt.unit ) );
 
     if ( fd_bwidth != FL_BOUND_WIDTH && fd_bwidth )
-        fprintf( fn, "Border Width: %d\n", fd_bwidth );
+        fprintf( fp, "Border Width: %d\n", fd_bwidth );
 
     if ( snap != 10 )
-        fprintf( fn, "SnapGrid: %d\n", snap );
+        fprintf( fp, "SnapGrid: %d\n", snap );
 
     for ( i = 0; i < fnumb; i++ )
-        write_form( fn, forms[ i ].form, forms[ i ].fname );
+        write_form( fp, forms[ i ].form, forms[ i ].fname );
 
-    fprintf( fn, "\n==============================\n%s\n", main_name );
-    fclose( fn );
+    fprintf( fp, "\n==============================\n%s\n", main_name );
+    fclose( fp );
 
  emit_code:
 

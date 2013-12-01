@@ -87,17 +87,22 @@ xforms.5:
 # Makefile in 'xforms_images' will also copy the required figures into it
 
 .texi.html:
-	texi2html --init-file xforms.init xforms.texi
+	$(TEXI2HTML) --init-file xforms.init xforms.texi
 	/bin/mkdir -p xforms.html
 	mv index.html xforms_*.html xforms.html
 	cp -r xforms_images xforms.html
 
 .texi.pdf:
+	if [ $(TEXI2DVI_NEEDS_PDF) = "yes" ]; then \
+		$(MAKE) -C xforms_images create_pdf_files; \
+	fi
 	texi2dvi --pdf --batch xforms.texi
 
 .texi.dvi:
-	$(MAKE) -C xforms_images create_eps_files
-	texi2dvi --batch xforms.texi
+	if [ $(CONVERT) != "no" ]; then \
+		$(MAKE) -C xforms_images create_eps_files;
+	fi
+	$(TEXI2DVI) --batch xforms.texi
 
 clean-local:
 	-rm -rf xforms.5 xforms.info* xforms.html *~

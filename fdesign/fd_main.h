@@ -699,8 +699,6 @@ void select_pallette_entry( int );
 
 void reset_pallette( void );
 
-#define MAX_CONTENT  128
-
 typedef struct {
     double           min,
                      max,
@@ -729,7 +727,6 @@ typedef struct {
     int              direction;
     int              mbuttons;
     int              int_val;
-    unsigned int     how_return;
     int              align;
     int              dx,
                      dy;
@@ -737,15 +734,6 @@ typedef struct {
     int              h_pref,
                      v_pref;
     int              nlines;
-    char             filename[ 2048 ];
-    char             focus_filename[ 2048 ];
-    char             data[ MAX_VAR_LEN ];
-    char             focus_data[ MAX_VAR_LEN ];
-    char             width[ MAX_VAR_LEN ],
-                     height[ MAX_VAR_LEN ];
-    void           * cspecv;
-    int              use_data;
-    int              fullpath;
     int              xmajor,
                      xminor;
     int              ymajor,
@@ -763,7 +751,6 @@ typedef struct {
     int              new_menuapi;
     int              global_scope;
     int              showsymbol;
-    int              cspecv_size;
     char           * misc_char;
     int              grid_linestyle;
     int              no_title;
@@ -792,21 +779,6 @@ void copy_superspec( FL_OBJECT * dest,
 
 void free_superspec( FL_OBJECT * obj );
 
-typedef struct {
-    int  align;
-    int  dx,
-         dy;
-    int  show_focus;
-    char filename[ 2048 ];
-    char focus_filename[ 2048 ];
-    char data[ MAX_VAR_LEN ];
-    char focus_data[ MAX_VAR_LEN ];
-    char width[ MAX_VAR_LEN ];
-    char height[ MAX_VAR_LEN ];
-    int  use_data;
-    int  fullpath;
-} IconInfo;
-
 #define ISBUTTON( cls )  (    ( cls ) == FL_BUTTON             \
                            || ( cls ) == FL_LIGHTBUTTON        \
                            || ( cls ) == FL_CHECKBUTTON        \
@@ -826,6 +798,11 @@ void select_object_by_class( int );
 char * append_fd_suffix( const char * );
 
 const char * get_placement( FL_FORM * );
+
+unsigned int
+check_resize( unsigned int what,
+              int          nw,
+              int          se );
 
 void reset_dupinfo_cache( void );
 
@@ -847,11 +824,6 @@ int get_how_return_val( const char * );
 
 const char * get_how_return_name( unsigned int,
                                   int );
-
-void get_xpm_stuff( char *,
-                    FILE * );
-
-void get_xbm_stuff( IconInfo * );
 
 const char * file_tail( const char * );
 

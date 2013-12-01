@@ -34,36 +34,27 @@
 #include <config.h>
 #endif
 
+#include <ctype.h>
+#include <float.h>
+
 #include "include/forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
-#include <ctype.h>
-#include <float.h>
+#include "fd_iconinfo.h"
 
 #define MAXSEL  2048
 
 #define BackOBJ( )    cur_form->first->next
 
-static FL_OBJECT *selobj[ MAXSEL ]; /* the selected objects */
+static FL_OBJECT *selobj[ MAXSEL ]; /* list of selected objects */
 static int selnumb = 0;             /* and their number */
 static int backf = FL_FALSE;        /* whether the selection is the backface */
 
 
 static FL_OBJECT * copy_object( FL_OBJECT * obj,
                                 int         exact );
-static void set_attribs( FL_OBJECT  * obj,
-                         int          boxtype,
-                         int          col1,
-                         int          col2,
-                         int          lcol,
-                         int          align,
-                         int          lsize,
-                         int          lstyle,
-                         const char * label );
-static void set_miscattribs( FL_OBJECT    * obj,
-                             unsigned int   nw,
-                             unsigned int   se,
-                             unsigned int   re );\
+static void set_attribs( FL_OBJECT * obj,
+                         FL_OBJECT * src );
 
 
 /***************************************
@@ -865,12 +856,7 @@ change_selected_objects( FL_OBJECT * curobj )
         if ( ob->objclass != FL_BEGIN_GROUP && ob->objclass != FL_END_GROUP )
         {
             spec_change_type( ob, curobj->type );
-            set_attribs( ob, curobj->boxtype, curobj->col1, curobj->col2,
-                         curobj->lcol, curobj->align,
-                         curobj->lsize, curobj->lstyle, ob->label );
-            set_miscattribs( ob, curobj->nwgravity, curobj->segravity,
-                             curobj->resize );
-            fli_handle_object( ob, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+            set_attribs( ob, curobj );
         }
     }
 }
@@ -1730,17 +1716,18 @@ copy_object( FL_OBJECT * obj,
 
     obj2 = add_an_object( obj->objclass, obj->type, obj->x, obj->y,
                           obj->w, obj->h );
+
     get_object_name( obj, name, cbname, argname );
     set_object_name( obj2, exact ? name : "", cbname, argname );
-
-    set_attribs( obj2, obj->boxtype, obj->col1, obj->col2,
-                 obj->lcol, obj->align, obj->lsize, obj->lstyle, obj->label );
-
-    set_miscattribs( obj2, obj->nwgravity, obj->segravity, obj->resize );
+    set_attribs( obj2, obj );
 
     /* Also copy the object specific info */
 
     copy_superspec( obj2, obj );
+    superspec_to_spec( obj2 );
+
+    copy_iconinfo( obj2, obj );
+    restore_spec( obj2 );
 
     fl_delete_object( obj2 );
 
@@ -1753,24 +1740,18 @@ copy_object( FL_OBJECT * obj,
  ***************************************/
 
 static void
-set_attribs( FL_OBJECT  * obj,
-             int          boxtype,
-             int          col1,
-             int          col2,
-             int          lcol,
-             int          align,
-             int          lsize,
-             int          lstyle,
-             const char * label )
+set_attribs( FL_OBJECT * obj,
+             FL_OBJECT * src )
 {
+    char *label;
     char *s;
 
-    obj->boxtype = boxtype;
-    obj->col1    = col1;
-    obj->col2    = col2;
-    obj->lcol    = lcol;
-    obj->lsize   = lsize;
-    obj->lstyle  = lstyle;
+    obj->boxtype = src->boxtype;
+    obj->col1    = src->col1;
+    obj->col2    = src->col2;
+    obj->lcol    = src->lcol;
+    obj->lsize   = src->lsize;
+    obj->lstyle  = src->lstyle;
 
     if (    obj->objclass == FL_SLIDER
          && ! ( obj->type & FL_VERT_PROGRESS_BAR ) )
@@ -1780,12 +1761,19 @@ set_attribs( FL_OBJECT  * obj,
             obj->align = FL_SLIDER_ALIGN;
     }
     else
-        obj->align   = align;
+        obj->align   = src->align;
 
-    if ( ( s = strchr( label, '\010' ) ) )
+    s = label = fl_strdup( src->label );
+    while ( ( s = strchr( s, '\010' ) ) )
         memmove( s, s + 1, strlen( s ) + 1 );
         
     fl_set_object_label( obj, label );
+    fl_free( label );
+
+    obj->nwgravity  = src->nwgravity;
+    obj->segravity  = src->segravity;
+    obj->resize     = src->resize;
+    obj->how_return = src->how_return;
 
     fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 
@@ -1796,30 +1784,14 @@ set_attribs( FL_OBJECT  * obj,
     {
         FL_OBJECT *subobj = fl_get_spinner_input( obj );
 
-        subobj->col1 = col1;
-        subobj->col2 = col2;
+        subobj->col1 = src->col1;
+        subobj->col2 = src->col2;
 
-        subobj->lstyle = lstyle;
-        subobj->lsize  = lsize; 
+        subobj->lstyle = src->lstyle;
+        subobj->lsize  = src->lsize; 
 
         fli_handle_object( subobj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
    }
-}
-
-
-/***************************************
- * More attributes
- ***************************************/
-
-static void
-set_miscattribs( FL_OBJECT    * obj,
-                 unsigned int   nw,
-                 unsigned int   se,
-                 unsigned int   re )
-{
-    obj->nwgravity = nw;
-    obj->segravity = se;
-    obj->resize    = re;
 }
 
 

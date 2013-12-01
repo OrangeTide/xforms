@@ -40,6 +40,8 @@ fdesign_SOURCES = \
 	fd_spec.c \
 	fd_spec.h \
 	fd_super.c \
+	fd_iconinfo.c \
+	fd_iconinfo.h \
 	fd_util.c \
 	sp_browser.c \
 	sp_browser.h \

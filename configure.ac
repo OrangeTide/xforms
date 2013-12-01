@@ -1,7 +1,7 @@
 dnl Process with autoconf to generate configure script   -*- sh -*-
 
 AC_PREREQ(2.52)
-AC_INIT([xforms],[1.0.94pre24],[xforms-development@nongnu.org])
+AC_INIT([xforms],[1.0.94pre25],[xforms-development@nongnu.org])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(lib/forms.c)
 XFORMS_CHECK_VERSION
@@ -50,7 +50,7 @@ if test BUILD_DOCS; then
 fi
 
 AM_CONDITIONAL([BUILD_HTML_DOCS],[test x$TEXI2HTML != xno])
-AM_CONDITIONAL([BUILD_PDF_DOCS],[test x$PDFTEX != x"no" -o x$PDFLATEX != x"no" -a x$TEXI2DVI != x"no"])
+AM_CONDITIONAL([BUILD_PDF_DOCS],[test x$TEXI2DVI != x"no"])
 
 ### Check for programs
 XFORMS_PROG_CC

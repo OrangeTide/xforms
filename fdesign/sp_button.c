@@ -34,6 +34,7 @@
 #include <ctype.h>
 #include "fd_main.h"
 #include "fd_spec.h"
+#include "fd_iconinfo.h"
 #include "spec/button_spec.h"
 
 static FD_buttonattrib *bt_attrib = NULL;
@@ -133,7 +134,7 @@ void
 button_fill_in_spec_form( FL_OBJECT * obj )
 {
     FL_BUTTON_SPEC *sp = obj->spec;
-    IconInfo *info = get_superspec( obj )->cspecv;
+    IconInfo *info = get_iconinfo( obj );
 
     fl_set_button( bt_attrib->react_left,   sp->react_to[ 0 ] );
     fl_set_button( bt_attrib->react_middle, sp->react_to[ 1 ] );
@@ -141,14 +142,18 @@ button_fill_in_spec_form( FL_OBJECT * obj )
     fl_set_button( bt_attrib->react_up,     sp->react_to[ 3 ] );
     fl_set_button( bt_attrib->react_down,   sp->react_to[ 4 ] );
     fl_set_button( bt_attrib->initialval,   sp->val );
-    fl_set_button( bt_attrib->use_data,     info->use_data );
-    fl_set_button( bt_attrib->fullpath,     info->fullpath );
 
-    fl_set_button( bt_attrib->showfocus, info->show_focus );
-    fl_set_choice_text( bt_attrib->pixalign, align_name( info->align, 0 ) );
+    if ( info )
+    {
+        fl_set_button( bt_attrib->use_data, info->use_data );
+        fl_set_button( bt_attrib->fullpath, info->fullpath );
 
-    fl_set_input( bt_attrib->filename, info->filename );
-    fl_set_input( bt_attrib->focus_filename, info->focus_filename );
+        fl_set_button( bt_attrib->showfocus, info->show_focus );
+        fl_set_choice_text( bt_attrib->pixalign, align_name( info->align, 0 ) );
+
+        fl_set_input( bt_attrib->filename, info->filename );
+        fl_set_input( bt_attrib->focus_filename, info->focus_filename );
+    }
 }
 
 
@@ -176,10 +181,12 @@ button_reread_spec_form( FL_OBJECT * obj )
 void
 button_restore_spec( FL_OBJECT * obj )
 {
-    IconInfo *info = get_superspec( obj )->cspecv;
+    IconInfo *info;
 
     if ( ! IsIconButton( obj ) )
         return;
+
+    info = get_iconinfo( obj );
 
     if ( *info->filename )
         ( obj->objclass == FL_PIXMAPBUTTON ?
@@ -201,6 +208,10 @@ button_restore_spec( FL_OBJECT * obj )
           fl_set_pixmapbutton_focus_file : fl_set_bitmapbutton_file )
             ( curobj, info->focus_filename );
     }
+
+    if ( obj->objclass == FL_PIXMAPBUTTON )
+        fl_set_pixmap_align( obj, fl_to_inside_lalign( info->align ),
+                             info->dx, info->dy );
 }
 
 
@@ -237,8 +248,9 @@ button_emit_spec_fd_code( FILE      * fp,
         return;
     }
 
-    info = get_superspec( obj )->cspecv;
-    definfo = get_superspec( defobj )->cspecv;
+    info = get_iconinfo( obj );
+    spec_to_superspec( defobj );
+    definfo = get_iconinfo( defobj );
 
     get_data_name( obj, info );
 
@@ -270,6 +282,7 @@ button_emit_spec_fd_code( FILE      * fp,
     if ( *info->height )
         fprintf( fp, "    height: %s\n", info->height );
 
+    free_iconinfo( defobj );
     free_superspec( defobj );
     fl_free_object( defobj );
 }
@@ -308,8 +321,9 @@ button_emit_spec_c_code( FILE      * fp,
         return;
     }
 
-    info = get_superspec( obj )->cspecv;
-    definfo = get_superspec( defobj )->cspecv;
+    info = get_iconinfo( obj );
+    spec_to_superspec( defobj );
+    definfo = get_iconinfo( defobj );
 
     if (    obj->objclass == FL_PIXMAPBUTTON
          && info->align != definfo->align )
@@ -350,6 +364,7 @@ button_emit_spec_c_code( FILE      * fp,
         fprintf( fp, "    fl_set_pixmapbutton_focus_outline( obj, %d );\n",
                  info->show_focus );
 
+    free_iconinfo( defobj );
     free_superspec( defobj );
     fl_free_object( defobj );
 }
@@ -367,7 +382,7 @@ button_emit_spec_header( FILE      * fp,
     if ( ! IsIconButton( obj ) )
         return;
 
-    info = get_superspec( obj )->cspecv;
+    info = get_iconinfo( obj );
 
     if ( info->use_data && *info->data && *info->filename )
     {
@@ -396,8 +411,7 @@ void
 usedata_change( FL_OBJECT * obj,
                 long        data  FL_UNUSED_ARG )
 {
-    ( ( IconInfo * ) get_superspec( curobj )->cspecv )->use_data =
-                                                           fl_get_button( obj );
+    get_iconinfo( curobj )->use_data = fl_get_button( obj );
 }
 
 
@@ -408,8 +422,7 @@ void
 fullpath_cb( FL_OBJECT * ob,
              long        data  FL_UNUSED_ARG )
 {
-    ( ( IconInfo * ) get_superspec( curobj )->cspecv )->fullpath =
-                                                            fl_get_button( ob );
+    get_iconinfo( curobj )->fullpath = fl_get_button( ob );
 }
 
 
@@ -452,7 +465,7 @@ void
 showfocus_change( FL_OBJECT * obj,
                   long        data  FL_UNUSED_ARG )
 {
-    IconInfo *info = get_superspec( curobj )->cspecv;
+    IconInfo *info = get_iconinfo( curobj );
 
     info->show_focus = fl_get_button( obj );
     fl_set_pixmapbutton_focus_outline( curobj, info->show_focus );
@@ -466,10 +479,7 @@ void
 iconbutton_filename_change( FL_OBJECT * ob,
                             long        data  FL_UNUSED_ARG )
 {
-    IconInfo *info = get_superspec( curobj )->cspecv;
-
-    if ( ! IsIconButton( curobj ) )
-        return;
+    IconInfo *info = get_iconinfo( curobj );
 
     strcpy( info->filename, fl_get_input( ob ) );
 
@@ -501,7 +511,7 @@ void
 focusiconbutton_filename_change( FL_OBJECT * obj,
                                  long        data  FL_UNUSED_ARG )
 {
-    IconInfo *info = get_superspec( curobj )->cspecv;
+    IconInfo *info = get_iconinfo( curobj );
 
     strcpy( info->focus_filename, fl_get_input( obj ) );
 
@@ -517,7 +527,7 @@ void
 pixalign_change( FL_OBJECT * obj,
                  long        data  FL_UNUSED_ARG )
 {
-    IconInfo *info = get_superspec( curobj )->cspecv;
+    IconInfo *info = get_iconinfo( curobj );
     const char *s = fl_get_choice_text( obj );
 
     if ( ! s )
@@ -606,52 +616,47 @@ create_default_button( FL_OBJECT * ob )
 
 static void
 get_data_name( FL_OBJECT * obj,
-               IconInfo  * inf )
+               IconInfo  * info )
 {
     FILE *fp;
 
-    *inf->filename       = '\0';
-    *inf->focus_filename = '\0';
-    *inf->width          = '\0';
-    *inf->height         = '\0';
-
-    if ( ! IsIconButton( obj ) || ! inf->use_data )
+    if ( ! info->use_data )
         return;
 
-    if ( *inf->filename )
+    if ( *info->filename )
     {
-        if ( ! ( fp = fopen( inf->filename, "r" ) ) )
+        if ( ( fp = fopen( info->filename, "r" ) ) )
         {
             if ( obj->objclass == FL_PIXMAPBUTTON )
-                get_xpm_stuff( inf->data, fp );
+                get_xpm_stuff( info->data, fp );
             else
-                get_xbm_stuff( inf );
+                get_xbm_stuff( info );
 
             fclose( fp );
         }
 
-        if ( ! fp || ! *inf->data )
+        if ( ! fp || ! *info->data )
         {
-            fprintf( stderr, "Can't open or read '%s'\n", inf->filename );
-            *inf->filename = '\0';
+            fprintf( stderr, "Can't open or read '%s'\n", info->filename );
+            *info->filename = '\0';
         }
 
     }
 
-    if ( obj->objclass != FL_PIXMAPBUTTON || ! *inf->focus_filename )
+    if ( obj->objclass != FL_PIXMAPBUTTON || ! *info->focus_filename )
         return;
 
-    if ( ( fp = fopen( inf->focus_filename, "r" ) ) )
+    if ( ( fp = fopen( info->focus_filename, "r" ) ) )
     {
-        get_xpm_stuff( inf->focus_data, fp );
+        get_xpm_stuff( info->focus_data, fp );
         fclose( fp );
     }
 
-    if ( ! fp || ! *inf->focus_data )
+    if ( ! fp || ! *info->focus_data )
     {
         fprintf( stderr, "Can't open or read focusfile '%s'\n",
-                 inf->focus_filename );
-        *inf->focus_filename = '\0';
+                 info->focus_filename );
+        *info->focus_filename = '\0';
     }
 }
 

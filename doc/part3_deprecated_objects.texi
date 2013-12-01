@@ -181,7 +181,7 @@ using the call
 @example
 const char *fl_get_choice_text(FL_OBJECT *obj);
 @end example
-@@noindent
+@noindent
 @code{NULL} is returned when there is no current choice.
 
 To obtain the text of an arbitrary choice item, use the following routine
@@ -752,7 +752,7 @@ To obtain the popup ID associated with a menu, use the following routine
 int fl_get_menu_popup(FL_OBJECT *obj);
 @end example
 @noindent
-The function return the popup ID if the menu was created using
+The function returns the popup ID if the menu was created using
 @code{@ref{fl_set_menu_popup()}} or
 @code{@ref{fl_set_menu_entries()}}, otherwise it returns -1.
 

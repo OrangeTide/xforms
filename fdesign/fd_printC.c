@@ -927,52 +927,6 @@ supported_shortcut( int objclass )
 
 
 /***************************************
- ***************************************/
-
-static unsigned int
-check_resize( unsigned int what,
-              int          nw,
-              int          se )
-{
-    if (    what & FL_RESIZE_X
-         && (    nw == FL_NorthWest
-              || nw == FL_West
-              || nw == FL_SouthWest )
-         && (    se == FL_NorthWest
-              || se == FL_West
-              || se == FL_SouthWest ) )
-        what &= ~ FL_RESIZE_X;
-    else if (    ! ( what & FL_RESIZE_X )
-              && (    nw == FL_NorthWest
-                   || nw == FL_West
-                   || nw == FL_SouthWest )
-              && (    se == FL_NorthEast
-                   || se == FL_East
-                   || se == FL_SouthEast ) )
-        what |= ~ FL_RESIZE_X;
-
-    if (    what & FL_RESIZE_Y
-         && (    nw == FL_NorthWest
-              || nw == FL_North
-              || nw == FL_NorthEast )
-         && (    se == FL_NorthWest
-              || se == FL_North
-              || se == FL_NorthEast ) )
-        what &= ~ FL_RESIZE_Y;
-    else if (    ! ( what & FL_RESIZE_Y )
-              && (    nw == FL_NorthWest
-                   || nw == FL_North
-                   || nw == FL_NorthEast )
-              && (    se == FL_SouthWest
-                   || se == FL_South
-                   || se == FL_SouthEast ) )
-        what |= ~ FL_RESIZE_Y;
-
-    return what;
-}
-
-
-/***************************************
  * Generate the C file for the forms we've defined. Header is generated
  * elsewhere. All default attributes are omitted.
  ***************************************/
@@ -1550,7 +1504,7 @@ post_form_output( FILE * fn )
  ***************************************/
 
 static void
-output_object( FILE      * fn,
+output_object( FILE      * fp,
                FL_OBJECT * obj,
                int         altfmt )
 {
@@ -1575,14 +1529,14 @@ output_object( FILE      * fn,
         if ( *name )
         {
             if ( ! altfmt )
-                fprintf( fn, "\n    %s->%s =", fdvname, name );
+                fprintf( fp, "\n    %s->%s =", fdvname, name );
             else
-                fprintf( fn, "\n    %s =", name );
+                fprintf( fp, "\n    %s =", name );
         }
-        fprintf( fn, " fl_bgn_group( );\n" );
+        fprintf( fp, " fl_bgn_group( );\n" );
     }
     else if ( obj->objclass == FL_END_GROUP )
-        fprintf( fn, "    fl_end_group( );\n\n");
+        fprintf( fp, "    fl_end_group( );\n\n");
     else
     {
         defobj = find_class_default( obj->objclass, obj->type );
@@ -1595,19 +1549,19 @@ output_object( FILE      * fn,
             exit( 1 );
         }
 
-        fprintf( fn, "\n    " );
+        fprintf( fp, "\n    " );
 
         if ( *name )
         {
             if ( ! altfmt )
-                fprintf( fn, "%s->%s = ", fdvname, name );
+                fprintf( fp, "%s->%s = ", fdvname, name );
             else
-                fprintf( fn, "%s = ", name );
+                fprintf( fp, "%s = ", name );
         }
 
-        fprintf( fn, "obj = " );
-        fprintf( fn, "fl_add_%s( ", find_class_name( obj->objclass ) );
-        fprintf( fn, "FL_%s,", find_type_name( obj->objclass, obj->type ) );
+        fprintf( fp, "obj = " );
+        fprintf( fp, "fl_add_%s( ", find_class_name( obj->objclass ) );
+        fprintf( fp, "FL_%s,", find_type_name( obj->objclass, obj->type ) );
 
         fakeobj.x = obj->x;
         fakeobj.y = obj->y;
@@ -1617,10 +1571,10 @@ output_object( FILE      * fn,
 
         label = get_label( obj, 1 );
         if ( obj->objclass != FL_FREE )
-            fprintf( fn, " %d, %d, %d, %d, \"%s\" );\n", fakeobj.x, fakeobj.y,
+            fprintf( fp, " %d, %d, %d, %d, \"%s\" );\n", fakeobj.x, fakeobj.y,
                      fakeobj.w, fakeobj.h, label );
         else
-            fprintf( fn, "% d, %d, %d, %d, \"%s\",\n\t\t\t%s );\n",
+            fprintf( fp, "% d, %d, %d, %d, \"%s\",\n\t\t\t%s );\n",
                      fakeobj.x, fakeobj.y, fakeobj.w, fakeobj.h,
                      label, get_free_handle( obj, name ) );
         fl_free( label );
@@ -1628,37 +1582,37 @@ output_object( FILE      * fn,
         if  (    ( p = get_shortcut_string( obj ) )
               && *p
               && obj->type != FL_RETURN_BUTTON )
-            fprintf( fn, "    fl_set_%s_shortcut( obj, \"%s\", 1 );\n",
+            fprintf( fp, "    fl_set_%s_shortcut( obj, \"%s\", 1 );\n",
                      supported_shortcut( obj->objclass ),
                      get_shortcut_string( obj ) );
 
         if ( obj->boxtype != defobj->boxtype && obj->objclass != FL_BOX )
         {
             if ( obj->objclass != FL_CANVAS && obj->objclass != FL_FRAME )
-                emit_attrib( fn, obj->boxtype, vn_btype,
+                emit_attrib( fp, obj->boxtype, vn_btype,
                              "fl_set_object_boxtype" );
         }
 
         if ( obj->col1 != defobj->col1 || obj->col2 != defobj->col2 )
         {
             if ( obj->objclass != FL_CANVAS )
-                fprintf( fn, "    fl_set_object_color( obj, %s, %s );\n",
+                fprintf( fp, "    fl_set_object_color( obj, %s, %s );\n",
                          fli_query_colorname( obj->col1 ),
                          fli_query_colorname( obj->col2 ) );
         }
 
         if ( obj->lcol != defobj->lcol )
-            fprintf( fn, "    fl_set_object_lcolor( obj, %s );\n",
+            fprintf( fp, "    fl_set_object_lcolor( obj, %s );\n",
                      fli_query_colorname( obj->lcol ) );
 
         if ( obj->lsize != defobj->lsize )
-            emit_attrib( fn, obj->lsize, vn_lsize, "fl_set_object_lsize" );
+            emit_attrib( fp, obj->lsize, vn_lsize, "fl_set_object_lsize" );
 
         if ( obj->align != defobj->align )
-            emit_attrib( fn, obj->align, vn_align, "fl_set_object_lalign" );
+            emit_attrib( fp, obj->align, vn_align, "fl_set_object_lalign" );
 
         if ( obj->lstyle != defobj->lstyle )
-            fprintf( fn, "    fl_set_object_lstyle( obj, %s );\n",
+            fprintf( fp, "    fl_set_object_lstyle( obj, %s );\n",
                      style_name( obj->lstyle ) );
 
         /* 'resize' must be checked for consistency with the gravity settings */
@@ -1666,27 +1620,27 @@ output_object( FILE      * fn,
         obj->resize = check_resize( obj->resize,
                                     obj->nwgravity, obj->segravity );
         if ( obj->resize != defobj->resize )
-            fprintf( fn, "    fl_set_object_resize( obj, %s );\n",
+            fprintf( fp, "    fl_set_object_resize( obj, %s );\n",
                      resize_name( obj->resize ) );
 
         if (    obj->nwgravity != defobj->nwgravity
              || obj->segravity != defobj->segravity)
-            fprintf( fn, "    fl_set_object_gravity( obj, %s, %s );\n",
+            fprintf( fp, "    fl_set_object_gravity( obj, %s, %s );\n",
                      gravity_name( obj->nwgravity ),
                      gravity_name( obj->segravity ) );
 
         if ( *cbname )
-            fprintf( fn, "    fl_set_object_callback( obj, %s, %s );\n",
+            fprintf( fp, "    fl_set_object_callback( obj, %s, %s );\n",
                      cbname, argname );
 
         if ( obj->how_return != defobj->how_return )
-            fprintf( fn, "    fl_set_object_return( obj, %s );\n",
+            fprintf( fp, "    fl_set_object_return( obj, %s );\n",
                      get_how_return_name( obj->how_return, 1 ) );
     }
 
     /* Generate object class specifc settings */
 
-    emit_objclass_spec_info( fn, obj );
+    emit_objclass_spec_info( fp, obj );
 }
 
 

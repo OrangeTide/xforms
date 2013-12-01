@@ -2,6 +2,7 @@ dnl Some useful functions for xforms configure.in                 -*- sh -*-
 dnl Author: Jean-Marc Lasgouttes (lasgouttes@lyx.org)
 dnl         Lars Gullik Bjønnes (larsbj@lyx.org)
 dnl         Allan Rae (rae@lyx.org)
+dnl         Jens Thoms Toerring (jt@toerring.de)
 
 
 ### Check for version and warn when a development version is used
@@ -91,22 +92,58 @@ changequote([,])
 fi])
 
 
-dnl Macro tests if texi2dvi and pdflatex or pdftex is installed.
-dnl
+dnl Macro tests if 'texi2dvi' is installed and usable. Also test for 'convert'
+dnl and checks if PNG files must be converted to PDF files. 
+
 AC_DEFUN([XFORMS_CHECK_TEXI2DVI],[
 AC_CHECK_PROGS(TEXI2DVI,[texi2dvi],no)
-AC_CHECK_PROGS(PDFTEX,[pdftex],no)
-AC_CHECK_PROGS(PDFLATEX,[pdflatex],no)
 export TEXI2DVI
-export PDFTEX;
-export PDFTEX;
-if test $PDFTEX = "no" -a $PDFLATEX = "no" -o $TEXI2DVI = "no";
+AC_CHECK_PROGS(CONVERT,[convert],no)
+export CONVERT
+
+dnl If 'texi2dvi' doesn't exist there' nothing we can do. Otherwise we need to
+dnl check if the installed version of 'texi2dvi' uses programs that can't deal
+dnl with PNG files (as some older versions did). For this we create a minimal
+dnl texi file that just contains an image and run 'texi2dvi' on it. If this
+dnl fails we check the log file for a line complaining about a missing image.
+dnl If such a line doesn't exist 'texi2dvi' must be broken in a way we can't
+dnl deal with. Otherwise we need to convert the PNF files to PDF. This in turn
+dnl requires 'convert'. If it doesn't exist we can't create the PD
+dnl documentation, otherwise we set a variable that tells us in the Makefile
+dnl that all PNG files have to be converted to PDF.
+
+if test $TEXI2DVI = "no"
 then
-	XFORMS_WARNING([Unable to find either application 'texi2dvi' or one of 'pdftex' or 'pdflatex', PDF documentation won't be built]);
+	XFORMS_WARNING([Unable to find application 'texi2dvi', PDF documentation won't be built])
+else
+	cat > texi2dvi_test.texi <<EOF
+\input texinfo
+@center @image{doc/xforms_images/pushme,5cm}
+@bye
+EOF
+	$TEXI2DVI --pdf --batch texi2dvi_test.texi > /dev/null 2>&1;
+	if test $? != 0;
+	then
+		grep "ould not find image file" texi2dvi_test.log > /dev/null 2>&1
+		if test $? = 0;
+		then
+			if test $CONVERT = "no";
+			then
+				XFORMS_WARNING(['tesi2dvi' requires the 'convert' application but which doesn't exist, so PDF documentation won't be built])
+	        else
+	           TEXI2DVI_NEEDS_PDF="yes"
+			   export TEXI2DVI_NEEDS_PDF
+            fi
+		else
+			TEXI2DVI="no"
+			XFORMS_WARNING([Unable to find a working application 'texi2dvi', PDF documentation won't be built])
+		fi
+	fi
+	rm -f texi2dvi_test.*
 fi
 AC_SUBST(TEXI2DVI)
-AC_SUBST(PDFTEX)
-AC_SUBST(PDFLATEX)
+AC_SUBST(CONVERT)
+AC_SUBST(TEXI2DVI_NEEDS_PDF)
 ])
 
 

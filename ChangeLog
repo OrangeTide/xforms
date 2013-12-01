@@ -1,3 +1,10 @@
+2013-11-01 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/objects.c: Bug fix in fl_set_obkject_resize()
+	* fdesign: Several bug fixes
+	* build system: Fixes for creation of documentation to
+	allow build with older texi2dvi versions
+
 2013-11-25 Jens Thoms Toerring    <jt@toerring.de>
 
 	* Bug fixes and documentation update for new

@@ -167,7 +167,7 @@ menu_emit_spec_c_code( FILE      * fp,
     if ( sp->numitems == 0 )
         return;
 
-    /* create a default object */
+    /* Create a default object */
 
     defobj = fl_create_menu( obj->type, 0, 0, 0, 0, "" );
     defsp = defobj->spec;
