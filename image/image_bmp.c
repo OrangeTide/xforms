@@ -508,7 +508,8 @@ load_1bit_bmp( FL_IMAGE * im,
             im->error_message( im, "malloc() failed" );
             return -1;
         }
-        fl_unpack_bits( im->ci[ i ], buf, im->w );
+
+        unpack_bits( im->ci[ i ], buf, im->w );
     }
 
     fl_free( buf );
@@ -692,7 +693,7 @@ BMP_write_image( FL_IMAGE * im )
 
         for ( i = im->h; --i >= 0; )
         {
-            fl_pack_bits( tmpbuf, im->ci[ i ], im->w );
+            pack_bits( tmpbuf, im->ci[ i ], im->w );
             fwrite( tmpbuf, 1, totalbpl, fp );
         }
 

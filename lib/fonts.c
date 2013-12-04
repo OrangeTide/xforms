@@ -200,7 +200,7 @@ fl_set_font_name( int          n,
         return -1;
     }
 
-    if ( ! name )
+    if ( ! name || ! *name )
     {
         M_warn( "fl_set_font_name", "Bad font name" );
         return -1;
@@ -256,10 +256,10 @@ fl_set_font_name_f( int          n,
 
 int
 fl_enumerate_fonts( void ( * output )( const char *s ),
-                    int  shortform)
+                    int  shortform )
 {
     FL_FONT *flf = fl_fonts,
-            *fe = flf + FL_MAXFONTS;
+            *fe  = flf + FL_MAXFONTS;
     int n = 0;
 
     for ( ; output && flf < fe; flf++ )
@@ -421,7 +421,6 @@ fl_get_string_width( int          style,
 /***************************************
  ***************************************/
 
-
 int
 fli_get_string_widthTABfs( XFontStruct * fs,
                            const char *  s,
@@ -464,9 +463,10 @@ fl_get_string_widthTAB( int          style,
 
 
 /***************************************
- * Function returns the font height (not, as its name may make one believe,
- * the height of the string) and, via 'asc' and 'desc' (but which both can
- * be NULL pointers) the fonts ascent and descent.
+ * Function returns the height of the string, calculated from adding the
+ * largest ascent and descent of all its characters in the string, via 'asc'
+ * and 'desc' (but which both can be NULL pointers), the maximum ascent
+ * and descent.
  ***************************************/
 
 int
@@ -477,16 +477,18 @@ fl_get_string_height( int          style,
                       int *        asc,
                       int *        desc )
 {
-    XFontStruct *fs = fl_get_font_struct( style, size );
-    XCharStruct overall;
-    int dh,
-        a,
-        d;
+    int a, d;
 
     if ( fli_no_connection )
         a = d = size / 2;
     else
+    {
+        XFontStruct *fs = fl_get_font_struct( style, size );
+        XCharStruct overall;
+        int dh;
+
         XTextExtents( fs, s, len, &dh, &a, &d, &overall );
+    }
 
     if ( asc )
         *asc = a;
@@ -498,7 +500,8 @@ fl_get_string_height( int          style,
 
 
 /***************************************
- * Returns font height and, via 'asc' and 'desc', the fonts ascent and descent.
+ * Returns font height and, via 'asc' and 'desc' (but which both can be NULL
+ * pointers), the fonts ascent and descent.
  ***************************************/
 
 int
@@ -507,7 +510,24 @@ fl_get_char_height( int   style,
                     int * asc,
                     int * desc )
 {
-    return fl_get_string_height( style, size, "", 0, asc, desc );
+    int a, d;
+
+    if ( fli_no_connection )
+        a = d = size / 2;
+    else
+    {
+        XFontStruct *fs = fl_get_font_struct( style, size );
+
+        a = fs->ascent;
+        d = fs->descent;
+
+        if ( asc )
+            *asc = a;
+        if ( desc )
+            *desc = d;
+    }
+
+    return a + d;
 }
 
 
@@ -542,7 +562,7 @@ fl_get_string_dimension( int          fntstyle,
         maxw = 0,
         maxh = 0;
 
-    h = fl_get_string_height( fntstyle, fntsize, "", 0, NULL, NULL );
+    h = fl_get_char_height( fntstyle, fntsize, NULL, NULL );
 
     for ( q = s; *q && ( p = strchr( q, '\n' ) ); q = p + 1 )
     {
@@ -589,58 +609,32 @@ fl_set_tabstop( const char *s )
 }
 
 
-#if 0
-
-/***************************************
- ***************************************/
-
-int
-fl_set_tabstops( int          n,
-                 const char * s )
-{
-    if ( n < 0 || n >= MaxTabs || ! s )
-        return -1;
-
-    if ( tabstop[ n ] != 0 )
-         fl_free( tabstop[ n ] );
-
-    tabstop[ n ] = fl_strdup( s );
-    tabstopNchar[ n ] = strlen( tabstop[ n ] );
-    return 0;
-}
-
-#endif
-
-
 /***************************************
  ***************************************/
 
 int
 fli_get_tabpixels( XFontStruct * fs )
 {
-    return XTextWidth( fs, *tabstop, *tabstopNchar ) + XTextWidth( fs, " ", 1 );
+    return   XTextWidth( fs, *tabstop, *tabstopNchar )
+           + XTextWidth( fs, " ", 1 );
 }
 
 
 /***************************************
- * Convert X font names to more conventional names by striping the
+ * Convert X font names to more conventional names by stripping the
  * auxiliary info.
  ***************************************/
-
-#define is_garb( c )                        \
-    (    ! isalpha( ( unsigned char ) c )   \
-      && ! isdigit( ( unsigned char ) c ) )
 
 static const char *
 cv_fname( const char *f )
 {
-    static char fname[ 127 ];
+    static char fname[ FL_MAX_FONTNAME_LENGTH + 1 ];
     char *q,
          *p;
 
     /* Remove all the garbages from head */
 
-    for ( q = strcpy( fname, f ); *q && is_garb( *q ); q++ )
+    for ( q = strcpy( fname, f ); *q && ! isalnum( ( unsigned char ) *q ); q++ )
         /* empty */ ;
 
     /* Remove all the garbage from the end, starting from '?' */
@@ -650,7 +644,8 @@ cv_fname( const char *f )
 
     /* Remove all remaining garbages */
 
-    for ( p = fname + strlen( fname ) - 1; p > q && is_garb( *p ); p-- )
+    for ( p = fname + strlen( fname ) - 1;
+          p > q && ! isalnum( ( unsigned char ) *p ); p-- )
         /* empty */ ;
 
     *++p = '\0';
@@ -693,7 +688,9 @@ get_fname( const char * str,
 
 
 /***************************************
- * Some compatibility stuff
+ * Some compatibility stuff, i.e. functions that were never documented
+ * and were removed from V0.89, but apparently this broke some applications
+ * that were using them. Put back in 10/22/00.
  ***************************************/
 
 int

@@ -315,13 +315,6 @@ FL_EXPORT int fl_interpolate( const float * wx,
                               double        grid,
                               int           ndeg );
 
-FL_EXPORT int fl_spline_interpolate( const float * wx,
-                                     const float * wy,
-                                     int           nin,
-                                     float       * x,
-                                     float       * y,
-                                     double       grid );
-
 typedef void ( * FL_XYPLOT_SYMBOL )( FL_OBJECT *,
                                      int,
                                      FL_POINT *,

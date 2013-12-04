@@ -162,6 +162,8 @@ objects and canvases.
 @subsection Adding Frame Objects
 
 To add a frame to a form you use the routine
+@findex fl_add_frame()
+@anchor{fl_add_frame()}
 @example
 FL_OBJECT *fl_add_frame(int type, FL_Coord x, FL_Coord y,
                         FL_Coord w, FL_Coord h, const char *label);

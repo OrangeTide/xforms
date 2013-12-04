@@ -247,7 +247,7 @@ fli_popup_add( Window       win,
 
     p->win = None;
     p->parent_win = win != None ? win : fl_root;
-    p->cursor     = fl_get_cursor_byname( popup_cursor );
+    p->cursor     = fli_get_cursor_byname( popup_cursor );
 
     p->entries     = NULL;
     p->callback    = NULL;
@@ -1642,7 +1642,7 @@ fl_popup_set_cursor( FL_POPUP * popup,
 {
     if ( popup == NULL )
     {
-        popup_cursor = fl_get_cursor_byname( cursor );
+        popup_cursor = fli_get_cursor_byname( cursor );
         return;
     }
 
@@ -1652,7 +1652,7 @@ fl_popup_set_cursor( FL_POPUP * popup,
         return;
     }
 
-    popup->cursor =  fl_get_cursor_byname( cursor );
+    popup->cursor =  fli_get_cursor_byname( cursor );
 
     if ( popup->win )
         XDefineCursor( flx->display, popup->win, popup->cursor );

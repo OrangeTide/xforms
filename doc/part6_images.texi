@@ -30,7 +30,7 @@ to include image support in the library proper.
 
 @menu
 * The Basic Image Support API::
-* The @code{FL_IMAGE} Structure::
+* The FL_IMAGE Structure::
 * Supported image types::
 * Creating Images::
 * Supported Image Formats::
@@ -239,7 +239,7 @@ The function returns true if the specified file is a known image file.
 If the file is not a known image or not readable for any reason, the
 function return 0.
 
-@node The @code{FL_IMAGE} Structure
+@node The FL_IMAGE Structure
 @section The @code{FL_IMAGE} Structure
 
 Before we go into more details on image support, some comments on the

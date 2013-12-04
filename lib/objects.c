@@ -1606,13 +1606,13 @@ fli_hide_and_get_region( FL_OBJECT * obj,
        to the function */
 
     if ( obj->objclass == FL_CANVAS || obj->objclass == FL_GLCANVAS )
-        fl_hide_canvas( obj );
+        fli_hide_canvas( obj );
 
     get_object_rect( obj, &xrect, 0 );
 
     XUnionRectWithRegion( &xrect, *reg, *reg );
 
-    /* Mark it as invisible (must be last, fl_hide_canvas() tests for
+    /* Mark it as invisible (must be last, fli_hide_canvas() tests for
        visibility and doesn't do anything if already marked as invisible) */
 
     obj->visible = 0;
@@ -3480,7 +3480,6 @@ get_label_rect( FL_OBJECT  * obj,
         sh;
     int xx,
         yy,
-        ascent,
         descent;
 
     if ( ! obj->label || ! *obj->label )
@@ -3491,7 +3490,7 @@ get_label_rect( FL_OBJECT  * obj,
 
     fl_get_string_dimension( obj->lstyle, obj->lsize, obj->label,
                              strlen( obj->label ), &sw, &sh );
-    fl_get_char_height( obj->lstyle, obj->lsize, &ascent, &descent );
+    fl_get_char_height( obj->lstyle, obj->lsize, NULL, &descent );
 
     /* Some objects don't use the normal way of placing their label,
        for these use some approximation */

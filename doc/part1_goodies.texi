@@ -431,6 +431,8 @@ up the child process.
 To show or hide the logs of the command output, use the following functions
 @findex fl_show_command_log()
 @anchor{fl_show_command_log()}
+@findex fl_hide_command_log()
+@anchor{fl_hide_command_log()}
 @example
 int fl_show_command_log(int border);
 void fl_hide_command_log(void);

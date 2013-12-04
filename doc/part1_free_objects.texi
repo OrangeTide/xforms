@@ -84,7 +84,7 @@ information is available on the state of the current form as well as
 several routines that will help you to tackle the trickiest (also the
 most tedious) part of X programming. In particular, the return value
 of @code{@ref{fl_get_vclass()}} can be used as an index into a table
-of structures, @code{FL_STATE fl_state[]}, from which all information
+of structures, @code{@ref{fl_state}[]}, from which all information
 about current active visual can be obtained. @xref{Part IV Drawing
 Objects, , Drawing Objects}, for details on drawing objects and the
 routines.
@@ -524,14 +524,14 @@ return value must be checked.}. Similarly the routine
 server. Part IV has more details on the utility functions in the Forms
 Library.
 
-The structure @code{fl_state[]} keeps much "inside" information on the
-state of the Forms Library. For simplicity, we choose to use the Forms
-Library's default GC. There is no fundamental reason that this has be
-so. We certainly can copy the default GC and change the foreground
-color in the copy. Of course unlike using the default GC directly, we
-might have to set the clip mask in the copy whereas the default GC
-always have the proper clip mask (in this case, to the bounding box of
-the free object).
+The array of structures @code{@ref{fl_state}[]} keeps much "inside"
+information on the state of the Forms Library. For simplicity, we
+choose to use the Forms Library's default GC. There is no fundamental
+reason that this has be so. We certainly can copy the default GC and
+change the foreground color in the copy. Of course unlike using the
+default GC directly, we might have to set the clip mask in the copy
+whereas the default GC always have the proper clip mask (in this case,
+to the bounding box of the free object).
 
 We use the Forms Library's built-in drawing routines to draw circles
 and rectangles. Then our drawing functions can be defined as follows:

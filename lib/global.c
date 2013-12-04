@@ -18,18 +18,24 @@
 
 
 /**
- * \file global.h
+ * \file global.c
  *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-1998  T.C. Zhao and Mark Overmars
  *  All rights reserved.
  *
  * All gloabl varialbes used in XForms. It is important to start all
- * variables with fl/FL to avoid name space pollution.
+ * variables with fl/FL or fli/FLI to avoid name space pollution.
  */
 
-#ifndef FL_GLOBAL_H
-#define FL_GLOBAL_H
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+
+#include "include/forms.h"
+#include "flinternal.h"
+
 
 Window fl_root,
        fl_vroot;
@@ -95,9 +101,6 @@ FL_OBJECT *FL_EVENT = ( FL_OBJECT * ) - 1L;   /* The special event object */
 
 
 FLI_TARGET *flx;
-
-#endif /* ! def GLOBAL_H */
-
 
 /*
  * Local variables:

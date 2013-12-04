@@ -579,19 +579,6 @@ fl_free_dirlist( FL_Dirlist * dl )
 }
 
 
-/***************************************
- ***************************************/
-
-void
-fl_free_all_dirlist( void )
-{
-    int i;
-
-    for ( i = 0; i < MAXCACHE; i++ )
-        fl_free_dirlist( dirlist[ i ] );
-}
-
-
 /**********************************************************************
  * The user callable routine to read a directory
  *********************************************************************/
@@ -649,7 +636,7 @@ fl_get_dirlist( const char * dir,
  **********************************************************************/
 
 int
-fl_is_valid_dir( const char *name )
+fli_is_valid_dir( const char *name )
 {
     struct stat stbuf;
 
@@ -678,7 +665,7 @@ static void add_one( char *,
                      char * );
 
 char *
-fl_fix_dirname( char * dir )
+fli_fix_dirname( char * dir )
 {
     static char ldir[ FL_PATH_MAX ],
                 one[ FL_PATH_MAX ];
@@ -839,20 +826,6 @@ add_one( char * dir,
         }
     }
 #endif
-}
-
-
-/************************************************************
- * File modification time
- ***********************************************************/
-
-unsigned long
-fl_fmtime( const char * s )
-{
-    struct stat fffstat;
-
-    stat( ( char * ) s, &fffstat );
-    return fffstat.st_mtime;
 }
 
 

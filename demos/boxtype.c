@@ -42,16 +42,6 @@ typedef struct {
 
 #define VN( a ) { a, #a }
 
-static VN_struct gmode[ ] =
-{
-    VN( StaticGray ),
-    VN( GrayScale ),
-    VN( StaticColor ),
-    VN( PseudoColor ),
-    VN( TrueColor ),
-    VN( DirectColor ),
-};
-
 static VN_struct btypes[ ]=
 {
    { FL_NO_BOX,            "No box"              },
@@ -83,8 +73,7 @@ static VN_struct btypes[ ]=
 FL_FORM *form;
 FL_OBJECT *tobj[ 18 ],
           *exitob,
-          *btypeob,
-          *modeob;
+          *btypeob;
 
 
 /***************************************
@@ -106,27 +95,6 @@ boxtype_cb( FL_OBJECT * ob,
         fl_unfreeze_form ( form );
         lastbt = req_bt;
     }
-}
-
-
-/***************************************
- ***************************************/
-
-static void
-mode_cb( FL_OBJECT * ob,
-         long        arg  FL_UNUSED_ARG )
-{
-    static int lval = -1;
-    int val = fl_get_select_item( ob )->val;
-
-    if ( val == lval )
-        return;
-
-    fl_hide_form ( form );
-    fl_set_graphics_mode( gmode[ val ].val, 0 );
-    fl_show_form( form, FL_PLACE_GEOMETRY, border, "Box types" );
-
-    lval = val;
 }
 
 
@@ -200,11 +168,6 @@ create_form( void )
     fl_set_object_callback( btypeob, boxtype_cb, 0 );
     fl_popup_set_title( fl_get_select_popup( btypeob ), "Boxtype" );
 
-    modeob = fl_add_select( FL_NORMAL_SELECT, 370, 30, 130, 30,
-                            "Graphics mode" );
-    fl_set_object_callback( modeob, mode_cb, 0 );
-    fl_popup_set_title( fl_get_select_popup( modeob ), "Graphics mode" );
-
     fl_end_form ( );
 }
 
@@ -213,15 +176,20 @@ create_form( void )
 
 static char * browserlines[ ] = {
     "@C1@c@l@bObjects Demo",
-    "This demo shows you many of",   "the objects that currently",
-    "exist in the Forms Library.",   "",
-    "You can change the boxtype",    "of the different objects",
-    "using the buttons at the",      "top of the form. Note that",
-    "some combinations might not",   "look too good. Also realize",
-    "that for all object classes",   "many different types are",
-    "available with different",      "behaviour.", " ",
-    "With this demo you can also",   "see the effect of the drawing",
-    "mode on the appearance of the", "objects.",
+    "This demo shows you many of",
+    "the objects that currently",
+    "exist in the Forms Library.",
+    "",
+    "You can change the boxtype",
+    "of the different objects",
+    "using the buttons at the",
+    "top of the form. Note that",
+    "some combinations might not",
+    "look too good. Also realize",
+    "that for all object classes",
+    "many different types are",
+    "available with different",
+    "behaviour.",
     NULL
 };
 
@@ -236,9 +204,6 @@ main( int    argc,
     FL_COLOR c = FL_BLACK;
     char **p;
     VN_struct *vn;
-    int i;
-    VN_struct *g = gmode,
-              *gs = g + sizeof gmode / sizeof *gmode;
 
     fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
@@ -267,17 +232,6 @@ main( int    argc,
 
     for ( vn = btypes; vn->val >= 0; vn++ )
         fl_add_select_items( btypeob, vn->name );
-
-    for ( i = 1; g < gs; g++, i++ )
-    {
-        FL_POPUP_ENTRY *item = fl_add_select_items( modeob, g->name );
-
-        if ( ! fl_mode_capable( g->val, 0 ) )
-            fl_popup_entry_set_state( item, FL_POPUP_DISABLED );
-    }
-
-    fl_set_select_item( modeob, fl_get_select_item_by_value( modeob,
-                                                             fl_vmode ) );
 
     fl_set_select_item( btypeob, fl_get_select_item_by_value( btypeob, 1 ) );
     boxtype_cb( btypeob, 0 );

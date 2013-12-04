@@ -828,7 +828,7 @@ read_pixels( FL_IMAGE * im )
             else if ( sp->bps[0] == 1 )
             {
                 for ( i = 0; row < im->h && i < rps; i++, row++, tmp += bpl )
-                    fl_unpack_bits( im->ci[ row ], tmp, im->w );
+                    unpack_bits( im->ci[ row ], tmp, im->w );
             }
             else
             {
@@ -1269,9 +1269,9 @@ write_pixels( FL_IMAGE * im,
         {
             for ( j = 0; row < im->h && j < sp->rowsPerStrip; j++, row++ )
             {
-                fl_pack_bits( tmpbuf, im->ci[row], im->w );
-                err = 
-                 fwrite( tmpbuf, 1, bytesPerRow, fp ) != ( size_t ) bytesPerRow;
+                pack_bits( tmpbuf, im->ci[row], im->w );
+                err = fwrite( tmpbuf, 1, bytesPerRow, fp )
+                                                 != ( size_t ) bytesPerRow;
             }
         }
         else if ( im->type == FL_IMAGE_RGB )

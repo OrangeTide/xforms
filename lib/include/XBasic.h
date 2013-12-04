@@ -70,8 +70,8 @@ enum {
 #define StaticGrey  StaticGray
 #endif
 
-#define FL_is_gray( v )  ( v == GrayScale || v == StaticGray )
-#define FL_is_rgb( v )   ( v == TrueColor || v == DirectColor )
+#define FL_is_gray( v )  ( ( v ) == GrayScale || ( v ) == StaticGray )
+#define FL_is_rgb( v )   ( ( v ) == TrueColor || ( v ) == DirectColor )
 
 
 /* Internal colormap size. Not really very meaningful as fl_mapcolor
@@ -358,14 +358,6 @@ FL_EXPORT void fl_drw_frame( int      style,
                              FL_Coord h,
                              FL_COLOR c,
                              int      bw );
-
-FL_EXPORT void fl_drw_checkbox( int      type,
-                                FL_Coord x,
-                                FL_Coord y,
-                                FL_Coord w,
-                                FL_Coord h,
-                                FL_COLOR col,
-                                int      bw );
 
 /*
  * Interfaces
@@ -669,8 +661,6 @@ FL_EXPORT Display * fl_initialize( int        * na,
                                    FL_CMD_OPT * appopt,
                                    int          nappopt );
 
-FL_EXPORT Display * fl_init( void );
-
 FL_EXPORT void fl_finish( void );
 
 FL_EXPORT const char * fl_get_resource( const char * rname,
@@ -685,9 +675,6 @@ FL_EXPORT void fl_set_resource( const char * str,
 
 FL_EXPORT void fl_get_app_resources( FL_RESOURCE * appresource,
                                      int           n );
-
-FL_EXPORT void fl_set_graphics_mode( int mode,
-                                     int doublebuf );
 
 FL_EXPORT void fl_set_visualID( long id );
 
@@ -771,16 +758,7 @@ FL_EXPORT void fl_set_defaults( unsigned   long mask,
 
 FL_EXPORT void fl_set_tabstop( const char * s );
 
-FL_EXPORT void fl_get_defaults( FL_IOPT * cntl );
-
 FL_EXPORT int fl_get_visual_depth( void );
-
-FL_EXPORT const char * fl_vclass_name( int n );
-
-FL_EXPORT int fl_vclass_val( const char * v );
-
-FL_EXPORT void fl_set_ul_property( int prop,
-                                   int thickness );
 
 FL_EXPORT int fl_is_global_clipped( void );
 

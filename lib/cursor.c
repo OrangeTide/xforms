@@ -231,7 +231,7 @@ fl_set_cursor( Window win,
                 c->win = win;
                 if ( c->timeout_id == 0 )
                     c->timeout_id =
-                                fl_add_timeout( c->timeout, animate_cursor, c );
+                              fl_add_timeout( c->timeout, animate_cursor, c );
             }
             else
             {
@@ -248,7 +248,7 @@ fl_set_cursor( Window win,
         }
     }
 
-    XDefineCursor( flx->display, win, fl_get_cursor_byname( name ) );
+    XDefineCursor( flx->display, win, fli_get_cursor_byname( name ) );
 }
 
 
@@ -257,7 +257,7 @@ fl_set_cursor( Window win,
  ***************************************/
 
 Cursor
-fl_get_cursor_byname( int name )
+fli_get_cursor_byname( int name )
 {
     CurStruct *c;
     Cursor cur = 0;
@@ -289,8 +289,8 @@ fl_get_cursor_byname( int name )
     }
     else
     {
-        M_err( "fl_get_cursor_byname", "Unknown cursor: %d\n", name );
-        cur = fl_get_cursor_byname( FL_DEFAULT_CURSOR );    /* recursion */
+        M_err( "fli_get_cursor_byname", "Unknown cursor: %d\n", name );
+        cur = fli_get_cursor_byname( FL_DEFAULT_CURSOR );    /* recursion */
     }
 
     return cur;
@@ -310,7 +310,7 @@ fl_set_cursor_color( int      name,
     int r,
         g,
         b;
-    Cursor cur = fl_get_cursor_byname( name );
+    Cursor cur = fli_get_cursor_byname( name );
 
     fl_getmcolor( fg, &r, &g, &b );
     xfg.red   = ( r << 8 ) | 0xff;
@@ -360,7 +360,7 @@ fl_create_animated_cursor( int * cur_names,
     CurStruct *c = 0;
 
     for ( ; *n >= 0 && --k >= 0; n++ )
-        c = add_cursor( user_cur_name, fl_get_cursor_byname( *n ) );
+        c = add_cursor( user_cur_name, fli_get_cursor_byname( *n ) );
 
     if ( c )
         c->timeout = timeout > 0 ? timeout : 20;

@@ -200,7 +200,7 @@ init_pup( PopUP * m )
     m->item[ 0 ]    = NULL;
     m->padh         = PADH;
     if ( ! pup_defcursor )
-        pup_defcursor = fl_get_cursor_byname( XC_sb_right_arrow );
+        pup_defcursor = fli_get_cursor_byname( XC_sb_right_arrow );
     m->cursor       = pup_defcursor;
     m->lpad         = m->rpad = PADW;
     init_pupfont( );
@@ -1614,7 +1614,7 @@ fl_setpup_cursor( int nm,
 
     m = menu_rec + nm;
     old = m->cursor;
-    m->cursor = cursor ? fl_get_cursor_byname( cursor ) : pup_defcursor;
+    m->cursor = cursor ? fli_get_cursor_byname( cursor ) : pup_defcursor;
 
     return old;
 }
@@ -1628,7 +1628,7 @@ fl_setpup_default_cursor( int cursor )
 {
     Cursor old_defcursor = pup_defcursor;
 
-    pup_defcursor = fl_get_cursor_byname( cursor );
+    pup_defcursor = fli_get_cursor_byname( cursor );
     return old_defcursor;
 }
 
@@ -1809,7 +1809,7 @@ draw_item( PopUP * m,
         int w = CHECKW + ( item->radio ? 0 : 2 );
         int bbw = item->radio ? -2 : -1;
 
-        ( item->radio ? fl_drw_checkbox : fl_drw_box )
+        ( item->radio ? fli_drw_checkbox : fl_drw_box )
             ( FL_UP_BOX, 2 * bw + ( m->lpad - w ) / 2,
               y + ( h - CHECKW ) / 2 - 2,
               w, w, pup_color, bbw );
@@ -1820,7 +1820,7 @@ draw_item( PopUP * m,
         int w = CHECKW + ( item->radio ? 0 : 2 );
         int bbw = item->radio ? -3 : -2;
 
-        ( item->radio ? fl_drw_checkbox : fl_drw_box )
+        ( item->radio ? fli_drw_checkbox : fl_drw_box )
             ( FL_DOWN_BOX, 2 * bw + ( m->lpad - w ) / 2,
               y + ( h - CHECKW ) / 2 - 2, w, w,
               fli_depth( fl_vmode ) == 1 ? FL_BLACK : pup_checked_color, bbw );
@@ -1876,12 +1876,6 @@ draw_title( Display  * d,
 
     if ( ! s || ! * s )
         return;
-#if 0
-    fl_drw_text( FL_ALIGN_CENTER, x - 2, y - 5,
-                 XTextWidth( pup_font_struct, s, strlen( s ) ),
-                 0, FL_SLATEBLUE, pup_title_font_size,
-                 pup_title_font_style + FL_EMBOSSED_STYLE, s );
-#else
     b = t = fl_strdup( s );
     while ( ( b = strchr( b, '\b' ) ) )
         memmove( b, b + 1, strlen( b ) );
@@ -1889,7 +1883,7 @@ draw_title( Display  * d,
     n = strlen( t );
 
     fl_set_font( pup_title_font_style, pup_title_font_size );
-    fl_textcolor( pup_text_color );
+    fli_textcolor( pup_text_color );
     XDrawString( d, w, flx->textgc, x - 1, y - 1, t, n );
     XDrawString( d, w, flx->textgc, x, y - 1, t, n );
     XDrawString( d, w, flx->textgc, x + 1, y - 1, t, n );
@@ -1898,11 +1892,10 @@ draw_title( Display  * d,
     XDrawString( d, w, flx->textgc, x - 1, y + 1, t, n );
     XDrawString( d, w, flx->textgc, x, y + 1, t, n );
     XDrawString( d, w, flx->textgc, x + 1, y + 1, t, n );
-    fl_textcolor( FL_WHITE );
+    fli_textcolor( FL_WHITE );
     XDrawString( d, w, flx->textgc, x, y, t, n );
 
     fl_free( t );
-#endif
 }
 
 

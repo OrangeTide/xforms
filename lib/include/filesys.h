@@ -75,14 +75,4 @@ FL_EXPORT int fl_set_dirlist_filterdir( int yes );
 
 FL_EXPORT void fl_free_dirlist( FL_Dirlist * dl );
 
-/* Free all directory caches */
-
-FL_EXPORT void fl_free_all_dirlist( void );
-
-FL_EXPORT int fl_is_valid_dir( const char * name );
-
-FL_EXPORT unsigned long fl_fmtime( const char * s );
-
-FL_EXPORT char * fl_fix_dirname( char * dir );
-
 #endif /* ! defined FL_FILESYS_H */

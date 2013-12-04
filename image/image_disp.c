@@ -1586,7 +1586,7 @@ convert_ximage( FL_IMAGE * im,
             uc = ( unsigned char * ) ximage->data;
             for ( y = 0; y < im->h; y++ )
             {
-                fl_unpack_bits( im->ci[ y ], uc, ximage->bytes_per_line );
+                unpack_bits( im->ci[ y ], uc, ximage->bytes_per_line );
                 uc += ximage->bytes_per_line;
             }
             break;

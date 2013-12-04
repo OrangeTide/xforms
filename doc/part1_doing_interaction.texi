@@ -1000,10 +1000,9 @@ To help find out when an event has occurred, whenever
 @code{@ref{fl_do_forms()}} and @code{@ref{fl_check_forms()}} encounter
 an event that is not meant for handling by the library but by the
 application program itself they return a special object
-@tindex FL_EVENT
-@code{FL_EVENT}. Upon receiving this special event, the application
-program can and must remove the pending event from the queue using
-@code{@ref{fl_XNextEvent()}}.
+@code{@ref{FL_EVENT}}. Upon receiving this special event, the
+application program can and must remove the pending event from the
+queue using @code{@ref{fl_XNextEvent()}}.
 
 So the basis of a program with its own windows would look as follows:
 @example
@@ -1031,13 +1030,13 @@ change some settings. This routine might not want to be concerned with
 any redrawing of the main window, etc., but you also not want to
 discard any events. In this case you can use the routines
 @code{@ref{fl_do_only_forms()}} and @code{@ref{fl_check_only_forms()}}
-that will never return @code{FL_EVENT}. The events don't disappear but
-will be returned at later calls to the normal routines
+that will never return @code{@ref{FL_EVENT}}. The events don't
+disappear but will be returned at later calls to the normal routines
 @code{@ref{fl_do_forms()}} etc.
 
 It can't be over-emphasized that it is an error to ignore
-@code{FL_EVENT} or use @code{@ref{fl_XNextEvent()}} without seeing
-@code{FL_EVENT}.
+@code{@ref{FL_EVENT}} or use @code{@ref{fl_XNextEvent()}} without seeing
+@code{@ref{FL_EVENT}}.
 
 Sometimes an application program might need to find out more
 information about the event that triggered a callback, e.g., to
@@ -1226,7 +1225,7 @@ the form callback.
 When the application program also has its own windows (via Xlib or Xt),
 it most likely also wants to know about XEvents for the window. As
 explained earlier, this can be accomplished by checking
-for @code{FL_EVENT} objects. Another (and better) way is to
+for @code{@ref{FL_EVENT}} objects. Another (and better) way is to
 add an event callback routine. This routine will be called whenever an
 XEvent is pending for the application's own window. To setup an event
 callback routine use the call

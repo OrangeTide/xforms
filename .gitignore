@@ -26,6 +26,7 @@ configure
 *.tp
 *.tps
 *.vr
+*.vrs
 .cvsignore
 CVS
 Makefile.in

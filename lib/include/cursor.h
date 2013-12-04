@@ -59,8 +59,6 @@ FL_EXPORT int fl_create_bitmap_cursor( const char * source,
 FL_EXPORT int fl_create_animated_cursor( int * cur_names,
                                          int   timeout );
 
-FL_EXPORT Cursor fl_get_cursor_byname( int name );
-
 #define fl_reset_cursor( win )   fl_set_cursor( win, FL_DEFAULT_CURSOR );
 
 #endif /* ! defined FL_CURSOR_H */

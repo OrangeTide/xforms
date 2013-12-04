@@ -233,7 +233,7 @@ fl_set_defaults( unsigned long   mask,
     if ( mask & FL_PDVisual )
     {
         SetMember( vclass );
-        strcpy( fli_cntl.vname, fl_vclass_name( cntl->vclass ) );
+        strcpy( fli_cntl.vname, fli_vclass_name( cntl->vclass ) );
     }
 
     if ( mask & FL_PDButtonFontSize )
@@ -307,22 +307,6 @@ fl_set_defaults( unsigned long   mask,
 
     if ( mask & FL_PDDebug )
         fli_set_debug_level( cntl->debug );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-fl_get_defaults( FL_IOPT * cntl )
-{
-    if ( ! fl_display )
-    {
-        M_err( "fl_get_defaults", "You forgot to call fl_initialize" );
-        exit( 1 );
-    }
-
-    *cntl = fli_cntl;
 }
 
 
@@ -761,8 +745,8 @@ fli_init_resources( void )
 }
 
 
-static int fl_argc;
-static char ** fl_argv;
+static int fli_argc;
+static char ** fli_argv;
 
 
 /***************************************
@@ -777,13 +761,13 @@ dup_argv( char ** argv,
     if ( ! argv )
         return;
 
-    if ( ! fl_argv )
-        fl_argv = fl_malloc( ( n + 1 ) * sizeof *fl_argv );
+    if ( ! fli_argv )
+        fli_argv = fl_malloc( ( n + 1 ) * sizeof *fli_argv );
 
     for ( i = 0; i < n; i++ )
-        fl_argv[ i ] = fl_strdup( argv[ i ] );
+        fli_argv[ i ] = fl_strdup( argv[ i ] );
     
-    fl_argv[ i ] = NULL;
+    fli_argv[ i ] = NULL;
 }
 
 
@@ -793,8 +777,8 @@ dup_argv( char ** argv,
 char **
 fl_get_cmdline_args( int * n )
 {
-    *n = fl_argc;
-    return fl_argv;
+    *n = fli_argc;
+    return fli_argv;
 }
 
 
@@ -806,13 +790,13 @@ fli_free_cmdline_args( void )
 {
     size_t i;
 
-    if ( ! fl_argv )
+    if ( ! fli_argv )
         return;
 
-    for ( i = 0; fl_argv[ i ]; i++ )
-        fli_safe_free( fl_argv[ i ] );
+    for ( i = 0; fli_argv[ i ]; i++ )
+        fli_safe_free( fli_argv[ i ] );
 
-    fli_safe_free( fl_argv );
+    fli_safe_free( fli_argv );
 }
 
 
@@ -947,7 +931,7 @@ fl_initialize( int        * na,
 
     /* Save a copy of the command line for later WM hints */
 
-    fl_argc = *na;
+    fli_argc = *na;
     dup_argv( arg, *na );
 
     /* Get appname and class, but without any leading paths  */
@@ -1003,7 +987,7 @@ fl_initialize( int        * na,
         /* if no display is set, there is no guarantee that buf
            is long enough to contain the DISPLAY setting */
 
-        M_err( "fl_initialize", "%s: Can't open display %s", fl_argv[ 0 ],
+        M_err( "fl_initialize", "%s: Can't open display %s", fli_argv[ 0 ],
                XDisplayName( buf[ 0 ] ? buf : 0 ) );
         return 0;
     }
@@ -1031,9 +1015,10 @@ fl_initialize( int        * na,
         while ( i < Ncopt )
         {
             if ( i == 0 )
-                fprintf( stderr, "%s: ", fl_argv[ 0 ] );
+                fprintf( stderr, "%s: ", fli_argv[ 0 ] );
             else
-                fprintf( stderr, "%*s  ", ( int ) strlen( fl_argv[ 0 ] ), "" );
+                fprintf( stderr, "%*s  ",
+                         ( int ) strlen( fli_argv[ 0 ] ), "" );
 
             fprintf( stderr, " %s", copt[ i ].option );
 
@@ -1072,7 +1057,7 @@ fl_initialize( int        * na,
 
     fli_init_resources( );
 
-    fli_cntl.vclass = fl_vclass_val( fli_cntl.vname );
+    fli_cntl.vclass = fli_vclass_val( fli_cntl.vname );
     fli_cntl.coordUnit = fli_get_vn_value( vn_coordunit, OpCoordUnit );
     if ( fli_cntl.coordUnit == -1 )
         fli_cntl.coordUnit = FL_COORD_PIXEL;
@@ -1084,7 +1069,7 @@ fl_initialize( int        * na,
         DumpD( debug );
         fprintf( stderr, "\tVisual:%s (%d)\n",
                  fli_cntl.vclass >= 0 ?
-                 fl_vclass_name( fli_cntl.vclass ) : "To be set",
+                 fli_vclass_name( fli_cntl.vclass ) : "To be set",
                  fli_cntl.vclass );
         DumpD( depth );
         DumpD( privateColormap );
@@ -1111,9 +1096,9 @@ fl_initialize( int        * na,
     fl_set_gamma( fli_cntl.rgamma, fli_cntl.ggamma, fli_cntl.bgamma );
 #endif
 
-    fl_set_ul_property( fli_cntl.ulPropWidth, fli_cntl.ulThickness );
+    fli_set_ul_property( fli_cntl.ulPropWidth, fli_cntl.ulThickness );
 
-    fli_cntl.vclass = fl_vclass_val( fli_cntl.vname );
+    fli_cntl.vclass = fli_vclass_val( fli_cntl.vname );
 
     /* Get the current keyboard state */
 
@@ -1386,6 +1371,7 @@ xerror_handler( Display     * d  FL_UNUSED_ARG,
 {
     return xev->error_code;
 }
+
 
 static Window
 fli_GetVRoot( Display * dpy,

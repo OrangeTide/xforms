@@ -66,8 +66,8 @@ typedef struct {
     int    comp;                   /* number of components */
 } SubImage;
 
-extern SubImage * flimage_get_subimage( FL_IMAGE * im,
-                                        int make );
+SubImage * flimage_get_subimage( FL_IMAGE * im,
+                                 int make );
 
 
 #define FL_IsGray( t )        ( t == FL_IMAGE_GRAY || t == FL_IMAGE_GRAY16 )
@@ -104,52 +104,52 @@ extern FLIMAGE_QUANTIZE_RGB flimage_quantize_rgb;
 
 extern FLIMAGE_QUANTIZE_PACKED flimage_quantize_packed;
 
-extern void flimage_replace_image( FL_IMAGE *,
-                                   int,
-                                   int,
-                                   void *,
-                                   void *,
-                                   void * );
+void flimage_replace_image( FL_IMAGE *,
+                            int,
+                            int,
+                            void *,
+                            void *,
+                            void * );
 
-extern int flimage_transform( FL_IMAGE *,
-                              int,
-                              int,
-                              float m[ ][ 2 ],
-                              float *shift,
-                              unsigned int,
-                              int subp );
+int flimage_transform( FL_IMAGE *,
+                       int,
+                       int,
+                       float m[ ][ 2 ],
+                       float *shift,
+                       unsigned int,
+                       int subp );
 
-extern int flimage_getmem( FL_IMAGE * );
+int flimage_getmem( FL_IMAGE * );
 
-extern void flimage_freemem( FL_IMAGE * );
+void flimage_freemem( FL_IMAGE * );
 
-extern void flimage_add_comments( FL_IMAGE *,
-                                  const char *,
-                                  int );
+void flimage_add_comments( FL_IMAGE *,
+                           const char *,
+                           int );
 
-extern int fl_j2pass_quantize_rgb( unsigned char **,
-                                   unsigned char **,
-                                   unsigned char **,
-                                   int,
-                                   int,
-                                   int,
-                                   unsigned short **,
-                                   int *,
-                                   int *,
-                                   int *,
-                                   int *,
-                                   FL_IMAGE * );
+int j2pass_quantize_rgb( unsigned char **,
+                         unsigned char **,
+                         unsigned char **,
+                         int,
+                         int,
+                         int,
+                         unsigned short **,
+                         int *,
+                         int *,
+                         int *,
+                         int *,
+                            FL_IMAGE * );
 
-extern int fl_j2pass_quantize_packed( unsigned int **,
-                                      int,
-                                      int,
-                                      int,
-                                      unsigned short **,
-                                      int *,
-                                      int *,
-                                      int *,
-                                      int *,
-                                      FL_IMAGE * );
+int j2pass_quantize_packed( unsigned int **,
+                            int,
+                            int,
+                            int,
+                            unsigned short **,
+                            int *,
+                            int *,
+                            int *,
+                            int *,
+                            FL_IMAGE * );
 
 /* These numbers can be anything, but should be less than < 128 and may not
    equal 0 */
@@ -159,87 +159,71 @@ enum {
     FL_MAKE_MATRIX
 };
 
-extern void * fl_get_submatrix( void *,
-                                int,
-                                int,
-                                int,
-                                int,
-                                int,
-                                int,
-                                unsigned int );
+void flimage_enable_gzip( void );
 
-extern void * fl_make_submatrix( void *,
-                                 int,
-                                 int,
-                                 int,
-                                 int,
-                                 int,
-                                 int,
-                                 unsigned int );
+void flimage_invalidate_pixels( FL_IMAGE * );
 
-extern void flimage_enable_gzip( void );
+int flimage_get_closest_color_from_map( FL_IMAGE *,
+                                        unsigned int );
 
-extern void flimage_invalidate_pixels( FL_IMAGE * );
+int flimage_replace_pixel( FL_IMAGE *,
+                           unsigned int,
+                           unsigned int );
 
-extern int flimage_get_closest_color_from_map( FL_IMAGE *,
-                                               unsigned int );
+void flimage_free_gray( FL_IMAGE * );
 
-extern int flimage_replace_pixel( FL_IMAGE *,
-                                  unsigned int,
-                                  unsigned int );
+void flimage_free_ci( FL_IMAGE * );
 
-extern void flimage_free_gray( FL_IMAGE * );
+void flimage_free_rgb( FL_IMAGE * );
 
-extern void flimage_free_ci( FL_IMAGE * );
+void pack_bits( unsigned char *,
+                unsigned short *,
+                int );
 
-extern void flimage_free_rgb( FL_IMAGE * );
+void unpack_bits( unsigned short *,
+                  unsigned char *,
+                  int );
 
-extern void fl_pack_bits(unsigned char *, unsigned short *, int);
+void flimage_error( FL_IMAGE *,
+                    const char *,
+                    ... );
 
-extern void fl_unpack_bits( unsigned short *,
-                            unsigned char *,
-                            int );
+void flimage_enable_genesis( void );
 
-extern void flimage_error( FL_IMAGE *,
-                           const char *,
-                           ... );
+int fl_spline_int_interpolate( const int *,
+                               const int *,
+                               int,
+                               int,
+                               int * );
 
-extern void flimage_enable_genesis( void );
+unsigned int fl_value_to_bits( unsigned int val );
 
-extern int fl_spline_int_interpolate( const int *,
-                                      const int *,
+int flimage_get_linearlut( FL_IMAGE * );
+
+void flimage_free_linearlut( FL_IMAGE * );
+
+FLIMAGE_IO *flimage_find_imageIO( const char * );
+
+void flimage_display_markers( FL_IMAGE * );
+
+unsigned long flimage_color_to_pixel( FL_IMAGE *,
+                                      int,
                                       int,
                                       int,
                                       int * );
 
-extern unsigned int fl_value_to_bits( unsigned int val );
+int flimage_write_annotation( FL_IMAGE * );
 
-extern int flimage_get_linearlut( FL_IMAGE * );
+int flimage_read_annotation( FL_IMAGE * );
 
-extern void flimage_free_linearlut( FL_IMAGE * );
+int flimage_swapbuffer( FL_IMAGE * );
 
-extern FLIMAGE_IO *flimage_find_imageIO( const char * );
+FL_IMAGE *flimage_dup_( FL_IMAGE *,
+                        int );
 
-extern void flimage_display_markers( FL_IMAGE * );
-
-extern unsigned long flimage_color_to_pixel( FL_IMAGE *,
-                                             int,
-                                             int,
-                                             int,
-                                             int * );
-
-extern int flimage_write_annotation( FL_IMAGE * );
-
-extern int flimage_read_annotation( FL_IMAGE * );
-
-extern int flimage_swapbuffer( FL_IMAGE * );
-
-extern FL_IMAGE *flimage_dup_( FL_IMAGE *,
-                               int );
-
-extern int flimage_to_ximage( FL_IMAGE *,
-                              FL_WINDOW,
-                              XWindowAttributes * );
+int flimage_to_ximage( FL_IMAGE *,
+                       FL_WINDOW,
+                       XWindowAttributes * );
 
 #if ! defined( SEEK_SET )
 #define SEEK_SET 0

@@ -51,6 +51,9 @@ SPEC;
 #define XWDDEBUG  0
 
 
+static unsigned int value_to_bits( unsigned int val );
+
+
 /***************************************
  ***************************************/
 
@@ -477,8 +480,9 @@ XWD_read_pixels( FL_IMAGE * im )
                     break;
                 }
 
-                fl_unpack_bits( im->ci[y], uc, h->bytes_per_line );
+                unpack_bits( im->ci[y], uc, h->bytes_per_line );
             }
+
             fl_free( uc );
             break;
 
@@ -581,7 +585,7 @@ XWD_write_image( FL_IMAGE * im )
     }
     else if ( im->type == FL_IMAGE_GRAY16 )
     {
-        h->pixmap_depth = fl_value_to_bits( im->gray_maxval + 1 );
+        h->pixmap_depth = value_to_bits( im->gray_maxval + 1 );
         h->bits_per_pixel = 16;
         h->bitmap_unit = 16;
         h->bitmap_pad = 16;
@@ -682,7 +686,7 @@ XWD_write_image( FL_IMAGE * im )
 
         for ( y = 0; y < im->h; y++ )
         {
-            fl_pack_bits( uc, im->ci[ y ], im->w );
+            pack_bits( uc, im->ci[ y ], im->w );
             fwrite( uc, 1, h->bytes_per_line, fp );
         }
 
@@ -708,6 +712,21 @@ flimage_enable_xwd( void )
                         FL_IMAGE_FLEX & ~FL_IMAGE_PACKED,
                         XWD_identify, XWD_description,
                         XWD_read_pixels, XWD_write_image );
+}
+
+
+/***************************************
+ ***************************************/
+
+static unsigned int
+value_to_bits( unsigned int val )
+{
+    unsigned int i;
+
+    for ( i = 1; ( 1u << i ) < val; i++ )
+        /* empty */ ;
+
+    return i;
 }
 
 

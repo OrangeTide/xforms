@@ -49,7 +49,7 @@ static unsigned long max_server_cols;   /* max cols in current visual       */
 static long cols_in_default_visual;
 static long predefined_cols;    /* min(max_server_col, built_in_col) */
 static int allow_leakage;
-static FL_COLOR lastmapped;     /* so fl_textcolor can refresh its cache */
+static FL_COLOR lastmapped;     /* so fli_textcolor can refresh its cache */
 
 
 static void fli_free_newpixel( unsigned long );
@@ -327,7 +327,7 @@ fl_set_gamma( double r,
         /* Too lazy to shuffle colormap around */
 
         M_err( "fl_set_gamma",
-               "Ignored. Please call fl_set_gamma before fl_init" );
+               "Ignored. Please call fl_set_gamma before fl_initialize()" );
         return;
     }
 
@@ -589,7 +589,7 @@ get_private_cmap( int vmode )
         lut[ i ] = i;
 
     M_warn( "get_private_cmap", "%s %s succesful",
-            fl_vclass_name( vmode ), ok ? "" : "not" );
+            fli_vclass_name( vmode ), ok ? "" : "not" );
 
     return ok;
 }
@@ -657,7 +657,7 @@ get_shared_cmap( int vmode )
     {
         fli_map( vmode ) = DefaultColormap( flx->display, fl_screen );
         M_warn( "get_shared_cmap", "Using default map %ld for %s",
-                fli_map( vmode ), fl_vclass_name( vmode ) );
+                fli_map( vmode ), fli_vclass_name( vmode ) );
     }
     else
     {
@@ -666,7 +666,7 @@ get_shared_cmap( int vmode )
                                             vmode != FL_DirectColor ?
                                             AllocNone : AllocAll );
         M_warn( "get_shared_cmap", " NewMap %ld (0x%lx) for %s (ID = 0x%lx)",
-                fli_map( vmode ), fli_map( vmode ), fl_vclass_name( vmode ),
+                fli_map( vmode ), fli_map( vmode ), fli_vclass_name( vmode ),
                 fli_visual( vmode )->visualid );
     }
 
@@ -679,7 +679,7 @@ get_shared_cmap( int vmode )
 #define PD( v )                                                          \
     if ( ( DefaultVisual( flx->display, fl_screen ) )->class == ( v ) )  \
         fprintf( stderr, "DefaultVisual = %s CurrentVisual = %s\n",          \
-                 #v, fl_vclass_name( fli_class( vmode ) ) );
+                 #v, fli_vclass_name( fli_class( vmode ) ) );
 
     if ( fli_cntl.debug )
     {
@@ -710,7 +710,7 @@ get_shared_cmap( int vmode )
     if ( ! ok )
     {
         M_warn( "get_shared_cmap", "can't share for %s",
-                fl_vclass_name( vmode ) );
+                fli_vclass_name( vmode ) );
         fli_map( vmode ) = XCopyColormapAndFree( flx->display,
                                                  fli_map( vmode ) );
     }
@@ -749,7 +749,7 @@ fli_create_gc( Window win )
 
     /* Need to create new GCs */
 
-    M_warn( "fli_create_gc", "For %s", fl_vclass_name( fl_vmode ) );
+    M_warn( "fli_create_gc", "For %s", fli_vclass_name( fl_vmode ) );
 
     if ( ! fli_gray_pattern[ 1 ] )
     {
@@ -831,7 +831,7 @@ fli_init_colormap( int vmode )
     if ( fli_map( vmode ) )
     {
 #if FL_DEBUG >= ML_DEBUG
-        M_info( "fli_init_colormap", "%s is ok", fl_vclass_name( vmode ) );
+        M_info( "fli_init_colormap", "%s is ok", fli_vclass_name( vmode ) );
 #endif
         return;
     }
@@ -910,7 +910,7 @@ fli_init_colormap( int vmode )
         exit( 1 );
     }
 
-    M_warn( "fli_init_colormap", "%s Done", fl_vclass_name( vmode ) );
+    M_warn( "fli_init_colormap", "%s Done", fli_vclass_name( vmode ) );
 
 #if FL_DEBUG >= ML_WARN
     fli_dump_state_info( vmode, "fli_init_colormap" );
@@ -1093,7 +1093,7 @@ fli_free_newpixel( unsigned long pixel )
  ***************************************/
 
 void
-fl_textcolor( FL_COLOR col )
+fli_textcolor( FL_COLOR col )
 {
     static int vmode = -1;
     static int switched;
@@ -1156,7 +1156,7 @@ fl_bk_color( FL_COLOR col )
  ***************************************/
 
 void
-fl_bk_textcolor( FL_COLOR col )
+fli_bk_textcolor( FL_COLOR col )
 {
     if ( flx->bktextcolor != col )
     {
@@ -1434,24 +1434,6 @@ fl_getmcolor( FL_COLOR i,
 /***************************************
  ***************************************/
 
-void
-fl_set_graphics_mode( int mode,
-                      int doublebuf )
-{
-    if ( mode >= 0 && mode < 6 && fl_mode_capable( mode, 1 ) )
-    {
-        fl_vmode = mode;
-        M_warn( "fl_set_graphics_mode", "Changed to %s\n",
-                fl_vclass_name( mode ) );
-    }
-
-    fli_cntl.doubleBuffer = doublebuf;
-}
-
-
-/***************************************
- ***************************************/
-
 int
 fl_get_visual_depth( void )
 {
@@ -1474,7 +1456,7 @@ fli_dump_state_info( int          mode,
     if ( fli_cntl.debug )
     {
         fprintf( stderr, "In %s", where );
-        fprintf( stderr, " VClass: %s", fl_vclass_name( fli_class( mode ) ) );
+        fprintf( stderr, " VClass: %s", fli_vclass_name( fli_class( mode ) ) );
         fprintf( stderr, " VisualID: 0x%lx", fs->xvinfo->visualid );
         fprintf( stderr, " Depth: %d %d",
                  fli_depth( mode ), fs->xvinfo->depth );
@@ -1532,7 +1514,7 @@ fl_mode_capable( int mode,
 
     if ( ! cap && warn )
         M_warn( "fl_mode_capable", "Not capable of %s at depth = %d",
-                fl_vclass_name( mode ), fli_depth( mode ) );
+                fli_vclass_name( mode ), fli_depth( mode ) );
 
     return cap;
 }

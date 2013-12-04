@@ -1002,15 +1002,13 @@ FL_EXPORT FL_FORM_ATCLOSE fl_set_form_atclose( FL_FORM         * form,
 FL_EXPORT FL_FORM_ATCLOSE fl_set_atclose( FL_FORM_ATCLOSE   fmclose,
                                           void            * data );
 
-FL_EXPORT FL_FORM_ATACTIVATE
-	fl_set_form_atactivate( FL_FORM            * form,
-							FL_FORM_ATACTIVATE   cb,
-							void               * data );
+FL_EXPORT FL_FORM_ATACTIVATE fl_set_form_atactivate( FL_FORM            * form,
+													 FL_FORM_ATACTIVATE   cb,
+													 void               * data );
 
-FL_EXPORT FL_FORM_ATDEACTIVATE
-    fl_set_form_atdeactivate( FL_FORM              * form,
-                              FL_FORM_ATDEACTIVATE   cb,
-                              void                 * data );
+FL_EXPORT FL_FORM_ATDEACTIVATE fl_set_form_atdeactivate( FL_FORM              * form,
+														 FL_FORM_ATDEACTIVATE   cb,
+														 void                 * data );
 
 FL_EXPORT void fl_unfreeze_form( FL_FORM * form );
 
@@ -1227,6 +1225,10 @@ FL_EXPORT const char * fl_get_object_label( FL_OBJECT * obj );
 
 FL_EXPORT void fl_set_object_helper( FL_OBJECT  * ob,
                                      const char * tip );
+
+FL_EXPORT void fl_set_object_helper_f( FL_OBJECT  * ob,
+									   const char * fmt,
+									   ... );
 
 FL_EXPORT void fl_set_object_position( FL_OBJECT * obj,
                                        FL_Coord    x,
@@ -1502,10 +1504,6 @@ FL_EXPORT void fl_set_icm_color( FL_COLOR col,
 FL_EXPORT void fl_color( FL_COLOR col );
 
 FL_EXPORT void fl_bk_color( FL_COLOR col );
-
-FL_EXPORT void fl_textcolor( FL_COLOR col );
-
-FL_EXPORT void fl_bk_textcolor( FL_COLOR col );
 
 FL_EXPORT void fl_set_gamma( double r,
                              double g,

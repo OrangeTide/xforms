@@ -213,6 +213,8 @@ bounds it gets adjusted to the nearest boundary value.
 To obtain the current value or bounds of a slider use
 @findex fl_get_slider_value()
 @anchor{fl_get_slider_value()}
+@findex fl_get_slider_bounds()
+@anchor{fl_get_slider_bounds()}
 @example
 double fl_get_slider_value(FL_OBJECT *obj);
 void fl_get_slider_bounds(FL_OBJECT *obj, double *min, double *max);
@@ -221,7 +223,7 @@ void fl_get_slider_bounds(FL_OBJECT *obj, double *min, double *max);
 @c -----------------------------------------------------------------
 @c The following function still exist but the description is wrong.
 @c fl_set_slider_step() doesn't do anything and
-@c fl_set_slider_increment() is only used internallyy for sliders
+@c fl_set_slider_increment() is only used internally for sliders
 @c used in scrollbars (and doesn't do anything for normal sliders)
 
 @c In a number of situations you may like slider values to be rounded to
@@ -971,7 +973,7 @@ been released.
 Per default a positioner only reacts to the left mouse button.
 But sometimes it can be useful to modify which mouse buttons it
 will reacts to. To set this use
-@findex fl_set_positoner_mouse_buttons()
+@findex fl_set_positioner_mouse_buttons()
 @anchor{fl_set_positioner_mouse_buttons()}
 @example
 void fl_set_positioner_mouse_buttons(FL_OBJECT *obj,
@@ -1745,6 +1747,13 @@ void fl_set_thumbwheel_step(FL_OBJECT *obj, double step);
 @noindent
 After this call thumbwheel values will be rounded to multiples of
 @code{step}. Use a value 0.0 for @code{step} to switch off rounding.
+
+To get the current setting for this call
+@findex fl_get_thumbwheel_step()
+@anchor{fl_get_thumbwheel_step()}
+@example
+double fl_set_thumbwheel_step(FL_OBJECT *obj);
+@end example
 
 
 @node Thumbwheel Attributes

@@ -1,4 +1,13 @@
-2013-11-01 Jens Thoms Toerring    <jt@toerring.de>
+2013-12-04 Jens Thoms Toerring    <jt@toerring.de>
+
+	* fdesign: Minor display bug reported by Segre Bromow fixed
+	* docs: Thanks to Michal Szymanski PDF documentation can now
+	also be build on systems with older texi2dvi versions
+	* Clean-up: Several functions declared in public header
+	files but which were either not present or only meant for
+	internal use removed, other functions documented.
+
+2013-12-01 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/objects.c: Bug fix in fl_set_obkject_resize()
 	* fdesign: Several bug fixes

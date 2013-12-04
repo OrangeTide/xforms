@@ -492,7 +492,7 @@ static FLI_VN_PAIR xvclass[ ] =
  ***************************************/
 
 const char *
-fl_vclass_name( int n )
+fli_vclass_name( int n )
 {
     FLI_VN_PAIR *xc = xvclass;
 
@@ -510,7 +510,7 @@ fl_vclass_name( int n )
  ***************************************/
 
 int
-fl_vclass_val( const char * v )
+fli_vclass_val( const char * v )
 {
     FLI_VN_PAIR *vn;
 

@@ -202,11 +202,18 @@ One can set various attributes of an item using the following routine
 @findex fl_set_choice_item_mode()
 @anchor{fl_set_choice_item_mode()}
 @example
-void fl_set_choice_item_mode(FL_OBJECT *obj, int numb, unsigned mode);
+void fl_set_choice_item_mode(FL_OBJECT *obj, int numb, int mode);
 @end example
 @noindent
 Here @code{mode} is the same as that used for menu objects (see
 above). See also @ref{XPopup}, for details.
+
+To find about those settings use
+@findex fl_get_choice_item_mode()
+@anchor{fl_get_choice_item_mode()}
+@example
+int fl_get_choice_item_mode(FL_OBJECT *obj, int numb);
+@end example
 
 You can use the follow routine to populate a choice object at once,
 including mode and shortcut, by using
@@ -298,10 +305,10 @@ Normally the pop-up shown for the choice objects will be displayed at
 the current mouse position or, for those of type
 @code{@code{FL_DROPLIST_CHOICE}}, directly below the choice object.
 This can be modified by a call of the function
-@findex fl_set_choice_aloign_bottom()
-@anchor{fl_set_choice_aloign_bottom()}
+@findex fl_set_choice_align_bottom()
+@anchor{fl_set_choice_align_bottom()}
 @example
-int fl_set_choice_aloign_bottom(GL_OBJECT *obj, int flag);
+int fl_set_choice_align_bottom(GL_OBJECT *obj, int flag);
 @end example
 @noindent
 If @code{flag} is @code{0} the normal behaviour is used, but when

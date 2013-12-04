@@ -179,6 +179,18 @@ via @code{WMHints}. The effect of a window having this property is
 that it can't be interactively resized (provided the window manager
 cooperates).
 
+Also the state of the window when opening it can be influenced
+by the function
+@findex fl_initial_winstate()
+@anchor{fl_initial_winstate()}
+@example
+void fl_initial_winstate(int state);
+@end example
+where @code{state} is on of the XLib constants @code{NormalState} (the
+default) or @code{IconicState}, which will result in the opened window
+being iconified. The third possible constant, @code{WithdrawnState},
+doesn't make much sense in this context.
+
 It is sometimes desirable to have a window that is resizeable but only
 within a useful range. To set such a constraint use the following
 functions:

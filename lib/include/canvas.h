@@ -102,8 +102,6 @@ FL_EXPORT void fl_remove_canvas_handler( FL_OBJECT        * ob,
                                          int                ev,
                                          FL_HANDLE_CANVAS   h );
 
-FL_EXPORT void fl_hide_canvas( FL_OBJECT * ob );
-
 FL_EXPORT void fl_share_canvas_colormap( FL_OBJECT * ob,
                                          Colormap    colormap );
 

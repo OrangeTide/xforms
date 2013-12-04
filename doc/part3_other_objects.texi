@@ -992,8 +992,6 @@ It is possible to generate a PostScript output of an XYPlot. See the
 function @code{@ref{fl_object_ps_dump()}} documented in Part V.
 
 
-
-
 @node Canvas Object
 @section Canvas Object
 
@@ -1266,6 +1264,17 @@ value for @code{yes_no}:
 @example
 void fl_canvas_yield_to_shortcut(FL_OBJECT *obj, int yes_no);
 @end example
+
+To clear the canvas use
+@findex fl_clear_canvas()
+@anchor{fl_clear_canvas()}
+@example
+void fl_clear_canvas(FL_OBJECT *obj);
+@end example
+@noindent
+If @code{@ref{fl_set_object_color()}} gas been called on the object
+the first color passed to the function will be used to draw the
+background of the color, otherwise it's drawn in black.
 
 
 @node Canvas Attributes

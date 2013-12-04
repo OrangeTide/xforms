@@ -33,6 +33,119 @@
 #include "flimage_int.h"
 
 
+/***************************************
+ * Specialized for image processing
+ ***************************************/
+
+static int
+spline_int_interpolate( const int * wx,
+                        const int * wy,
+                        int         nin,
+                        int         grid,
+                        int       * y )
+{
+    int i,
+        j,
+        k,
+        jo,
+        ih,
+        im,
+        nout;
+    double sig,
+           p,
+           h,
+           a,
+           b,
+           x;
+    static int nwork = 0;
+    static double *y2 = NULL,
+                  *u = NULL;
+
+    if ( nin <= 3 )
+    {
+        M_warn( "fl_spline_int_interpolate",
+                "too few points (less than 4) for interpolation" );
+        return -1;
+    }
+
+    if ( nwork < nin )
+    {
+        y2 = fl_realloc( y2, nin * sizeof *y2 );
+        u = fl_realloc( u, nin * sizeof *u );
+        nwork = nin;
+    }
+
+    y2[ 0 ] = u[ 0 ] = 0.0;
+
+    for ( i = 1; i < nin - 1; i++ )
+    {
+        sig = ( double ) ( wx[ i ] - wx[ i - 1 ] ) /
+              ( wx[ i + 1 ] - wx[ i - 1 ] );
+        p = sig * y2[ i - 1 ] + 2.0;
+        y2[ i ] = ( sig - 1.0 ) / p;
+        u[ i ] =   ( double ) ( wy[ i + 1 ] - wy[ i ] ) /
+                              ( wx[ i + 1 ] - wx[ i ] )
+                 - ( double ) ( wy[ i ] - wy[ i - 1 ] ) /
+                              ( wx[ i ] - wx[ i - 1 ] );
+        u[ i ] = (   6.0 * u[ i ] / ( wx[ i + 1 ] - wx[ i - 1 ] )
+                   - sig * u[ i - 1 ] ) / p;
+    }
+
+    y2[ nin - 1 ] = 0.0;
+    for ( k = nin - 2; k >= 0; k-- )
+        y2[ k ] = y2[ k ] * y2[ k + 1 ] + u[ k ];
+
+    /* Outputs */
+
+    nout = ( int ) ( ( wx[ nin - 1 ] - wx[ 0 ] ) / grid + 1.01 );
+
+    y[ 0 ] = wy[ 0 ];
+
+    /* Start the main loop */
+
+    for ( jo = 0, i = 1; i < nout; i++ )
+    {
+        x = wx[ 0 ] + i * grid;
+
+        /* Center */
+
+        j = jo;
+        ih = nin - 1;
+        while ( ih - j > 1 )
+        {
+            im = ( ih + j ) / 2;
+            if ( x > wx[ im ] )
+                j = im;
+            else
+                ih = im;
+        }
+
+        jo = j;
+
+        /* Interpolate */
+
+        h = wx[ ih ] - wx[ j ];
+        a = ( wx[ ih ] - x ) / h;
+        b = ( x - wx[ j ] ) / h;
+
+        y[i] = ( a * wy[ j ] + b * wy[ ih ]
+                 + ( ( a * a * a - a ) * y2[ j ]
+                     + ( b * b * b - b ) * y2[ ih ] )
+                 * ( h * h ) / 6.0 ) + 0.1;
+
+        /* Clamp */
+
+        if ( y[ i ] < 0 )
+            y[ i ] = 0;
+        else if ( y[ i ] > FL_PCMAX )
+            y[ i ] = FL_PCMAX;
+    }
+
+    y[ nout - 1 ] = wy[ nin - 1 ];
+    return nout;
+}
+
+
 /***********************************************************************
  * convert image types
  ***********************************************************************/
@@ -427,7 +540,7 @@ fs_dither( unsigned short ** mat,
 
     tmp = fl_get_matrix( h + 1, w, sizeof **tmp );
 
-    fl_spline_int_interpolate( x, y, 4, 1, lut );
+    spline_int_interpolate( x, y, 4, 1, lut );
 
     for ( ras = mat[ 0 ], curr = tmp[ 0 ], n = h * w; --n >= 0; ras++, curr++ )
         *curr = lut[ *ras ];

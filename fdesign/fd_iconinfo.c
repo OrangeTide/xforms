@@ -47,7 +47,8 @@ get_iconinfo( FL_OBJECT * obj )
 
         info->use_data        = 0;
 		info->show_focus      = 1;
-		info->dx              = info->dy = 3;
+		info->dx              = 0;
+        info->dy              = 0;
 		info->align           = FL_ALIGN_CENTER;
 		info->fullpath        = 1;
 		*info->filename       = '\0';
@@ -338,9 +339,6 @@ check_for_data( const char * line,
 
     strncpy( name, start, len );
     name[ len ] = '\0';
-
-    if ( strcmp( name + len - strlen( what ), what ) )
-        return NULL;
 
     /* Make sure that the next non-blank char is a '[' */
 

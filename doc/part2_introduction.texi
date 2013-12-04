@@ -6,7 +6,7 @@ builder meant to help you interactively design dialogue forms for use
 with the Forms Library. This part assumes the reader is familiar with
 the Forms Library and has read Part I of this document. Even though
 designing forms is quite easy and requires only a relatively small
-number of lines of C-code, it can be time consuming to ﬁgure out all
+number of lines of C-code, it can be time consuming to figure out all
 required positions and sizes of the objects. The Form Designer was
 written to facilitate the construction of forms. With Form Designer,
 there is no longer any need to calculate or guess where the objects

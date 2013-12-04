@@ -23,7 +23,6 @@
 #include <ctype.h>
 #include "include/forms.h"
 #include "flinternal.h"
-#include "global.h"
 
 
 static void do_interaction_step( int );

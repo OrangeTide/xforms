@@ -37,7 +37,6 @@
 #include <sys/types.h>
 
 
-
 /***************************************
  * Returns if two objects are the same - not of any use normally,
  * but seems to help with the Python port (so don't use it for

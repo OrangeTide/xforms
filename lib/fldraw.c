@@ -557,13 +557,13 @@ fl_drw_box( int      style,
  ***************************************/
 
 void
-fl_drw_checkbox( int      type,
-                 FL_Coord x,
-                 FL_Coord y,
-                 FL_Coord w,
-                 FL_Coord h,
-                 FL_COLOR col,
-                 int      bw )
+fli_drw_checkbox( int      type,
+                  FL_Coord x,
+                  FL_Coord y,
+                  FL_Coord w,
+                  FL_Coord h,
+                  FL_COLOR col,
+                  int      bw )
 {
     int halfw = w / 2,
         halfh = h / 2;
@@ -614,13 +614,10 @@ fl_drw_checkbox( int      type,
 
     fl_polyf( allp + 4, 4, col );
 
-#if 1
     /* Special hack for B&W, add a border */
 
     if ( fli_dithered( fl_vmode ) )
         fl_polyl( allp, 4, FL_BLACK );
-#endif
-
 }
 
 

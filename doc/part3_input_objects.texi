@@ -529,17 +529,6 @@ fl_set_input_cursorpos(ob, 4, 1);
 places the the cursor after the first character of the word
 @code{"arbitrary"}, i.e.@: directly after the first @code{a}.
 
-Shortcut keys can be associated with an input field to switch input
-focus. To this end, use the following routine
-@findex fl_set_input_shortcut()
-@anchor{fl_set_input_shortcut()}
-@example
-void fl_set_input_shortcut(FL_OBJECT *obj, const char *sc,
-                           int showit);
-@end example
-@noindent
-@c ????
-
 By default, if an input field of type @code{@ref{FL_MULTILINE_INPUT}}
 contains more text than can be shown, scrollbars will appear with
 which the user can scroll the text around horizontally or vertically.

@@ -326,8 +326,8 @@ fli_drw_string( int           align,
 
     /* Set foreground and background color for text */
 
-    fl_textcolor( forecol );
-    fl_bk_textcolor( bkcol );
+    fli_textcolor( forecol );
+    fli_bk_textcolor( bkcol );
 
     /* Draw the lines requested */
 
@@ -398,10 +398,10 @@ fli_drw_string( int           align,
             fl_rectf( xsel, line->y - flx->fasc, wsel,
                       flx->fheight, forecol );
 
-            fl_textcolor( backcol );  /* bkcol ? */
+            fli_textcolor( backcol );  /* bkcol ? */
             drawIt( flx->display, flx->win, flx->textgc, xsel,
                     line->y, line->str + start, len );
-            fl_textcolor( forecol );
+            fli_textcolor( forecol );
 
             if ( line->underline_index > 0 )
                 underline_col = backcol;
@@ -1005,8 +1005,8 @@ fl_drw_text_beside( int          align,
  ***************************************/
 
 void
-fl_set_ul_property( int prop,
-                    int thickness )
+fli_set_ul_property( int prop,
+                     int thickness )
 {
     UL_propwidth = prop;
     if ( thickness > 0 )

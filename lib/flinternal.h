@@ -427,6 +427,14 @@ void fli_drw_slider( FL_OBJECT *,
                      const char *,
                      int );
 
+void fli_drw_checkbox( int      type,
+                       FL_Coord x,
+                       FL_Coord y,
+                       FL_Coord w,
+                       FL_Coord h,
+                       FL_COLOR col,
+                       int      bw );
+
 void fli_set_global_clipping( FL_Coord,
                               FL_Coord,
                               FL_Coord,
@@ -1076,6 +1084,25 @@ void fli_set_tab_lalign( FL_OBJECT * obj,
 
 void fli_set_tab_bw( FL_OBJECT * obj,
                      int         bw );
+void fli_textcolor( FL_COLOR col );
+
+void fli_bk_textcolor( FL_COLOR col );
+
+char * fli_fix_dirname( char * dir );
+
+Cursor fli_get_cursor_byname( int name );
+
+void fli_hide_canvas( FL_OBJECT * ob );
+
+const char * fli_vclass_name( int n );
+
+int fli_vclass_val( const char * v );
+
+void fli_set_ul_property( int prop,
+                          int thickness );
+
+int fli_is_valid_dir( const char * name );
+
 
 #endif /* ! defined FL_INTERNAL_H */
 

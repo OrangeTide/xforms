@@ -1241,7 +1241,8 @@ fli_tbox_set_bottomline( FL_OBJECT * obj,
 
 
 /***************************************
- * Makes a line shown in the center of the browser (as far as possible)
+ * Shifts the content to make the indexed line show up in the center
+ * of the browser (as far as possible)
  ***************************************/
 
 void

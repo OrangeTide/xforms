@@ -52,11 +52,11 @@ FL_POPUP *fl_popup_add(Window win, const char *title);
 The function returns the address of the new popup on success and
 @code{NULL} on failure. @code{win} is the window of a parent object
 (use @code{@ref{FL_ObjWin()}} to find out about it). You can also use
-@code{fl_root} for the root window, with @code{None} having the same
-effect . @code{title} is an optional string that gets shown at the top
-of the popup in a framed box. If not wanted pass an empty string or
-@code{NULL}. The function returns a pointer to a new popup or
-@code{NULL} on failure.
+@code{@ref{fl_root}} for the root window, with @code{None} having the
+same effect . @code{title} is an optional string that gets shown at
+the top of the popup in a framed box. If not wanted pass an empty
+string or @code{NULL}. The function returns a pointer to a new popup
+or @code{NULL} on failure.
 
 The title may contain embedded newline characters, this allows to
 create titles that span more than one line.)
@@ -528,8 +528,8 @@ FL_POPUP *fl_popup_create(Window win, const char *title,
 @noindent
 The @code{win} and @code{title} arguments are the same as used in
 @code{@ref{fl_popup_add()}}, i.e.@: they are parent window for the
-popup (or @code{fl_root} or @code{None}) and the (optional, can be
-@code{NULL}) title for the popup.
+popup (or @code{@ref{fl_root}} or @code{None}) and the (optional, can
+be @code{NULL}) title for the popup.
 
 @code{items} is a pointer to an array of structures of the following
 form:

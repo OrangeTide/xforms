@@ -412,12 +412,12 @@ the select objects popup.
 
 Another sometimes useful function allows insertion of new items somewhere
 in the middle of a list of already existing items:
-@findex fl_insert_select_item()
-@anchor{fl_insert_select_item()}
+@findex fl_insert_select_items()
+@anchor{fl_insert_select_items()}
 @example
-FL_POPUP_ENTRY *fl_insert_select_item(FL_OBJECT *obj,
-                                      FL_POPUP_ENTRY *after,
-                                      const char *new_items, ...);
+FL_POPUP_ENTRY *fl_insert_select_items(FL_OBJECT *obj,
+                                       FL_POPUP_ENTRY *after,
+                                       const char *new_items, ...);
 @end example
 @noindent
 @code{after} is the entry after which the new item(s) are to be
@@ -1432,6 +1432,15 @@ int fl_get_browser_topline(FL_OBJECT *obj);
 Note that the index of the top line is @code{1}, not @code{0}. A
 value of @code{0} is returned if the browser doesn't contain any
 lines.
+
+Finally, the function
+@findex fl_show_browser_line()
+@anchor{fl_show_browser_line()}
+@example void fl_show_browser_line(FL_OBJECT *obj, int ln);
+@end example
+@noindent
+shifts the browsers content so that (as far as possible) the line
+indexed by @code{ln} is shown at the center of the browser.
 
 It is possible to register a callback function that gets called when a
 line is double-clicked on. To do so, the following function is

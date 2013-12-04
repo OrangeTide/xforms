@@ -602,7 +602,8 @@ static void hide_it( FL_OBJECT * ob    FL_UNUSED_ARG,
 /***************************************
  ***************************************/
 
-static void init_save_as_form( void )
+static void
+init_save_as_form( void )
 {
     static FD_saveAs_form *fd_saveAs_form;
     const FLIMAGE_FORMAT_INFO *fmtinfo;
@@ -615,18 +616,18 @@ static void init_save_as_form( void )
 
     fl_use_fselector( 2 );
     fd_fselect = fl_get_fselector_fdstruct( );
-/*    fl_set_fselector_callback( save_file,0 ); */
+/*    fl_set_fselector_callback( save_file, 0 ); */
     fl_set_object_callback( fd_fselect->ready, hide_it, 0 );
     fl_show_object( fd_fselect->ready );
     fl_set_form_atclose( app.fd_saveAs_form->saveAs_form,
                          fl_goodies_atclose, fd_fselect->ready );
 
-    /* put fselector into the formbrowser as a way of reparenting */
+    /* Put fselector into the formbrowser as a way of reparenting */
 
     fl_addto_formbrowser( app.fd_saveAs_form->formcontainer,
                           fd_fselect->fselect );
 
-    /* fill the output format choice */
+    /* Fill the output format choice */
 
     for ( n = flimage_get_number_of_formats( ), i = 1; i <= n; i++ )
     {

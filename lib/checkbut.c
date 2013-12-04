@@ -57,9 +57,9 @@ draw_checkbutton( FL_OBJECT * ob )
     yy = ob->y + ( ob->h - hh ) / 2;
 
     if ( sp->val )
-        fl_drw_checkbox( FL_DOWN_BOX, xx, yy, ww, hh, ob->col2, bw );
+        fli_drw_checkbox( FL_DOWN_BOX, xx, yy, ww, hh, ob->col2, bw );
     else
-        fl_drw_checkbox( FL_UP_BOX, xx, yy, ww, hh, ob->col1, bw );
+        fli_drw_checkbox( FL_UP_BOX, xx, yy, ww, hh, ob->col1, bw );
 
     if ( fl_is_inside_lalign( ob->align ) )
         fl_drw_text( FL_ALIGN_LEFT, xx + ww + 1, ob->y, ob->w - ww - 3, ob->h,

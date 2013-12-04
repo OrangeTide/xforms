@@ -15,6 +15,7 @@ specific object classes see Part III.
 * Doing Interaction::
 * Signals::
 * Idle Callbacks and Timeouts::
+* Global Variables::
 @end menu
 
 @end ifnottex
@@ -227,6 +228,19 @@ If the border width is set to a negative number, all objects appear to
 have a softer appearance. Older version of the library used a larger
 default for the border width of 3.
 
+As mentioned the @code{@ref{fl_initialize()}} function removes all the
+above listed values from the command line arguments, leaving you with
+a cleaned-up list. To get again at the complete list you can use the
+function
+@findex fl_get_cmdline_args()
+@anchor{fl_get_cmdline_args()}
+@example
+char **fl_get_cmdline_args( int *arg_cnt );
+@end example
+@noindent
+returning a copy to the values from the original list and
+their number via the @code{arg_cnt} argument.
+
 Depending on your application XForms defaults may or may not be
 appropriate. E.g., on machines capable of @w{24 bits} visuals, Forms
 Library always selects the deeper @w{24 bits} visual. If your
@@ -409,6 +423,13 @@ fl_set_defaults(FL_PDBorderWidth, &fl_cntl);
 Typically this function, if used, should appear before
 @code{@ref{fl_initialize()}} is called so the user has the option to
 override the default via resource or command line options.
+
+The cirrent setting of the borderwidth can also tested via
+@findex fl_get_border_width()
+@anchor{fl_get_border_width()}
+@example
+int fl_get_border_width(void);
+@end example
 
 To change the default scrollbar type (which is @code{THIN_SCROLLBAR})
 used in browser and input object, the following convenience function
@@ -1141,6 +1162,16 @@ The form is automatically redrawn once it is "unfrozen", so a call of
 "frozen", calling this function as well as @code{@ref{fl_redraw_object()}}
 has no effects).
 
+You may also freeze and unfreeze all forms at once by using
+@findex fl_freeze_all_forms()
+@anchor{fl_freeze_all_forms()}
+@findex fl_unfreeze_all_forms()
+@anchor{fl_unfreeze_all_forms()}
+@example
+void fl_freeze_all_forms(void);
+void fl_unfreeze_all_forms(void);
+@end example
+
 There are also routines that influence the way events are dispatched.
 These routines are provided mainly to facilitate the development of
 (unusual) new objects where attributes need to be changed on the fly.
@@ -1333,10 +1364,12 @@ int fl_object_ps_dump(FL_OBJECT *obj, const char *fname);
 @end example
 @noindent
 The function will output the specified object in PostScript. If
-@code{fname} is @code{NULL}, a fselector will be shown to ask the user
-for a file name. The function returns a negative number if no output
-is generated due to errors. At the moment, only the @code{FL_XYPLOT}
-object is supported.
+@code{fname} is @code{NULL}, a file selector will be shown to ask the
+user for a file name. The function returns a negative number if no
+output is generated due to errors. At the moment, only the
+@code{FL_XYPLOT} object is supported. Nothe that this function isn't
+part of the statndard XForms library (@code{libforms}) but the
+XForms image library (@code{libflimage} discussed in @ref{Part VI Images}.
 
 The object must be visible at the time of the function call. The
 hardcopy should mostly be WYSIWYG and centered on the printed page.
@@ -2139,3 +2172,95 @@ where @code{id} is the timeout ID returned by
 @code{@ref{fl_add_timeout()}}. @xref{Timer Object}, for the usage of
 @code{FL_TIMER} object. For tasks that need more accurate timing the
 use of signal should be considered.
+
+
+@node Global Variables
+@section Global Variables
+
+For convenience the library exports a number of global variables.
+These are:
+
+@table @code
+@vindex FL_EVENT
+@anchor{FL_EVENT}
+@item FL_OBJECT *FL_EVENT
+This is a special object returned by @code{@ref{fl_do_forms()}} etc.@:
+when an X event is received that isn't coming from a form under the
+control of the library, e.g.@: for a  window that was opened directly
+via Xlib functions. Upon receiving this special event the application
+program can and must remove the pending event from the queue using
+@code{@ref{fl_XNextEvent()}}.
+
+@vindex fl_current_form
+@anchor{fl_current_form}
+@item FL_FORM *fl_current_form
+This variable is always set to the currently active form.
+
+@vindex fl_display
+@anchor{fl_display}
+@item Display *fl_display
+This variable is set to the display (X server) the program is
+connected to and is needed as an argument for many Xlib functions.
+It's recommended not to use this global variable but instead either
+the function @code{@ref{fl_get_display()}} or
+@code{@ref{FL_FormDisplay()}} (the latter accepts a form pointer as
+its argument and will also be safe in future versions of the library
+that may support multiple connections).
+
+@vindex fl_screen
+@anchor{ fl_screen}
+@item int fl_screen
+This variable is set to the default screen of the display connection.
+
+@vindex fl_root
+@anchor{fl_root}
+@item Window fl_root
+This variable is set to the root window.
+
+@vindex fl_vroot
+@anchor{fl_vroot}
+@item Window fl_vroot
+Some window managers have problems with obtaining the corrent root
+window and applications don't work with the normal root windows. In
+this case @code{fl_vroot} can be used instead.
+
+
+@vindex fl_scrw
+@anchor{fl_scrw}
+@vindex fl_scrh
+@anchor{fl_scrh}
+@item int fl_scrw, fl_scrh
+These variables contain the screens width and height.
+
+@vindex fl_vmode
+@anchor{fl_vmode}
+@item int fl_mode
+The variable contains the visual mode in use, it should be one of the
+Xlib constants @code{PseudoColor}, @code{TrueColor},
+@code{DirectColor}, @code{StaticColor}, @code{GrayScale or
+@code{StaticGray}. Alternatively, the functions
+@code{@ref{fl_get_vclass()}} or @code{fl_get_form_vclass()}} can be
+used (the latter accepts a form pointer as its argument and is thus
+also safe for future versions that may allow multiple connections).
+
+
+@vindex fl_state
+@anchor{fl_state}
+@item FL_State fl_state[ 6 ]
+This array of structure of type @code{@ref{FL_State}} contains a lot
+of information about the graphics mode, where each structure has the
+information for each of the cisual modes. Interesting is only the
+entry for the visual mode used, @code{@ref{fl_vmode}}.
+
+
+@vindex fl_ul_magic_char
+@anchor{fl_ul_magic_char}
+@item char *fl_ul_magic_char
+This variable points to the character used to indicate underlining
+in labels and other texts. If it appears as the very first character
+of a string all characters in that string are underlined, otherwise
+the character direct in front of it. Per default it's set to
+@code{'\b'}.
+
+@end table
+

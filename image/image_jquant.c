@@ -41,8 +41,8 @@
 void
 fl_select_mediancut_quantizer( void )
 {
-    flimage_quantize_rgb = fl_j2pass_quantize_rgb;
-    flimage_quantize_packed = fl_j2pass_quantize_packed;
+    flimage_quantize_rgb = j2pass_quantize_rgb;
+    flimage_quantize_packed = j2pass_quantize_packed;
 }
 
 
@@ -228,18 +228,18 @@ alloc_spec( int   w,
  ***************************************/
 
 int
-fl_j2pass_quantize_rgb( unsigned char  ** red,
-                        unsigned char  ** green,
-                        unsigned char  ** blue,
-                        int               w,
-                        int               h,
-                        int               max_color,
-                        unsigned short ** ci,
-                        int             * actual_color,
-                        int             * red_lut,
-                        int             * green_lut,
-                        int             * blue_lut,
-                        FL_IMAGE        * im )
+j2pass_quantize_rgb( unsigned char  ** red,
+                     unsigned char  ** green,
+                     unsigned char  ** blue,
+                     int               w,
+                     int               h,
+                     int               max_color,
+                     unsigned short ** ci,
+                     int             * actual_color,
+                     int             * red_lut,
+                     int             * green_lut,
+                     int             * blue_lut,
+                     FL_IMAGE        * im )
 {
     SPEC *sp = alloc_spec( w, h, red_lut, green_lut, blue_lut );
     int i;
@@ -288,16 +288,16 @@ fl_j2pass_quantize_rgb( unsigned char  ** red,
  ***************************************/
 
 int
-fl_j2pass_quantize_packed( unsigned int   ** packed,
-                           int               w,
-                           int               h,
-                           int               max_color,
-                           unsigned short ** ci,
-                           int             * actual_color,
-                           int             * red_lut,
-                           int             * green_lut,
-                           int             * blue_lut,
-                           FL_IMAGE        * im )
+j2pass_quantize_packed( unsigned int   ** packed,
+                        int               w,
+                        int               h,
+                        int               max_color,
+                        unsigned short ** ci,
+                        int             * actual_color,
+                        int             * red_lut,
+                        int             * green_lut,
+                        int             * blue_lut,
+                        FL_IMAGE        * im )
 {
     SPEC *sp = alloc_spec( w, h, red_lut, green_lut, blue_lut );
     unsigned char **red = NULL,

@@ -104,13 +104,13 @@ the routines @code{@ref{fl_set_button()}} and
 @ifnottex
 
 @menu
-* The Routine @code{fl_add_NEW()}::
+* The Routine fl_add_NEW()::
 @end menu
 
 @end ifnottex
 
 
-@node The Routine @code{fl_add_NEW()}
+@node The Routine fl_add_NEW()
 @section The Routine @code{fl_add_NEW()}
 
 @code{fl_add_NEW()} has to add a new object to the form and bind its
@@ -164,6 +164,14 @@ debugging capabilities in future versions of the Forms Library. Also
 note that these functions are actually function pointers, and if
 desired, the application is free to assign these pointers to its own
 memory allocation routines.
+
+There's also a version equivalent to the @code{strdup()} POSIX
+function which used @code{@ref{fl_malloc()}}:
+@findex fl_strdup()
+@anchor{fl_strdup()}
+@example
+char * fl_strdup(const char *s);
+@end example
 
 The object pointer returned by @code{@ref{fl_make_object()}} will have
 all of its fields set to some defaults (@pxref{Part IV The Type

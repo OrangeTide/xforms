@@ -643,7 +643,7 @@ fli_create_window( Window       parent,
 
     if ( ( st_wmask & CWCursor ) != CWCursor )
     {
-        st_xswa.cursor = fl_get_cursor_byname( FL_DEFAULT_CURSOR );
+        st_xswa.cursor = fli_get_cursor_byname( FL_DEFAULT_CURSOR );
         st_wmask |= CWCursor;
     }
 

@@ -2,7 +2,7 @@
 
 @setfilename xforms.info
 @settitle XForms (Forms Library) - Version 1.2@*A Graphical User Interface Toolkit for X
-@set lastupdate December 1, 2013
+@set lastupdate December 4, 2013
 @paragraphindent 0
 
 @titlepage
@@ -32,7 +32,6 @@
 @top
 
 @ifnottex
-
 
 @menu
 * Preface:                             Preface
@@ -79,8 +78,21 @@
 * Trouble Shooting:                    Part V Trouble Shooting
 * Part VI - Image Supprt API:          Part VI
 * Part VI Images::
+
+@c There are three indexes, for functions, variables and constants.
+@c But for HTML we combine them into one - it's easier to search only
+@c one page instead of having to go to three of them and the second
+@c and third page are also a bit difficult to find...
+
+@ifnothtml
 * Index of Functions::
+* Index of Global Variables::
 * Index of Constants::
+@end ifnothtml
+
+@ifhtml
+* Index::
+@end ifhtml
 @end menu
 
 @end ifnottex
@@ -136,14 +148,36 @@
 @include part6.texi
 @include part6_images.texi
 
+
+@ifnothtml
+
 @node Index of Functions
 @unnumbered Index of Functions
 
 @printindex fn
 
+@node Index of Global Variables
+@unnumbered Index of Global Variables
+
+@printindex vr
+
 @node Index of Constants
 @unnumbered Index of Constants
 
 @printindex tp
+
+@end ifnothtml
+
+@ifhtml
+
+@syncodeindex vr fn
+@syncodeindex tp fn
+
+@node Index
+@unnumbered Index
+
+@printindex fn
+
+@end ifhtml
 
 @bye

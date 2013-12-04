@@ -653,60 +653,8 @@ FL_EXPORT FL_IMAGE * flimage_dup( FL_IMAGE * );
 
 /* Miscellaneous prototypes */
 
-FL_EXPORT void * fl_get_submatrix( void *,
-								   int,
-								   int,
-								   int,
-								   int,
-								   int,
-								   int,
-								   unsigned int );
-
-FL_EXPORT int fl_j2pass_quantize_packed( unsigned int **,
-										 int,
-										 int,
-										 int,
-										 unsigned short **,
-										 int *,
-										 int *,
-										 int *,
-										 int *,
-										 FL_IMAGE * );
-
-FL_EXPORT int fl_j2pass_quantize_rgb( unsigned char **,
-									  unsigned char **,
-									  unsigned char **,
-									  int,
-									  int,
-									  int,
-									  unsigned short **,
-									  int *,
-									  int *,
-									  int *,
-									  int *,
-									  FL_IMAGE * );
-
-FL_EXPORT void * fl_make_submatrix( void *,
-									int,
-									int,
-									int,
-									int,
-									int,
-									int,
-									unsigned int );
-
 FL_EXPORT int fl_object_ps_dump( FL_OBJECT *,
 								 const char * );
-
-FL_EXPORT void fl_pack_bits( unsigned char *,
-							 unsigned short *,
-							 int );
-
-FL_EXPORT void fl_unpack_bits( unsigned short *,
-							   unsigned char  *,
-							   int );
-
-FL_EXPORT unsigned int fl_value_to_bits( unsigned int );
 
 FL_EXPORT void flimage_add_comments( FL_IMAGE *,
 									 const char *,

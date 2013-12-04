@@ -59,7 +59,7 @@ libforms_la_SOURCES = \
 	frame.c \
 	free.c \
 	fselect.c \
-	global.h \
+	global.c \
 	goodie_alert.c \
 	goodie_choice.c \
 	goodie_input.c \
@@ -97,7 +97,6 @@ libforms_la_SOURCES = \
 	sldraw.c \
 	slider.c \
 	space.c \
-	spline.c \
 	spinner.c \
 	strdup.c \
 	symbols.c \

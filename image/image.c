@@ -134,8 +134,8 @@ flimage_alloc( void )
 
     if ( ! flimage_quantize_rgb )
     {
-        flimage_quantize_rgb = fl_j2pass_quantize_rgb;
-        flimage_quantize_packed = fl_j2pass_quantize_packed;
+        flimage_quantize_rgb = j2pass_quantize_rgb;
+        flimage_quantize_packed = j2pass_quantize_packed;
     }
 
     /* make sure visual_cue and error_message are ok */
@@ -1526,9 +1526,9 @@ flimage_free_gray( FL_IMAGE * im )
  ***************************************/
 
 void
-fl_unpack_bits( unsigned short * out,
-                unsigned char  * in,
-                int              len )
+unpack_bits( unsigned short * out,
+             unsigned char  * in,
+             int              len )
 {
     unsigned int mask = 0x80;
 
@@ -1549,9 +1549,9 @@ fl_unpack_bits( unsigned short * out,
  ***************************************/
 
 void
-fl_pack_bits( unsigned char  * out,
-              unsigned short * in,
-              int              len)
+pack_bits( unsigned char  * out,
+           unsigned short * in,
+           int              len)
 {
     int k = 0,
         bit = 0;
@@ -1573,21 +1573,6 @@ fl_pack_bits( unsigned char  * out,
         k <<= 8 - bit;
         *out++ = k;
     }
-}
-
-
-/***************************************
- ***************************************/
-
-unsigned int
-fl_value_to_bits( unsigned int val )
-{
-    unsigned int i;
-
-    for ( i = 1; ( 1u << i ) < val; i++ )
-        /* empty */ ;
-
-    return i;
 }
 
 

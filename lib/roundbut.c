@@ -80,7 +80,7 @@ draw_roundbutton( FL_OBJECT * ob )
 
 
 /***************************************
- * creates an object
+ * Creates an object
  ***************************************/
 
 FL_OBJECT *

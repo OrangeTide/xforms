@@ -533,7 +533,7 @@ handle_canvas( FL_OBJECT * ob,
             break;
 
         case FL_FREEMEM:
-            fl_hide_canvas( ob );
+            fli_hide_canvas( ob );
             free_canvas( ob );
             break;
     }
@@ -546,7 +546,7 @@ handle_canvas( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_hide_canvas( FL_OBJECT * ob )
+fli_hide_canvas( FL_OBJECT * ob )
 {
     FLI_CANVAS_SPEC *sp = ob->spec;
 

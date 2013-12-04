@@ -34,6 +34,7 @@ such information is needed.
 
 All state information is kept in a global structure of type
 @tindex FL_State
+@anchor{FL_State}
 @code{FL_State} and there is a total of six such structures,
 @code{fl_state[6]}, each for every visual class.
 
@@ -84,7 +85,7 @@ int fl_get_vclass(void);
 @end example
 @noindent
 The value returned can be used as an index into the array
-@code{fl_state} of @code{FL_State} structures. Note that
+@code{@ref{fl_state}} of @code{@ref{FL_State}} structures. Note that
 @code{@ref{fl_get_vclass()}} should only be used within a class/new
 object module where there can be no confusion what the "current" form
 is.
@@ -104,14 +105,14 @@ connection to the X server and current window ID are needed. The Forms
 Library comes with some utility functions/macros to facilitate easy
 utilization of Xlib calls. Since the current version of Forms Library
 only maintains a single connection, the global variable
-@w{@code{Display *fl_display}} can be used where required. However, it
+@code{@ref{fl_display}} can be used where required. However, it
 is recommended that you use
 @findex fl_get_display()
 @anchor{fl_get_display()}
 @code{fl_get_display()} or
-@findex FL_FormDisplay(form)
-@anchor{FL_FormDisplay(form)}
-@code{FL_FormDisplay(form)} instead since the function/macro version
+@findex FL_FormDisplay()
+@anchor{FL_FormDisplay()}
+@code{FL_FormDisplay(Form *form)} instead since the function/macro version
 has the advantage that your program will remain compatible with future
 (possibly multi-connection) versions of the Forms Library.
 
@@ -417,20 +418,20 @@ provided:
 @findex fl_get_char_width()
 @anchor{fl_get_char_width()}
 @example
-int fl_get_char_height(int style, int size, int *ascend, int *descend)
+int fl_get_char_height(int style, int size, int *ascent, int *descent)
 int fl_get_char_width(int style, int size);
 @end example
 @noindent
 These two routines return the maximum height and width of the font
-used, where size indicates the point size for the font and style is
-the style in which the text is to be drawn. The first function,
-@code{@ref{fl_get_char_height()}}, also returns the height above and
-below the baseline of the font via the @code{ascend} and
-@code{descend} arguments. A list of valid styles can be found in
-Section 3.11.3.
+used, where @code{size} indicates the point size for the font and
+@code{style} is the style in which the text is to be drawn. The first
+function, @code{@ref{fl_get_char_height()}}, also returns the height
+above and below the baseline of the font via the @code{ascent} and
+@code{descent} arguments (if they aren't @code{NULL} pointers).
+A list of valid styles can be found in Section 3.11.3.
 
 To obtain the width and height information for a specific string use
-the following routines
+the following routines:
 @findex fl_get_string_width()
 @anchor{fl_get_string_width()}
 @findex fl_get_string_height()
@@ -439,17 +440,25 @@ the following routines
 int fl_get_string_width(int style, int size, const char *str,
                         int len);
 int fl_get_string_height(int style, int size, const char *str,
-                         int len, int *ascend, int *descend);
+                         int len, int *ascent, int *descent);
 @end example
 where @code{len} is the length of the string @code{str}. The functions
 return the width and height of the string, respectively. The second
-function also returns the height above and below the fonts baseline.
+function also returns the height above and below the fonts baseline
+if @code{ascent} and @code{descent} aren't @code{NULL} pointers.
+Note that the string may not contain newline characters @code{'\n'}
+and that the height calculated from the ascent and descent of those
+characters in the string that extend the most above and below the
+fonts baseline. It thus may not be suitable for calculating line
+spacings, for that use the @code{@ref{fl_get_char_height()}} or
+@code{@ref{fl_get_string_dimension()}} function.
 
 There exists also a routine that returns the width and height of a
 string in one call. In addition, the string passed can contain
 embedded newline characters @code{'\n'} and the routine will make
-proper adjustment so the values returned are (just) large enough to
-contain the multiple lines of text
+proper adjustment so the values returned are large enough to contain
+the multiple lines of text. The height of each of the lines is the
+fonts height.
 @findex fl_get_string_dimension()
 @anchor{fl_get_string_dimension()}
 @example
@@ -610,18 +619,18 @@ and @code{@ref{fl_ovall()}} with the first argument @code{fill}
 set to either @code{1} or @code{0}.
 
 To simplify drawing circles there are three additional functions. The
-first one draws a filled circle, the second one an open circle (with
-the circumfence in the given color), and the last one a filled circle
-with a black circumfence:
+first one draws an (open) circle (with the circumfence in the given
+color), the second one a filled circle, and the last one a filled
+circle with a black circumfence:
+@findex fl_circ()
+@anchor{fl_circ()}
 @findex fl_circf()
 @anchor{fl_circf()}
-@findex fl_circl()
-@anchor{fl_circl()}
 @findex fl_circbound()
 @anchor{fl_circbound()}
 @example
+void fl_circ(FL_Coord x, FL_Coord y, FL_Coord r, FL_COLOR col);
 void fl_circf(FL_Coord x, FL_Coord y, FL_Coord r, FL_COLOR col);
-void fl_circl(FL_Coord x, FL_Coord y, FL_Coord r, FL_COLOR col);
 void fl_circbound(FL_Coord x, FL_Coord y, FL_Coord r, FL_COLOR col);
 @end example
 @noindent
@@ -870,32 +879,6 @@ void fl_drw_frame(int style, FL_Coord x, FL_Coord y,
 @noindent
 All parameters have the usual meaning except that the frame is drawn
 outside of the bounding box specified.
-
-To draw a slider of various types and shapes use
-@findex fl_drw_slider)
-@anchor{fl_drw_slider)}
-@example
-void fl_drw_slider(int boxtype, FL_Coord x, FL_Coord y,
-                   FL_Coord w, FL_Coord h, FL_COLOR col1,
-                   FL_COLOR col2, int slider_type,
-                   double slider_size, double slider_value,
-                   char *label, int parts, int inverted, FL_Coord bw);
-@end example
-@noindent
-where @code{slider_type} is one of the different slider types like
-@code{FL_VERT_SLIDER} etc., see @ref{Slider Object}, for a complete list.
-Other parameters have the obvious meaning except for @code{parts},
-which can be one of the following
-@table @code
-@item FL_SLIDER_NONE
-Don't draw anything.
-@item FL_SLIDER_BOX
-Draw the bounding box only.
-@item FL_SLIDER_KNOB
-Draw the knob only.
-@item FL_SLIDER_ALL
-Draw the entire slider.
-@end table
 
 For drawing text there are two routines:
 @findex fl_drw_text()

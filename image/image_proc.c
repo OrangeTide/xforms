@@ -33,6 +33,25 @@
 #include "flimage_int.h"
 
 
+static void * get_submatrix( void *,
+                             int,
+                             int,
+                             int,
+                             int,
+                             int,
+                             int,
+                             unsigned int );
+
+static void * make_submatrix( void *,
+                              int,
+                              int,
+                              int,
+                              int,
+                              int,
+                              int,
+                              unsigned int );
+
+
 /********************************************************************
  *  general pixel transformation
  ********************************************************************/
@@ -147,7 +166,7 @@ flimage_get_subimage( FL_IMAGE * im,
     SubImage *sub = subimage + buf;
     void * ( * submat )( void *, int, int, int, int, int, int, unsigned int );
 
-    submat = make ? fl_make_submatrix : fl_get_submatrix;
+    submat = make ? make_submatrix : get_submatrix;
     im->subx = FL_clamp( im->subx, 0, im->w - 1 );
     im->suby = FL_clamp( im->suby, 0, im->h - 1 );
 
@@ -224,15 +243,15 @@ flimage_get_subimage( FL_IMAGE * im,
 
 /* grab a piece of a matrix without copying */
 
-void *
-fl_make_submatrix( void         * in,
-                   int            rows,
-                   int            cols,
-                   int            r1,
-                   int            c1,
-                   int            rs,
-                   int            cs,
-                   unsigned int   esize )
+static void *
+make_submatrix( void         * in,
+                int            rows,
+                int            cols,
+                int            r1,
+                int            c1,
+                int            rs,
+                int            cs,
+                unsigned int   esize )
 {
     int i;
     unsigned int offset = c1 * esize;
@@ -241,14 +260,14 @@ fl_make_submatrix( void         * in,
 
     if (r1 < 0 || c1 < 0 || (r1 + rs - 1) >= rows || (c1 + cs - 1) >= cols)
     {
-        M_err("MakeSubMatrix", "Bad arguments");
+        M_err("make_submatrix", "Bad arguments");
         return 0;
     }
 
     if (    mat[ -1 ] != ( char * ) FL_GET_MATRIX
          && mat[ -1 ] != ( char * ) FL_MAKE_MATRIX )
     {
-        M_err( "MakeSubMatrix", "input is not a matrix" );
+        M_err( "make_submatrix", "input is not a matrix" );
         return NULL;
     }
 
@@ -263,15 +282,15 @@ fl_make_submatrix( void         * in,
 
 /* grab a piece of a matrix */
 
-void *
-fl_get_submatrix( void         * in,
-                  int            rows,
-                  int            cols,
-                  int            r1,
-                  int            c1,
-                  int            rs,
-                  int            cs,
-                  unsigned int   esize )
+static void *
+get_submatrix( void         * in,
+               int            rows,
+               int            cols,
+               int            r1,
+               int            c1,
+               int            rs,
+               int            cs,
+               unsigned int   esize )
 {
     int i;
     unsigned int offset = c1 * esize,
@@ -281,14 +300,14 @@ fl_get_submatrix( void         * in,
 
     if ( r1 < 0 || c1 < 0 || r1 + rs - 1 >= rows || c1 + cs - 1 >= cols )
     {
-        M_err("GetSubMatrix", "Bad arguments");
+        M_err("get_submatrix", "Bad arguments");
         return 0;
     }
 
     if (    mat[ -1 ] != ( char * ) FL_GET_MATRIX
          && mat[ -1 ] != ( char * ) FL_MAKE_MATRIX )
     {
-        M_err( "GetSubMatrix", "input is not a matrix" );
+        M_err( "get_submatrix", "input is not a matrix" );
         return NULL;
     }
 

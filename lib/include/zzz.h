@@ -28,13 +28,13 @@
 #define fl_fdesc       fl_fdesc_( )
 #define fl_cur_fs      fl_cur_fs_( )
 
-extern GC fl_gc_( void );
-extern GC fl_textgc_( void );
-extern int fl_fheight_( void );
-extern int fl_fdesc_( void );
-extern Window fl_cur_win_( void );
-extern XFontStruct * fl_cur_fs_( void );
-extern Display * fl_display_( void );
+FL_EXPORT GC fl_gc_( void );
+FL_EXPORT GC fl_textgc_( void );
+FL_EXPORT int fl_fheight_( void );
+FL_EXPORT int fl_fdesc_( void );
+FL_EXPORT Window fl_cur_win_( void );
+FL_EXPORT XFontStruct * fl_cur_fs_( void );
+FL_EXPORT Display * fl_display_( void );
 
 #if ! defined FL_TRUE && ! defined FL_FALSE
 #define FL_FALSE        0

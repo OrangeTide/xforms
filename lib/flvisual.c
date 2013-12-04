@@ -65,7 +65,7 @@ RGBmode_init( int v )
 
 #if FL_DEBUG >= ML_WARN
     M_info( "RGBmode_init", "%s: bits_per_rgb = %d",
-            fl_vclass_name( v ), s->rgb_bits );
+            fli_vclass_name( v ), s->rgb_bits );
     M_info( "RGBmode_init", "RS = %d GS = %d BS = %d",
             s->rshift, s->gshift, s->bshift );
     M_info( "RGBmode_init", "RB = %d GB = %d BB = %d",
@@ -95,7 +95,8 @@ check_user_preference( int * vmode,
 
 #if FL_DEBUG >= ML_WARN
     M_warn( "check_user_preference", "UserRequest: %s %d",
-            reqv >= 0 ? fl_vclass_name( reqv ) : "None", reqd > 0 ? reqd : 0 );
+            reqv >= 0 ?
+            fli_vclass_name( reqv ) : "None", reqd > 0 ? reqd : 0 );
 #endif
 
     /* Need to check special value FL_DefaultVisual */
@@ -193,8 +194,9 @@ select_best_visual( void )
             if ( bestv[ j ] )
                 fprintf( stderr,
                          "Best %11s: Id = 0x%lx Depth = %2u RGBbits = %d\n",
-                         fl_vclass_name( fli_class( j ) ), bestv[ j ]->visualid,
-                         bestv[ j ]->depth, bestv[ j ]->bits_per_rgb );
+                         fli_vclass_name( fli_class( j ) ),
+                         bestv[ j ]->visualid, bestv[ j ]->depth,
+                         bestv[ j ]->bits_per_rgb );
     }
 #endif
 
@@ -258,7 +260,7 @@ fli_initialize_program_visual( void )
 #if FL_DEBUG >= ML_WARN
     M_warn( "fli_initialize_program_visual",
             "Initial visual: %s (ID = 0x%lx) depth = %d",
-            fl_vclass_name( vmode ), fli_visual( vmode )->visualid,
+            fli_vclass_name( vmode ), fli_visual( vmode )->visualid,
             fli_depth( vmode ) );
 #endif
 
@@ -270,14 +272,14 @@ fli_initialize_program_visual( void )
     depth = fli_depth( vmode );
 
     M_warn( "fli_initialize_program_visual", "ProgramDefault: %s %d",
-            fl_vclass_name( vmode ), depth);
+            fli_vclass_name( vmode ), depth);
 
     /* Give user a chance to select a visual */
 
     check_user_preference( &vmode, &depth );
 
     M_warn( "fli_initialize_program_visual", "UserPreference: %s %d",
-            fl_vclass_name( vmode ), depth );
+            fli_vclass_name( vmode ), depth );
 
     /* If requested a visualID directly, honor it here */
 
@@ -330,7 +332,7 @@ fli_initialize_program_visual( void )
 
             M_err( "fli_initialize_program_visual",
                    "Bogus request: %s with depth = %d",
-                   fl_vclass_name( vmode ), depth );
+                   fli_vclass_name( vmode ), depth );
 
             vmode = select_best_visual( );
         }
@@ -341,7 +343,7 @@ fli_initialize_program_visual( void )
 #if FL_DEBUG >= ML_WARN
     M_warn( "fli_initialize_program_visual",
             "SelectedVisual: %s (ID = 0x%lx) depth = %d",
-            fl_vclass_name( vmode ), fli_visual( vmode )->visualid,
+            fli_vclass_name( vmode ), fli_visual( vmode )->visualid,
             fli_depth( vmode ) );
 #endif
 
