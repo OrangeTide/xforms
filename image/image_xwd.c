@@ -527,8 +527,7 @@ XWD_write_image( FL_IMAGE * im )
     FILE *fp = im->fpout;
     int x,
         y,
-        n,
-        pad;
+        n;
     CARD32 *c32;
     int ( * write32 )( int, FILE * ),
         ( * write16 )( int, FILE * );
@@ -631,6 +630,8 @@ XWD_write_image( FL_IMAGE * im )
 
         for ( n = 0; n < ( int ) h->ncolors; n++ )
         {
+            int pad;
+
             xwdcolor.red   = ( im->red_lut[   n ] << 8 ) | 0xff;
             xwdcolor.green = ( im->green_lut[ n ] << 8 ) | 0xff;
             xwdcolor.blue  = ( im->blue_lut[  n ] << 8 ) | 0xff;

@@ -54,8 +54,8 @@ this colormap, but you should never free it.
 @item Window trailblazer
 This is a valid window resource ID created in the current visual with
 the colormap mentioned above. This member is useful if you have to
-call, before the form becomes active (thus don't have a window ID),
-some Xlib routines that require a valid window. A macro,
+call, before the form becomes active (thus does not have a window
+ID), some Xlib routines that require a valid window. A macro,
 @findex fl_default_window()
 @anchor{fl_default_window()}
 @code{fl_default_window()}, is defined to return this member and use

@@ -191,7 +191,7 @@ void create_form_xyplot( void )
     int dx = 180,
         dy = 160;
     int i = 0,
-        j = N / 3 + ( N % 3  ? 1 : 0 );
+        j = N / 3 + ( ( N % 3 ) ? 1 : 0 );
 
     if ( fxyplot )
         return;

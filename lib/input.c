@@ -836,7 +836,7 @@ handle_edit( FL_OBJECT * obj,
 {
     FLI_INPUT_SPEC *sp = obj->spec;
     int ret = FL_RETURN_CHANGED,
-        i, j;
+        i;
     int prev = 1;
 
     if ( key == kmap.del_prev_char || key == kmap.backspace )
@@ -899,7 +899,9 @@ handle_edit( FL_OBJECT * obj,
     }
     else if ( key == kmap.del_prev_word )
     {
-        if ( obj->type == FL_SECRET_INPUT || ( j = sp->position ) == 0 )
+        int j = sp->position;
+
+        if ( obj->type == FL_SECRET_INPUT || j == 0 )
             ret = FL_RETURN_NONE;
         else
         {
@@ -950,6 +952,7 @@ handle_edit( FL_OBJECT * obj,
     {
         prev = 0;
         sp->xoffset = 0;
+
         if ( slen > 0 )
         {
             if ( slen > 1 )
@@ -983,9 +986,11 @@ handle_edit( FL_OBJECT * obj,
 #if ! defined USE_CLASSIC_EDITKEYS
     else if ( key == kmap.del_to_bol )
     {
+        int j = sp->position;
+
         prev = -1;
 
-        if ( ( j = sp->position ) == 0 )
+        if ( j == 0 )
             ret = FL_RETURN_NONE;
         else
         {
@@ -1114,7 +1119,6 @@ handle_key( FL_OBJECT    * obj,
 
     if ( IsRegular( key ) )     /* Normal keys and new line */
     {
-        int ok = FL_VALID;
         char *tmpbuf = 0;
         int tmppos = 0,
             tmpxoffset = 0;
@@ -1177,7 +1181,7 @@ handle_key( FL_OBJECT    * obj,
 
         if ( sp->validate )
         {
-            ok = sp->validate( obj, tmpbuf, sp->str, key );
+            int ok = sp->validate( obj, tmpbuf, sp->str, key );
 
             if ( ( ok & ~ FL_RINGBELL ) != FL_VALID )
             {
@@ -1257,7 +1261,6 @@ paste_it( FL_OBJECT           * obj,
 {
     int status = FL_RETURN_NONE;
     FLI_INPUT_SPEC *sp = obj->spec;
-    int slen;
     unsigned char *p;
 
     /* For non-text input we must check each individual character */
@@ -1269,6 +1272,8 @@ paste_it( FL_OBJECT           * obj,
             status |= handle_key( obj, *thebytes++, 0 );
     else
     {
+        int slen;
+
         /* Must not allow single line input field contain tab or newline */
 
         if ( obj->type == FL_NORMAL_INPUT || obj->type == FL_SECRET_INPUT )

@@ -586,7 +586,6 @@ fli_tbox_add_chars( FL_OBJECT  * obj,
     int new_len;
     char *old_fulltext;
     char * old_text;
-    int i;
     char *new_text;
     char *del;
 
@@ -691,6 +690,8 @@ fli_tbox_add_chars( FL_OBJECT  * obj,
 
     if ( tl->w > sp->max_width )
     {
+        int i;
+
         sp->max_width = tl->w;
         for ( i = 0; i < sp->num_lines; i++ )
             if ( fl_is_center_lalign( sp->lines[ i ]->align ) )
@@ -759,7 +760,6 @@ fli_tbox_clear( FL_OBJECT * obj )
 {
     FLI_TBOX_SPEC *sp = obj->spec;
     int i;
-
 
     sp->select_line = sp->deselect_line = -1;
 

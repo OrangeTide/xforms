@@ -669,10 +669,7 @@ fl_display_rgb( FL_IMAGE * im,
                 Window     win  FL_UNUSED_ARG )
 {
     unsigned char *xpixels;
-    int i,
-        j,
-        pad,
-        total = im->w * im->h;
+    int total = im->w * im->h;
     XImage *ximage = 0;
     unsigned char *red   = im->red[   0 ],
                   *green = im->green[ 0 ],
@@ -682,9 +679,11 @@ fl_display_rgb( FL_IMAGE * im,
 
     if ( im->vclass == DirectColor || im->vclass == TrueColor )
     {
+        int i;
+
         /* Use minimum possible padding */
 
-        pad = im->depth <= 8 ? 8 : ( im->depth <= 16 ? 16 : 32 );
+        int pad = im->depth <= 8 ? 8 : ( im->depth <= 16 ? 16 : 32 );
         ximage = XCreateImage( im->xdisplay, im->visual, im->sdepth,
                                ZPixmap, 0, 0, w, h, pad, 0 );
 
@@ -731,6 +730,7 @@ fl_display_rgb( FL_IMAGE * im,
             if ( machine_endian( ) != ximage->byte_order )
             {
                 unsigned char *rgba = ( unsigned char * ) ximage->data;
+                int i;
 
                 for ( i = 0; i < total; i++, rgba += 2 )
                     SWAP_CHAR( rgba[ 0 ], rgba[ 1 ] );
@@ -745,9 +745,12 @@ fl_display_rgb( FL_IMAGE * im,
             unsigned char *tt = ( unsigned char * ) xpixels,
                           *tmp3;
             unsigned int xcol;
+            int j;
 
             for ( j = 0; j < im->h; j++, tt += ximage->bytes_per_line )
             {
+                int i;
+
                 if ( ximage->byte_order == MSBFirst )
                     for ( i = 0, tmp3 = tt; i < im->w; i++ )
                     {
@@ -842,8 +845,6 @@ flimage_color_to_pixel( FL_IMAGE * im,
     XColor xc;
     static Colormap lastcolormap;
     static XColor *xcolor;
-    int i,
-        max_col;
     unsigned long pixel = 0;
 
     *newpix = 0;
@@ -852,6 +853,8 @@ flimage_color_to_pixel( FL_IMAGE * im,
         return rgb2pixel( im, r, g, b, &im->rgb2p );
     else
     {
+        int max_col;
+
         xc.flags = DoRed | DoGreen | DoBlue;
         xc.red   = ( r << 8 ) | 0xff;
         xc.green = ( g << 8 ) | 0xff;
@@ -871,6 +874,8 @@ flimage_color_to_pixel( FL_IMAGE * im,
 
         if ( lastcolormap != im->xcolormap )
         {
+            int i;
+
             for ( i = 0; i < max_col; i++ )
                 xcolor[ i ].pixel = i;
             XQueryColors( im->xdisplay, im->xcolormap, xcolor, max_col );
@@ -1024,11 +1029,6 @@ flimage_to_ximage( FL_IMAGE *          im,
 
     if ( im->tran_rgb >= 0 && im->app_background >= 0 )
     {
-        int ar,
-            ag,
-            ab,
-            tc;
-
         if ( im->app_background >= 0 )
             bk = im->app_background;
 
@@ -1036,7 +1036,11 @@ flimage_to_ximage( FL_IMAGE *          im,
              && im->tran_index >= 0
              && im->tran_index < im->map_len )
         {
-            tc = im->tran_index;
+            int ar,
+                ag,
+                ab,
+                tc = im->tran_index;
+
             FL_UNPACK3( bk, ar, ag, ab );
             im->red_lut[   tc ] = ar;
             im->green_lut[ tc ] = ag;

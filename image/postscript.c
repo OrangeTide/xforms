@@ -73,8 +73,6 @@ auto_scale( float pw,
             float obh )
 {
     float margin = 0.4 * 72;    /* about 1cm */
-    float gscalex,
-          gscaley;
     int i = 100;
 
     pw -= 2 * margin;
@@ -85,6 +83,9 @@ auto_scale( float pw,
          || (    flps->orientation == FLPS_LANDSCAPE
               && ( pw < obh || ph < obw ) ) )
     {
+        float gscalex,
+              gscaley;
+
         if ( flps->orientation == FLPS_PORTRAIT )
         {
             gscalex = ( pw - 2.0 ) / obw;

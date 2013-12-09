@@ -254,7 +254,6 @@ static int FITS_next( FL_IMAGE * );
 static int
 FITS_description( FL_IMAGE * im )
 {
-    int i;
     SPEC *sp = fl_calloc( 1, sizeof *sp );
 
     init_fits( sp );
@@ -310,6 +309,8 @@ FITS_description( FL_IMAGE * im )
     }
     else
     {
+        int i;
+
         /* fake a graymap */
 
         im->type = FL_IMAGE_CI;

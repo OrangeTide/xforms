@@ -965,8 +965,7 @@ pup_keyboard( XKeyEvent * xev,
 {
     KeySym keysym = NoSymbol;
     char buf[ 16 ];
-    int i,
-        oldval = *val;
+    int oldval = *val;
 
     XLookupString( xev, buf, sizeof buf, &keysym, 0 );
 
@@ -1022,6 +1021,8 @@ pup_keyboard( XKeyEvent * xev,
     }
     else
     {
+        int i;
+
         if ( ( i = handle_shortcut( m, keysym, xev->state ) ) )
         {
             *val = i;
@@ -2368,13 +2369,14 @@ fl_setpup_entries( int            n,
 int
 fl_getpup_items( int n )
 {
-    int m = 0,
-        k,
-        i;
+    int m = 0;
 
     if ( n >= 0 && n < fl_maxpup && menu_rec[ n ].used )
     {
-        m = k = menu_rec[ n ].nitems;
+        int k,
+            i;
+
+        k = m = menu_rec[ n ].nitems;
 
         for ( i = 0; i < k; i++ )
             if ( menu_rec[ n ].item[ i ]->subm >= 0 )

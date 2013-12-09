@@ -1332,9 +1332,7 @@ convert_coord( FL_OBJECT       * ob,
          *p;
     int j,
         ticl = 6,
-        w = 0,
-        tmpw = 0,
-        ll;
+        w = 0;
     int fh = fl_get_string_height( sp->lstyle, sp->lsize, "1pj", 3, &j, &j );
     float halfh = 0.55 * fh;
 
@@ -1381,11 +1379,13 @@ convert_coord( FL_OBJECT       * ob,
         label = buf;
         if ( ! *sp->aytic )
         {
+            int tmpw = 0;
+
             if ( sp->yscale == FL_LOG )
             {
                 char *fmt = sp->ybase == 10 ? "%g-e%d" : "%g%d  ";
+                int ll = sprintf( label, fmt, sp->ybase, ( int ) sp->yscmax );
 
-                ll = sprintf( label, fmt, sp->ybase, ( int ) sp->yscmax );
                 w = fl_get_string_width( sp->lstyle, sp->lsize, label, ll );
                 ll = sprintf( label, fmt, sp->ybase, ( int ) sp->yscmin );
                 tmpw = fl_get_string_width( sp->lstyle, sp->lsize, label, ll );
@@ -3024,7 +3024,7 @@ load_data( const char  * f,
             continue;
         }
 
-        if ( ( err = sscanf( buf, "%f%*[ \t,]%f", *x + n, *y + n ) != 2 ) )
+        if ( ( err = ( sscanf( buf, "%f%*[ \t,]%f", *x + n, *y + n ) != 2 ) ) )
         {
             M_err( "load_data", "An error occured at line %d",
                    ++n + ncomment );

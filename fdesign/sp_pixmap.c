@@ -327,7 +327,8 @@ pixmaplookfor_pixmapfile_cb( FL_OBJECT * obj   FL_UNUSED_ARG,
     if ( ! fn )
         return;
 
-    if ( strstr( fn, cwd = fli_getcwd( buf, sizeof buf - 2 )) )
+    cwd = fli_getcwd( buf, sizeof buf - 2 );
+    if ( cwd && strstr( fn, cwd ) )
         fn += strlen( cwd ) + 1;
 
     fl_set_input( px_attrib->filename, fn );

@@ -105,15 +105,16 @@ round_size( double * x,
             double * w,
             double * h )
 {
-    int t;
-
     if ( *w > width )
         *w = width;
+
     if ( *h > height )
         *h = height;
+
     if ( stepsize > 0.0 )
     {
-        t = *w / stepsize + 0.5;
+        int t = *w / stepsize + 0.5;
+
         if ( *w >= 0.0 )
             *w = stepsize * t;
         else
@@ -128,18 +129,25 @@ round_size( double * x,
 
     if ( *x + *w > xmin + width )
         *w = xmin + width - *x;
+
     if ( *y + *h > ymin + height )
         *h = ymin + height - *y;
+
     if ( *x + *w < xmin )
         *w = xmin - *x;
+
     if ( *y + *h < ymin )
         *h = ymin - *y;
+
     if ( *w >= 0.0f && *w < stepsize )
         *w = stepsize;
+
     if ( *h >= 0.0 && *h < stepsize )
         *h = stepsize;
+
     if ( *w < 0.0 && *w > -stepsize )
         *w = -stepsize;
+
     if ( *h < 0.0 && *h > -stepsize )
         *h = -stepsize;
 }
@@ -155,15 +163,16 @@ round_position( double * x,
                 double * w,
                 double * h )
 {
-    int t;
-
     if ( *w > width )
         *w = width;
+
     if ( *h > height )
         *h = height;
+
     if ( stepsize > 0.0 )
     {
-        t = *x / stepsize + 0.5;
+        int t = *x / stepsize + 0.5;
+
         *x = stepsize * t;
         t = *y / stepsize + 0.5;
         *y = stepsize * t;
@@ -171,10 +180,13 @@ round_position( double * x,
 
     if ( *x < xmin )
         *x = xmin;
+
     if ( *y < ymin )
         *y = ymin;
+
     if ( *x + *w > xmin + width )
         *x = xmin + width - *w;
+
     if ( *y + *h > ymin + height )
         *y = ymin + height - *h;
 }

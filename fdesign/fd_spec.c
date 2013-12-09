@@ -307,7 +307,7 @@ static ObjSPEC objspec[ ] =
         freeobj_adjust_spec_form,
         freeobj_fill_in_spec_form,
         freeobj_reread_spec_form,
-        NULL,
+        freeobj_restore_spec,
         freeobj_emit_spec_fd_code,
         NULL,
         NULL,
@@ -932,10 +932,9 @@ static int
 ff_read_sp_content( FL_OBJECT * obj  FL_UNUSED_ARG,
                     SuperSPEC * sp )
 {
-    int r;
     char *p;
 
-    if ( ( r = ff_read( "%S", &p ) ) < 0 )
+    if ( ff_read( "%S", &p ) < 0 )
         return ff_err( "Can't read expected object content" );
 
     ++sp->nlines;
@@ -997,10 +996,9 @@ static int
 ff_read_sp_shortcut( FL_OBJECT * obj  FL_UNUSED_ARG,
                      SuperSPEC * sp )
 {
-    int r;
     char *p;
 
-    if ( ( r = ff_read( "%s", &p) ) < 0 )
+    if ( ff_read( "%s", &p) < 0 )
         return ff_err( "Can't read expected object shortcut" );
 
     sp->shortcut[ sp->nlines ] = p;
@@ -1016,10 +1014,9 @@ static int
 ff_read_sp_callback( FL_OBJECT * obj  FL_UNUSED_ARG,
                      SuperSPEC * sp )
 {
-    int r;
     char *p;
 
-    if ( ( r = ff_read( "%v", &p) ) < 0 )
+    if ( ff_read( "%v", &p) < 0 )
         return ff_err( "Can't read expected object callback" );
 
     sp->callback[ sp->nlines ] = p;
@@ -1054,14 +1051,13 @@ static int
 ff_read_sp_file( FL_OBJECT * obj,
                  SuperSPEC * sp  FL_UNUSED_ARG )
 {
-    int r;
     char *p;
     IconInfo *info = get_iconinfo( obj );
 
     if ( ! info )
         return ff_err( "Invalid \"file\" attribute for object type found" );
 
-    if ( ( r = ff_read( "%S", &p ) ) < 0 )
+    if ( ff_read( "%S", &p ) < 0 )
         return ff_err( "Can't read expected object \"file\" attribute" );
 
     if ( strlen( p ) >= sizeof info->filename )
@@ -1082,14 +1078,13 @@ static int
 ff_read_sp_focus_file( FL_OBJECT * obj,
                        SuperSPEC * sp  FL_UNUSED_ARG )
 {
-    int r;
     char *p;
     IconInfo *info = get_iconinfo( obj );
 
     if ( ! info )
         return ff_err( "Invalid \"focus\" attribute for object type found" );
 
-    if ( ( r = ff_read( "%S", &p ) ) < 0 )
+    if ( ff_read( "%S", &p ) < 0 )
         return ff_err( "Can't read expected object \"focus\" attribute" );
 
     if ( strlen( p ) >= sizeof info->focus_filename )
@@ -1132,14 +1127,13 @@ static int
 ff_read_sp_data( FL_OBJECT * obj,
                  SuperSPEC * sp  FL_UNUSED_ARG )
 {
-    int r;
     char *p;
     IconInfo *info = get_iconinfo( obj );
 
     if ( ! info )
         return ff_err( "Invalid data structrure for object type found" );
 
-    if ( ( r = ff_read( "%v", &p ) ) < 0 )
+    if ( ff_read( "%v", &p ) < 0 )
         return ff_err( "Can't read expected object data attribute" );
 
     strcpy( info->data, p );
@@ -1160,7 +1154,6 @@ static int
 ff_read_sp_focus_data( FL_OBJECT * obj,
                        SuperSPEC * sp  FL_UNUSED_ARG )
 {
-    int r;
     char *p;
     IconInfo *info = get_iconinfo( obj );
 
@@ -1168,7 +1161,7 @@ ff_read_sp_focus_data( FL_OBJECT * obj,
         return ff_err( "Invalid \"focus_data\" attribute for object type "
                        "found" );
 
-    if ( ( r = ff_read( "%v", &p ) ) < 0 )
+    if ( ff_read( "%v", &p ) < 0 )
         return ff_err( "Can't read expected object \"focus_data\" attribute" );
 
     strcpy( info->focus_data, p );
@@ -1209,14 +1202,13 @@ static int
 ff_read_sp_width( FL_OBJECT * obj,
                   SuperSPEC * sp  FL_UNUSED_ARG )
 {
-    int r;
     char *p;
     IconInfo *info = get_iconinfo( obj );
 
     if ( ! info )
         return ff_err( "Invalid \"width\" attribute for object type found" );
 
-    if ( ( r = ff_read( "%v", &p ) ) < 0 )
+    if ( ff_read( "%v", &p ) < 0 )
         return ff_err( "Can't read expected object \"width\" attribute" );
 
     strcpy( info->width, p );
@@ -1234,14 +1226,13 @@ static int
 ff_read_sp_height( FL_OBJECT * obj,
                    SuperSPEC * sp  FL_UNUSED_ARG )
 {
-    int r;
     char *p;
     IconInfo *info = get_iconinfo( obj );
 
     if ( ! info )
         return ff_err( "Invalid \"height\" attribute for object type found" );
 
-    if ( ( r = ff_read( "%v", &p ) ) < 0 )
+    if ( ff_read( "%v", &p ) < 0 )
         return ff_err( "Can't read expected object \"height\" attribute" );
 
     strcpy( info->height, p );

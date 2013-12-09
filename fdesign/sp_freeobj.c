@@ -100,8 +100,7 @@ freeobj_reread_spec_form( FL_OBJECT * obj  FL_UNUSED_ARG )
  ***************************************/
 
 void
-freeobj_spec_restore( FL_OBJECT * obj,
-                      long        data  FL_UNUSED_ARG )
+freeobj_restore_spec( FL_OBJECT * obj )
 {
     fli_safe_free( obj->c_vdata );
     obj->c_vdata = fl_strdup( ori_handle_name );
@@ -173,7 +172,6 @@ get_free_handle( FL_OBJECT  * obj,
     static int n;
     static char buf[ 1024 ];
     static FL_OBJECT *freeobj[ MAXFREEOBJ ];
-    int i, k;
 
     if ( obj->c_vdata )
         strcpy( buf, obj->c_vdata );
@@ -183,6 +181,8 @@ get_free_handle( FL_OBJECT  * obj,
         sprintf( buf, "freeobj_%s_handle", obj->label );
     else
     {
+        int i, k;
+
         for ( k = -1, i = 0; i < MAXFREEOBJ && k < 0; i++ )
             if ( freeobj[ i ] == obj )
                 k = i;

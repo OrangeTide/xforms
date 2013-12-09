@@ -780,9 +780,17 @@ FL_APPEVENT_CB fl_set_idle_callback(FL_APPEVENT_CB callback,
 
 After the registration, whenever the main loop
 (@code{@ref{fl_do_forms()}}) is idle, i.e., no user action or light
-user action, the callback function is called as
+user action, the callback function of type @code{FL_APPEVENT_CB}
+is called
+@tindex FL_APPEVENT_CB
+@anchor{FL_APPEVENT_CB}
 @example
-int callback(xev, user_data);
+typedef int (*FL_APPEVENT_CB)(XEvent *xev, void *user_data);
+@end example
+@noindent
+i.e.@: a function with the signature
+@example
+int idle_callback(XEvent *xev, void *user_data);
 @end example
 @noindent
 where @code{user_data} is the void pointer passed to the system in
@@ -1228,10 +1236,11 @@ explained earlier, this can be accomplished by checking
 for @code{@ref{FL_EVENT}} objects. Another (and better) way is to
 add an event callback routine. This routine will be called whenever an
 XEvent is pending for the application's own window. To setup an event
-callback routine use the call
+callback routine (of type @code{@ref{FL_APPEVENT_CB}} use the call
 @tindex FL_APPEVENT_CB
 @findex fl_set_event_callback()
 @example
+typedef int (*FL_APPEVENT_CB)(XEvent *, void *);
 FL_APPEVENT_CB fl_set_event_callback(int (*callback)(XEvent *ev,
                                                      void *data),
                                      void *data);
@@ -1241,7 +1250,6 @@ Whenever an event happens the callback function is invoked with the
 event as the first argument and a pointer to data you want it to
 receive. So the callback should have the form
 @example
-typedef int (*FL_APPEVENT_CB)(XEvent *ev, void *data);
 int callback(XEvent *xev, void *data);
 @end example
 

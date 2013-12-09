@@ -865,7 +865,12 @@ fli_init_context( void )
     if ( fli_context )
         return;
 
-    fli_context = fl_calloc( 1, sizeof *fli_context );
+    if ( ! ( fli_context = fl_calloc( 1, sizeof *fli_context ) ) )
+    {
+        M_err( "fli_init_context", "Running out of memory" );
+        exit( 1 );
+    }
+
     fli_context->io_rec        = NULL;
     fli_context->idle_rec      = NULL;
     fli_context->atclose       = NULL;
@@ -1261,7 +1266,6 @@ fl_initialize( int        * na,
 /***************************************
  * Cleanup everything. At the moment, only need to restore the keyboard
  * settings and deallocate memory used for the object and event queue etc.
- * This routine is registered as an atexit in fl_initialize in flresource.
  ***************************************/
 
 void
@@ -1345,10 +1349,11 @@ fl_finish( void )
     }
 #endif
 
-    while ( fli_context->io_rec )
-        fl_remove_io_callback( fli_context->io_rec->source,
-                               fli_context->io_rec->mask,
-                               fli_context->io_rec->callback );
+    if ( fli_context )
+        while ( fli_context->io_rec )
+            fl_remove_io_callback( fli_context->io_rec->source,
+                                   fli_context->io_rec->mask,
+                                   fli_context->io_rec->callback );
 
     fli_safe_free( fli_context );
 

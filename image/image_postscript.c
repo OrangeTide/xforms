@@ -371,13 +371,14 @@ auto_scale( float pagew,
             float h,
             int   landscape )
 {
-    float sx,
-          sy;
     int i = 0;
 
     if (    ( ! landscape && ( pagew < w || pageh < h ) )
          || ( landscape && ( pagew < h || pageh < w ) ) )
     {
+        float sx,
+              sy;
+
         if ( ! landscape )
         {
             sx = ( pagew - 2.0 ) / w;
@@ -766,10 +767,6 @@ static void
 PS_annotation_init( FL_IMAGE * im )
 {
     const char *mbuf[ MBUFLEN ];
-    int i,
-        j,
-        k,
-        out;
     FLIMAGE_MARKER *m;
 
     if ( ! im->nmarkers && !im->ntext )
@@ -784,6 +781,8 @@ PS_annotation_init( FL_IMAGE * im )
 
     if ( im->nmarkers )
     {
+        int i, k;
+
         flps_output( "%%marker defs: t w h angle xo yo\n" );
         flps_output( 0 );
         flps_output( "/DTD {[5 4 1 4] 0 setdash} BD\n" );       /* dot-dash */
@@ -800,8 +799,11 @@ PS_annotation_init( FL_IMAGE * im )
 
         for ( k = 0, m = im->marker, i = 0; i < im->nmarkers; i++, m++ )
         {
+            int j, out;
+
             for ( j = out = 0; ! out && j < MBUFLEN; j++ )
                 out = m->name == mbuf[ j ];
+
             if ( ! out )
             {
                 mbuf[ k++ ] = m->name;

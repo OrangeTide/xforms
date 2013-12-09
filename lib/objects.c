@@ -1332,7 +1332,7 @@ void
 fl_set_object_lalign( FL_OBJECT * obj,
                       int         align )
 {
-    int need_show;
+    int need_show = 0;
 
     if ( ! obj )
     {
@@ -2709,8 +2709,6 @@ fli_handle_object( FL_OBJECT * obj,
                    XEvent    * xev,
                    int         enter_it )
 {
-    int res;
-
     if ( ! obj )
         return;
 
@@ -2723,6 +2721,8 @@ fli_handle_object( FL_OBJECT * obj,
 
     if ( enter_it && obj->form && obj->form->window )
     {
+        int res;
+
         if ( ( res = handle_object( obj, event, mx, my, key, xev, 0 ) ) )
             fli_object_qenter( obj, event );
     }

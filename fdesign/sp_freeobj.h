@@ -25,6 +25,7 @@ FL_FORM * freeobj_create_spec_form( void );
 void freeobj_adjust_spec_form( FL_OBJECT * obj );
 void freeobj_fill_in_spec_form( FL_OBJECT * obj );
 void freeobj_reread_spec_form( FL_OBJECT * obj );
+void freeobj_restore_spec( FL_OBJECT * obj );
 void freeobj_emit_spec_fd_code( FILE      * fp,
                                FL_OBJECT * obj );
 int noop_handle( FL_OBJECT * obj,

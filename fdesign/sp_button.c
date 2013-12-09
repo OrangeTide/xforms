@@ -569,7 +569,8 @@ lookfor_pixmapfile_cb( FL_OBJECT * ob   FL_UNUSED_ARG,
     if ( ! fn )
         return;
 
-    if ( strstr( fn, cwd = fli_getcwd( buf, sizeof buf - 2 ) ) )
+    cwd = fli_getcwd( buf, sizeof buf - 2 );
+    if ( cwd && strstr( fn, cwd ) )
         fn += strlen( cwd ) + 1;
 
     ob = data ? bt_attrib->focus_filename : bt_attrib->filename;

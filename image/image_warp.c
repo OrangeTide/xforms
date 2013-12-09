@@ -545,22 +545,22 @@ flimage_warp( FL_IMAGE * im,
     if ( FL_IsGray( im->type ) )
     {
         fill = FL_RGB2GRAY( FL_GETR( fill ), FL_GETG( fill ), FL_GETB( fill ) );
-        if ( ! ( err = transform_short( im->gray, us, im->w, im->h, nw, nh,
-                                        inv, shift, fill, subp, im) < 0 ) )
+        if ( ! ( err = ( transform_short( im->gray, us, im->w, im->h, nw, nh,
+                                          inv, shift, fill, subp, im) < 0 ) ) )
             flimage_replace_image( im, nw, nh, us, 0, 0 );
     }
     else if ( FL_IsCI( im->type ) )
     {
         fill = flimage_get_closest_color_from_map( im, fill );
-        if (!(err = transform_short( im->ci, us, im->w, im->h, nw, nh,
-                                     inv, shift, fill, 0, im ) < 0 ) )
+        if ( ! ( err = ( transform_short( im->ci, us, im->w, im->h, nw, nh,
+                                          inv, shift, fill, 0, im ) < 0 ) ) )
             flimage_replace_image( im, nw, nh, us, 0, 0 );
     }
     else if ( im->type == FL_IMAGE_RGB )
     {
-        if ( ! ( err = transform_rgb( im->red, im->green, im->blue,
-                                      r, g, b, im->w, im->h, nw, nh, inv,
-                                      shift, fill, subp, im ) < 0 ) )
+        if ( ! ( err = ( transform_rgb( im->red, im->green, im->blue,
+                                        r, g, b, im->w, im->h, nw, nh, inv,
+                                        shift, fill, subp, im ) < 0 ) ) )
             flimage_replace_image( im, nw, nh, r, g, b );
     }
     else

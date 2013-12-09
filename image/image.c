@@ -303,7 +303,7 @@ flimage_read( FL_IMAGE * im )
 
     image->foffset = ftell( image->fpin );
 
-    if ( ( error = io->read_description( image ) < 0 ) )
+    if ( ( error = ( io->read_description( image ) < 0 ) ) )
         return NULL;
 
     /* image_io can change between description and read_pixels for
@@ -311,7 +311,7 @@ flimage_read( FL_IMAGE * im )
 
     io = image->image_io;
 
-    if ( ( error = flimage_getmem( image ) < 0 ) )
+    if ( ( error = ( flimage_getmem( image ) < 0 ) ) )
     {
         im->error_message( im, "ImageGetMem:Failed to allocate memory" );
         flimage_freemem( im );
@@ -700,7 +700,7 @@ flimage_getmem( FL_IMAGE * im )
     {
         case FL_IMAGE_CI:
         case FL_IMAGE_MONO:
-            if ( ( nomap = im->map_len <= 0 ) )
+            if ( ( nomap = ( im->map_len <= 0 ) ) )
                 im->map_len = 2;
 
             if ( flimage_getcolormap( im ) < 0 )
@@ -1647,7 +1647,6 @@ read_marker( FLIMAGE_MARKER * m,
 {
     char buf[ 128 ];
     static char name[ 64 ];
-    int n;
     int r,
         g,
         b,
@@ -1660,18 +1659,17 @@ read_marker( FLIMAGE_MARKER * m,
     else
         return -1;
 
-    n = sscanf( buf, "%s %d %d %d %d %d %d %d %d %d %d %d %d %d %d", name,
-                &m->x, &m->y, &m->w, &m->h, &m->fill, &m->angle, &m->thickness,
-                &m->style, &r, &g, &b, &br, &bg, &bb );
-
-    if ( n == 15 )
+    if ( sscanf( buf, "%63s %d %d %d %d %d %d %d %d %d %d %d %d %d %d", name,
+                 &m->x, &m->y, &m->w, &m->h, &m->fill, &m->angle, &m->thickness,
+                 &m->style, &r, &g, &b, &br, &bg, &bb ) == 15 )
     {
         m->name = name;
         m->color = FL_PACK( r, g, b );
         m->bcolor = FL_PACK( br, bg, bb );
+        return 0;
     }
 
-    return n == 15 ? 0 : -1;
+    return -1;
 }
 
 
@@ -1788,7 +1786,6 @@ read_text( FLIMAGE_TEXT * t,
         br,
         bg,
         bb;
-    int n;
     char *p = buf + 1,
          *s = name,
          *ss = name + sizeof name - 1;
@@ -1802,11 +1799,9 @@ read_text( FLIMAGE_TEXT * t,
         *s++ = *p;
     *s = '\0';
 
-    n = sscanf( p + 1, "%s %s %d %d %d %s %d %d %d %d %d %d %d %d", fnt, style,
-                &t->size, &t->x, &t->y, align, &t->angle, &t->nobk,
-                &r, &g, &b, &br, &bg, &bb );
-
-    if ( n == 14 )
+    if ( sscanf( p + 1, "%63s %63s %d %d %d %63s %d %d %d %d %d %d %d %d",
+                 fnt, style, &t->size, &t->x, &t->y, align, &t->angle, &t->nobk,
+                 &r, &g, &b, &br, &bg, &bb ) == 14 )
     {
         t->str = name;
         t->len = s - name;
@@ -1815,9 +1810,11 @@ read_text( FLIMAGE_TEXT * t,
         t->align = fli_get_vn_value( align_vn, align );
         t->color = FL_PACK( r, g, b );
         t->bcolor = FL_PACK( br, bg, bb );
+
+        return 0;
     }
 
-    return n == 14 ? 0 : -1;
+    return -1;
 }
 
 

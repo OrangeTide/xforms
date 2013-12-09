@@ -81,10 +81,11 @@ typedef struct
  ***************************************/
 
 static void
-draw_barchart( FLI_CHART_SPEC * sp,
-               float            min,
-               float            max )
+draw_barchart( FL_OBJECT * ob,
+               float       min,
+               float       max )
 {
+    FLI_CHART_SPEC *sp = ob->spec;
     int x = sp->x,
         y = sp->y,
         w = sp->w,
@@ -121,7 +122,7 @@ draw_barchart( FLI_CHART_SPEC * sp,
     /* base line */
 
     if( ! sp->no_baseline )
-        fl_line( x, zeroh + 0.5, x + w, zeroh + 0.5, FL_BLACK );
+        fl_line( x, zeroh + 0.5, x + w, zeroh + 0.5, ob->col2 );
 
     if ( min == 0.0 && max == 0.0 )
         return;         /* Nothing else to draw */
@@ -160,10 +161,11 @@ draw_barchart( FLI_CHART_SPEC * sp,
  ***************************************/
 
 static void
-draw_horbarchart( FLI_CHART_SPEC  * sp,
-                  float             min,
-                  float             max )
+draw_horbarchart( FL_OBJECT * ob,
+                  float       min,
+                  float       max )
 {
+    FLI_CHART_SPEC *sp = ob->spec;
     int x = sp->x,
         y = sp->y,
         w = sp->w,
@@ -211,7 +213,7 @@ draw_horbarchart( FLI_CHART_SPEC  * sp,
     /* Draw base line */
 
     if ( ! sp->no_baseline )
-        fl_line( zeroh + 0.5, y, zeroh + 0.5, y + h, FL_BLACK );
+        fl_line( zeroh + 0.5, y, zeroh + 0.5, y + h, ob->col2 );
 
     if ( min == 0.0 && max == 0.0 )
         return;         /* Nothing else to draw */
@@ -248,11 +250,12 @@ draw_horbarchart( FLI_CHART_SPEC  * sp,
  ***************************************/
 
 static void
-draw_linechart( int               type,
-                FLI_CHART_SPEC  * sp,
-                float             min,
-                float             max )
+draw_linechart( FL_OBJECT * ob,
+                float       min,
+                float       max )
 {
+    FLI_CHART_SPEC *sp = ob->spec;
+    int type = ob->type;
     int x = sp->x,
         y = sp->y,
         w = sp->w,
@@ -335,7 +338,7 @@ draw_linechart( int               type,
     /* Draw base line */
 
     if ( ! sp->no_baseline )
-        fl_line( x, zeroh + 0.5, x + w, zeroh + 0.5, FL_BLACK );
+        fl_line( x, zeroh + 0.5, x + w, zeroh + 0.5, ob->col2 );
 
     /* Draw the labels */
 
@@ -362,9 +365,10 @@ draw_linechart( int               type,
  ***************************************/
 
 static void
-draw_piechart( FLI_CHART_SPEC * sp,
-               int              special )
+draw_piechart( FL_OBJECT * ob,
+               int         special )
 {
+    FLI_CHART_SPEC *sp = ob->spec;
     int x = sp->x,
         y = sp->y,
         w = sp->w,
@@ -522,23 +526,23 @@ draw_chart( FL_OBJECT * ob )
     switch ( ob->type )
     {
         case FL_BAR_CHART:
-            draw_barchart( sp, min, max );
+            draw_barchart( ob, min, max );
             break;
 
         case FL_HORBAR_CHART:
-            draw_horbarchart( sp, min, max );
+            draw_horbarchart( ob, min, max );
             break;
 
         case FL_PIE_CHART:
-            draw_piechart( sp, 0 );
+            draw_piechart( ob, 0 );
             break;
 
         case FL_SPECIALPIE_CHART:
-            draw_piechart( sp, 1 );
+            draw_piechart( ob, 1 );
             break;
 
         default:
-            draw_linechart( ob->type, sp, min, max );
+            draw_linechart( ob, min, max );
             break;
     }
 
@@ -603,7 +607,7 @@ fl_create_chart( int          type,
 
     obj->boxtype = FL_CHART_BOXTYPE;
     obj->col1    = FL_CHART_COL1;
-    obj->col2    = FL_CHART_COL1;
+    obj->col2    = FL_BLACK;
     obj->align   = FL_CHART_ALIGN;
     obj->lcol    = FL_CHART_LCOL;
     obj->active  = 0;
@@ -716,7 +720,6 @@ fl_add_chart_value( FL_OBJECT  * ob,
                     FL_COLOR     col )
 {
     FLI_CHART_SPEC *sp = ob->spec;
-    int i;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_CHART ) )
@@ -730,6 +733,8 @@ fl_add_chart_value( FL_OBJECT  * ob,
 
     if ( sp->numb == sp->maxnumb )
     {
+        int i;
+
         for ( i = 0; i < sp->numb - 1; i++ )
             sp->entries[ i ] = sp->entries[ i + 1 ];
         sp->numb--;

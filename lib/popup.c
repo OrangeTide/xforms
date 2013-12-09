@@ -2701,13 +2701,17 @@ radio_check( FL_POPUP_ENTRY * entry )
     /* First reset (if necessary) the old ones */
 
     for ( e = entry->popup->entries; e != NULL; e = e->next )
-        if ( e->type == FL_POPUP_RADIO && e->group == e->group )
+        if (    e->type == FL_POPUP_RADIO
+             && e != entry
+             && entry->group == e->group )
             e->state &= ~ FL_POPUP_CHECKED;
 
     /* Also reset all the new ones (except the one we were called for) */ 
 
     for ( e = entry->prev; e != NULL; e = e->prev )
-        if ( e->type == FL_POPUP_RADIO && e->group == e->group )
+        if ( e->type == FL_POPUP_RADIO
+             && e != entry
+             && entry->group == e->group )
             e->state &= ~ FL_POPUP_CHECKED;
 }       
 

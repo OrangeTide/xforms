@@ -155,6 +155,7 @@ XBM_write( FL_IMAGE * im )
     FILE *fp = im->fpout;
 
     strncpy( tmpstr, im->outfile, sizeof tmpstr - 25 );
+    tmpstr[ sizeof tmpstr - 25 ] = '\0';
     if ( ( p = strchr( tmpstr, '.' ) ))
         *p = '\0';
 

@@ -162,7 +162,6 @@ menu_emit_spec_c_code( FILE      * fp,
     FLI_MENU_SPEC *sp = obj->spec,
                   *defsp;
     SuperSPEC *ssp;
-    int i;
 
     if ( sp->numitems == 0 )
         return;
@@ -177,6 +176,9 @@ menu_emit_spec_c_code( FILE      * fp,
     if ( ssp->new_menuapi )
         fprintf( fp, "    fl_set_menu_entries( obj, %s );\n", ssp->misc_char );
     else
+    {
+        int i;
+
         for ( i = 1; i <= sp->numitems; i++ )
         {
             fprintf( fp, "    fl_addto_menu( obj, \"%s\" );\n",
@@ -199,6 +201,7 @@ menu_emit_spec_c_code( FILE      * fp,
                 fprintf( fp, "    fl_set_menu_item_id( obj, %d, %d );\n",
                          i, sp->mval[ i ] );
         }
+    }
 
     fl_free_object( defobj );
 }

@@ -1025,12 +1025,12 @@ check_scrollbar( FL_OBJECT * ob )
                          && sp->canvas->h < sp->max_height ) );
 
     if ( sp->h_on && ! sp->v_on )
-        sp->v_on =    sp->canvas->h - 2 * absbw - sp->hh_def > 0
+        sp->v_on =    sp->canvas->w - 2 * absbw - sp->vw_def > 0
                    && sp->canvas->h - 2 * absbw - sp->hh_def > 0
                    && sp->v_pref != FL_OFF
                    && sp->canvas->h < sp->max_height + sp->hh_def;
     else if ( ! sp->h_on && sp->v_on )
-        sp->h_on =    sp->canvas->h - 2 * absbw - sp->hh_def > 0
+        sp->h_on =    sp->canvas->w - 2 * absbw - sp->vw_def > 0
                    && sp->canvas->h - 2 * absbw - sp->hh_def > 0
                    && sp->h_pref != FL_OFF
                    && sp->canvas->w < sp->max_width + sp->vw_def;

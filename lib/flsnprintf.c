@@ -654,7 +654,7 @@ fli_portable_vsnprintf( char       * str,
                                                string arguments  */
              int str_arg_l;                 /* natural field width of arg
                                                without padding and sign */
-
+             int j;
              long int long_arg;  /* long int argument value - always defined
                                     in case of numeric arguments, regardless
                                     of data type modifiers. In case of data
@@ -851,8 +851,7 @@ fli_portable_vsnprintf( char       * str,
 
                          case 'c':
                          {
-                             int j = va_arg( ap, int );
-
+                             j = va_arg( ap, int );
                              str_arg = ( const char * ) &j;
                          }
                          break;

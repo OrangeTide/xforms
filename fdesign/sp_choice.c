@@ -152,7 +152,6 @@ choice_emit_spec_c_code( FILE     * fp,
     FLI_CHOICE_SPEC *sp    = obj->spec,
                     *defsp = defobj->spec;
     SuperSPEC *ssp = get_superspec( obj );
-    int i;
 
 
     if ( sp->align != defsp->align )
@@ -165,6 +164,9 @@ choice_emit_spec_c_code( FILE     * fp,
             fprintf( fp, "    fl_set_choice_entries( obj, %s );\n",
                      ssp->misc_char );
         else
+        {
+            int i;
+
             for ( i = 1; i <= sp->numitems; i++ )
             {
                 fprintf( fp, "    fl_addto_choice( obj, \"%s\" );\n",
@@ -176,6 +178,7 @@ choice_emit_spec_c_code( FILE     * fp,
                     fprintf( fp, "    fl_set_choice_item_shortcut( obj, %d, "
                              "\"%s\" );\n", i, sp->shortcut[ i ] );
             }
+        }
 
         if ( sp->val != defsp->val )
             fprintf( fp, "    fl_set_choice( obj, %d );\n", sp->val );

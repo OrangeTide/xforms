@@ -294,8 +294,8 @@ flps_foldertab_box( int      style,
     float C = 4;
     int savelw = fl_get_linewidth( );
 
-    if ( ! ( border = bw > 0 ) )
-        bw = bw;
+    if ( ! ( border = ( bw > 0 ) ) )
+        bw = -bw;
 
     ctr = absbw / 2;
     x += ctr;
@@ -464,7 +464,7 @@ flps_draw_box( int      style,
              *xp;
     int bw = bw_in;
 
-    if ( ! ( border = bw > 0 ) )
+    if ( ! ( border = ( bw > 0 ) ) )
         bw = -bw;
 
     B = border;
@@ -622,7 +622,7 @@ flps_draw_frame( int      style,
     FL_POINT xpoint[ 10],
              *xp;
 
-    if ( ! ( border = bw > 0 ) )
+    if ( ! ( border = ( bw > 0 ) ) )
         bw = -bw;
 
     B = border;

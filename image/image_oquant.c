@@ -35,6 +35,7 @@
 #include "quantize.h"
 
 
+#if 0
 /***************************************
  ***************************************/
 
@@ -43,7 +44,7 @@ void fl_select_octree_quantizer( void )
    flimage_quantize_rgb = fl_octree_quantize_rgb;
    flimage_quantize_packed  = fl_octree_quantize_packed;
 }
-
+#endif
 
 /***************************************
  ***************************************/

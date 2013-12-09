@@ -1402,8 +1402,7 @@ ps_drw_slider_shape( int          boxtype,
 {
     float slx, sly, slw, slh;
     int slbox = boxtype, slbw = bw;
-    float absbw = FL_abs( bw ),
-          absbw2, bw2;
+    float absbw = FL_abs( bw );
 
     if ( sltype == FL_VERT_FILL_SLIDER )
     {
@@ -1528,6 +1527,9 @@ ps_drw_slider_shape( int          boxtype,
     }
     else
     {
+        int absbw2,
+            bw2;
+
         switch ( boxtype )
         {
             case FL_UP_BOX:
@@ -1568,7 +1570,7 @@ ps_drw_slider_shape( int          boxtype,
              || sltype == FL_VERT_BROWSER_SLIDER2
              || sltype == FL_VERT_THIN_SLIDER )
         {
-            int extra = bw2 < 0;
+            int extra = ( bw2 < 0 );
 
             ps_draw_text( FL_ALIGN_CENTER,
                           slx - extra, sly, slw + 2 * extra, slh, 0,
@@ -2113,6 +2115,8 @@ flps_draw_browser( FL_OBJECT * ob )
         ps_draw_text( FL_ALIGN_LEFT_TOP | FL_ALIGN_INSIDE,
                       tx + m, ty, tw, th, ob->lcol,
                       sp->fontstyle, sp->fontsize, str );
+
+        free( str );
     }
 
     ps_unset_clipping( );
@@ -2151,12 +2155,13 @@ default_filter( FL_OBJECT * ob  FL_UNUSED_ARG,
                 double      totalsec )
 {
     static char buf[ 32 ];
-    int hr, minutes;
+    int minutes;
     float sec;
 
     if ( totalsec >= 3600.0 )
     {
-        hr = totalsec / 3600.0 + 0.001;
+        int hr = totalsec / 3600.0 + 0.001;
+
         minutes = totalsec / 60.0 + 0.001;
         minutes -= hr * 60;
         sec = totalsec - 60 * ( minutes + 60 * hr );

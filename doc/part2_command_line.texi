@@ -26,6 +26,15 @@ emit the corresponding C-routines and header files. This can be useful
 e.g.@: in automatically compiling packages in Makefiles. Note that
 the input @code{.fd} will only be read but never modified when this
 option is used.
+@item -migrate @i{fd-file-list}
+When fdesign is invoked with the @code{-convert} option it just
+creates new defived @code{.c} anf @code{.h} files but leaves the
+@code{.fd} files unmodified. In some situations, e.g.@: if you
+want to auto,atically upgrade @code{.fd} files created by an
+older version of fdesign, you can instead use the @code{-migrate}
+option which does all what the @code{-conbert} option does and
+also writes out a new version of the @code{.fd} file it just
+read in.
 @item -version
 Prints current version and quits.
 @item -help

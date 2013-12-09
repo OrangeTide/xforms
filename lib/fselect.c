@@ -622,12 +622,11 @@ input_cb( FL_OBJECT * obj,
         for ( i = 1; i <= num_lines; i++ )
         {
             const char *line = fl_get_browser_line( lfs->browser, i );
-            int cmp;
 
             if ( line[ 1 ] == '\0' )
                 continue;
 
-            if ( ! ( cmp = strncmp( line + 2, ip, len ) ) )
+            if ( ! strncmp( line + 2, ip, len ) )
             {
                 fl_select_browser_line( lfs->browser, i );
                 fl_show_browser_line( lfs->browser, i );
@@ -1090,33 +1089,34 @@ contract_dirname( const char * dir,
         pat_replace( buf, home, "~" );
 
     if ( fl_get_string_width( ob->lstyle, ob->lsize, buf,
-                              strlen( buf ) ) < ob->w )
+                              strlen( buf ) ) < ob->w - 4 )
         return buf;
 
-    /* Replace middle components with ... */
+    /* Try to replace middle components with ... */
 
     if ( ( l = strlen( buf ) ) > limit )
     {
         int k = limit / 3 - 3;
 
-        p = strchr( buf + k, '/' );
-        q = buf + l - k;
-        while ( *q != '/' && q != buf )
-            q--;
-
-        if ( q > p + 3 )
+        if ( ( p = strchr( buf + k, '/' ) ) )
         {
-            /* Replace whatever in between with X */
+            q = buf + l - k;
+            while ( *q != '/' && q > buf )
+                q--;
 
-            *++p = '.';
-            *++p = '.';
-            *++p = '.';
-            *++p = '\0';
-            strcpy( p, q );
+            if ( q > p + 3 )
+            {
+                *++p = '.';
+                *++p = '.';
+                *++p = '.';
+                *++p = '\0';
+                memmove( p, q, strlen( q ) + 1 );
+            }
         }
     }
 
-    /* Final checks */
+    /* Reolacement may have been impossible or the string may still be too
+       long, in this case truncate and put three dots at the end and */
 
     if ( strlen( buf ) > ( size_t ) limit )
     {
@@ -1128,10 +1128,13 @@ contract_dirname( const char * dir,
     }
 
     len = strlen( buf );
-    while (    len > 0
+    while (    len > 3
             && fl_get_string_width( ob->lstyle, ob->lsize,
-                                    buf, len ) > ob->w - 2 )
+                                    buf, len ) > ob->w - 4 )
     {
+        buf[ len - 4 ] = '.';
+        buf[ len - 3 ] = '.';
+        buf[ len - 2 ] = '.';
         buf[ len - 1 ] = '\0';
         len--;
     }

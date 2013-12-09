@@ -49,7 +49,6 @@ flimage_replace_pixel( FL_IMAGE     * im,
         r2,
         g2,
         b2;
-    int tmp;
 
     if ( ! im || im->w <= 0 )
         return -1;
@@ -67,8 +66,7 @@ flimage_replace_pixel( FL_IMAGE     * im,
 
         for ( n = im->w * im->h; --n >= 0; )
         {
-            tmp = FL_PACK( red[ n ], green[ n ], blue[ n ] );
-            if ( tmp == ( int ) target )
+            if ( ( int ) target == FL_PACK( red[ n ], green[ n ], blue[ n ] ) )
             {
                 red[   n ] = r2;
                 green[ n ] = g2;

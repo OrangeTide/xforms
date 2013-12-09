@@ -457,7 +457,7 @@ load_object( FL_FORM * form,
               && strcmp( objcls, "BEGIN_GROUP" )
               && strcmp( objcls, "FL_END_GROUP" )
               && strcmp( objcls, "END_GROUP" )
-              && (    fscanf( fl, "type: %s\n", val ) != 1
+              && (    fscanf( fl, "type: %999s\n", val ) != 1
                    || fscanf( fl, "box: %d %d %d %d\n",
                               &x, &y, &w, &h ) != 4 ) ) )
     {
@@ -484,7 +484,7 @@ load_object( FL_FORM * form,
         else if ( ! strcmp(key, "colors" ) )
         {
             cn1[ 0 ] = cn2[ 0 ] = '\0';
-            if ( sscanf( val, "%s %s", cn1, cn2 ) != 2 )
+            if ( sscanf( val, "%63s %63s", cn1, cn2 ) != 2 )
             {
                 fprintf( stderr, "Somethings wrong with the file\n" );
                 exit( EXIT_FAILURE );
@@ -541,7 +541,7 @@ read_form( FILE * fl )
 
     if (    ! fgets( fname, sizeof fname, fl )
          || *fname != '='
-         || fscanf( fl, "Name: %s\n", fname ) != 1 )
+         || fscanf( fl, "Name: %1023s\n", fname ) != 1 )
     {
         /* This is an error and should be handled JTT*/
     }
@@ -630,7 +630,7 @@ load_form_definition( const char * filename )
             float xs,
                   ys;
 
-            if ( sscanf( buf, "Unit of measure: %s", ubuf ) != 1 )
+            if ( sscanf( buf, "Unit of measure: %31s", ubuf ) != 1 )
             {
                 fclose( fp );
                 fprintf( stderr, "Failure to read file %s\n", filename );
@@ -642,7 +642,7 @@ load_form_definition( const char * filename )
         }
         else if ( strncmp( buf, "Border", 6 ) == 0 )
         {
-            if ( sscanf( buf, "Border Width: %s", ubuf ) != 1 )
+            if ( sscanf( buf, "Border Width: %31s", ubuf ) != 1 )
             {
                 fclose( fp );
                 fprintf( stderr, "Failure to read file %s\n", filename );

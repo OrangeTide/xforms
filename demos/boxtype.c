@@ -83,12 +83,13 @@ static void
 boxtype_cb( FL_OBJECT * ob,
             long        arg  FL_UNUSED_ARG )
 {
-    size_t i;
     int req_bt = fl_get_select_item( ob )->val;
     static int lastbt = -1;
 
     if ( lastbt != req_bt )
     {
+        size_t i;
+
         fl_freeze_form( form );
         for ( i = 0; i < sizeof tobj / sizeof *tobj; i++ )
             fl_set_object_boxtype( tobj[ i ], btypes[ req_bt ].val );

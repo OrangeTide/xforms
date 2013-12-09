@@ -52,7 +52,7 @@ static int form_event_queued( XEvent *,
 #define SHORT_PAUSE   1
 
 
-/* How frequently to generate FL_STEP event, in milli-seconds is set here.
+/* How frequently to generate FL_STEP event, in milliseconds is set here.
  * These are modified if an idle callback exists */
 
 static int delta_msec = FLI_TIMER_RES;

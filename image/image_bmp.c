@@ -144,7 +144,6 @@ BMP_description( FL_IMAGE * im )
 {
     SPEC *sp = fl_calloc( 1, sizeof *sp );
     char buf[ 40 ];
-    int i;
 
     if ( fread( buf, 1, 2, im->fpin ) != 2 )
     {
@@ -214,6 +213,8 @@ BMP_description( FL_IMAGE * im )
 
     if ( sp->bpp != 24 )
     {
+        int i;
+
         if ( ( im->map_len = sp->col_used ) <= 0 )
             im->map_len = 1 << sp->bpp;
         flimage_getcolormap( im );
@@ -320,9 +321,6 @@ load_8bit_bmp( FL_IMAGE * im,
 {
     FILE *fp = im->fpin;
     int i,
-        j,
-        k,
-        len,
         pix;
     unsigned short *ci;
 
@@ -330,6 +328,8 @@ load_8bit_bmp( FL_IMAGE * im,
     {
         for ( i = im->h - 1; i >= 0 && ! feof( fp ); i--, im->completed++ )
         {
+            int j;
+
             ci = im->ci[ i ];
 
             for ( j = 0; j < im->w + sp->pad; j++ )
@@ -350,7 +350,7 @@ load_8bit_bmp( FL_IMAGE * im,
 
         for ( i = im->h - 1; i >= 0 && ! feof( fp ); )
         {
-            len = getc( fp );
+            int len = getc( fp );
             pix = getc( fp );
 
             if ( len )
@@ -374,6 +374,8 @@ load_8bit_bmp( FL_IMAGE * im,
                 }
                 else
                 {
+                    int k;
+
                     for ( k = 0; k < pix; k++ )
                         *ci++ = getc( fp );
                     if ( k & 1 )
@@ -399,12 +401,7 @@ load_4bit_bmp( FL_IMAGE * im,
                SPEC     * sp )
 {
     FILE *fp = im->fpin;
-    int i = -1,
-        j,
-        c,
-        k,
-        len,
-        pix;
+    int i = -1;
     unsigned short *ci,
                    *cis = 0;
 
@@ -412,12 +409,15 @@ load_4bit_bmp( FL_IMAGE * im,
     {
         for ( i = im->h - 1; i >= 0 && ! feof( fp ); i--, im->completed++ )
         {
+            int j;
+
             ci = im->ci[ i ];
             cis = ci + im->w;
 
             for ( j = 0; j < sp->bpl; j++ )
             {
-                c = getc( fp );
+                int c = getc( fp );
+
                 *ci++ = ( c >> 4 ) & 0x0f;
                 if ( ci < cis )
                     *ci++ = c & 0x0f;
@@ -433,12 +433,14 @@ load_4bit_bmp( FL_IMAGE * im,
     {
         for ( i = im->h - 1; i >= 0 && ! feof( fp ); )
         {
-            ci = im->ci[ i ];
-            len = getc( fp );
-            pix = getc( fp );
+            int len = getc( fp );
+            int pix = getc( fp );
 
+            ci = im->ci[ i ];
             if ( len )
             {
+                int k;
+
                 /* len is the number of pixels, not bytes */
 
                 for ( k = 0; k < len; k++ )
@@ -458,6 +460,8 @@ load_4bit_bmp( FL_IMAGE * im,
                 }
                 else
                 {
+                    int k;
+
                     for ( k = 0, len = pix; k < len; k++ )
                     {
                         if ( ( k & 1 ) == 0 )
@@ -533,7 +537,7 @@ write_bmp_header( FL_IMAGE * im,
                   SPEC     * sp )
 {
     FILE *fp = im->fpout;
-    int mapsize, i;
+    int mapsize;
 
     sp->w = im->w;
     sp->h = im->h;
@@ -589,6 +593,7 @@ write_bmp_header( FL_IMAGE * im,
     if ( sp->bpp != 24 )
     {
         char junk[ ] = { 0, 0, 0, 0 };
+        int i;
 
         for ( i = 0; i < im->map_len; i++ )
         {

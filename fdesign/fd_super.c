@@ -253,13 +253,6 @@ spec_to_superspec( FL_OBJECT * obj )
         spp->max        = sp->max;
         spp->prec       = sp->prec;
     }
-    else if ( obj->objclass == FL_SPINNER )
-    {
-        spp->dval = fl_get_spinner_value( obj );
-        fl_get_spinner_bounds( obj, &spp->dmin, &spp->dmax );
-        spp->dstep = fl_get_spinner_step( obj );
-        spp->prec = fl_get_spinner_precision( obj );
-    }
     else if ( obj->objclass == FL_DIAL )
     {
         FLI_DIAL_SPEC *sp = obj->spec;

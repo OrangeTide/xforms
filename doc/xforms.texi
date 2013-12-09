@@ -2,7 +2,7 @@
 
 @setfilename xforms.info
 @settitle XForms (Forms Library) - Version 1.2@*A Graphical User Interface Toolkit for X
-@set lastupdate December 4, 2013
+@set lastupdate December 5, 2013
 @paragraphindent 0
 
 @titlepage
@@ -148,6 +148,9 @@
 @include part6.texi
 @include part6_images.texi
 
+
+@c For non-HTML output create an index for functions, global variables
+@c and constants, for HTML output combine them into one
 
 @ifnothtml
 

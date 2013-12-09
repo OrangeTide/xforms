@@ -155,8 +155,6 @@ static void pass2_fs_dither( SPEC *,
 static void
 cleanup_spec( SPEC *sp )
 {
-    int i;
-
     if ( sp->fserrors )
         fl_free( sp->fserrors );
 
@@ -168,6 +166,8 @@ cleanup_spec( SPEC *sp )
 
     if ( sp->histogram )
     {
+        int i;
+
         for ( i = 0; i < HIST_C0_ELEMS; i++ )
     {
         if ( sp->histogram[ i ] )

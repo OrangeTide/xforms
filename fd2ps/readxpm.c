@@ -84,7 +84,11 @@ read_xpm( const char  * file,
           fd2psCMAP  ** maps,
           int         * set )
 {
-    char buf[ 2048 ], val[ 64 ], *head, key[ 16 ], ckey[ 8 ];
+    char buf[ 2048 ],
+         val[ 64 ],
+         *head,
+         key[ 16 ],
+         ckey[ 8 ];
     int char_per_pixel, signature = 0;
     int x, y, icol, c, n, i, match;
     fd2psCMAP *map = 0;
@@ -164,7 +168,7 @@ read_xpm( const char  * file,
         head += char_per_pixel + 1;
 
     loop:
-        sscanf( head, " %s %s %n", ckey, val, &n );
+        sscanf( head, " %7s %63s %n", ckey, val, &n );
         if ( val[ strlen( val ) - 1 ] == '"')
             val[ strlen( val ) - 1 ] = '\0';
         if ( val[ strlen( val ) - 1 ] == ',' )

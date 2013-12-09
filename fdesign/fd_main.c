@@ -404,6 +404,7 @@ static FL_CMD_OPT fd_cmdopt[ ] =
     { "-scm",        ".language",       XrmoptionNoArg, "scm"     },
     { "-ps",         ".language",       XrmoptionNoArg, "ps"      },
     { "-filter",     ".filter",         XrmoptionSepArg, NULL     },
+    { "-migrate",    ".migrate",        XrmoptionNoArg, "1"       },
     { "-help",       ".help",           XrmoptionNoArg, "1"       }
 };
 
@@ -437,6 +438,7 @@ static FL_resource fdres[ ] =
     { "align.geometry", "Align.Geometry", FL_STRING, fdaligngeom, 0, NG },
     { "control.border", "XForm.Border", FL_BOOL, &fd_cntlborder, "0", 0 },
     { "convert", "Convert", FL_BOOL, &fdopt.conv_only, "0", 0 },
+    { "migrate", "Migrate", FL_BOOL, &fdopt.conv_only, "0", 0 },
     { "compensate", "Compensate", FL_BOOL, &fdopt.compensate, "0", 0 },
     { "unit", "Unit", FL_STRING, fd_sunit, "pixel", 30 },
     { "language", "Language", FL_STRING, fd_slanguage, "C", 30 },
@@ -470,6 +472,7 @@ char *helps[ ] =
     "-I headername             alternate header file (forms.h default)",
     "-G glcanvas headername    alternate glcanvas header file (glcanvas.h default)",
     "-convert file-list        convert .fd to code non-interactively",
+    "-migrate file-list        convert & migrate .fd list non-interactively",
     "-dir destdir              output any generated files in destdir",
     "-geometry geom            initial working area geometry",
     0,
@@ -633,6 +636,12 @@ pre_connect( int    argc,
             fli_internal_init( );
             fdopt.conv_only = 1;
         }
+        else if ( strncmp( argv[ i ] + 1, "migrate", 1 ) == 0 )
+        {
+            fli_no_connection = 1;
+            fli_internal_init( );
+            fdopt.conv_only = 2;
+        }
         else if ( strncmp( argv[ i ] + 1, "dir", 3 ) == 0 && i + 1 < argc )
         {
             fdopt.output_dir = malloc( strlen( argv[ ++i ] ) + 1 );
@@ -670,7 +679,11 @@ pre_connect( int    argc,
 
     if ( i > argc - 1 )
     {
-        fprintf( stderr, "'-convert' requires argument(s)\n" );
+        if ( fdopt.conv_only == 1 )
+            fprintf( stderr, "'-convert' requires argument(s)\n" );
+        else
+            fprintf( stderr, "'-migrate' requires argument(s)\n" );
+
         usage( argv[ 0 ], 1 );
     }
 

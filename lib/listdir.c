@@ -375,8 +375,7 @@ scandir_get_entries( const char  * dir,
     FL_Dirlist *dl;
     static int lastn;
     static struct stat ffstat;
-    int i,
-        n;
+    int n = 0;
 
     cpat = pat;
     cdir = dir;
@@ -392,10 +391,12 @@ scandir_get_entries( const char  * dir,
         dlist = NULL;
     }
 
-    n = 0;
     if ( ( lastn = tc_scandir( dir, &dlist ) ) > 0 )
     {
+        int i;
+
         dl = *dirlist = fl_malloc( ( lastn + 1 ) * sizeof **dirlist );
+
         for ( i = n = 0; i < lastn; i++ )
         {
             if ( fselect( dlist[ i ]->d_name, &ffstat, &dl->type ) )
@@ -875,7 +876,7 @@ do_matching( const char * s,
                 return *++p ? match_star( s, p ) : 1;
 
             case '[':       /* [!....] means inverse character class. */
-                if ( ( reverse = p[ 1 ] == '!' ) )
+                if ( ( reverse = ( p[ 1 ] == '!' ) ) )
                     p++;
                 for ( last = 0400, matched = 0; *++p && *p != ']'; last = *p )
                     if (    ( *p == '-' && *s <= *++p && *s >= last ) 

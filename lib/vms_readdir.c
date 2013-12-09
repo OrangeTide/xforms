@@ -21,11 +21,11 @@
    **  Written by Rich $alz, <rsalz@bbn.com> in August, 1990.
    **  This code has no copyright.
    **
-   **  Feb'95 --        reliance on <descrip.h> eliminated, here and in dirent.h;
-   **           support for Unix-style directory specifications implemented;
-   **           vmsreaddirversions() modified to return prior flag setting;
-   **           use ANSI headers <stdlib.h> and <string.h> plus VMS headers
-   **           <lib$routines.h> and <fscndef.h>; minor lint cleanup.   [pr]
+   **  Feb'95 -- reliance on <descrip.h> eliminated, here and in dirent.h;
+   **            support for Unix-style directory specifications implemented;
+   **            vmsreaddirversions() modified to return prior flag setting;
+   **            use ANSI headers <stdlib.h> and <string.h> plus VMS headers
+   **            <lib$routines.h> and <fscndef.h>; minor lint cleanup.   [pr]
    **
    **  Known problems:
    **           garbage directory specifications aren't always diagnosed.
@@ -100,8 +100,9 @@ cvt_action(char *name, int dir_flag___unused)
 /*
    **  Open a directory, return a handle for later use.
  */
+
 DIR *
-opendir(name)
+opendir( name )
      const char *name;
 {
     DIR *dd;
@@ -193,8 +194,9 @@ vmsreaddirversions(dd, flag)
 /*
    **  Free up an opened directory.
  */
+
 void
-closedir(dd)
+closedir( dd )
      DIR *dd;
 {
     if (dd)
@@ -209,8 +211,9 @@ closedir(dd)
 /*
    **  Collect all the version numbers for the current file.
  */
+
 static void
-collectversions(dd)
+collectversions( dd )
      DIR *dd;
 {
     struct dsc pat;

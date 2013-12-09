@@ -184,8 +184,7 @@ static int
 PNM_read_pixels( FL_IMAGE * im )
 {
     int i,
-        npix = im->w * im->h,
-        err;
+        npix = im->w * im->h;
     SPEC *sp = im->io_spec;
 
     if ( im->type == FL_IMAGE_RGB )
@@ -245,13 +244,15 @@ PNM_read_pixels( FL_IMAGE * im )
     {
         unsigned short *ci = im->ci[ 0 ],
                        *cend = ci + npix;
-        int bit,
-            k;
 
         if ( sp->raw )
         {
             for ( i = 0; i < im->h; i++ )
             {
+                int err,
+                    bit,
+                    k;
+
                 cend = ( ci = im->ci[ i ] ) + im->w;
                 for ( k = bit = err = 0; ! err && ci < cend; ci++, bit++ )
                 {

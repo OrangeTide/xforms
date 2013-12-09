@@ -602,14 +602,15 @@ void
 fl_delete_folder_bynumber( FL_OBJECT * ob,
                            int         num )
 {
-    int i = num - 1,
-        j;
+    int i = num - 1;
     FLI_TABFOLDER_SPEC *sp = ob->spec;
     FL_OBJECT *deleted = NULL;
     FL_FORM *theform = NULL;
 
     if ( i >= 0 && i < sp->nforms )
     {
+        int j;
+
         deleted = sp->title[ i ];
         fli_detach_form( theform = sp->forms[ i ] );
 

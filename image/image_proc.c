@@ -162,7 +162,6 @@ flimage_get_subimage( FL_IMAGE * im,
 {
     static SubImage subimage[ MAX_RETBUF ];
     static int buf;
-    int err;
     SubImage *sub = subimage + buf;
     void * ( * submat )( void *, int, int, int, int, int, int, unsigned int );
 
@@ -197,6 +196,8 @@ flimage_get_subimage( FL_IMAGE * im,
     }
     else
     {
+        int err;
+
         sub->w = im->subw;
         sub->h = im->subh;
 
@@ -331,8 +332,6 @@ get_histogram(FL_IMAGE * im)
                  *bhist,
                  *grhist;
     unsigned int size = ( FL_PCMAX + 3 ) * sizeof **im->hist;
-    int g,
-        n;
 
     if ( ! im->hist[ 0 ] )
     {
@@ -348,6 +347,10 @@ get_histogram(FL_IMAGE * im)
     memset( grhist = im->hist[ 3 ], 0, size );
 
     if ( im->type == FL_IMAGE_RGB )
+    {
+        int g,
+            n;
+
         for ( n = im->w * im->h; --n >= 0; )
         {
             if ( ++rhist[ im->red[ 0 ][ n ] ] == 0 )
@@ -362,15 +365,21 @@ get_histogram(FL_IMAGE * im)
             if ( ++grhist[ g ] == 0 )
                 grhist[ g ]--;
         }
+    }
     else if ( im->type == FL_IMAGE_GRAY )
+    {
+        int n;
+
         for ( n = im->w * im->h; --n >= 0; )
         {
             if ( ++grhist[ im->gray[ 0 ][ n ] ] == 0 )
                 grhist[ im->gray[ 0 ][ n ] ]--;
         }
+    }
     else if ( im->type == FL_IMAGE_CI )
     {
         unsigned short *ci = im->ci[ 0 ];
+        int g;
 
         for ( ci = im->ci[ 0 ] + im->w * im->h; --ci >= im->ci[ 0 ]; )
         {

@@ -1123,9 +1123,6 @@ get_free_handle( FL_OBJECT  * ob,
     static int n;
     static char buf[ 1024 ];
     static FL_OBJECT *freeobj[ MAXFREEOBJ ];
-    int i,
-        k;
-
 
     if ( ob->c_vdata )
         strcpy( buf, ob->c_vdata );
@@ -1135,6 +1132,9 @@ get_free_handle( FL_OBJECT  * ob,
         sprintf( buf, "freeobj_%s_handle", ob->label );
     else
     {
+        int i,
+            k;
+
         for ( k = -1, i = 0; i < MAXFREEOBJ && k < 0; i++ )
             if ( freeobj[ i ] == ob )
                 k = i;
@@ -1481,7 +1481,6 @@ pre_form_output( FILE * fn )
         fprintf( fn, "    fl_set_border_width( %d );\n", fd_bwidth );
 
     if (    fdopt.unit != FL_COORD_PIXEL
-         || ( fd_bwidth != FL_BOUND_WIDTH && fd_bwidth != 0 )
          || ( fd_bwidth != FL_BOUND_WIDTH && fd_bwidth != 0 ) )
         fprintf( fn, "\n" );
 }

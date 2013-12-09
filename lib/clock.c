@@ -176,7 +176,7 @@ draw_clock( int      type  FL_UNUSED_ARG,
 
     for ( ra = 0.0, i = 0; i < 12; i++, ra += M_PI / 6 )
     {
-        f1 = ( i % 3 ? 0.01 : 0.02 ) * w;
+        f1 = ( ( i % 3 ) ? 0.01 : 0.02 ) * w;
 
         ROTxy( xp[ 0 ].x, xp[ 0 ].y, xc - f1, yc + f2, ra );
         ROTxy( xp[ 1 ].x, xp[ 1 ].y, xc + f1, yc + f2, ra );

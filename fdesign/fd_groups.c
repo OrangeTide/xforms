@@ -74,7 +74,7 @@ group_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
            to be kept pressed down) we clear the selection of the
            <Shift> button isn't pressed */
 
-        if ( ! fl_last_event( )->xmotion.state & ShiftMask )
+        if ( ! ( fl_last_event( )->xmotion.state & ShiftMask ) )
             clear_selection( );
         addgroupto_selection( begobj[ n ] );
     }

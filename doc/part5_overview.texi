@@ -1910,13 +1910,17 @@ program, the following means of interaction are provided (note that
 these do not work on form windows, for which a different set of
 functions exist. @xref{Windowing Support}, for details.)
 
-You may set up a callback routine for all user events using
+You may set up a callback routine (of type @code{FL_APPEVENT_CB} for
+all user events using
+@tindex FL_APPEVENT_CB
 @findex fl_set_event_callback()
 @anchor{fl_set_event_callback()}
 @example
-FL_APPEVENT_CB fl_set_event_callback(int (*callback)(XEvent *ev, void *data),
-                                     void *data);
+typedef int (*FL_APPEVENT_CB)(XEvent *, void *);
+FL_APPEVENT_CB fl_set_event_callback(FL_APPEVENT_CB callback, void *data);
 @end example
+@noindent
+The function returns the previously set callback (or @code{NULL}).
 
 It is also possible to set up callback functions on a per window/event
 basis using the following routines:
@@ -1927,7 +1931,6 @@ basis using the following routines:
 @anchor{fl_remove_event_callback()}
 @example
 typedef int (*FL_APPEVENT_CB)(XEvent *xev, void *user_data);
-
 FL_APPEVENT_CB fl_add_event_callback(Window win, int xevent_type,
                                      FL_APPEVENT_CB callback,
                                      void *user_data);
@@ -2117,10 +2120,10 @@ where @code{callback} is the function that will get called whenever
 the main loop is idle. The time interval between invocations of the
 idle callback can vary considerably depending on interface activity
 and other factors. A range between 50 and @w{300 msec} should be
-expected. While the idle callback is executed it won't be called
-from again (i.e.@: no call of any XForms function from within the
-idle callback function will call the idle callback function), so it
-doesn't need to be reentrant.
+expected. While the idle callback is executed it won't be called again
+(i.e.@: no call of any XForms function from within the idle callback
+function will call the idle callback function), so it does not need to
+be reentrant.
 
 It is possible to change what the library considers to be "idle" with
 the following function:

@@ -75,13 +75,13 @@ read_xbm(const char *f)
 
     bit_w = bit_h = 0;
 
-    for (nosize = 1; nosize && fgets(buf, sizeof(buf) - 1, fp);)
+    for ( nosize = 1; nosize && fgets( buf, sizeof buf - 1, fp ); )
     {
-        if (sscanf(buf, "#define %*s %d", &c) == 1)
+        if ( sscanf( buf, "#define %*s %d", &c ) == 1 )
         {
-            if (strstr(buf, "_width"))
+            if ( strstr( buf, "_width" ) )
                 bit_w = c;
-            else if (strstr(buf, "_height"))
+            else if ( strstr( buf, "_height" ) )
                 bit_h = c;
             nosize = bit_w < 1 || bit_h < 1;
         }

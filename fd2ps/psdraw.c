@@ -73,17 +73,19 @@ ps_output( const char * fmt,
         fprintf( flps->fp, "%s", buf );
     else
     {
+        flps->literal = 0;
+
         for ( q = buf; *q; q++ )
         {
             if ( *q == '\n' )
                 *q = ' ';
 
-            if ( *q == '(') /* ) ( */
+            if ( *q == '(' )
                 flps->literal = 1;
-            else if ( *q == '(' )
+            else if ( *q == ')' )
                 flps->literal = 0;
 
-            if ( lastc == ' ' && *q == ' ' && ! flps->literal )
+            if ( lastc == ' ' && *q == ' ' && flps->literal )
                 continue;
 
             if ( *q == ' ' && flps->len == 0 )
@@ -609,8 +611,8 @@ ps_foldertab_box( int   style,
     float absbw = FL_abs( bw );
     float C = Corner;
 
-    if ( ! ( border = bw > 0 ) )
-        bw = bw;
+    if ( ! ( border = ( bw > 0 ) ) )
+        bw = -bw;
 
     ctr = absbw / 2;
     x += ctr;
@@ -767,7 +769,7 @@ ps_draw_box( int   style,
     Point xpoint[ 8 ], *xp;
     int bw = bw_in;
 
-    if ( ! ( border = bw > 0 ) )
+    if ( ! ( border = ( bw > 0 ) ) )
         bw = -bw;
 
     B = border;
@@ -929,67 +931,73 @@ ps_draw_frame( int   style,
     float B;
     Point xpoint[ 10 ], *xp;
 
-    if (!(border = bw > 0))
-    bw = -bw;
+    if ( ! ( border = ( bw > 0 ) ) )
+        bw = -bw;
 
     B = border;
     xp = xpoint;
 
-    if (psinfo.verbose)
-    ps_verbatim("%%frame (%.2f %.2f %.2f %.2f)\n", x, y, w, h);
+    if ( psinfo.verbose )
+        ps_verbatim( "%%frame (%.2f %.2f %.2f %.2f)\n", x, y, w, h );
 
-    switch (style)
+    switch ( style )
     {
         case FL_UP_FRAME:
-            ps_rectf(x - bw - B, y + h - 1, w + 2 * bw, bw + 1 + B, FL_TOP_BCOL);
-            ps_rectf(x - bw - B, y - bw - B, w + 2 * bw, bw + 1 + B, FL_BOTTOM_BCOL);
+            ps_rectf( x - bw - B, y + h - 1, w + 2 * bw, bw + 1 + B,
+                      FL_TOP_BCOL);
+            ps_rectf( x - bw - B, y - bw - B, w + 2 * bw, bw + 1 + B,
+                      FL_BOTTOM_BCOL);
+
             /* left */
 
             xp = xpoint;
-            AddVertex(xp, x - bw - B, y - bw - B);
-            AddVertex(xp, x, y);
-            AddVertex(xp, x, y + h - 1);
-            AddVertex(xp, x - bw - B, y + h + bw + B - 1);
-            ps_poly(1, xpoint, 4, FL_LEFT_BCOL);
+            AddVertex( xp, x - bw - B, y - bw - B );
+            AddVertex( xp, x, y );
+            AddVertex( xp, x, y + h - 1 );
+            AddVertex( xp, x - bw - B, y + h + bw + B - 1 );
+            ps_poly( 1, xpoint, 4, FL_LEFT_BCOL );
 
             /* right */
 
             xp = xpoint;
-            AddVertex(xp, x + w - 1 + bw + B, y - bw - B);
-            AddVertex(xp, x + w - 1 + bw + B, y + h + bw + B - 1);
-            AddVertex(xp, x + w - 1, y + h - 1);
-            AddVertex(xp, x + w - 1, y);
-            ps_poly(1, xpoint, 4, FL_RIGHT_BCOL);
+            AddVertex( xp, x + w - 1 + bw + B, y - bw - B );
+            AddVertex( xp, x + w - 1 + bw + B, y + h + bw + B - 1 );
+            AddVertex( xp, x + w - 1, y + h - 1 );
+            AddVertex( xp, x + w - 1, y );
+            ps_poly( 1, xpoint, 4, FL_RIGHT_BCOL );
             break;
 
         case FL_DOWN_FRAME:
-            ps_rectf(x - bw - B, y + h - 1, w + 2 * bw, bw + 1 + B, FL_BOTTOM_BCOL);
-            ps_rectf(x - bw - B, y - bw - B, w + 2 * bw, bw + 1 + B, FL_TOP_BCOL);
+            ps_rectf( x - bw - B, y + h - 1, w + 2 * bw, bw + 1 + B,
+                      FL_BOTTOM_BCOL);
+            ps_rectf( x - bw - B, y - bw - B, w + 2 * bw, bw + 1 + B,
+                      FL_TOP_BCOL);
 
             /* left */
 
             xp = xpoint;
-            AddVertex(xp, x - bw - B, y - bw - B);
-            AddVertex(xp, x, y);
-            AddVertex(xp, x, y + h - 1);
-            AddVertex(xp, x - bw - B, y + h + bw + B - 1);
-            ps_poly(1, xpoint, 4, FL_RIGHT_BCOL);
+            AddVertex( xp, x - bw - B, y - bw - B );
+            AddVertex( xp, x, y );
+            AddVertex( xp, x, y + h - 1 );
+            AddVertex( xp, x - bw - B, y + h + bw + B - 1 );
+            ps_poly( 1, xpoint, 4, FL_RIGHT_BCOL );
 
             /* right */
 
             xp = xpoint;
-            AddVertex(xp, x + w - 1 + bw + B, y - bw - B);
-            AddVertex(xp, x + w - 1 + bw + B, y + h + bw + B - 1);
-            AddVertex(xp, x + w - 1, y + h - 1);
-            AddVertex(xp, x + w - 1, y);
-            ps_poly(1, xpoint, 4, FL_LEFT_BCOL);
+            AddVertex( xp, x + w - 1 + bw + B, y - bw - B );
+            AddVertex( xp, x + w - 1 + bw + B, y + h + bw + B - 1 );
+            AddVertex( xp, x + w - 1, y + h - 1 );
+            AddVertex( xp, x + w - 1, y );
+            ps_poly( 1, xpoint, 4, FL_LEFT_BCOL );
             break;
 
         case FL_ENGRAVED_FRAME:
-            B = (bw > 2 ? (bw - 2) : 1);
+            B = ( bw > 2 ? ( bw - 2 ) : 1 );
             B *= 0.5;
-            ps_draw_frame(FL_DOWN_FRAME, x, y, w, h, 0, 1);
-            ps_draw_frame(FL_UP_FRAME, x + B, y + B, w - 2 * B, h - 2 * B, 0, -1);
+            ps_draw_frame( FL_DOWN_FRAME, x, y, w, h, 0, 1 );
+            ps_draw_frame( FL_UP_FRAME, x + B, y + B, w - 2 * B,
+                           h - 2 * B, 0, -1 );
             break;
     }
 }
@@ -1013,30 +1021,30 @@ ps_draw_checkbox( int   type,
     /* generate all points */
 
     xp = allp;
-    AddVertex(xp, x + w / 2, y);
-    AddVertex(xp, x, y + h / 2);
-    AddVertex(xp, x + w / 2, y + h);
-    AddVertex(xp, x + w, y + h / 2);
+    AddVertex( xp, x + w / 2, y );
+    AddVertex( xp, x, y + h / 2 );
+    AddVertex( xp, x + w / 2, y + h );
+    AddVertex( xp, x + w, y + h / 2 );
 
-    AddVertex(xp, x + w / 2, y + bw);
-    AddVertex(xp, x + bw, y + h / 2);
-    AddVertex(xp, x + w / 2, y + h - bw);
-    AddVertex(xp, x + w - bw, y + h / 2);
+    AddVertex( xp, x + w / 2, y + bw );
+    AddVertex( xp, x + bw, y + h / 2 );
+    AddVertex( xp, x + w / 2, y + h - bw );
+    AddVertex( xp, x + w - bw, y + h / 2 );
 
     /* draw overall box */
 
     xp = allp + 4;
-    ps_poly(1, xp, 4, col);
+    ps_poly( 1, xp, 4, col );
     xp = xpoint;
 
-    switch (type)
+    switch ( type )
     {
-        case FL_DOWN_BOX:
-            AddVertex(xp, allp[0].x, allp[0].y);
-            AddVertex(xp, allp[1].x, allp[1].y);
-            AddVertex(xp, allp[5].x, allp[5].y);
-            AddVertex(xp, allp[4].x, allp[4].y);
-            ps_poly(1, xp = xpoint, 4, FL_LEFT_BCOL);
+        case FL_DOWN_BOX :
+            AddVertex( xp, allp[ 0 ].x, allp[ 0 ].y );
+            AddVertex( xp, allp[ 1 ].x, allp[ 1 ].y );
+            AddVertex( xp, allp[ 5 ].x, allp[ 5 ].y );
+            AddVertex( xp, allp[ 4 ].x, allp[ 4 ].y );
+            ps_poly( 1, xp = xpoint, 4, FL_LEFT_BCOL );
 
             AddVertex(xp, allp[0].x, allp[0].y);
             AddVertex(xp, allp[4].x, allp[4].y);
@@ -1282,7 +1290,7 @@ draw_ripple_lines( float x,
 {
     float ym = y + h / 2, ys;
     float xm = x + w / 2, xs;
-    int i, mw = FL_BOUND_WIDTH;
+    int mw = FL_BOUND_WIDTH;
 
     if (h < 9 || w < 9)
     {
@@ -1294,14 +1302,21 @@ draw_ripple_lines( float x,
     ys = ym + 5;
 
     if (angle == 90 || angle == 270)
-        for (i = 0; i < 3; i++)
+    {
+        int i;
+
+        for ( i = 0; i < 3; i++ )
         {
             ps_line(xs, y + mw, xs, y + h - mw - 1, FL_RIGHT_BCOL);
             xs -= 1;
             ps_line(xs, y + mw, xs, y + h - mw - 1, FL_LEFT_BCOL);
             xs -= 3;
         }
+    }
     else
+    {
+        int i;
+
         for (i = 0; i < 3; i++)
         {
             ps_line(x + mw, ys, x + w - mw - 1, ys, FL_LEFT_BCOL);
@@ -1309,6 +1324,7 @@ draw_ripple_lines( float x,
             ps_line(x + mw, ys, x + w - mw - 1, ys, FL_RIGHT_BCOL);
             ys -= 3;
         }
+    }
 }
 
 

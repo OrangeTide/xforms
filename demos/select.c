@@ -96,8 +96,6 @@ int
 main( int    argc,
       char * argv[ ] )
 {
-    FL_OBJECT *obj = NULL;
-
     fl_flip_yorigin( );
     fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
@@ -106,7 +104,7 @@ main( int    argc,
     fl_show_form( form, FL_PLACE_CENTER | FL_FREE_SIZE, FL_TRANSIENT,
                   "Select Object Demo" );
 
-    while ( ( obj  = fl_do_forms( ) ) != readyobj )
+    while ( fl_do_forms( ) != readyobj )
         /* empty */ ;
 
     fl_hide_form( form );

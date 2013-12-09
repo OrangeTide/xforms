@@ -356,7 +356,7 @@ fl_drw_box( int      style,
     if ( style == FL_NO_BOX )
         return;
 
-    if ( ! ( B = bw > 0 ) )
+    if ( ! ( B = ( bw > 0 ) ) )
         bw = - bw;
 
     if ( bw == 0 )
@@ -643,7 +643,7 @@ fl_drw_frame( int      style,
     if ( w <= 0 || h <= 0 )
         return;
 
-    if ( ! ( B = bw > 0 ) )
+    if ( ! ( B = ( bw > 0 ) ) )
         bw = - bw;
 
     switch ( style )
@@ -927,7 +927,7 @@ fl_foldertab_box( int      style,
     int C = Tabfolder_Corner;
     int isbroken = style & FLI_BROKEN_BOX;
 
-    if ( ! ( border = bw > 0 ) )
+    if ( ! ( border = ( bw > 0 ) ) )
         bw = -bw;
 
     style &= ~ FLI_BROKEN_BOX;

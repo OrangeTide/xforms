@@ -1021,7 +1021,6 @@ get_rgb_pixel( FL_COLOR   packed,
 {
     FL_STATE *s = &fl_state[ fl_vmode ];
     unsigned long pixel;
-    int max_col;
     static Colormap lastcolormap;
     static XColor *xcolor;
     static int new_col;
@@ -1036,6 +1035,8 @@ get_rgb_pixel( FL_COLOR   packed,
         return rgb2pixel( r, g, b );
     else
     {
+        int max_col;
+
         xc.flags = DoRed | DoGreen | DoBlue;
         xc.red   = ( r << 8 ) | 0xff;
         xc.green = ( g << 8 ) | 0xff;
@@ -1098,12 +1099,12 @@ fli_textcolor( FL_COLOR col )
     static int vmode = -1;
     static int switched;
     static GC textgc;
-    unsigned long p;
 
     if (    flx->textcolor != col
          || vmode != fl_vmode
          || flx->textcolor == lastmapped )
     {
+        unsigned long p;
 
         lastmapped = FL_NoColor;
 
@@ -1576,13 +1577,8 @@ fl_create_colormap( XVisualInfo * xv,
     int maxread = FL_min( MAXREAD, maxcolors );
     XColor *cur_entries = fl_malloc( maxread * sizeof *cur_entries ),
            *dc;
-    int i,
-        j,
-        k,
-        found;
     unsigned long pixels[ MAXREAD ],
-                  allocated[ MAXREAD ],
-                  p;
+                  allocated[ MAXREAD ];
     int keep = maxcolors / 32;
 
     cmap = XCreateColormap( flx->display, fl_root, xv->visual,
@@ -1608,10 +1604,15 @@ fl_create_colormap( XVisualInfo * xv,
 
     if ( nfill > 0 && fl_vmode == xv->class && fl_vmode != DirectColor )
     {
+        int i,
+            k;
+
         nfill = FL_min( MAXFILL, nfill );
         nfill = FL_min( nfill, maxcolors );
+
         if ( nfill < 4 )        /* potentially 8+1+4 colors */
             nfill = 4;
+
         for ( i = 0; i < maxread; i++ )
             cur_entries[ i ].pixel = i;
 
@@ -1630,12 +1631,16 @@ fl_create_colormap( XVisualInfo * xv,
 
         for ( k = 0, i = keep; i < maxread; i++ )
         {
-            p = allocated[ i ];
+            unsigned int p = allocated[ i ];
+            int j,
+                found;
+
             for ( j = found = 0; ! found && j < nfill; j++ )
                 found =    p == fl_get_pixel( j )
                         || p == ( unsigned long ) white
                         || p == ( unsigned long ) black
                         || p == 34;
+
             if ( ! found && p != FL_NoColor )
                 pixels[ k++ ] = p;
         }

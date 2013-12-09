@@ -479,7 +479,7 @@ show_attributes( const FL_OBJECT * obj )
 	/* d. label font size */
 
     for ( oksize = i = 0; ! oksize && i < ( int ) NFSIZE; i++ )
-        if ( ( oksize = obj->lsize == fsizes[ i ].size ))
+        if ( ( oksize = ( obj->lsize == fsizes[ i ].size ) ) )
             fl_set_choice( fd_generic_attrib->sizeobj, i + 1 );
 
     if ( ! oksize )

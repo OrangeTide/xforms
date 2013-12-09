@@ -1150,9 +1150,7 @@ fl_prepare_form_window( FL_FORM    * form,
          screenh,
          dont_fix_size = 0;
     FL_Coord mx,
-             my,
-             nmx,
-             nmy;
+             my;
 
     if ( border == 0 )
         border = FL_FULLBORDER;
@@ -1209,6 +1207,9 @@ fl_prepare_form_window( FL_FORM    * form,
     }
     else if ( place != FL_PLACE_FREE )
     {
+        FL_COORD nmx,
+                 nmy;
+
         switch ( place )
         {
             case FL_PLACE_CENTER:
@@ -1235,15 +1236,17 @@ fl_prepare_form_window( FL_FORM    * form,
                     form->hoty = form->h / 2;
                 }
 
-                nmx = mx;
-                nmy = my;
                 form->x = mx - form->hotx;
                 form->y = my - form->hoty;
+
                 force_visible( form );
+
                 nmx = form->x + form->hotx;
                 nmy = form->y + form->hoty;
+
                 if ( nmx != mx || nmy != my )
                     fl_set_mouse( nmx, nmy );
+
                 break;
 
             case FL_PLACE_GEOMETRY :
@@ -1407,11 +1410,11 @@ fl_show_form( FL_FORM *    form,
  ***************************************/
 
 Window
-fl_show_f( FL_FORM    * form,
-           int          place,
-           int          border,
-           const char * fmt,
-           ... )
+fl_show_form_f( FL_FORM    * form,
+                int          place,
+                int          border,
+                const char * fmt,
+                ... )
 {
     Window w;
     char *buf;
@@ -2111,12 +2114,10 @@ fl_fit_object_label( FL_OBJECT * obj,
 
     bw = (    obj->boxtype == FL_UP_BOX
            || obj->boxtype == FL_DOWN_BOX
-           || obj->boxtype == FL_EMBOSSED_BOX
-           || obj->boxtype == FL_EMBOSSED_BOX) ?
+           || obj->boxtype == FL_EMBOSSED_BOX ) ?
         FL_abs( obj->bw ) : 1;
 
-    if (    obj->boxtype == FL_EMBOSSED_BOX
-         || obj->boxtype == FL_EMBOSSED_BOX )
+    if (    obj->boxtype == FL_EMBOSSED_BOX )
         bw += bw > 2 ? bw - 2 : 1;
 
     if (    obj->objclass == FL_BUTTON
@@ -2261,12 +2262,10 @@ fl_adjust_form_size( FL_FORM * form )
 
         bw = (    obj->boxtype == FL_UP_BOX
                || obj->boxtype == FL_DOWN_BOX
-               || obj->boxtype == FL_EMBOSSED_BOX
-               || obj->boxtype == FL_EMBOSSED_BOX) ?
+               || obj->boxtype == FL_EMBOSSED_BOX ) ?
              FL_abs( obj->bw ) : 1;
 
-        if (    obj->boxtype == FL_EMBOSSED_BOX
-             || obj->boxtype == FL_EMBOSSED_BOX )
+        if (    obj->boxtype == FL_EMBOSSED_BOX )
             bw += bw > 2 ? bw - 2 : 1;
 
         if (    obj->objclass == FL_BUTTON

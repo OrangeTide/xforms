@@ -1,3 +1,13 @@
+2013-12-09 Jens Thoms Toerring    <jt@toerring.de>
+
+	* fdesign: Applied a patch Serge Bromow created to
+	add a '-migrate' option to fdesign
+	* Thanks to a suggestion from David Binderman all
+	code was checked with the 'cppcheck' static
+	checking tool, which resulted in finding several
+	bugs and improvements in the code with respect to
+	readability.
+
 2013-12-04 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign: Minor display bug reported by Segre Bromow fixed

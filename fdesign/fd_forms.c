@@ -748,10 +748,10 @@ save_forms( const char *str )
 
     strcpy( fname, filename );
 
-    /* On conversion there's no need to (re)save  the .fd file - it would
-       just mess up Makefile rules */
+    /* In simple convert mode (i.e. not migrate) there's no need to (re)save
+       the .fd file */
 
-    if ( fdopt.conv_only )
+    if ( fdopt.conv_only == 1 )
         goto emit_code;
 
     /* Make the .fd file */

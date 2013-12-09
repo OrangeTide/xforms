@@ -33,16 +33,17 @@
 #include "include/forms.h"
 
 
-long func = 1;
-double x = 0.0;
-double step = 0.15;
+static long func = 1;
+static double x = 0.0;
+static double step = 0.15;
 
-FL_FORM *form;
+static FL_FORM * form;
 
-FL_OBJECT *chartobj,
-          *sinobj,
-          *exitbut,
-          *stepobj;
+static FL_OBJECT * chartobj,
+                 * sinobj,
+                 * exitbut,
+                 * stepobj,
+                 * timerobj;
 
 static void create_form_form(void);
 
@@ -106,7 +107,7 @@ next_step( void )
             break;
     }
 
-    x += 0.2 * step;
+    x += step;
 
     return res;
 }
@@ -115,23 +116,12 @@ next_step( void )
 /***************************************
  ***************************************/
 
-int
-idle_cb( XEvent * xev  FL_UNUSED_ARG,
-         void   * d    FL_UNUSED_ARG )
+static void
+timer_cb( FL_OBJECT * obj,
+          long        data  FL_UNUSED_ARG )
 {
     fl_insert_chart_value( chartobj, 1, next_step( ), "", 1 );
-    return 0;
-}
-
-
-/***************************************
- ***************************************/
-
-void
-add_value( void * xev  FL_UNUSED_ARG,
-           void * a    FL_UNUSED_ARG )
-{
-    fl_insert_chart_value( chartobj, 1, next_step( ), "", 1 );
+    fl_set_timer( obj, 0.05 );
 }
 
 
@@ -142,8 +132,6 @@ int
 main( int    argc,
       char * argv[ ] )
 {
-    FL_OBJECT *obj;
-
     fl_flip_yorigin( );
     fl_initialize( &argc, argv, "FormDemo", 0, 0 );
     create_form_form( );
@@ -157,11 +145,10 @@ main( int    argc,
     fl_show_form( form,FL_PLACE_CENTER | FL_FREE_SIZE, FL_TRANSIENT,
                   "StripChart" );
 
-    do
-    {
-        fl_insert_chart_value( chartobj, 1, next_step( ), "", 1 );
-        obj = fl_check_forms( );
-    } while ( obj != exitbut );
+    fl_set_timer( timerobj, 0.05 );
+
+    while ( fl_do_forms( ) != exitbut )
+        /* empty */ ;
 
     fl_finish( );
     return 0;
@@ -181,6 +168,7 @@ create_form_form( void )
     fl_add_box( FL_BORDER_BOX, 0, 0, 490, 320, "" );
 
     chartobj = obj = fl_add_chart( FL_LINE_CHART, 20, 160, 390, 140, "" );
+    fl_set_object_color( obj, FL_BLACK, FL_INACTIVE );
     fl_set_object_dblbuffer( obj, 1 );
 
     fl_bgn_group( );
@@ -221,8 +209,12 @@ create_form_form( void )
     fl_set_object_boxtype( obj, FL_BORDER_BOX );
 
     stepobj = obj = fl_add_valslider( FL_VERT_SLIDER, 430, 20, 40, 280, "" );
+    fl_set_object_return( obj, FL_RETURN_END_CHANGED );
     fl_set_object_boxtype( obj, FL_BORDER_BOX );
     fl_set_object_callback( obj, set_step, 0 );
+
+    timerobj = obj = fl_add_timer( FL_HIDDEN_TIMER, 0, 0, 0, 0, "" );
+    fl_set_object_callback( obj, timer_cb, 0 );
 
     fl_end_form( );
 }

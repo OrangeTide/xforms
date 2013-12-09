@@ -208,7 +208,8 @@ XPM_load( FL_IMAGE * im )
         done = 0;
         while ( ! done )
         {
-            if ( ( done = sscanf( head, " %s %s %n", ckey, val, &n ) < 2 ) )
+            if ( ( done =
+                      ( sscanf( head, "%7s %31s %n", ckey, val, &n ) < 2 ) ) )
                 break;
 
             head += n;

@@ -701,13 +701,14 @@ GIF_load( FL_IMAGE * im )
 static void
 flush_buffer( FL_IMAGE * im )
 {
-    int i;
     int incode;
 
     incode = lbuf - lhead;
 
     if ( incode >= im->w )
     {
+        int i;
+
         lbuf = lhead;
 
         while ( incode >= im->w )

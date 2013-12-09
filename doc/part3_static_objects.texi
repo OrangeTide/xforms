@@ -1017,9 +1017,18 @@ which may not be larger than @code{FL_CHART_MAX}.
 Don't use boxtype @code{FL_NO_BOX} for a chart object if it changes
 value.
 
+
+Normally, for bar and line chart a baseline is drawn at 0. This
+can be switched on and off by the function
+@findex fl_set_chart_baseline()
+@anchor{fl_set_chart_baseline()}
+@example
+void fl_set_chart_baseline(FL_OBJECT *ob, int yes_no);
+@end example
+
 The first color argument (@code{col1}) to
-@code{@ref{fl_set_object_color()}} controls the color of the box, the
-argument (@code{col2}) isn't used.
+@code{@ref{fl_set_object_color()}} controls the (background) color of
+the box, the second (@code{col2}) the color of the baseline.
 
 
 @node Chart Remarks

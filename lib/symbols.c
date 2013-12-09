@@ -316,9 +316,6 @@ rotate_it( FL_Coord xc,
 {
     FL_POINT *xp = xpnts,
              *xps = xpnts + i;
-    double tmpx,
-           tmpy;
-    int tmp;
 
     if ( a == 0 || a == 360 )
         return;
@@ -329,14 +326,16 @@ rotate_it( FL_Coord xc,
     else if ( a == 90 )
         for ( ; xp < xps; xp++ )
         {
-            tmp = xp->x;
+            int tmp = xp->x;
+
             xp->x = xc + xp->y - yc;
             xp->y = yc - tmp + xc;
         }
     else if ( a == 270 )
         for ( ; xp < xps; xp++ )
     {
-        tmp = xp->x;
+        int tmp = xp->x;
+
         xp->x = xc + xp->y - yc;
         xp->y = yc + tmp - xc;
     }
@@ -345,32 +344,36 @@ rotate_it( FL_Coord xc,
     else if ( a == 45 )
         for ( ; xp < xps; xp++ )
         {
-            tmpx = xp->x - xc;
-            tmpy = xp->y - yc;
+            double tmpx = xp->x - xc;
+            double tmpy = xp->y - yc;
+
             xp->x = FL_nint( ( tmpx + tmpy ) * FACT + xc );
             xp->y = FL_nint( ( - tmpx + tmpy ) * FACT + yc );
         }
     else if ( a == 135 )
         for ( ; xp < xps; xp++ )
         {
-            tmpx = xp->x - xc;
-            tmpy = xp->y - yc;
+            double tmpx = xp->x - xc;
+            double tmpy = xp->y - yc;
+
             xp->x = FL_nint( ( - tmpx + tmpy ) * FACT + xc );
             xp->y = FL_nint( ( - tmpx - tmpy ) * FACT + yc );
         }
     else if ( a == 225 )
         for ( ; xp < xps; xp++ )
         {
-            tmpx = xp->x - xc;
-            tmpy = xp->y - yc;
+            double tmpx = xp->x - xc;
+            double tmpy = xp->y - yc;
+
             xp->x = FL_nint( ( - tmpx - tmpy ) * FACT + xc );
             xp->y = FL_nint( ( tmpx - tmpy ) * FACT + yc );
         }
     else if ( a == 315 )
         for ( ; xp < xps; xp++ )
         {
-            tmpx = xp->x - xc;
-            tmpy = xp->y - yc;
+            double tmpx = xp->x - xc;
+            double tmpy = xp->y - yc;
+
             xp->x = FL_nint( ( tmpx - tmpy ) * FACT + xc );
             xp->y = FL_nint( ( tmpx + tmpy ) * FACT + yc );
         }
@@ -381,8 +384,9 @@ rotate_it( FL_Coord xc,
 
         for ( ; xp < xps; xp++ )
         {
-            tmpx = xp->x - xc;
-            tmpy = xp->y - yc;
+            double tmpx = xp->x - xc;
+            double tmpy = xp->y - yc;
+
             xp->x = FL_nint( xc + tmpx * cosfact + tmpy * sinfact );
             xp->y = FL_nint( yc - tmpx * sinfact + tmpy * cosfact );
         }
@@ -826,24 +830,28 @@ draw_ripplelines( FL_Coord x,
     int ym = y + ( h + 1 ) / 2,
         xm = x + ( w + 1 ) / 2;
     int xs,
-        ys,
-        i,
-        mw = 3;
+        ys;
 
     xs = xm - 5;
     ys = ym - 5;
 
     if ( angle == 0 || angle == 180 )
+    {
+        int i;
+
         for ( i = 0; i < 3; i++ )
         {
+            int mw = 3;
+
             fl_line( x + mw, ys, x + w - 2 - mw, ys, FL_LEFT_BCOL );
             ys += 1;
             fl_line( x + mw, ys, x + w - 2 - mw, ys, FL_RIGHT_BCOL );
             ys += 3;
         }
+    }
     else if ( angle == 90 || angle == 270 )
     {
-        int e;
+        int e, i;
 
         y += ( h - w ) / 2;
         swapit( FL_Coord, w, h );
@@ -851,6 +859,8 @@ draw_ripplelines( FL_Coord x,
         e = h < 15;
         for ( i = 0; i < 3; i++ )
         {
+            int mw = 3;
+
             fl_line( xs, y + mw - e, xs, y + h - 2 - mw + e, FL_LEFT_BCOL );
             xs += 1;
             fl_line( xs, y + mw - e, xs, y + h - 2 - mw + e, FL_RIGHT_BCOL );

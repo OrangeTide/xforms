@@ -58,13 +58,13 @@ default_filter( FL_OBJECT * ob  FL_UNUSED_ARG,
                 double      totalsec )
 {
     static char buf[ 32 ];
-    int hr,
-        minutes;
+    int minutes;
     double sec;
 
     if ( totalsec >= 3600.0 )
     {
-        hr = totalsec / 3600.0 + 0.001;
+        int hr = totalsec / 3600.0 + 0.001;
+
         minutes = totalsec / 60.0 + 0.001;
         minutes -= hr * 60;
         sec = totalsec - 60 * ( minutes + 60 * hr );

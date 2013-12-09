@@ -556,8 +556,7 @@ read_tag( FILE * fp,
     int tag_val,
         count,
         type,
-        nbyte,
-        i;
+        nbyte;
     TIFFTag *tag;
 
     fseek( fp, offset, SEEK_SET );
@@ -600,10 +599,12 @@ read_tag( FILE * fp,
         fseek( fp, tag->offset, SEEK_SET );
     }
 
-    /* we read the colormap seperately */
+    /* We read the colormap seperately */
 
     if ( tag->tag_value != ColorMap )
     {
+        int i;
+
         for ( i = 0; i < count; i++)
             tag->value[ i ] = ( sp->readit[ type ] )( fp );
     }
@@ -915,7 +916,6 @@ load_tiff_colormap( FL_IMAGE * im )
     FILE *fp = im->fpin;
     TIFFTag *tag = find_tag( ColorMap );
     SPEC *sp = im->io_spec;
-    int i;
 
     if ( ! tag->count )
         return 0;
@@ -928,6 +928,8 @@ load_tiff_colormap( FL_IMAGE * im )
 
     if ( im->map_len > 0 )
     {
+        int i;
+
         fseek( fp, tag->offset, SEEK_SET );
 
         for ( i = 0; i < im->map_len; i++ )

@@ -192,7 +192,6 @@ fl_set_font_name( int          n,
                   const char * name )
 {
     FL_FONT *flf;
-    int i;
 
     if ( n < 0 || n >= FL_MAXFONTS )
     {
@@ -216,6 +215,8 @@ fl_set_font_name( int          n,
 
     if ( *flf->fname )
     {
+        int i;
+
         for ( i = 0; i < flf->nsize; i++ )
             XFreeFont( flx->display, flf->fs[ i ] );
         *flf->fname = '\0';
@@ -664,7 +665,6 @@ get_fname( const char * str,
 {
     static char fname[ sizeof fli_curfnt ];
     char len_str[ 50 ];    /* should be enough for all ints */
-    int len;
     char *p;
 
     /* If necessary truncate font names that are too long, the caller
@@ -675,7 +675,8 @@ get_fname( const char * str,
 
     if ( ( p = strchr( fname, '?' ) ) )
     {
-        len = sprintf( len_str, "%d0", size );
+        int len = sprintf( len_str, "%d0", size );
+
         if ( len + strlen( str ) <= sizeof fname - 1 )
         {
             memmove( p + len, p + 1, strlen( p ) );

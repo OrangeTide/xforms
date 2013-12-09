@@ -461,18 +461,13 @@ within_selection( double mx,
 void
 handle_move( const XEvent * xev )
 {
+    double mx,
+           my;
     double x,
            y,
            w,
            h;
-    double mx,
-           my;
-    double ox,
-           oy,
-           ow,
-           oh;
-    int i,
-        s;
+    int s;
 
     if ( cur_form == NULL || backf )
         return;
@@ -497,10 +492,11 @@ handle_move( const XEvent * xev )
     }
     else
     {
-        ox = x;
-        oy = y;
-        ow = w;
-        oh = h;
+        int i;
+        double ox = x;
+        double oy = y;
+        double ow = w;
+        double oh = h;
 
         /* Show the rubberband box */
 
@@ -1137,7 +1133,6 @@ raise_selection( void )
     {
         FL_OBJECT *first,
                   *last;
-        int idx;
 
         first = last = selobj[ i ];
 
@@ -1146,6 +1141,8 @@ raise_selection( void )
 
         if ( first->objclass == FL_BEGIN_GROUP )
         {
+            int idx;
+
             /* If a whole group is selected we move it all at once,
                including the objects marking the groups begin and end */
 
@@ -1232,7 +1229,6 @@ lower_selection( void )
     {
         FL_OBJECT *first,
                   *last;
-        int idx;
 
         first = last = selobj[ i ];
 
@@ -1241,6 +1237,8 @@ lower_selection( void )
 
         if ( first->objclass == FL_END_GROUP )
         {
+            int idx;
+
             do
             {
                 first = first->prev;

@@ -184,10 +184,7 @@ fli_drw_slider( FL_OBJECT  * ob,
              ysl,
              hsl,
              wsl;
-    FL_Coord absbw = FL_abs( bw ),
-             bw2,
-             absbw2;
-    int slbox;
+    FL_Coord absbw = FL_abs( bw );
     FLI_SCROLLBAR_KNOB knob;
 
     fli_calc_slider_size( ob, &knob );
@@ -250,6 +247,10 @@ fli_drw_slider( FL_OBJECT  * ob,
     }
     else
     {
+        FL_COORD bw2,
+                 absbw2;
+        int slbox;
+
         switch ( ob->boxtype )
         {
             case FL_UP_BOX:
@@ -285,8 +286,10 @@ fli_drw_slider( FL_OBJECT  * ob,
         /* This is the height of the sliding bar */
 
         absbw2 = absbw >= 2 ? absbw - 1 : absbw - ( bw < 0 );
+
         if ( absbw2 == 0 )
             absbw2 = 1;
+
         bw2 = bw > 0 ? absbw2 : - absbw2;
 
         if (    sltype == FL_VERT_THIN_SLIDER

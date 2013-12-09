@@ -61,7 +61,7 @@ main( int    argc,
     args = argv + parse_command_line( &argc, argv );
 
     if (   argc < 3 ||
-         ! ( fmt = argc >= 4 ? args[ 3 ] : strrchr( args[ 2 ], '.' ) ) )
+         ! ( fmt = ( argc >= 4 ? args[ 3 ] : strrchr( args[ 2 ], '.' ) ) ) )
         usage( argv[ 0 ], argc >= 3 );
 
     fmt += fmt[ 0 ] == '.';

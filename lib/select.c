@@ -1176,9 +1176,7 @@ draw_select( FL_OBJECT * obj )
 
     if ( obj->type == FL_MENU_SELECT )
     {
-        int box_x,
-            box_y,
-            box_h = FL_max( 6 + ( obj->bw > 0 ), 0.1 * obj->h ),
+        int box_h  =   FL_max( 6 + ( obj->bw > 0 ), 0.1 * obj->h ),
             box_bw = - FL_max( bw - ( obj->bw > 0 ), 1 );
 
         box_w = FL_max( 0.11 * obj->w, 13 );
@@ -1188,8 +1186,8 @@ draw_select( FL_OBJECT * obj )
              && box_w >= 2 * box_bw
              && box_h >= 2 * box_bw )
         {
-            box_x = obj->x + obj->w -box_w - bw - 2;
-            box_y = obj->y + ( obj->h - box_h ) / 2;
+            int box_x = obj->x + obj->w -box_w - bw - 2;
+            int box_y = obj->y + ( obj->h - box_h ) / 2;
 
             fl_drw_box( FL_UP_BOX, box_x, box_y, box_w, box_h, obj->col1,
                         box_bw );

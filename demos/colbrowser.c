@@ -33,6 +33,7 @@
 
 #include "include/forms.h"
 #include <stdlib.h>
+#include <limits.h>
 
 #define MAX_RGB 3000
 
@@ -259,29 +260,23 @@ search_entry( int r,
 {
     RGBdb *db = rgbdb;
     int i,
-        j,
-        diffr,
-        diffg,
-        diffb;
-    unsigned int diff,
-                 mindiff;
-
-    mindiff = ~0;
+        j;
+    unsigned int mindiff = UINT_MAX;
 
     for ( i = j = 0; db->r < 256; db++, i++ )
     {
-        diffr = r - db->r;
-        diffg = g - db->g;
-        diffb = b - db->b;
+        int diffr = r - db->r;
+        int diffg = g - db->g;
+        int diffb = b - db->b;
 
 #ifdef FL_LINEAR
-        diff = ( int ) ( 3.0 * FL_abs( r - db->r ) +
-                         5.9 * FL_abs( g - db->g ) +
-                         1.1 * FL_abs(b - db->b  ) );
+        unsigned int diff = ( int ) ( 3.0 * FL_abs( diffr ) +
+                                      5.9 * FL_abs( diffg ) +
+                                      1.1 * FL_abs( diffb ) );
 #else
-        diff = ( int ) ( 3.0 * ( diffr * diffr ) +
-                         5.9 * ( diffg * diffg ) +
-                         1.1 * ( diffb * diffb ) );
+        unsigned int diff = ( int ) ( 3.0 * ( diffr * diffr ) +
+                                      5.9 * ( diffg * diffg ) +
+                                      1.1 * ( diffb * diffb ) );
 #endif
 
         if ( mindiff > diff )
