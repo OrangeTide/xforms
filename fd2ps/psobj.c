@@ -27,8 +27,9 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
+
 #include "include/forms.h"
 #include "fd2ps.h"
 #include "flinternal.h"     /* for UPBOX8 etc */
@@ -507,8 +508,6 @@ flps_draw_button( FL_OBJECT * ob )
                       dw, dh, ob->lcol, 0, 0, "@returnarrow" );
         off2 = dw - 2;
     }
-
-    dh = FL_min( 8, dh );
 
     if ( ob->type == FL_MENU_BUTTON && ob->boxtype == FL_UP_BOX )
     {
@@ -1100,12 +1099,13 @@ flps_draw_dial( FL_OBJECT * ob )
 
     if ( ob->type == FL_NORMAL_DIAL )
     {
-        float r = FL_nint( 0.1 * radius );
+        float r;
 
 #if 0
         float xc = x + iradius - r - 2, yc = y;
         rotate_it( xp, xc, yc, dangle );
-        if ( r < 1 )
+
+        if ( ( r = = FL_nint( 0.1 * radius ) ) < 1 )
             r = 1;
         ps_circ( 1, xp[ 0 ].x, xp[ 0 ].y, r, ob->col2 );
         ps_circ( 0, xp[ 0 ].x, xp[ 0 ].y, r, FL_BLACK );
@@ -1560,8 +1560,6 @@ ps_drw_slider_shape( int          boxtype,
         }
 
         absbw2 = absbw >= 2 ? absbw - 1 : absbw - ( bw < 0 );
-        if ( absbw2 == 0 )
-            absbw = 1;
         bw2 = bw > 0 ? absbw2 : - absbw2;
 
         ps_draw_box( slbox, slx, sly, slw, slh, col2, bw2 );

@@ -21,7 +21,7 @@
 /* A demo that shows the use of push buttons.  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"

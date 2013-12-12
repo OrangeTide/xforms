@@ -25,8 +25,9 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
+
 #include "include/forms.h"
 #include "fd2ps.h"
 #include <stdlib.h>

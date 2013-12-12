@@ -1,4 +1,4 @@
-^^^^^^/*
+/*
  *  This file is part of XForms.
  *
  *  XForms is free software; you can redistribute it and/or modify it
@@ -21,8 +21,10 @@
 /*
  * test popups
  */
+
+
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -280,7 +282,7 @@ create_form_pupform( void )
 
     fdui->pupform = fl_bgn_form( FL_NO_BOX, 320, 250 );
 
-    obj = fl_add_box( FL_UP_BOX, 0, 0, 320, 250, "" );
+    fl_add_box( FL_UP_BOX, 0, 0, 320, 250, "" );
 
     fdui->menu = obj = fl_add_menu( FL_PULLDOWN_MENU, 20, 95, 60, 20, "Menu" );
     fl_set_object_boxtype( obj, FL_FLAT_BOX );

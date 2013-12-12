@@ -16,7 +16,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -295,7 +295,7 @@ fl_replace_select_item( FL_OBJECT      * obj,
 
         fl_popup_entry_delete( old_item );
 
-        if ( sp->sel->entry == old_item )
+        if ( sp->sel != NULL && sp->sel->entry == old_item )
             sp->sel = find_first_item( obj );
     }
     else

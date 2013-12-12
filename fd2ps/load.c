@@ -27,7 +27,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -543,13 +543,14 @@ read_form( FILE * fl )
          || *fname != '='
          || fscanf( fl, "Name: %1023s\n", fname ) != 1 )
     {
-        /* This is an error and should be handled JTT*/
+        fprintf( stderr, "Inbvalid format of input file.\n" );
+        exit( 1 );
     }
 
-    if (    fscanf( fl, "Width: %lf\n", &w ) != 1
-         || fscanf( fl, "Height: %lf\n", &h ) != 1 )
+    if ( fscanf( fl, "Width: %lf\nHeight: %lf\n",  &w, &h ) != 2 )
     {
-        /* This is an error and should be handled JTT*/
+        fprintf( stderr, "Inbvalid format of input file.\n" );
+        exit( 1 );
     }
 
     cur_form = make_form( FL_NO_BOX, w, h );
@@ -560,7 +561,7 @@ read_form( FILE * fl )
         /* This is an error and should be handled JTT*/
     }
 
-    /* Here should be checked if as many objects could be loaded as expected
+    /* Here should be checks if as many objects could be loaded as expected
        JTT */
 
     while ( --onumb >= 0 )

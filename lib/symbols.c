@@ -32,7 +32,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -208,7 +208,8 @@ fl_draw_symbol( const char * label,
     pos = 1;
 
     /* Check for character sequences that are for increasing or decreasing
-       the size of the symbol, maintain the aspect ratio or for rotation. */
+       the size of the symbol, maintain the aspect ratio or indicate
+       rotation. */
 
     while ( label[ pos ] )
     {
@@ -235,15 +236,15 @@ fl_draw_symbol( const char * label,
         {
             if ( label[ pos ] == '0' )
             {
-                rotated = 0;
-                while (    label[ ++pos ]
-                        && isdigit( ( unsigned char ) label[ pos ] ) )
-                    rotated = 10 * rotated + label[ pos ] - '0';
+                char *eptr;
 
-                while ( rotated > 360 )
-                    rotated -= 360;
+                rotated = strtol( label + ++pos, &eptr, 10 );
+                pos = label - eptr;
+
+                while ( rotated >= 360 )
+                    rotated %= 360;
                 while ( rotated < 0 )
-                    rotated += 360;
+                    rotated = 360 - ( -rotated % 360 );
             }
             else
                 rotated = defr[ label[ pos++ ] - '0' ];
@@ -973,51 +974,43 @@ draw_uparrow( FL_Coord x,
         /* undo driver's transformation */
 
         swapit( FL_Coord, w, h );
-        x -= ( w - h ) / 2;
-        y -= ( h - w ) / 2;
+
         dx = w / 2;
         dy = h / 2;
 
-        /* correct for human perception error */
-
-        y++;
-        h -= 2;
-
-        fl_line( xc, yc - dy, xc - dx, yc + dy, FL_LEFT_BCOL );
-        fl_line( xc, yc - dy, xc + dx, yc + dy, FL_RIGHT_BCOL );
+        fl_line( xc,      yc - dy, xc - dx, yc + dy, FL_LEFT_BCOL   );
+        fl_line( xc,      yc - dy, xc + dx, yc + dy, FL_RIGHT_BCOL  );
         fl_line( xc - dx, yc + dy, xc + dx, yc + dy, FL_BOTTOM_BCOL );
 
     }
     else if ( a == 270 )
     {
         swapit( FL_Coord, w, h );
-        x -= ( w - h ) / 2;
-        y -= ( h - w ) / 2;
+
         dx = w / 2;
         dy = h / 2;
 
-        fl_line( xc - dx, yc - dy, xc + dx, yc - dy, FL_TOP_BCOL );
-        fl_line( xc + dx, yc - dy, xc, yc + dy, FL_RIGHT_BCOL );
-        fl_line( xc, yc + dy, xc - dx, yc - dy, FL_LEFT_BCOL );
+        fl_line( xc - dx, yc - dy, xc + dx, yc - dy, FL_TOP_BCOL   );
+        fl_line( xc + dx, yc - dy, xc     , yc + dy, FL_RIGHT_BCOL );
+        fl_line( xc,      yc + dy, xc - dx, yc - dy, FL_LEFT_BCOL  );
     }
     else if ( a == 180 )
     {
         dy = h / 2;
         dx = w / 2;
 
-        fl_line( xc - dx, yc, xc + dx, yc - dy, FL_LEFT_BCOL );
-        fl_line( xc + dx, yc - dy, xc + dx, yc + dy, FL_RIGHT_BCOL );
-        fl_line( xc + dx, yc + dy, xc - dx, yc, FL_BOTTOM_BCOL );
+        fl_line( xc - dx, yc,      xc + dx, yc - dy, FL_LEFT_BCOL  );
+        fl_line( xc + dx, yc - dy, xc + dx, yc + dy, FL_RIGHT_BCOL  );
+        fl_line( xc + dx, yc + dy, xc - dx, yc,      FL_BOTTOM_BCOL );
     }
     else
     {
         dx = w / 2;
         dy = h / 2;
-        fl_line( xc - dx, yc - dy, xc + dx, yc,
-                 fli_dithered( fl_vmode ) ? FL_BLACK : FL_TOP_BCOL );
-        fl_line( xc - dx, yc + dy, xc + dx, yc, FL_RIGHT_BCOL );
-        fl_line( xc - dx, yc - dy, xc - dx, yc + dy,
-                 fli_dithered( fl_vmode ) ? FL_BLACK : FL_LEFT_BCOL );
+
+        fl_line( xc - dx, yc - dy, xc + dx, yc,      FL_TOP_BCOL   );
+        fl_line( xc - dx, yc + dy, xc + dx, yc,      FL_RIGHT_BCOL );
+        fl_line( xc - dx, yc - dy, xc - dx, yc + dy, FL_LEFT_BCOL  );
     }
 }
 
@@ -1046,47 +1039,42 @@ draw_dnarrow( FL_Coord x,
         /* undo driver's transformation */
 
         swapit( FL_Coord, w, h );
-        x -= ( w - h ) / 2;
-        y -= ( h - w ) / 2;
+
         dx = w / 2;
         dy = h / 2;
 
-        /* correct for human perception error */
-
-        y++;
-        h -= 2;
-
-        fl_line( xc, yc - dy, xc - dx, yc + dy, FL_RIGHT_BCOL );
-        fl_line( xc, yc - dy, xc + dx, yc + dy, FL_LEFT_BCOL );
-        fl_line( xc - dx, yc + dy, xc + dx, yc + dy, FL_TOP_BCOL );
+        fl_line( xc,      yc - dy, xc - dx, yc + dy, FL_RIGHT_BCOL );
+        fl_line( xc,      yc - dy, xc + dx, yc + dy, FL_LEFT_BCOL  );
+        fl_line( xc - dx, yc + dy, xc + dx, yc + dy, FL_TOP_BCOL   );
     }
     else if ( a == 270 )
     {
         swapit( FL_Coord, w, h );
-        x -= ( w - h ) / 2;
-        y -= ( h - w ) / 2;
+
         dx = w / 2;
         dy = h / 2;
 
         fl_line( xc - dx, yc - dy, xc + dx, yc - dy, FL_BOTTOM_BCOL );
-        fl_line( xc + dx, yc - dy, xc, yc + dy, FL_LEFT_BCOL );
-        fl_line( xc, yc + dy, xc - dx, yc - dy, FL_RIGHT_BCOL );
+        fl_line( xc + dx, yc - dy, xc,      yc + dy, FL_LEFT_BCOL   );
+        fl_line( xc,      yc + dy, xc - dx, yc - dy, FL_RIGHT_BCOL  );
     }
     else if ( a == 180 )
     {
         dy = h / 2;
         dx = w / 2;
-        fl_line( xc - dx, yc, xc + dx, yc - dy, FL_RIGHT_BCOL );
-        fl_line( xc + dx, yc - dy, xc + dx, yc + dy, FL_LEFT_BCOL );
-        fl_line( xc + dx, yc + dy, xc - dx, yc, FL_BOTTOM_BCOL );
+
+        fl_line( xc - dx, yc,      xc + dx, yc - dy, FL_RIGHT_BCOL  );
+        fl_line( xc + dx, yc - dy, xc + dx, yc + dy, FL_LEFT_BCOL   );
+        fl_line( xc + dx, yc + dy, xc - dx, yc,      FL_BOTTOM_BCOL );
     }
     else
     {
         dx = w / 2;
         dy = h / 2;
+
         fl_line( xc - dx, yc - dy, xc - dx, yc + dy, FL_RIGHT_BCOL );
-        fl_line( xc - dx, yc - dy, xc + dx, yc, FL_RIGHT_BCOL );
-        fl_line( xc - dx, yc + dy, xc + dx, yc, FL_TOP_BCOL );
+        fl_line( xc - dx, yc - dy, xc + dx, yc,      FL_RIGHT_BCOL );
+        fl_line( xc - dx, yc + dy, xc + dx, yc,      FL_TOP_BCOL   );
     }
 }
 

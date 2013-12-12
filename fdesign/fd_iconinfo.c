@@ -17,7 +17,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include <ctype.h>
@@ -285,7 +285,7 @@ check_for_data( const char * line,
 
     line += 4;
 
-    if ( ! *line || ! isblank( *line ) )
+    if ( ! *line || ! ( isblank( *line ) || *line == '*' ) )
         return NULL;
 
     while ( *++line && isblank( *line ) )
@@ -297,11 +297,8 @@ check_for_data( const char * line,
     {
         line += 5;
 
-        if ( ! *line || ! isblank( *line ) )
-            return NULL;
-
-        while ( *++line && isblank( *line ) )
-            /* empty */ ;
+        while ( *line && isblank( *line ) )
+            line++;
     }
 
     /* When reading an xpm file a '*' must come next */
@@ -311,8 +308,8 @@ check_for_data( const char * line,
         if ( ! *line || *line != '*' )
             return NULL;
 
-        while ( *++line && isblank( *line ) )
-            /* empty */;
+        while ( ++line && isblank( *line ) )
+            /* empty */ ;
     }    
 
     /* Now we should have arrived at the variable name */
@@ -326,29 +323,26 @@ check_for_data( const char * line,
                  || *line == '_' ) )
         line++;
 
-    /* A blank or a '[' must immediately followe the variable name */
-
-    if ( ! *line || ! ( isblank( *line ) || *line == '[' ) )
-        return NULL;
-
     /* Check that the variable name is ok */
 
     len = line - start;
-    if ( len > MAX_VAR_LEN - 1 || len <= strlen( what ) )
+    if ( len > MAX_VAR_LEN - 1 || ( ! strcmp( what, "_bits" ) && len < 6 ) )
         return NULL;
 
     strncpy( name, start, len );
     name[ len ] = '\0';
+
+    /* A blank or a '[' must immediately followe the variable name */
+
+    if ( ! *line || ! ( isblank( *line ) || *line == '[' ) )
+        return NULL;
 
     /* Make sure that the next non-blank char is a '[' */
 
     while ( *line && isblank( *line ) )
         line++;
 
-    if ( *line != '[' )
-        return NULL;
-
-    return name;
+    return *line == '[' ? name : NULL;
 }
 
 

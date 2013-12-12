@@ -29,7 +29,7 @@
 #define SIX_OCLOCK 1
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"

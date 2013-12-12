@@ -28,7 +28,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -707,8 +707,6 @@ flps_apply_gamma( float gamma )
         if ( flps->verbose )
             fprintf( stderr, "fm->r=%d\n", fm->r );
     }
-
-    lastgamma = gamma;
 }
 
 
@@ -931,36 +929,32 @@ draw_uparrow( int      x,
           dy;
     int d = 3 + ( w + h ) * 0.06;
 
-    x += d;
-    y += d;
-    w -= 2 * d;
-    h -= 2 * d;
-    dx = w / 2;
-    dy = h / 2;
+    dx = w / 2 - d;
+    dy = h / 2 - d;
 
     if ( angle == 90 )
     {
-        flps_line( xc, yc + dy, xc - dx, yc - dy, FL_LEFT_BCOL );
+        flps_line( xc,      yc + dy, xc - dx, yc - dy, FL_LEFT_BCOL   );
         flps_line( xc - dx, yc - dy, xc + dx, yc - dy, FL_BOTTOM_BCOL );
-        flps_line( xc + dx, yc - dy, xc, yc + dy, FL_RIGHT_BCOL );
+        flps_line( xc + dx, yc - dy, xc,      yc + dy, FL_RIGHT_BCOL  );
     }
     else if ( angle == 180 )
     {
-        flps_line( xc - dx, yc, xc + dx, yc + dy, FL_TOP_BCOL );
-        flps_line( xc + dx, yc + dy, xc + dx, yc - dy, FL_RIGHT_BCOL );
-        flps_line( xc + dx, yc - dy, xc - dx, yc, FL_BOTTOM_BCOL );
+        flps_line( xc - dx, yc,      xc + dx, yc + dy, FL_TOP_BCOL    );
+        flps_line( xc + dx, yc + dy, xc + dx, yc - dy, FL_RIGHT_BCOL  );
+        flps_line( xc + dx, yc - dy, xc - dx, yc,      FL_BOTTOM_BCOL );
     }
     else if ( angle == 270 )
     {
-        flps_line( xc - dx, yc + dy, xc, yc - dy, FL_BOTTOM_BCOL );
-        flps_line( xc, yc - dy, xc + dx, yc + dy, FL_RIGHT_BCOL );
-        flps_line( xc + dx, yc + dy, xc - dx, yc + dy, FL_TOP_BCOL );
+        flps_line( xc - dx, yc + dy, xc,      yc - dy, FL_BOTTOM_BCOL );
+        flps_line( xc,      yc - dy, xc + dx, yc + dy, FL_RIGHT_BCOL  );
+        flps_line( xc + dx, yc + dy, xc - dx, yc + dy, FL_TOP_BCOL    );
     }
     else
     {
-        flps_line( x, yc - dy, x + w, yc, FL_BOTTOM_BCOL );
-        flps_line( x, yc + dy, x + w, yc, FL_RIGHT_BCOL );
-        flps_line( x, yc - dy, x, yc + dy, FL_LEFT_BCOL );
+        flps_line( xc, yc - dy, xc + w, yc,      FL_BOTTOM_BCOL );
+        flps_line( xc, yc + dy, xc + w, yc,      FL_RIGHT_BCOL  );
+        flps_line( xc, yc - dy, xc,     yc + dy, FL_LEFT_BCOL   );
     }
 }
 
@@ -982,37 +976,32 @@ draw_dnarrow( int      x,
           dy;
     int d = 3 + ( w + h ) * 0.06;
 
-    x += d;
-    y += d;
-    w -= 2 * d;
-    h -= 2 * d;
-
-    dx = w / 2;
-    dy = h / 2;
+    dx = w / 2 - d;
+    dy = h / 2 - d;
 
     if ( angle == 90 )
     {
-        flps_line( xc, yc + dy, xc - dx, yc - dy, FL_RIGHT_BCOL );
-        flps_line( xc - dx, yc - dy, xc + dx, yc - dy, FL_TOP_BCOL );
-        flps_line( xc + dx, yc - dy, xc, yc + dy, FL_TOP_BCOL );
+        flps_line( xc,      yc + dy, xc - dx, yc - dy, FL_RIGHT_BCOL );
+        flps_line( xc - dx, yc - dy, xc + dx, yc - dy, FL_TOP_BCOL   );
+        flps_line( xc + dx, yc - dy, xc,      yc + dy, FL_TOP_BCOL   );
     }
     else if ( angle == 180 )
     {
-        flps_line( xc - dx, yc, xc + dx, yc + dy, FL_RIGHT_BCOL );
-        flps_line( xc + dx, yc + dy, xc + dx, yc - dy, FL_LEFT_BCOL );
-        flps_line( xc + dx, yc - dy, xc - dx, yc, FL_TOP_BCOL );
+        flps_line( xc - dx, yc, xc + dx, yc + dy,      FL_RIGHT_BCOL );
+        flps_line( xc + dx, yc + dy, xc + dx, yc - dy, FL_LEFT_BCOL  );
+        flps_line( xc + dx, yc - dy, xc - dx, yc,      FL_TOP_BCOL   );
     }
     else if ( angle == 270 )
     {
-        flps_line( xc - dx, yc + dy, xc, yc - dy, FL_RIGHT_BCOL );
-        flps_line( xc, yc - dy, xc + dx, yc + dy, FL_LEFT_BCOL );
+        flps_line( xc - dx, yc + dy, xc,      yc - dy, FL_RIGHT_BCOL  );
+        flps_line( xc,      yc - dy, xc + dx, yc + dy, FL_LEFT_BCOL   );
         flps_line( xc + dx, yc + dy, xc - dx, yc + dy, FL_BOTTOM_BCOL );
     }
     else
     {
-        flps_line( xc - dx, yc - dy, xc - dx, yc + dy, FL_RIGHT_BCOL );
-        flps_line( xc - dx, yc - dy, xc + dx, yc, FL_TOP_BCOL );
-        flps_line( xc - dx, yc + dy, xc + dx, yc, FL_BOTTOM_BCOL );
+        flps_line( xc - dx, yc - dy, xc - dx, yc + dy, FL_RIGHT_BCOL  );
+        flps_line( xc - dx, yc - dy, xc + dx, yc,      FL_TOP_BCOL    );
+        flps_line( xc - dx, yc + dy, xc + dx, yc,      FL_BOTTOM_BCOL );
     }
 }
 
@@ -1107,7 +1096,8 @@ draw_bararrowhead( int      x,
     flps_output( "gsave %.1f %.1f translate %d rotate\n", xc, yc, angle );
 
     xl = -dx + 1.1 * mar;
-    p = point;
+
+    p  = point;
     AddVertex( p, xl, -dy );
     AddVertex( p, xl + dbar, -dy );
     AddVertex( p, xl + dbar, dy );

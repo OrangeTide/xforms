@@ -32,7 +32,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -1750,10 +1750,9 @@ fl_create_input( int          type,
             sp->maxchars = 0;
     }
 
-    sp->dummy       = obj;
-    sp->dummy->spec = sp;
-    sp->input       = obj;
-    sp->field_char  = ' ';
+    sp->dummy      = obj;
+    sp->input      = obj;
+    sp->field_char = ' ';
 
     if ( obj->type == FL_INT_INPUT )
         sp->validate = int_validator;

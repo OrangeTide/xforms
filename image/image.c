@@ -25,7 +25,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -388,7 +388,7 @@ flimage_load( const char * file )
                                     image->green_lut[ tc ],
                                     image->blue_lut[ tc ] );
 
-    /* create a next_frame function on the fly if possible */
+    /* Create a next_frame function on the fly if possible */
 
     if ( ! image->next_frame && image->random_frame )
         image->next_frame = default_next_frame;

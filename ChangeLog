@@ -1,3 +1,13 @@
+2013-12-13 Jens Thoms Toerring    <jt@toerring.de>
+
+	* Bug fixes in fdesign: Some xpm files weren't read in
+	and editing choice/menu/browser object attributes could
+	crash the program
+	* Changes to build system to avoid recompilations on
+	install
+	* Clean-up of code after check with clang static
+	analyzer
+
 2013-12-09 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign: Applied a patch Serge Bromow created to

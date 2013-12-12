@@ -28,7 +28,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -350,7 +350,10 @@ select_cb( FL_OBJECT * obj,
             if ( lfs->fselect_cb || lfs->fselect->attached )
             {
                 const char *fn = cmplt_name( );
-                lfs->fselect_cb( fn, lfs->callback_data );
+
+                if ( lfs->fselect_cb )
+                    lfs->fselect_cb( fn, lfs->callback_data );
+
                 if ( fli_is_valid_dir( fn ) )
                     fl_set_directory( fn );
             }
@@ -933,7 +936,7 @@ fl_show_fselector( const char * message,
 
             fli_fix_dirname( fs->dname );
 
-            if ( fs->fselect_cb || fs->fselect->attached )
+            if ( fs->fselect_cb )
                 fs->fselect_cb( fs->dname, fs->callback_data );
 
             if ( fli_is_valid_dir( fs->dname ) )
@@ -956,8 +959,9 @@ fl_show_fselector( const char * message,
             }
         }
     } while (    obj != fs->cancel
-              && ( obj != fs->ready
-                   || fs->fselect_cb || fs->fselect->attached ) );
+              && (    obj != fs->ready
+                   || fs->fselect_cb
+                   || fs->fselect->attached ) );
 
     fl_hide_form( fs->fselect );
 

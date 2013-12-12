@@ -22,7 +22,7 @@
 */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include <stdio.h>
@@ -73,7 +73,7 @@ main( int    argc,
     fl_set_object_color( obj, FL_COL1, FL_INDIANRED );
     fl_set_button_shortcut( obj, "4", 0 );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 220, 90, 100, 30, "Exit" );
+    fl_add_button( FL_NORMAL_BUTTON, 220, 90, 100, 30, "Exit" );
 
     fl_end_form( );
 

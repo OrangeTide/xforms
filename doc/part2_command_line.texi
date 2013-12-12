@@ -28,13 +28,18 @@ the input @code{.fd} will only be read but never modified when this
 option is used.
 @item -migrate @i{fd-file-list}
 When fdesign is invoked with the @code{-convert} option it just
-creates new defived @code{.c} anf @code{.h} files but leaves the
+creates new @code{.c} and @code{.h} files but leaves the
 @code{.fd} files unmodified. In some situations, e.g.@: if you
-want to auto,atically upgrade @code{.fd} files created by an
-older version of fdesign, you can instead use the @code{-migrate}
-option which does all what the @code{-conbert} option does and
+also want to automatically upgrade @code{.fd} files created with
+older versions of fdesign, you can instead use the @code{-migrate}
+option which does all what the @code{-convert} option does but
 also writes out a new version of the @code{.fd} file it just
-read in.
+read in. It also does a few extra checks, e.g.@: it will test
+if XBM and XPM image files used for bitmaps and pixmaps actually
+exist (if they don't the newly generated @code{.fd} file won't
+reference them anymore, so carefully look out for error messages
+and, if necessary, restore it from the generated @code{.fd.bak}
+backup file).
 @item -version
 Prints current version and quits.
 @item -help

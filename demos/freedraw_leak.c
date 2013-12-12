@@ -24,7 +24,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -321,20 +321,19 @@ create_form_drawfree( void )
 
 	fdui->drawfree = fl_bgn_form( FL_NO_BOX, 530, 490 );
 
-	obj = fl_add_box( FL_UP_BOX, 0, 0, 530, 490, "" );
+	fl_add_box( FL_UP_BOX, 0, 0, 530, 490, "" );
 
-	obj = fl_add_frame( FL_DOWN_FRAME, 145, 55, 370, 405, "" );
+	fl_add_frame( FL_DOWN_FRAME, 145, 55, 370, 405, "" );
 
 	fdui->freeobj = obj = fl_add_free( FL_NORMAL_FREE, 145, 55, 370, 405, "",
 									   freeobject_handler );
-/*    fl_set_object_dblbuffer( obj, 1 ); */
 	fl_set_object_boxtype( obj, FL_FLAT_BOX );
 
 	fdui->colorobj = obj = fl_add_box( FL_BORDER_BOX, 25, 325, 90, 25, "");
-    fl_set_object_color( obj, FL_FREE_COL1, FL_COL1 ),
+    fl_set_object_color( obj, FL_FREE_COL1, FL_COL1 );
 
-		fdui->hsli = obj = fl_add_valslider( FL_HOR_SLIDER, 15, 55, 120, 25,
-											 "Height" );
+    fdui->hsli = obj = fl_add_valslider( FL_HOR_SLIDER, 15, 55, 120, 25,
+                                         "Height" );
     fl_set_object_lalign( obj, FL_ALIGN_TOP );
     fl_set_object_callback( obj, change_size, 1 );
 

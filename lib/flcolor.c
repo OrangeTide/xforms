@@ -36,7 +36,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -287,15 +287,20 @@ fli_query_namedcolor( const char *s )
 {
     FLI_IMAP *flmap;
 
-    for ( flmap = fli_imap;
-          s && flmap < fli_imap + FL_BUILT_IN_COLS + 1; flmap++ )
-        if ( strcmp( s, flmap->name ) == 0 )
+    if ( ! s )
+    {
+        M_err( "fli_query_namedcolor", "Null pointer for color name" );
+        return FL_MAX_COLORS + 1;
+    }
+
+    for ( flmap = fli_imap; flmap < fli_imap + FL_BUILT_IN_COLS + 1; flmap++ )
+        if ( ! strcmp( s, flmap->name ) )
             return flmap->index;
 
     if ( strstr( s, "FL_FREE_COL" ) )
         return FL_FREE_COL1 + atoi( s + 11 ) - 1;
 
-    if ( strcmp( "FL_NoColor", s ) == 0 )
+    if ( ! strcmp( "FL_NoColor", s ) )
         return FL_NoColor;
 
     /* A wild shot */

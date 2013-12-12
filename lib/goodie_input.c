@@ -26,7 +26,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -74,7 +74,7 @@ create_form_input( const char *str1,
     fdui->form = fl_bgn_form( FL_FLAT_BOX, 410, 120 );
     fl_set_form_title( fdui->form, "Input" );
 
-    obj = fl_add_frame( FL_ENGRAVED_FRAME, 8, 9, 394, 67, "" );
+    fl_add_frame( FL_ENGRAVED_FRAME, 8, 9, 394, 67, "" );
 
     fdui->input = obj = fl_add_input( FL_NORMAL_INPUT, 20, 33, 370, 30, str1 );
     fl_set_object_lalign( obj, FL_ALIGN_LEFT_TOP );

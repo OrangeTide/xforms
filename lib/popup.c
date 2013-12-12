@@ -17,7 +17,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -3538,7 +3538,7 @@ is_on_popups( FL_POPUP * popup,
  ***************************************/
 
 static FL_POPUP_RETURN *
-handle_selection( FL_POPUP_ENTRY *entry )
+handle_selection( FL_POPUP_ENTRY * entry )
 {
     FL_POPUP *p;
     int cb_result = 1;
@@ -3587,14 +3587,15 @@ handle_selection( FL_POPUP_ENTRY *entry )
        grand-parent etc.). Interrupt chain of callbacks if one of them
        returns FL_IGNORE. */
 
-    for ( p = entry->popup; p != NULL && cb_result != FL_IGNORE; p = p->parent )
+    for ( p = entry->popup; p && cb_result != FL_IGNORE; p = p->parent )
         if ( p->callback )
         {
             entry->popup->top_parent->ret.popup = p;
             cb_result = p->callback( &entry->popup->top_parent->ret );
         }
 
-    return cb_result != FL_IGNORE ? &entry->popup->top_parent->ret : NULL;
+    return ( cb_result != FL_IGNORE && entry->popup ) ?
+                                        &entry->popup->top_parent->ret : NULL;
 }
 
 

@@ -25,7 +25,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -288,14 +288,11 @@ flps_foldertab_box( int      style,
           top;
     FL_POINT vert[ 10 ],
              *xp;
-    int border,
-        i;
+    int border = ( bw > 0 );
+    int i;
     float absbw = FL_abs( bw );
     float C = 4;
     int savelw = fl_get_linewidth( );
-
-    if ( ! ( border = ( bw > 0 ) ) )
-        bw = -bw;
 
     ctr = absbw / 2;
     x += ctr;
@@ -626,7 +623,6 @@ flps_draw_frame( int      style,
         bw = -bw;
 
     B = border;
-    xp = xpoint;
 
     if ( flps->verbose )
         fprintf( flps->fp, "%%frame (%d %d %d %d)\n", x, y, w, h );

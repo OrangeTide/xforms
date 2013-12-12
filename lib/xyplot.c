@@ -35,7 +35,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -203,12 +203,10 @@ draw_square( FL_OBJECT * ob  FL_UNUSED_ARG,
         h2 = h / 2;
     FL_POINT *ps = p + n;
 
-    if ( flx->win == None )
-        return;
-
-    for ( ; p < ps; p++ )
-        XDrawRectangle( flx->display, flx->win, flx->gc,
-                        p->x - w2, p->y - h2, w, h );
+    if ( flx->win != None )
+        for ( ; p < ps; p++ )
+            XDrawRectangle( flx->display, flx->win, flx->gc,
+                            p->x - w2, p->y - h2, w, h );
 }
 
 
@@ -227,12 +225,10 @@ draw_circle( FL_OBJECT * ob  FL_UNUSED_ARG,
         h2 = h / 2;
     FL_POINT *ps = p + n;
 
-    if ( flx->win == None )
-        return;
-
-    for ( ; p < ps; p++ )
-        XDrawArc( flx->display, flx->win, flx->gc, p->x - w2, p->y - h2,
-                  w, h, 0, 64 * 360 );
+    if ( flx->win != None )
+        for ( ; p < ps; p++ )
+            XDrawArc( flx->display, flx->win, flx->gc, p->x - w2, p->y - h2,
+                      w, h, 0, 64 * 360 );
 }
 
 
@@ -247,23 +243,20 @@ draw_points( FL_OBJECT * ob  FL_UNUSED_ARG,
              int         w,
              int         h )
 {
-    FL_POINT *ps = p + n;
-    int w2 = w / 2,
-        h2 = h / 2;
+    w /= 2;
+    h /= h;
 
-    if ( flx->win == None )
-        return;
+    if ( flx->win != None )
+        for ( ; p < p + n; p++ )
+        {
+            XSegment seg[ ] = { { p->x - w, p->y,     p->x + w, p->y     },
+                                { p->x,     p->y - h, p->x,     p->y + h },
+                                { p->x - w, p->y - h, p->x + w, p->y + h },
+                                { p->x + w, p->y - h, p->x - w, p->y + h } };
 
-    for ( ; p < ps; p++ )
-    {
-        XSegment seg[ ] = { { p->x - w2, p->y,      p->x + w2, p->y      },
-                            { p->x,      p->y - h2, p->x,      p->y + h2 },
-                            { p->x - w2, p->y - h2, p->x + w2, p->y + h2 },
-                            { p->x + w2, p->y - h2, p->x - w2, p->y + h2 } };
-
-        XDrawSegments( flx->display, flx->win, flx->gc,
-                       seg, sizeof seg / sizeof *seg );
-    }
+            XDrawSegments( flx->display, flx->win, flx->gc,
+                           seg, sizeof seg / sizeof *seg );
+        }
 }
 
 
@@ -614,11 +607,7 @@ draw_curve_only( FL_OBJECT * ob )
             fl_lines( xp, nxp, col );
 
         if ( drawsymbol )
-        {
-            xp = sp->xp;    /* always use original point for symbol */
-            nxp = sp->nxp;
             drawsymbol( ob, nplot, sp->xp, sp->nxp, sp->ssize, sp->ssize );
-        }
 
         /* Do keys */
 
@@ -707,7 +696,7 @@ gen_xtic( FL_OBJECT * ob )
     float tic = sp->xtic;
     double x;
     float xmin,
-          xmax = sp->xmax;
+          xmax;
     float mxmin,
           mxmax;
     int i;

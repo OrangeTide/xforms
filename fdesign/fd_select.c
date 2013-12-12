@@ -31,7 +31,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include <ctype.h>
@@ -1180,7 +1180,7 @@ raise_selection( void )
 
             if ( first->group_id )
             {
-                FL_OBJECT *o = first;
+                FL_OBJECT *o;
 
                 for ( o = first; o != last; o = o->next )
                     o->group_id = 0;
@@ -1272,7 +1272,7 @@ lower_selection( void )
 
             if ( first->group_id )
             {
-                FL_OBJECT *o = first;
+                FL_OBJECT *o;
 
                 for ( o = first; o != last; o = o->next )
                     o->group_id = 0;

@@ -27,7 +27,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -244,7 +244,7 @@ fli_read_line( FILE *fp )
 /*******************************************
  * Secure string copy: a maximum of (n-1) bytes will be copied, the 
  * destination string is always ends in a '\0'.
- * Returns: dest or NULL if dest is NULL or n is 0
+ * Returns: dest or NULL if src or dest are NULL or n is 0
  *******************************************/
 
 char *
@@ -254,7 +254,7 @@ fli_sstrcpy( char       * dest,
 {
     size_t l = src ? strlen( src ) : 0;
 
-    if ( ! dest || n == 0 )
+    if ( ! src || ! dest || n == 0 )
         return NULL;
 
     if ( l < n )

@@ -27,7 +27,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -921,14 +921,11 @@ fl_foldertab_box( int      style,
         right,
         bott;
     FL_POINT vert[ 9 ];          /* need one extra for closing of polygon! */
-    int border;
+    int border = ( bw > 0 );
     int absbw = FL_abs( bw ),
         i;
     int C = Tabfolder_Corner;
     int isbroken = style & FLI_BROKEN_BOX;
-
-    if ( ! ( border = ( bw > 0 ) ) )
-        bw = -bw;
 
     style &= ~ FLI_BROKEN_BOX;
 
@@ -940,12 +937,13 @@ fl_foldertab_box( int      style,
     else
         h -= absbw;
 
-    /* We must guarante the width of the rectangle is larger than 0 */
+    /* We must try to guarantee the width of the rectangle is larger than 0 */
 
-    if ( w - 2 * bw <= 0 )
-        bw = w / 2 - 1;
-    if ( h - 2 * bw <= 0 )
-        bw = h / 2 - 1;
+    if ( w - 2 * absbw <= 0 )
+        absbw = FL_abs( w / 2 - 1 );
+
+    if ( h - 2 * absbw <= 0 )
+        absbw = FL_abs( h / 2 - 1 );
 
     ctr = absbw / 2;
     SHRINK( x, y, w, h, ctr );

@@ -25,7 +25,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -203,15 +203,16 @@ fl_show_alert_f( int c,
 
     EXPAND_FORMAT_STRING( buf, fmt );
 
-    p = strchr( buf, '\f' );
-    if ( p )
-        *p++ = '\0';
-    else
-        p = NULL;
+    if ( buf )
+    {
+        p = strchr( buf, '\f' );
+        if ( p )
+            *p++ = '\0';
 
-    fl_show_alert( buf, p, NULL, c );
+        fl_show_alert( buf, p, NULL, c );
 
-    fl_free( buf );
+        fl_free( buf );
+    }
 }
 
 

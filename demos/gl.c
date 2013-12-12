@@ -31,13 +31,13 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include <stdlib.h>
+#include <GL/gl.h>
+#include <GL/glx.h>
 
-#include "GL/gl.h"
-#include "GL/glx.h"
 #include "include/forms.h"
 #include "gl/glcanvas.h"
 
@@ -348,7 +348,7 @@ create_form_form( void )
 
     fdui->form = fl_bgn_form( FL_NO_BOX, 340, 280 );
 
-    obj = fl_add_box( FL_UP_BOX, 0, 0, 340, 280, "" );
+    fl_add_box( FL_UP_BOX, 0, 0, 340, 280, "" );
 
     fdui->canvas = obj = fl_add_glcanvas( FL_NORMAL_CANVAS, 20, 45, 225, 215,
                                           "" );

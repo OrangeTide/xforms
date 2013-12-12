@@ -23,7 +23,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -148,7 +148,7 @@ create_form_form(void)
 
     fdui->form = fl_bgn_form( FL_NO_BOX, 320, 130 );
 
-    obj = fl_add_box( FL_UP_BOX, 0, 0, 320, 130, "" );
+    fl_add_box( FL_UP_BOX, 0, 0, 320, 130, "" );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 210, 80, 90, 35, "Done" );
     fl_set_object_callback( obj, exit_cb, 0 );

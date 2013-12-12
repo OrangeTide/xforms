@@ -18,15 +18,8 @@
  */
 
 
-/*
- * Demo showing the use of user defined object class: CROSSBUTTON
- *
- * Form definition file generated with fdesign.
- * changed stub button to crossbutton
- */
-
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -110,7 +103,7 @@ create_form_newbut( void )
     obj = fl_add_crossbutton( FL_RADIO_BUTTON, 50, 55, 80, 30, "Button" );
     fl_set_object_color( obj, FL_COL1, FL_BLUE );
 
-    obj = fl_add_box( FL_FRAME_BOX, 180, 45, 100, 120, "" );
+    fl_add_box( FL_FRAME_BOX, 180, 45, 100, 120, "" );
 
     obj = fl_add_text( FL_NORMAL_TEXT, 190, 155, 50, 20, "CrossB" );
     fl_set_object_boxtype( obj, FL_FLAT_BOX );

@@ -26,18 +26,19 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
-#include "include/forms.h"
-#include "flimage.h"
-#include "fd/is_gui.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+#include "include/forms.h"
+#include "image/flimage.h"
+#include "fd/is_gui.h"
 
 typedef struct
 {
@@ -526,6 +527,7 @@ filemenu_callback( FL_OBJECT * ob,
             break;
 
         case 5:
+            fl_finish( );
             exit( 0 );
     }
 }
@@ -538,7 +540,6 @@ void
 progressbar( FL_OBJECT * ob    FL_UNUSED_ARG,
              long        data  FL_UNUSED_ARG )
 {
-    /* fill-in code for callback */
 }
 
 

@@ -27,7 +27,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include <ctype.h>
@@ -385,7 +385,10 @@ fl_end_form( void )
     FL_FORM * f = fl_current_form;
 
     if ( ! fl_current_form )
+    {
         M_err( "fl_end_form", "No current form" );
+        return;
+    }
 
     if ( fli_current_group )
     {
@@ -1437,8 +1440,8 @@ close_form_window( Window win )
 
     XUnmapWindow( flx->display, win );
     XDestroyWindow( flx->display, win );
-
     XSync( flx->display, 0 );
+
     while ( XCheckWindowEvent( flx->display, win, AllEventsMask, &xev ) )
         fli_xevent_name( "Eaten", &xev );
 

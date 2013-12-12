@@ -27,16 +27,16 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
-#include "include/forms.h"
-#include "flimage.h"
-#include "fd/ibrowser_gui.h"   /* from fd/ directory */
 #include <stdlib.h>
 
+#include "include/forms.h"
+#include "image/flimage.h"
+#include "fd/ibrowser_gui.h"   /* from fd/ directory */
+
 static FL_IMAGE *curr_image;
-Colormap map;
 
 
 /***************************************
@@ -551,30 +551,6 @@ convert_type( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
-#if STUPID_WM
-/* this shouldn't be necessary, but there are too many stupid WMs */
-
-static int
-enter_handle( FL_OBJECT * ob,
-              Window      win,
-              int         w,
-              int         h,
-              XEvent    * xev,
-              void      * data )
-{
-    if ( fl_vmode != FL_DirectColor )
-        XInstallColormap( fl_display, map );
-    return 0;
-}
-
-#endif
-
-
-/* callbacks and freeobj handles for form ibcanvas */
-
-/***************************************
- ***************************************/
-
 void
 browse_file( FL_OBJECT * ob,
              long        data  FL_UNUSED_ARG )
@@ -664,9 +640,6 @@ main( int    argc,
     FD_ibcanvas *fd_ibcanvas;
     int  n;
     static FLIMAGE_SETUP setup;
-#if STUPID_WM
-    int vmode;
-#endif
 
     fl_set_border_width( -2 );
     fl_initialize( &argc, argv, 0, 0, 0 );
@@ -704,17 +677,6 @@ main( int    argc,
 
     fl_add_canvas_handler( fd_ibcanvas->canvas,
                            MotionNotify, motion_handle, 0 );
-
-   /* fill-in form initialization code */
-
-#if STUPID_WM
-    vmode = fl_get_vclass( );
-    map = fl_create_colormap( fl_state[ vmode ].xvinfo, 30 );
-    fprintf( stderr, "map=0x%x\n", map );
-    fl_set_canvas_colormap( fd_ibcanvas->canvas, map );
-    fl_add_canvas_handler( fd_ibcanvas->canvas,
-                           EnterNotify, enter_handle, 0 );
-#endif
 
    /* Show the first form */
 

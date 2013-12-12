@@ -17,10 +17,10 @@
  *  MA 02111-1307, USA.
  */
 
-
 /* test screen/world conversion in addition to showing the xyplot styles */
+
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -203,7 +203,6 @@ void create_form_xyplot( void )
                 "" );
 
     for ( j = 0; xy->type != -1; j++ )
-    {
         for ( i = 0; i < 3 && xy->type != -1; i++ )
         {
             xyplot[ 3 * j + i ] = obj =
@@ -213,9 +212,6 @@ void create_form_xyplot( void )
             fl_set_object_color( obj, FL_COL1, xy->color );
             xy++;
         }
-
-        i = 0;
-    }
 
     obj = fl_add_button( FL_NORMAL_BUTTON, ( 3 * ( dx + 20 ) + 20 ) / 2 - 50,
                          j * ( dy + 30 ) + 60, 100, 30, "Exit" );

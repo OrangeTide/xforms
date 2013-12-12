@@ -32,12 +32,13 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include <stdlib.h>
+
 #include "include/forms.h"
-#include "flimage.h"
+#include "image/flimage.h"
 
 static void initialize( void );
 static void usage( const char *,
@@ -62,10 +63,14 @@ main( int    argc,
 
     if (   argc < 3 ||
          ! ( fmt = ( argc >= 4 ? args[ 3 ] : strrchr( args[ 2 ], '.' ) ) ) )
+    {
         usage( argv[ 0 ], argc >= 3 );
+        exit( 1 );
+    }
 
     fmt += fmt[ 0 ] == '.';
     im = flimage_load( strdup( args[ 1 ] ) );
+
     return flimage_dump( im, args[ 2 ], fmt ) < 0 ? 3 : 0;
 }
 

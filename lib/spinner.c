@@ -17,7 +17,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -308,31 +308,7 @@ fl_create_spinner( int          type,
 {
     FL_OBJECT *obj;
     FLI_SPINNER_SPEC *sp;
-    FL_Coord iw, ih,
-             uy,
-             dy,
-             bwh;
-    int orient;
-
-    if ( w >= h )
-    {
-        orient = 0;
-        bwh = h / 2;
-        bwh = FL_max( bwh, 1 );
-        h = ih = 2 * bwh;
-        iw = w - bwh - 1;
-        uy = x;
-        dy = uy + bwh;
-    }
-    else
-    {
-        orient = 1;
-        bwh = w / 2;
-        bwh = FL_max( bwh, 1 );
-        w = iw = 2 * bwh;
-        ih = h - bwh - 1;
-        uy = dy = y + ih - 1;
-    }
+    int orient = ( w < h );
 
     obj = fl_make_object( FL_SPINNER, type, x, y, w, h, label, handle_spinner );
     obj->boxtype    = FL_NO_BOX;

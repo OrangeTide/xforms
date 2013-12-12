@@ -27,8 +27,9 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
+
 #include <stdlib.h>
 #include "include/forms.h"
 
@@ -349,7 +350,7 @@ create_form_drawfree( void )
 
     fdui->drawfree = fl_bgn_form( FL_NO_BOX, 530, 490 );
 
-    obj = fl_add_box( FL_UP_BOX, 0, 0, 530, 490, "" );
+    fl_add_box( FL_UP_BOX, 0, 0, 530, 490, "" );
 
     obj = fl_add_frame( FL_DOWN_FRAME, 145, 30, 370, 405, "" );
     fl_set_object_gravity( obj, FL_NorthWest, FL_SouthEast );

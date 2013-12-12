@@ -31,7 +31,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include <stdio.h>
@@ -83,7 +83,7 @@ create_colorform( void )
 
     colorform = fl_bgn_form( FL_NO_BOX, 315, 190 );
 
-    obj = fl_add_box( FL_UP_BOX, 0, 0, 315, 190, "" );
+    fl_add_box( FL_UP_BOX, 0, 0, 315, 190, "" );
 
     bluesl = obj = fl_add_slider( FL_HOR_SLIDER, 20, 25, 220, 35, "" );
     fl_set_object_color( obj, FL_COL1, FL_BLUE );

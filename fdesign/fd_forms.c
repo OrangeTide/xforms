@@ -33,7 +33,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include <string.h>
@@ -697,8 +697,8 @@ load_forms( int          merge,
 
     fli_cntl.coordUnit = FL_COORD_PIXEL;
 
-    /* Force output the same as input when converting directly. The reason is
-       we don't know the screen DPI. */
+    /* Force output to use the same unit as used in the input when converting
+       directly. The reason is that we don't know the screen DPI. */
 
     if ( ! fdopt.conv_only )
         fdopt.unit = saved_unit;

@@ -26,7 +26,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -133,7 +133,7 @@ create_form_form0( void )
 
     fdui->form0 = fl_bgn_form( FL_NO_BOX, 351, 180 );
 
-    obj = fl_add_box( FL_UP_BOX, 0, 0, 351, 180, "" );
+    fl_add_box( FL_UP_BOX, 0, 0, 351, 180, "" );
 
 #ifndef TEST_PIXMAP_ALIGN
     fdui->box = obj = fl_add_box( FL_UP_BOX, 190, 40, 90, 55,
@@ -190,7 +190,7 @@ create_form_form0( void )
 
     fl_end_group( );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 200, 135, 70, 30, "Done" );
+    fl_add_button( FL_NORMAL_BUTTON, 200, 135, 70, 30, "Done" );
 
     fl_end_form( );
 

@@ -21,8 +21,9 @@
 /* This demo shows the use of a browser and fl_call_object_callback.  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
+
 #include <stdio.h>
 #include "include/forms.h"
 

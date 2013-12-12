@@ -27,7 +27,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -113,8 +113,6 @@ apply_gamma( float gamma )
         if ( psinfo.verbose )
             fprintf( stderr, "fm->r=%d\n", fm->r );
     }
-
-    lastgamma = gamma;
 }
 
 
@@ -211,7 +209,7 @@ fl_get_namedcolor( const char * s )
 
     /* a wild shot */
 
-    return atoi( s );
+    return s ? atoi( s ) : 0;
 }
 
 

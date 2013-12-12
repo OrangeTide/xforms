@@ -24,7 +24,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -55,7 +55,7 @@ create_form_clock( void )
 
     fclock = fl_bgn_form( FL_NO_BOX, 500, 350 );
 
-    obj = fl_add_box( FL_UP_BOX, 0, 0, 500, 350, "" );
+    fl_add_box( FL_UP_BOX, 0, 0, 500, 350, "" );
 
     obj = fl_add_clock( FL_DIGITAL_CLOCK, 185, 20, 150, 35, "" );
     fl_set_object_boxtype( obj, FL_ROUNDED_BOX );

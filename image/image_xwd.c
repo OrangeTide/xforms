@@ -25,7 +25,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -460,7 +460,7 @@ XWD_read_pixels( FL_IMAGE * im )
                     for ( x = 0; x < im->w; x++ )
                         im->ci[ y ][ x ] = get16( fp );
 
-                    for ( n = im->w * 2; x < ( int ) h->bytes_per_line; x++ )
+                    for ( ; x < ( int ) h->bytes_per_line; x++ )
                         getc( fp );
 
                     err = feof( fp ) || ferror( fp );

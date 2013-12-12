@@ -30,7 +30,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -607,12 +607,10 @@ ps_foldertab_box( int   style,
 {
     float ctr, right, top;
     Point vert[10], *xp;
-    int border, i;
+    int border = ( bw > 0 ),
+        i;
     float absbw = FL_abs( bw );
     float C = Corner;
-
-    if ( ! ( border = ( bw > 0 ) ) )
-        bw = -bw;
 
     ctr = absbw / 2;
     x += ctr;
@@ -935,7 +933,6 @@ ps_draw_frame( int   style,
         bw = -bw;
 
     B = border;
-    xp = xpoint;
 
     if ( psinfo.verbose )
         ps_verbatim( "%%frame (%.2f %.2f %.2f %.2f)\n", x, y, w, h );
@@ -1188,37 +1185,33 @@ draw_uparrow( float x,
     float dx, dy;
     int d = 3 + (w + h) * 0.06;
 
-    x += d;
-    y += d;
-    w -= 2 * d;
-    h -= 2 * d;
-    dx = w / 2;
-    dy = h / 2;
+    dx = w / 2 - d;
+    dy = h / 2 - d;
 
-    if (angle == 90)
+    if ( angle == 90 )
     {
-        ps_line(xc, yc + dy, xc - dx, yc - dy, FL_LEFT_BCOL);
-        ps_line(xc - dx, yc - dy, xc + dx, yc - dy, FL_BOTTOM_BCOL);
-        ps_line(xc + dx, yc - dy, xc, yc + dy, FL_RIGHT_BCOL);
+        ps_line( xc,      yc + dy, xc - dx, yc - dy, FL_LEFT_BCOL   );
+        ps_line( xc - dx, yc - dy, xc + dx, yc - dy, FL_BOTTOM_BCOL );
+        ps_line( xc + dx, yc - dy, xc,      yc + dy, FL_RIGHT_BCOL  );
     }
-    else if (angle == 180)
+    else if ( angle == 180 )
     {
-        ps_line(xc - dx, yc, xc + dx, yc + dy, FL_TOP_BCOL);
-        ps_line(xc + dx, yc + dy, xc + dx, yc - dy, FL_RIGHT_BCOL);
-        ps_line(xc + dx, yc - dy, xc - dx, yc, FL_BOTTOM_BCOL);
+        ps_line( xc - dx, yc,      xc + dx, yc + dy, FL_TOP_BCOL );
+        ps_line( xc + dx, yc + dy, xc + dx, yc - dy, FL_RIGHT_BCOL );
+        ps_line( xc + dx, yc - dy, xc - dx, yc,      FL_BOTTOM_BCOL );
     }
     else if (angle == 270)
     {
-        ps_line(xc - dx, yc + dy, xc, yc - dy, FL_BOTTOM_BCOL);
-        ps_line(xc, yc - dy, xc + dx, yc + dy, FL_RIGHT_BCOL);
-        ps_line(xc + dx, yc + dy, xc - dx, yc + dy, FL_TOP_BCOL);
+        ps_line( xc - dx, yc + dy, xc,      yc - dy, FL_BOTTOM_BCOL );
+        ps_line( xc,      yc - dy, xc + dx, yc + dy, FL_RIGHT_BCOL  );
+        ps_line( xc + dx, yc + dy, xc - dx, yc + dy, FL_TOP_BCOL    );
         
     }
     else
     {
-        ps_line(x, yc - dy, x + w, yc, FL_BOTTOM_BCOL);
-        ps_line(x, yc + dy, x + w, yc, FL_RIGHT_BCOL);
-        ps_line(x, yc - dy, x, yc + dy, FL_LEFT_BCOL);
+        ps_line( xc - dx, yc + dy, xc + dx, yc,      FL_BOTTOM_BCOL );
+        ps_line( xc - dx, yc - dy, xc + dx, yc,      FL_RIGHT_BCOL  );
+        ps_line( xc - dx, yc - dy, xc - dx, yc + dy, FL_LEFT_BCOL   );
     }
 }
 
@@ -1237,41 +1230,36 @@ draw_dnarrow( float x,
     float yc = y + h * 0.5;
     float xc = x + w * 0.5;
     float dx, dy;
-    int d = 3 + (w + h) * 0.06;
+    int d = 3 + ( w + h ) * 0.06;
 
-    x += d;
-    y += d;
-    w -= 2 * d;
-    h -= 2 * d;
+    dx = w / 2 - d;
+    dy = h / 2 - d;
 
-    dx = w / 2;
-    dy = h / 2;
-
-    if (angle == 90)
+    if ( angle == 90 )
     {
-        ps_line(xc, yc + dy, xc - dx, yc - dy, FL_RIGHT_BCOL);
-        ps_line(xc - dx, yc - dy, xc + dx, yc - dy, FL_TOP_BCOL);
-        ps_line(xc + dx, yc - dy, xc, yc + dy, FL_TOP_BCOL);
+        ps_line( xc,      yc + dy, xc - dx, yc - dy, FL_RIGHT_BCOL );
+        ps_line( xc - dx, yc - dy, xc + dx, yc - dy, FL_TOP_BCOL   );
+        ps_line( xc + dx, yc - dy, xc,      yc + dy, FL_TOP_BCOL   );
     }
-    else if (angle == 180)
+    else if ( angle == 180 )
     {
-        ps_line(xc - dx, yc, xc + dx, yc + dy, FL_RIGHT_BCOL);
-        ps_line(xc + dx, yc + dy, xc + dx, yc - dy, FL_LEFT_BCOL);
-        ps_line(xc + dx, yc - dy, xc - dx, yc, FL_TOP_BCOL);
+        ps_line( xc - dx, yc,      xc + dx, yc + dy, FL_RIGHT_BCOL );
+        ps_line( xc + dx, yc + dy, xc + dx, yc - dy, FL_LEFT_BCOL  );
+        ps_line( xc + dx, yc - dy, xc - dx, yc,      FL_TOP_BCOL   );
 
     }
-    else if (angle == 270)
+    else if ( angle == 270 )
     {
-        ps_line(xc - dx, yc + dy, xc, yc - dy, FL_RIGHT_BCOL);
-        ps_line(xc, yc - dy, xc + dx, yc + dy, FL_LEFT_BCOL);
-        ps_line(xc + dx, yc + dy, xc - dx, yc + dy, FL_BOTTOM_BCOL);
+        ps_line( xc - dx, yc + dy, xc,      yc - dy, FL_RIGHT_BCOL  );
+        ps_line( xc,      yc - dy, xc + dx, yc + dy, FL_LEFT_BCOL   );
+        ps_line( xc + dx, yc + dy, xc - dx, yc + dy, FL_BOTTOM_BCOL );
 
     }
     else
     {
-        ps_line(xc - dx, yc - dy, xc - dx, yc + dy, FL_RIGHT_BCOL);
-        ps_line(xc - dx, yc - dy, xc + dx, yc, FL_TOP_BCOL);
-        ps_line(xc - dx, yc + dy, xc + dx, yc, FL_BOTTOM_BCOL);
+        ps_line( xc - dx, yc - dy, xc - dx, yc + dy, FL_RIGHT_BCOL );
+        ps_line( xc - dx, yc - dy, xc + dx, yc,      FL_TOP_BCOL    );
+        ps_line( xc - dx, yc + dy, xc + dx, yc,      FL_BOTTOM_BCOL );
     }
 }
 
@@ -1350,31 +1338,27 @@ draw_bararrowhead( float x,
     Point point[ 5 ],
           *p;
 
-    x += d;
-    y += d;
-    w -= 2 * d;
-    h -= 2 * d;
-    dx = w / 2;
-    dy = h / 2;
+    dx = w / 2 - d;
+    dy = h / 2 - d;
 
     dbar = dx * 0.4;
-    mar = 0.2 * dx;
+    mar  = 0.2 * dx;
 
     ps_output( "gsave %.1f %.1f translate %d rotate\n", xc, yc, angle );
 
     xl = -dx + 1.1 * mar;
     p = point;
-    AddVertex( p, xl, -dy);
-    AddVertex( p, xl + dbar, -dy );
-    AddVertex( p, xl + dbar, dy );
-    AddVertex( p, xl, dy );
+    AddVertex( p, xl,        - dy );
+    AddVertex( p, xl + dbar, - dy );
+    AddVertex( p, xl + dbar,   dy );
+    AddVertex( p, xl,          dy );
     ps_poly( 1, point, 4, col );
     ps_poly( 0, point, 4, FL_RIGHT_BCOL );
 
     p = point;
-    AddVertex( p, -mar, -dy );
-    AddVertex( p, -mar + dx, 0 );
-    AddVertex( p, -mar, dy) ;
+    AddVertex( p, - mar,      - dy );
+    AddVertex( p, - mar + dx,   0  );
+    AddVertex( p, - mar,        dy ) ;
     ps_poly( 1, point, 3, col );
     ps_poly( 0, point, 3, FL_RIGHT_BCOL );
 

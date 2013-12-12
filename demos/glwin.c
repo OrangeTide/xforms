@@ -25,14 +25,15 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
-#include "GL/glx.h"
-#include "GL/gl.h"
+#include <stdlib.h>
+#include <GL/glx.h>
+#include <GL/gl.h>
+
 #include "include/forms.h"
 #include "gl/glcanvas.h"
-#include <stdlib.h>
 
 extern Window fl_glwincreate( int *,
                               GLXContext *,

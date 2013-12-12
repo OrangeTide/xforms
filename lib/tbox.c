@@ -17,7 +17,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -327,7 +327,6 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
         if ( p[ 1 ] == sp->specialkey )
         {
                 p += 1;
-                done = 1;
                 break;
         }
 

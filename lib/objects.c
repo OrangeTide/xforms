@@ -26,7 +26,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -1675,7 +1675,10 @@ fl_hide_object( FL_OBJECT * obj )
        or is frozen. */
 
     if ( ! FORM_IS_UPDATABLE( obj->form ) )
+    {
+        XDestroyRegion( reg );
         return;
+    }
 
     /* Determine the rectangle that covers the area of the object */
 
@@ -3779,20 +3782,23 @@ fli_mouse_wheel_to_keypress( int  * ev,
 
     *ev = FL_KEYPRESS;
 
-    if ( xev && shiftkey_down( ( ( XButtonEvent * ) xev )->state ) )
+    if ( xev )
     {
-        ( ( XKeyEvent * ) xev )->state = 0;
-        *key = *key == FL_MBUTTON4 ? FLI_1LINE_UP : FLI_1LINE_DOWN;
-    }
-    else if ( xev && controlkey_down( ( ( XButtonEvent * ) xev )->state ) )
-    {
-        ( ( XKeyEvent * ) xev )->state = 0;
-        *key = *key == FL_MBUTTON4 ? XK_Prior : XK_Next;
-    }
-    else
-    {
-        ( ( XKeyEvent * ) xev )->state = 0;
-        *key = *key == FL_MBUTTON4 ? FLI_HALFPAGE_UP : FLI_HALFPAGE_DOWN;
+        if ( shiftkey_down( ( ( XButtonEvent * ) xev )->state ) )
+        {
+            ( ( XKeyEvent * ) xev )->state = 0;
+            *key = *key == FL_MBUTTON4 ? FLI_1LINE_UP : FLI_1LINE_DOWN;
+        }
+        else if ( controlkey_down( ( ( XButtonEvent * ) xev )->state ) )
+        {
+            ( ( XKeyEvent * ) xev )->state = 0;
+            *key = *key == FL_MBUTTON4 ? XK_Prior : XK_Next;
+        }
+        else
+        {
+            ( ( XKeyEvent * ) xev )->state = 0;
+            *key = *key == FL_MBUTTON4 ? FLI_HALFPAGE_UP : FLI_HALFPAGE_DOWN;
+        }
     }
 
     return 1;

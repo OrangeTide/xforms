@@ -1,5 +1,7 @@
 include $(top_srcdir)/config/common.am
 
+INCLUDE = $(top_srcdir)/lib/include
+
 EXTRA_DIST = \
 	pallette.c \
 	pallette.fd \
@@ -9,4 +11,5 @@ EXTRA_DIST = \
 	ui_attrib.h \
 	ui_theforms.c \
 	ui_theforms.fd \
-	ui_theforms.h
+	ui_theforms.h \
+	Readme

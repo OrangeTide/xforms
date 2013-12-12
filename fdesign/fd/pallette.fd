@@ -126,6 +126,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_BUTTON
+    file: ../xpm/butt.xpm
+    fullpath: 0
+    data: butt_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -144,6 +147,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_LIGHTBUTTON
+    file: ../xpm/lightb.xpm
+    fullpath: 0
+    data: lightb_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -162,6 +168,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_ROUNDBUTTON
+    file: ../xpm/roundb.xpm
+    fullpath: 0
+    data: roundb_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -180,7 +189,10 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_ROUND3DBUTTON
+    file: ../xpm/r3dbut.xpm
+    fullpath: 0
     align: FL_ALIGN_TOP|FL_ALIGN_INSIDE
+    data: r3dbut_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -199,6 +211,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_CHECKBUTTON
+    file: ../xpm/check.xpm
+    fullpath: 0
+    data: check_pixels
 
 --------------------
 class: FL_BITMAPBUTTON
@@ -217,6 +232,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_BITMAPBUTTON
+    file: ../xpm/picture.xbm
+    fullpath: 0
+    data: picture_bits
+    width: picture_width
+    height: picture_height
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -235,6 +255,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_PIXMAPBUTTON
+    file: ../xpm/xconq.xpm
+    fullpath: 0
+    data: xconq
 
 =============== FORM ===============
 Name: staticform
@@ -295,6 +318,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_BOX
+    file: ../xpm/box.xpm
+    fullpath: 0
+    data: box_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -313,6 +339,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_TEXT
+    file: ../xpm/text.xpm
+    fullpath: 0
+    data: text_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -331,6 +360,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_LABELFRAME
+    file: ../xpm/frame.xpm
+    fullpath: 0
+    data: frame_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -349,6 +381,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_CHART
+    file: ../xpm/chart.xpm
+    fullpath: 0
+    data: chart_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -367,6 +402,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_CLOCK
+    file: ../xpm/clock.xpm
+    fullpath: 0
+    data: clock_pixels
 
 --------------------
 class: FL_BITMAPBUTTON
@@ -385,6 +423,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_BITMAP
+    file: ../xpm/picture1.xbm
+    fullpath: 0
+    data: picture1_bits
+    width: picture1_width
+    height: picture1_height
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -403,6 +446,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_PIXMAP
+    file: ../xpm/xconq1.xpm
+    fullpath: 0
+    data: xconq1
 
 =============== FORM ===============
 Name: valuatorform
@@ -463,6 +509,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_SLIDER
+    file: ../xpm/sld.xpm
+    fullpath: 0
+    data: sld_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -481,6 +530,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_SCROLLBAR
+    file: ../xpm/scb.xpm
+    fullpath: 0
+    data: scb_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -499,6 +551,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_DIAL
+    file: ../xpm/dial.xpm
+    fullpath: 0
+    data: dial_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -517,6 +572,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_COUNTER
+    file: ../xpm/cnt.xpm
+    fullpath: 0
+    data: cnt_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -535,6 +593,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_POSITIONER
+    file: ../xpm/pos.xpm
+    fullpath: 0
+    data: pos_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -553,6 +614,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_VALSLIDER
+    file: ../xpm/vals.xpm
+    fullpath: 0
+    data: vals_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -571,6 +635,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_THUMBWHEEL
+    file: ../xpm/twheel.xpm
+    fullpath: 0
+    data: twheel
 
 =============== FORM ===============
 Name: choiceform
@@ -631,6 +698,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_MENU
+    file: ../xpm/menu.xpm
+    fullpath: 0
+    data: menu_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -649,6 +719,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_CHOICE
+    file: ../xpm/choice.xpm
+    fullpath: 0
+    data: choice_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -667,6 +740,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_BROWSER
+    file: ../xpm/br.xpm
+    fullpath: 0
+    data: br_pixels
 
 =============== FORM ===============
 Name: miscform
@@ -727,6 +803,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_TIMER
+    file: ../xpm/timer.xpm
+    fullpath: 0
+    data: timer_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -745,6 +824,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_XYPLOT
+    file: ../xpm/xyplot.xpm
+    fullpath: 0
+    data: xyplot_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -781,6 +863,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_GLCANVAS
+    file: ../xpm/glcan.xpm
+    fullpath: 0
+    data: glcan_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -799,6 +884,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_NTABFOLDER
+    file: ../xpm/tab.xpm
+    fullpath: 0
+    data: tabfolder_pixels
 
 ==============================
 create_the_forms

@@ -27,8 +27,9 @@
 
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
+
 #include "include/forms.h"
 
 
@@ -103,7 +104,7 @@ create_form_form( void )
 
     form = fl_bgn_form( FL_NO_BOX, 940, 360 );
 
-    obj = fl_add_box( FL_UP_BOX, 0, 0, 940, 360, "" );
+    fl_add_box( FL_UP_BOX, 0, 0, 940, 360, "" );
 
     barchart = obj = fl_add_chart( FL_BAR_CHART, 20, 20, 210, 140,
                                    "BAR_CHART" );
@@ -134,8 +135,7 @@ create_form_form( void )
                                      "SPIKE_CHART" );
     fl_set_object_boxtype( obj, FL_RSHADOW_BOX );
 
-    exitbut = obj = fl_add_button( FL_NORMAL_BUTTON, 750, 260, 140, 30,
-                                   "Exit" );
+    exitbut = fl_add_button( FL_NORMAL_BUTTON, 750, 260, 140, 30, "Exit" );
 
     fl_end_form( );
 }

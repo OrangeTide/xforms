@@ -27,7 +27,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -700,7 +700,7 @@ test_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int i;
     FL_OBJECT *ob;
-    GEOM *p = oldgeom;
+    GEOM *p;
     int resizeable;
 
     if ( cur_form == NULL )
@@ -717,10 +717,11 @@ test_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     for ( i = 0, ob = cur_form->first; ob; ob = ob->next, i++ )
         /* empty */ ;
 
-    p = oldgeom = fl_realloc( oldgeom, i * sizeof *oldgeom );
+    p = oldgeom = fl_realloc( oldgeom, i * sizeof *p );
 
     for ( ob = cur_form->first; ob; ob = ob->next, i++, p++ )
     {
+        spec_to_superspec( ob );
         p->x = ob->x;
         p->y = ob->y;
         p->w = ob->w;

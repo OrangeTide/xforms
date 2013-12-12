@@ -2,6 +2,8 @@ include $(top_srcdir)/config/common.am
 
 CLEANFILES = *.bak *.[ch]
 
+INCLUDE = $(top_srcdir)/lib
+
 EXTRA_DIST = \
 	dim_porsche.xpm \
 	porsche.xpm \

@@ -530,17 +530,17 @@ FL_FORM* fl_delete_formbrowser_bynumber(FL_OBJECT *obj, int num);
 @end example
 @noindent
 In the first function you specify the form to be removed from the
-formbrowser by a pointer to the form. The function returns the current
-(after deletion) number of forms in the formbrowser if the form is
-removed successfully else it returns -1.
+formbrowser by a pointer to the form. If the form was removed
+successfully the function returns the remaining number of forms in the
+formbrowser, otherwise -1.
 
 In the second function, you indicate the form to be removed with a
 sequence number, an integer between 1 and the number of forms in the
 browser. The sequence number is basically the order in which forms
 were added to the formbrowser. After a form is removed, the sequence
 numbers are re-adjusted so they are always consecutive. The function
-returns @code{NULL} if the @code{num} is invalid, otherwise it returns
-address of the form that is removed.
+returns @code{NULL} if @code{num} was invalid, otherwise it returns
+address of the form that was removed.
 
 To replace a form in formbrowser, the following routine is available
 @findex fl_replace_formbrowser()
@@ -575,6 +575,9 @@ routine is available
 @example
 int fl_find_formbrowser_form_number(FL_OBJECT *obj, FL_FORM *form);
 @end example
+@noindent
+The function returns a number between 1 and the number of forms in
+the formbrowser on success, otherwise 0.
 
 To obtain the form handle from the sequence number, use the following
 routine
@@ -681,7 +684,7 @@ where @code{offset} is a positive number, measuring in pixels the
 offset from the the natural position from the left and the top,
 respectively. In other words, 0 indicates the natural position of the
 content within the formbrowser. An x-offset of 10 means the content is
-scrolled 10 pixels to the leftleft. Similarly a y-offset of 10 means
+scrolled 10 pixels to the left. Similarly an y-offset of 10 means
 the content is scrolled by 10 pixels upwards.
 
 To obtain the current offsets, use the following routines

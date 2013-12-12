@@ -1005,6 +1005,17 @@ decorated differently and its geometry is managed, e.g., you can use
 @code{@ref{fl_set_object_resize()}} to control its position and size
 after its parent form is resized.
 
+You also should be aware that when using a canvas you'll
+probably mostly program directly using basic Xlib functions,
+XForms doesn't supply much more than a few helper functions.
+You'll rather likely draw to it with Xlib functions and will
+be dealing with @code{XEvent}s yourself (instead having them
+taken care of by XForms and cenverted to some simpler to
+use events that then just return the object from
+@code{@ref{fl_do_forms()}} or invoke an associated callback
+function. Thus you will typically need a basic knowledge of how to
+program via the X11 Xlib.
+
 @ifnottex
 
 @menu
@@ -1082,10 +1093,10 @@ event from the server. Other book keeping (e.g.@: drawing the box that
 encloses the canvas, etc.) is done by the object handler.
 
 When a canvas handler is installed the library tries to set the
-correct mask for the the @code{Xevent} (which then tells the X Window
+correct mask for the the @code{XEvent} (which then tells the X Window
 system which events to pass on to the Forms Library). But since
-translation from an @code{Xevent} to a @code{Xevent} mask is not
-unique, the default translation of the @code{Xevent} to a mask may or
+translation from an @code{XEvent} to an @code{XEvent} mask is not
+unique, the default translation of the @code{XEvent} to a mask may or
 may not match exactly the intention of the application. Two events,
 namely @code{MotionNotify} and @code{ButtonPress}, are likely
 candidates that need further clarification from the application. There

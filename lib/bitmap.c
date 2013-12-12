@@ -27,7 +27,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -500,17 +500,6 @@ fl_create_from_bitmapdata( Window       win,
                            int          height )
 {
     return XCreateBitmapFromData( fl_display, win, data, width, height );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-fl_free_pixmap( Pixmap id )
-{
-    if ( id != None )
-        XFreePixmap( fl_display, id );
 }
 
 

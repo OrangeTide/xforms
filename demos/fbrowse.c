@@ -28,7 +28,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include <stdio.h>
@@ -117,10 +117,9 @@ create_form( void )
 
     fdui->form = fl_bgn_form( FL_NO_BOX, 590, 610 );
 
-    obj = fl_add_box( FL_UP_BOX, 0, 0, 590, 610, "" );
+    fl_add_box( FL_UP_BOX, 0, 0, 590, 610, "" );
 
     fdui->br = obj = fl_add_browser( FL_NORMAL_BROWSER, 20, 20, 550, 530, "" );
-/*    fl_set_object_boxtype( obj, FL_EMBOSSED_BOX ); */
 
     obj = fl_add_button( FL_NORMAL_BUTTON, x, 565, dx-5, dy, "Load" );
     fl_set_object_callback( obj, load_file, 0 );
@@ -150,6 +149,7 @@ create_form( void )
 
     obj = fl_add_button( FL_NORMAL_BUTTON, x, 565, 60, dy, "Exit" );
     fl_set_object_callback( obj, exit_program, 0 );
+
     fl_end_form();
 
     fl_adjust_form_size( fdui->form );

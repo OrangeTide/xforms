@@ -68,7 +68,7 @@ rm -f %{_tmppath}/%{name}-%{version}-devfiles
 #
 # 1. Create a list of files that require symbolic links.
 #
-lib_prefix=${RPM_INSTALL_PREFIX}/lib
+lib_prefix=${RPM_INSTALL_PREFIX}%{_libdir}
 sofiles=""
 for file in \
 	"${lib_prefix}/libforms.so"* \
@@ -105,7 +105,7 @@ done
 #
 # Remove symbolic links libforms.so, libforms.so.1, etc
 #
-lib_prefix=${RPM_INSTALL_PREFIX}/lib
+lib_prefix=${RPM_INSTALL_PREFIX}%{_libdir}
 for file in \
 	"${lib_prefix}/libforms.so"* \
 	"${lib_prefix}/libformsGL.so"* \

@@ -26,7 +26,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include <stdlib.h>
@@ -144,9 +144,9 @@ create_form_form0( void )
 
     fdui->form0 = fl_bgn_form( FL_NO_BOX, 350, 130 );
 
-    obj = fl_add_box( FL_UP_BOX, 0, 0, 350, 130, "" );
+    fl_add_box( FL_UP_BOX, 0, 0, 350, 130, "" );
 
-    fdui->timer = obj = fl_add_timer( FL_HIDDEN_TIMER, 0, 0, 0, 0, "" );
+    fdui->timer = fl_add_timer( FL_HIDDEN_TIMER, 0, 0, 0, 0, "" );
 
     fdui->report = obj = fl_add_text( FL_NORMAL_TEXT, 20, 20, 310, 50,"" );
     fl_set_object_align( obj, FL_ALIGN_CENTER );

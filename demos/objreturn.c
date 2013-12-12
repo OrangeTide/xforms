@@ -26,7 +26,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 #include "include/forms.h"
 #include <stdlib.h>
@@ -146,7 +146,7 @@ create_form_form0( void )
 
     fdui->form0 = fl_bgn_form( FL_NO_BOX, 321, 276 );
 
-    obj = fl_add_box( FL_UP_BOX, 0, 0, 321, 276, "" );
+    fl_add_box( FL_UP_BOX, 0, 0, 321, 276, "" );
 
     fdui->obj[ 0 ] = obj = fl_add_valslider( FL_HOR_SLIDER, 12, 55, 138, 22,
                                              "" );
@@ -173,7 +173,7 @@ create_form_form0( void )
     fdui->when = obj = fl_add_select( FL_NORMAL_SELECT, 40, 12, 240, 27, "" );
     fl_set_object_callback( obj, when_cb, 0 );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 170, 239, 80, 25, "Done" );
+    fl_add_button( FL_NORMAL_BUTTON, 170, 239, 80, 25, "Done" );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 70, 239, 80, 25, "ResetLog" );
     fl_set_object_callback( obj, resetlog_cb, 0 );

@@ -21,7 +21,7 @@
 /* default color chooser from the internal/built-in colormap */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"

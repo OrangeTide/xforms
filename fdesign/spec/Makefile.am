@@ -41,4 +41,5 @@ EXTRA_DIST = browser_spec.c \
 	twheel_spec.h \
 	xyplot_spec.c \
 	xyplot_spec.fd \
-	xyplot_spec.h
+	xyplot_spec.h \
+    Readme

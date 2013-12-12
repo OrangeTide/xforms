@@ -26,7 +26,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include <stdio.h>
@@ -66,7 +66,7 @@ create_form_form( void )
 
    form = fl_bgn_form( FL_NO_BOX, 480, 200 );
 
-   obj = fl_add_box( FL_UP_BOX, 0, 0, 480, 200, "" );
+   fl_add_box( FL_UP_BOX, 0, 0, 480, 200, "" );
 
    result = obj = fl_add_box( FL_DOWN_BOX, 310, 20, 150, 160, "" );
    fl_set_object_dblbuffer( result, 1 );
@@ -83,7 +83,7 @@ create_form_form( void )
    fl_set_object_color( obj, FL_SLATEBLUE, FL_BLUE );
    fl_set_object_callback( obj, color_change, 0 );
 
-   obj = fl_add_button( FL_NORMAL_BUTTON, 100, 150, 110, 30, "Exit" );
+   fl_add_button( FL_NORMAL_BUTTON, 100, 150, 110, 30, "Exit" );
 
    fl_end_form( );
 }

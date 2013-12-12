@@ -21,8 +21,9 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
+
 #include "fd2ps.h"
 #include <string.h>
 #include <time.h>
@@ -73,8 +74,8 @@ whoami( void )
 char *
 fl_strdup( const char * s )
 {
-    char *p = malloc( 1 + strlen( s ) );
-    return p ? strcpy( p, s ) : p;
+    char *p = malloc( strlen( s ) + 1 );
+    return p ? strcpy( p, s ) : NULL;
 }
 
 

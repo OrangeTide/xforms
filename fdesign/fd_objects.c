@@ -35,7 +35,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include <string.h>
@@ -1018,8 +1018,11 @@ add_an_object( int      objclass,
     }
 
     if ( ! obj )
-        fprintf( stderr, "Unknown object (class = %d type = %d)\n",
+    {
+        fprintf( stderr, "Failed to create object (class = %d type = %d)\n",
                  objclass, type );
+        return NULL;
+    }
 
     obj->fl1 = obj->x;
     obj->fr1 = cur_form->w_hr - obj->fl1;

@@ -25,7 +25,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -342,7 +342,7 @@ static char token[ ] = ".+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMN$%&!";
 
 
 /***************************************
- * only write colormaped images
+ * Only write colormaped images
  ***************************************/
 
 static int
@@ -416,7 +416,7 @@ XPM_dump( FL_IMAGE * im )
             im->visual_cue( im, "writing xpm" );
 
         buf[ 0 ] = '"';
-        buf[ buflen = 1 ] = '\0';
+        buf[ buflen + 1 ] = '\0';
         ci = im->ci[ y ];
 
         /* we never write cpp > 2 */

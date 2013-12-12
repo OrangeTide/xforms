@@ -11,12 +11,11 @@ man_MANS = fd2ps.1
 fd2ps.1:
 	cp -p $(srcdir)/fd2ps.man fd2ps.1
 
-# forms.h is a generated file
-INCLUDES = -I../lib -I$(top_srcdir)/lib $(X_CFLAGS)
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/lib $(X_CFLAGS)
 
 bin_PROGRAMS = fd2ps
 
-fd2ps_LDADD = ../lib/libforms.la $(X_LIBS) $(X_PRE_LIBS) -lX11 $(LIBS) $(X_EXTRA_LIBS)
+fd2ps_LDADD = ../lib/libforms.la $(X_LIBS) $(X_PRE_LIBS) $(LIBS) $(X_EXTRA_LIBS)
 
 fd2ps_SOURCES = \
         align.c \

@@ -22,7 +22,7 @@
 #ifndef PMENU_H_
 #define PMENU_H_
 
-#define MAXITEMS  ( FL_MENU_MAXITEMS + 1 )  /* index 0 unused */
+#define MMAXITEMS  ( FL_MENU_MAXITEMS + 1 )  /* index 0 unused */
 
 
 /* make sure that the first 5 elements are the same as FL_CHOICE.
@@ -32,18 +32,18 @@
 typedef struct {
     int             numitems;               /* number of items in menu */
     int             val;                    /* last menu item selected */
-    char          * items[ MAXITEMS ];      /* individual menu items   */
-    char          * shortcut[ MAXITEMS ];   /* shortcuts for items */
-    unsigned char   mode[ MAXITEMS ];       /* menu item mode */
+    char          * items[ MMAXITEMS ];     /* individual menu items   */
+    char          * shortcut[ MMAXITEMS ];  /* shortcuts for items */
+    unsigned char   mode[ MMAXITEMS ];      /* menu item mode */
     int             align;                  /* onle here to mirror FL_CHOICE */
     int             extern_menu;            /* if external pop is used */
     short           showsymbol;             /* whether symbol is to be shown */
     short           shown;                  /* if shown                    */
-    char            mval[ MAXITEMS ];       /* entry value, position based */
-    char            modechange[ MAXITEMS ];
+    char            mval[ MMAXITEMS ];      /* entry value, position based */
+    char            modechange[ MMAXITEMS ];
     int             cur_val;                /* counter for the value       */
     int             no_title;
-    FL_PUP_CB       cb[ MAXITEMS ];         /* item callback functions     */
+    FL_PUP_CB       cb[ MMAXITEMS ];        /* item callback functions     */
 } FLI_MENU_SPEC;
 
 #endif

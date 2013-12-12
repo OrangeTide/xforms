@@ -17,7 +17,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include <string.h>
@@ -177,7 +177,7 @@ change_object( FL_OBJECT * obj,
     {
         reread_spec_form( obj );
         readback_attributes( obj );
-//        spec_to_superspec( obj );
+        spec_to_superspec( obj );
     }
 
     cleanup_saved_object( );
@@ -256,6 +256,8 @@ save_edited_object( FL_OBJECT * obj )
 {
     /* Get memory for the object to save and copy everything */
 
+	/* Now get memory for the saved object and store what it contains */
+
     saved_object.obj = fl_malloc( sizeof *saved_object.obj );
     *saved_object.obj = *obj;
     saved_object.obj->spec = NULL;
@@ -268,6 +270,8 @@ save_edited_object( FL_OBJECT * obj )
 
 	/* Now get memory for the saved object, store what it contains and
        also save the label and the shortcut for real */
+
+    /* Make a copy of allocated memory in the obejct */
 
 	saved_object.obj->label = fl_strdup( obj->label );
 	copy_shortcut( saved_object.obj, obj );
@@ -426,7 +430,6 @@ show_attributes( const FL_OBJECT * obj )
     char objname[ MAX_VAR_LEN ],
          cbname[  MAX_VAR_LEN ],
          argname[ MAX_VAR_LEN ];
-    char buf[ MAX_VAR_LEN ];
     char *label;
     int i,
         lstyle,
@@ -445,10 +448,8 @@ show_attributes( const FL_OBJECT * obj )
     if ( obj->objclass != FL_BOX )
     {
         for ( i = 0; i < find_class_maxtype( obj->objclass ); i++ )
-        {
-            strcat( strcpy( buf, find_type_name( obj->objclass, i ) ), "%r1" );
-            fl_addto_choice( fd_generic_attrib->typeobj, buf );
-        }
+//            fl_addto_choice_f( fd_generic_attrib->typeobj,
+//                               "%s%%r1", find_type_name( obj->objclass, i ) );
 
         fl_set_choice( fd_generic_attrib->typeobj, obj->type + 1 );
     }

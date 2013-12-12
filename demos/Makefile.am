@@ -9,8 +9,7 @@ SUBDIRS = fd
 
 SUFFIXES = .fd .c
 
-# forms.h is a generated file
-INCLUDES = -I../lib -I../lib/include -I$(top_srcdir) -I$(top_srcdir)/lib -I$(top_srcdir)/image $(X_CFLAGS)
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/lib $(X_CFLAGS)
 
 if BUILD_GL
 GL = gl glwin
@@ -18,7 +17,8 @@ else
 GL =
 endif
 
-noinst_PROGRAMS = arrowbutton \
+noinst_PROGRAMS = \
+	arrowbutton \
 	borderwidth \
 	boxtype \
 	browserall \
@@ -114,6 +114,7 @@ noinst_PROGRAMS = arrowbutton \
 
 # Most of these demos link against libforms only. For them this default is
 # sufficient:
+
 LDFLAGS = ../lib/libforms.la $(X_LIBS) $(X_PRE_LIBS) $(LIBS) $(X_EXTRA_LIBS)
 
 arrowbutton_SOURCES = arrowbutton.c
@@ -146,6 +147,9 @@ demo_SOURCES = demo.c
 demo05_SOURCES = demo05.c
 demo06_SOURCES = demo06.c
 demo27_SOURCES = demo27.c
+demo27_LDADD  = ../lib/libforms.la \
+	$(X_LIBS) $(X_PRE_LIBS) -lX11 $(LIBS) $(X_EXTRA_LIBS)
+
 demo33_SOURCES = demo33.c
 
 demotest_SOURCES = demotest.c
@@ -193,7 +197,9 @@ glwin_LDADD  = ../gl/libformsGL.la ../lib/libforms.la \
 	$(X_LIBS) $(X_PRE_LIBS) -lGL -lX11 $(LIBS) $(X_EXTRA_LIBS)
 
 goodies_SOURCES = goodies.c
+
 grav_SOURCES = grav.c
+
 group_SOURCES = group.c
 
 ibrowser_SOURCES = ibrowser.c
@@ -293,6 +299,5 @@ xyplotover_LDADD  = ../image/libflimage.la ../lib/libforms.la \
 yesno_SOURCES = yesno.c
 yesno_cb_SOURCES = yesno_cb.c
 
-
 .fd.c: ../fdesign/fdesign
-	../fdesign/fdesign -dir fd -convert $<
+	../fdesign/fdesign -convert -dir $(top_srcdir)/demos/fd -I \"include/forms.h\" $<

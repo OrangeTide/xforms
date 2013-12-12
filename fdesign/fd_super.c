@@ -27,7 +27,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -65,141 +65,123 @@ get_superspec( FL_OBJECT * ob )
 SuperSPEC *
 spec_to_superspec( FL_OBJECT * obj )
 {
-    SuperSPEC *spp;
+    SuperSPEC *ssp;
     int i;
     int n;
 
     if ( ! obj->u_vdata )
     {
-        obj->u_vdata = spp = fl_calloc( 1, sizeof *spp );
+        obj->u_vdata = ssp = fl_calloc( 1, sizeof *ssp );
 
-        spp->content    = NULL;
-        spp->shortcut   = NULL;
-        spp->callback   = NULL;
-        spp->mode       = NULL;
-        spp->mval       = NULL;
-        spp->misc_char  = NULL;
+        ssp->content    = NULL;
+        ssp->shortcut   = NULL;
+        ssp->callback   = NULL;
+        ssp->mode       = NULL;
+        ssp->mval       = NULL;
+        ssp->misc_char  = NULL;
 
-        spp->new_menuapi = 0;
-        spp->nlines      = 0;
+        ssp->new_menuapi = 0;
+        ssp->nlines      = 0;
     }
     else
-        spp = obj->u_vdata;
+        ssp = obj->u_vdata;
 
     if ( obj->objclass == FL_BROWSER )
     {
         FLI_BROWSER_SPEC *sp = obj->spec;
 
-        spp->h_pref = sp->h_pref;
-        spp->v_pref = sp->v_pref;
+        ssp->h_pref = sp->h_pref;
+        ssp->v_pref = sp->v_pref;
 
-        for ( i = 1; i <= spp->nlines; i++ )
-        {
-            fli_safe_free( spp->content[ i ] );
-            fli_safe_free( spp->shortcut[ i ] );
-            fli_safe_free( spp->callback[ i ] );
-        }
+        for ( i = 1; i <= ssp->nlines; i++ )
+            fl_free( ssp->content[ i ] );
 
-        n = spp->nlines = fl_get_browser_maxline( obj );
+        n = ssp->nlines = fl_get_browser_maxline( obj );
 
-        spp->content  = fl_realloc( spp->content,
-                                    ( n + 1 ) * sizeof *spp->content );
-        spp->shortcut = fl_realloc( spp->shortcut,
-                                    ( n + 1 ) * sizeof *spp->shortcut );
-        spp->callback = fl_realloc( spp->callback,
-                                    ( n + 1 ) * sizeof *spp->callback );
-        spp->mode     = fl_realloc( spp->mode,
-                                    ( n + 1 ) * sizeof *spp->mode );
-        spp->mval     = fl_realloc( spp->mval,
-                                    ( n + 1 ) * sizeof *spp->mval );
+        ssp->content  = fl_realloc( ssp->content,
+                                    ( n + 1 ) * sizeof *ssp->content );
 
         for ( i = 1; i <= n; i++ )
-        {
-            spp->content[ i ] = fl_strdup( fl_get_browser_line( obj, i ) );
-            spp->shortcut[ i ] = spp->callback[ i ] = NULL;
-        }
+            ssp->content[ i ] = fl_strdup( fl_get_browser_line( obj, i ) );
     }
     else if ( obj->objclass == FL_CHOICE )
     {
         FLI_CHOICE_SPEC *sp = obj->spec;
 
-        for ( i = 1; i <= spp->nlines; i++ )
+        for ( i = 1; i <= ssp->nlines; i++ )
         {
-            fli_safe_free( spp->content[ i ] );
-            fli_safe_free( spp->shortcut[ i ] );
-            fli_safe_free( spp->shortcut[ i ] );
+            fl_free( ssp->content[ i ] );
+            fl_free( ssp->shortcut[ i ] );
         }
 
-        n = spp->nlines = sp->numitems;
+        n = ssp->nlines = sp->numitems;
 
-        spp->content  = fl_realloc( spp->content,
-                                    ( n + 1 ) * sizeof *spp->content );
-        spp->shortcut = fl_realloc( spp->shortcut,
-                                    ( n + 1 ) * sizeof *spp->shortcut );
-        spp->callback = fl_realloc( spp->callback,
-                                    ( n + 1 ) * sizeof *spp->callback );
-        spp->mode     = fl_realloc( spp->mode,
-                                    ( n + 1 ) * sizeof *spp->mode );
-        spp->mval     = fl_realloc( spp->mval,
-                                    ( n + 1 ) * sizeof *spp->mval );
+        ssp->content  = fl_realloc( ssp->content,
+                                    ( n + 1 ) * sizeof *ssp->content );
+        ssp->shortcut = fl_realloc( ssp->shortcut,
+                                    ( n + 1 ) * sizeof *ssp->shortcut );
+        ssp->mode     = fl_realloc( ssp->mode,
+                                    ( n + 1 ) * sizeof *ssp->mode );
 
-        spp->align   = sp->align;
-        spp->int_val = sp->val;
+        ssp->align   = sp->align;
+        ssp->int_val = sp->val;
 
         for ( i = 1; i <= n; i++ )
         {
-            spp->mode[ i ] = sp->mode[ i ];
-            spp->content[ i ] = fl_strdup( fl_get_choice_item_text( obj, i ) );
+            ssp->content[ i ] = fl_strdup( fl_get_choice_item_text( obj, i ) );
 
             if ( sp->shortcut[ i ] )
-                spp->shortcut[ i ] = fl_strdup( sp->shortcut[ i ] );
+                ssp->shortcut[ i ] = fl_strdup( sp->shortcut[ i ] );
             else
-                spp->shortcut[ i ] = NULL;
-
-            spp->callback[ i ] = NULL;
+                ssp->shortcut[ i ] = NULL;
         }
+
+        memcpy( ssp->mode, sp->mode, ( n + 1 ) * sizeof *ssp->mode );
+
     }
     else if ( obj->objclass == FL_MENU )
     {
         FLI_MENU_SPEC *sp = obj->spec;
 
-        for ( i = 1; i <= spp->nlines; i++ )
+        for ( i = 1; i <= ssp->nlines; i++ )
         {
-            fli_safe_free( spp->content[ i ] );
-            fli_safe_free( spp->shortcut[ i ] );
-            fli_safe_free( spp->callback[ i ] );
+            fl_free( ssp->content[ i ] );
+            fl_free( ssp->shortcut[ i ] );
+            fl_free( ssp->callback[ i ] );
         }
 
-        n = spp->nlines = sp->numitems;
+        n = ssp->nlines = sp->numitems;
 
-        spp->content  = fl_realloc( spp->content,
-                                    ( n + 1 ) * sizeof *spp->content );
-        spp->shortcut = fl_realloc( spp->shortcut,
-                                    ( n + 1 ) * sizeof *spp->shortcut );
-        spp->callback = fl_realloc( spp->callback,
-                                    ( n + 1 ) * sizeof *spp->callback );
-        spp->mode     = fl_realloc( spp->mode,
-                                    ( n + 1 ) * sizeof *spp->mode );
-        spp->mval     = fl_realloc( spp->mval,
-                                    ( n + 1 ) * sizeof *spp->mval );
+        ssp->content  = fl_realloc( ssp->content,
+                                    ( n + 1 ) * sizeof *ssp->content );
+        ssp->shortcut = fl_realloc( ssp->shortcut,
+                                    ( n + 1 ) * sizeof *ssp->shortcut );
+        ssp->callback = fl_realloc( ssp->callback,
+                                    ( n + 1 ) * sizeof *ssp->callback );
+        ssp->mode     = fl_realloc( ssp->mode,
+                                    ( n + 1 ) * sizeof *ssp->mode );
+        ssp->mval     = fl_realloc( ssp->mval,
+                                    ( n + 1 ) * sizeof *ssp->mval );
 
         for ( i = 1; i <= n; i++ )
         {
-            spp->mode[ i ] = sp->mode[ i ];
-            spp->mval[ i ] = sp->mval[ i ];
-            spp->content[ i ] =
+            ssp->content[ i ] =
                       fl_strdup( fl_get_menu_item_text( obj, sp->mval[ i ] ) );
 
             if ( sp->shortcut[ i ] )
-                spp->shortcut[ i ] = fl_strdup( sp->shortcut[ i ] );
+                ssp->shortcut[ i ] = fl_strdup( sp->shortcut[ i ] );
             else
-                spp->shortcut[ i ] = NULL;
+                ssp->shortcut[ i ] = NULL;
 
             if ( sp->cb[ i ] )
-                spp->callback[ i ] = fl_strdup( ( char * ) sp->cb[ i ] );
+                ssp->callback[ i ] = fl_strdup( ( char * ) sp->cb[ i ] );
             else
-                spp->callback[ i ] = NULL;
+                ssp->callback[ i ] = NULL;
         }
+
+        memcpy( ssp->mode, sp->mode, ( n + 1 ) * sizeof *ssp->mode );
+        memcpy( ssp->mval, sp->mval, ( n + 1 ) * sizeof *ssp->mval );
+        
     }
     else if (    obj->objclass == FL_SLIDER
               || obj->objclass == FL_VALSLIDER
@@ -207,14 +189,14 @@ spec_to_superspec( FL_OBJECT * obj )
     {
         FLI_SLIDER_SPEC *sp = obj->spec;
 
-        spp->val        = sp->val;
-        spp->min        = sp->min;
-        spp->max        = sp->max;
-        spp->step       = sp->step;
-        spp->prec       = sp->prec;
-        spp->ldelta     = sp->ldelta;
-        spp->rdelta     = sp->rdelta;
-        spp->slsize     = sp->slsize;
+        ssp->val        = sp->val;
+        ssp->min        = sp->min;
+        ssp->max        = sp->max;
+        ssp->step       = sp->step;
+        ssp->prec       = sp->prec;
+        ssp->ldelta     = sp->ldelta;
+        ssp->rdelta     = sp->rdelta;
+        ssp->slsize     = sp->slsize;
     }
     else if (    ISBUTTON( obj->objclass )
               || obj->objclass == FL_PIXMAP
@@ -222,97 +204,97 @@ spec_to_superspec( FL_OBJECT * obj )
     {
         FL_BUTTON_SPEC *sp = obj->spec;
 
-        spp->mbuttons = 0;
+        ssp->mbuttons = 0;
         for ( i = 0; i < 5; i++ )
             if ( sp->react_to[ i ] )
-                spp->mbuttons |= 1 << i; 
+                ssp->mbuttons |= 1 << i; 
 
-        spp->int_val = sp->val;
+        ssp->int_val = sp->val;
     }
     else if ( obj->objclass == FL_POSITIONER )
     {
         FLI_POSITIONER_SPEC *sp = obj->spec;
 
-        spp->xstep      = sp->xstep;
-        spp->ystep      = sp->ystep;
-        spp->xmin       = sp->xmin;
-        spp->xmax       = sp->xmax;
-        spp->xval       = sp->xval;
-        spp->ymin       = sp->ymin;
-        spp->ymax       = sp->ymax;
-        spp->yval       = sp->yval;
+        ssp->xstep      = sp->xstep;
+        ssp->ystep      = sp->ystep;
+        ssp->xmin       = sp->xmin;
+        ssp->xmax       = sp->xmax;
+        ssp->xval       = sp->xval;
+        ssp->ymin       = sp->ymin;
+        ssp->ymax       = sp->ymax;
+        ssp->yval       = sp->yval;
     }
     else if ( obj->objclass == FL_COUNTER )
     {
         FLI_COUNTER_SPEC *sp = obj->spec;
 
-        spp->val        = sp->val;
-        spp->lstep      = sp->lstep;
-        spp->sstep      = sp->sstep;
-        spp->min        = sp->min;
-        spp->max        = sp->max;
-        spp->prec       = sp->prec;
+        ssp->val        = sp->val;
+        ssp->lstep      = sp->lstep;
+        ssp->sstep      = sp->sstep;
+        ssp->min        = sp->min;
+        ssp->max        = sp->max;
+        ssp->prec       = sp->prec;
     }
     else if ( obj->objclass == FL_DIAL )
     {
         FLI_DIAL_SPEC *sp = obj->spec;
 
-        spp->min        = sp->min;
-        spp->max        = sp->max;
-        spp->val        = sp->val;
-        spp->step       = sp->step;
-        spp->thetai     = sp->thetai;
-        spp->thetaf     = sp->thetaf;
-        spp->direction  = sp->direction;
+        ssp->min        = sp->min;
+        ssp->max        = sp->max;
+        ssp->val        = sp->val;
+        ssp->step       = sp->step;
+        ssp->thetai     = sp->thetai;
+        ssp->thetaf     = sp->thetaf;
+        ssp->direction  = sp->direction;
     }
     else if ( obj->objclass == FL_XYPLOT )
     {
         FLI_XYPLOT_SPEC *sp = obj->spec;
 
-        spp->xmajor         = sp->xmajor;
-        spp->xminor         = sp->xminor;
-        spp->ymajor         = sp->ymajor;
-        spp->yminor         = sp->yminor;
-        spp->xscale         = sp->xscale;
-        spp->yscale         = sp->yscale;
-        spp->xgrid          = sp->xgrid;
-        spp->ygrid          = sp->ygrid;
-        spp->grid_linestyle = sp->grid_linestyle;
-        spp->xbase          = sp->xbase;
-        spp->ybase          = sp->ybase;
-        spp->mark_active    = sp->mark_active;
+        ssp->xmajor         = sp->xmajor;
+        ssp->xminor         = sp->xminor;
+        ssp->ymajor         = sp->ymajor;
+        ssp->yminor         = sp->yminor;
+        ssp->xscale         = sp->xscale;
+        ssp->yscale         = sp->yscale;
+        ssp->xgrid          = sp->xgrid;
+        ssp->ygrid          = sp->ygrid;
+        ssp->grid_linestyle = sp->grid_linestyle;
+        ssp->xbase          = sp->xbase;
+        ssp->ybase          = sp->ybase;
+        ssp->mark_active    = sp->mark_active;
     }
     else if ( obj->objclass == FL_SCROLLBAR )
     {
         FLI_SCROLLBAR_SPEC *scbsp = obj->spec;
         FLI_SLIDER_SPEC *sp = scbsp->slider->spec;
 
-        spp->val    = sp->val;
-        spp->min    = sp->min;
-        spp->max    = sp->max;
-        spp->prec   = sp->prec;
-        spp->step   = sp->step;
-        spp->slsize = sp->slsize;
-        spp->ldelta = sp->ldelta;
-        spp->rdelta = sp->rdelta;
+        ssp->val    = sp->val;
+        ssp->min    = sp->min;
+        ssp->max    = sp->max;
+        ssp->prec   = sp->prec;
+        ssp->step   = sp->step;
+        ssp->slsize = sp->slsize;
+        ssp->ldelta = sp->ldelta;
+        ssp->rdelta = sp->rdelta;
     }
     else if ( obj->objclass == FL_SPINNER )
     {
         FLI_SPINNER_SPEC *sp = obj->spec;
 
-        spp->i_val  = sp->i_val;
-        spp->i_min  = sp->i_min;
-        spp->i_max  = sp->i_max;
-        spp->i_incr = sp->i_incr;
-        spp->f_val  = sp->f_val;
-        spp->f_min  = sp->f_min;
-        spp->f_max  = sp->f_max;
-        spp->f_incr = sp->f_incr;
-        spp->orient = sp->orient;
-        spp->prec   = sp->prec;
+        ssp->i_val  = sp->i_val;
+        ssp->i_min  = sp->i_min;
+        ssp->i_max  = sp->i_max;
+        ssp->i_incr = sp->i_incr;
+        ssp->f_val  = sp->f_val;
+        ssp->f_min  = sp->f_min;
+        ssp->f_max  = sp->f_max;
+        ssp->f_incr = sp->f_incr;
+        ssp->orient = sp->orient;
+        ssp->prec   = sp->prec;
     }
 
-    return spp;
+    return ssp;
 }
 
 
@@ -323,10 +305,10 @@ void *
 superspec_to_spec( FL_OBJECT * obj )
 {
     void *v = obj->spec;
-    SuperSPEC *spp = obj->u_vdata;
+    SuperSPEC *ssp = obj->u_vdata;
     int i = 0;
 
-    if ( ! spp )
+    if ( ! ssp )
         return v;
 
     if ( obj->objclass == FL_BROWSER )
@@ -335,44 +317,44 @@ superspec_to_spec( FL_OBJECT * obj )
 
         fl_clear_browser( obj );
 
-        sp->h_pref = spp->h_pref;
-        sp->v_pref = spp->v_pref;
+        sp->h_pref = ssp->h_pref;
+        sp->v_pref = ssp->v_pref;
 
-        for ( i = 1; i <= spp->nlines; i++ )
-            fl_addto_browser( obj, spp->content[ i ] );
+        for ( i = 1; i <= ssp->nlines; i++ )
+            fl_addto_browser( obj, ssp->content[ i ] );
     }
     else if ( obj->objclass == FL_CHOICE )
     {
         fl_clear_choice( obj );
 
-        ( ( FLI_CHOICE_SPEC * ) obj->spec)->align = spp->align;
+        ( ( FLI_CHOICE_SPEC * ) obj->spec)->align = ssp->align;
 
-        for ( i = 1; i <= spp->nlines; i++ )
+        for ( i = 1; i <= ssp->nlines; i++ )
         {
-            fl_addto_choice( obj, spp->content[ i ] );
-            fl_set_choice_item_mode( obj, i, spp->mode[ i ] );
-            if ( spp->shortcut[ i ] )
-                fl_set_choice_item_shortcut( obj, i, spp->shortcut[ i ] );
+            fl_addto_choice( obj, ssp->content[ i ] );
+            if ( ssp->shortcut[ i ] )
+                fl_set_choice_item_shortcut( obj, i, ssp->shortcut[ i ] );
+            fl_set_choice_item_mode( obj, i, ssp->mode[ i ] );
         }
 
-        if ( spp->nlines >= spp->int_val )
-            fl_set_choice( obj, spp->int_val );
+        if ( ssp->nlines >= ssp->int_val )
+            fl_set_choice( obj, ssp->int_val );
     }
     else if ( obj->objclass == FL_MENU )
     {
         fl_clear_menu( obj );
 
-        for ( i = 1; i <= spp->nlines; i++ )
+        for ( i = 1; i <= ssp->nlines; i++ )
         {
-            fl_addto_menu( obj, spp->content[ i ] );
-            fl_set_menu_item_mode( obj, i, spp->mode[ i ] );
-            if ( spp->shortcut[ i ] )
-                fl_set_menu_item_shortcut( obj, i, spp->shortcut[ i ] );
-            if ( spp->callback[ i ] )
+            fl_addto_menu( obj, ssp->content[ i ] );
+            if ( ssp->shortcut[ i ] )
+                fl_set_menu_item_shortcut( obj, i, ssp->shortcut[ i ] );
+            if ( ssp->callback[ i ] )
                 fl_set_menu_item_callback( obj, i,
-                               ( FL_PUP_CB ) fl_strdup( spp->callback[ i ] ) );
-            if ( spp->mval[ i ] != i )
-                fl_set_menu_item_id( obj, i, spp->mval[ i ] );
+                               ( FL_PUP_CB ) fl_strdup( ssp->callback[ i ] ) );
+            fl_set_menu_item_mode( obj, i, ssp->mode[ i ] );
+            if ( ssp->mval[ i ] != i )
+                fl_set_menu_item_id( obj, i, ssp->mval[ i ] );
         }
     }
     else if (    obj->objclass == FL_SLIDER
@@ -381,14 +363,14 @@ superspec_to_spec( FL_OBJECT * obj )
     {
         FLI_SLIDER_SPEC *sp = obj->spec;
 
-        sp->val    = spp->val;
-        sp->min    = spp->min;
-        sp->max    = spp->max;
-        sp->step   = spp->step;
-        sp->prec   = spp->prec;
-        sp->ldelta = spp->ldelta;
-        sp->rdelta = spp->rdelta;
-        sp->slsize = spp->slsize;
+        sp->val    = ssp->val;
+        sp->min    = ssp->min;
+        sp->max    = ssp->max;
+        sp->step   = ssp->step;
+        sp->prec   = ssp->prec;
+        sp->ldelta = ssp->ldelta;
+        sp->rdelta = ssp->rdelta;
+        sp->slsize = ssp->slsize;
     }
     else if (    ISBUTTON( obj->objclass )
               || obj->objclass == FL_PIXMAP
@@ -397,11 +379,11 @@ superspec_to_spec( FL_OBJECT * obj )
         FL_BUTTON_SPEC *sp = obj->spec;
 
         for ( i = 0; i < 5; i++ )
-            sp->react_to[ i ] = ( spp->mbuttons & ( 1 << i ) ) != 0;
+            sp->react_to[ i ] = ( ssp->mbuttons & ( 1 << i ) ) != 0;
         if ( ISBUTTON( obj->objclass ) )
-            fl_set_button_mouse_buttons( obj, spp->mbuttons );
+            fl_set_button_mouse_buttons( obj, ssp->mbuttons );
 
-        sp->val = spp->int_val;
+        sp->val = ssp->int_val;
 
         if ( ISBUTTON( obj->objclass ) )
             fl_set_button( obj, sp->val );
@@ -410,90 +392,90 @@ superspec_to_spec( FL_OBJECT * obj )
     {
         FLI_POSITIONER_SPEC *sp = obj->spec;
 
-        sp->xstep      = spp->xstep;
-        sp->ystep      = spp->ystep;
-        sp->xmin       = spp->xmin;
-        sp->xmax       = spp->xmax;
-        sp->xval       = spp->xval;
-        sp->ymin       = spp->ymin;
-        sp->ymax       = spp->ymax;
-        sp->yval       = spp->yval;
+        sp->xstep      = ssp->xstep;
+        sp->ystep      = ssp->ystep;
+        sp->xmin       = ssp->xmin;
+        sp->xmax       = ssp->xmax;
+        sp->xval       = ssp->xval;
+        sp->ymin       = ssp->ymin;
+        sp->ymax       = ssp->ymax;
+        sp->yval       = ssp->yval;
     }
     else if ( obj->objclass == FL_COUNTER )
     {
         FLI_COUNTER_SPEC *sp = obj->spec;
 
-        sp->val        = spp->val;
-        sp->sstep      = spp->sstep;
-        sp->lstep      = spp->lstep;
-        sp->min        = spp->min;
-        sp->max        = spp->max;
-        sp->prec       = spp->prec;
+        sp->val        = ssp->val;
+        sp->sstep      = ssp->sstep;
+        sp->lstep      = ssp->lstep;
+        sp->min        = ssp->min;
+        sp->max        = ssp->max;
+        sp->prec       = ssp->prec;
     }
     else if ( obj->objclass == FL_SPINNER )
     {
-        fl_set_spinner_value( obj, spp->dval );
-        fl_set_spinner_bounds( obj, spp->dmin, spp->dmax );
-        fl_set_spinner_step( obj, spp->dstep );
-        fl_set_spinner_precision( obj, spp->prec );
+        fl_set_spinner_value( obj, ssp->dval );
+        fl_set_spinner_bounds( obj, ssp->dmin, ssp->dmax );
+        fl_set_spinner_step( obj, ssp->dstep );
+        fl_set_spinner_precision( obj, ssp->prec );
     }
     else if ( obj->objclass == FL_DIAL )
     {
         FLI_DIAL_SPEC *sp = obj->spec;
 
-        sp->min        = spp->min;
-        sp->max        = spp->max;
-        sp->val        = spp->val;
-        sp->step       = spp->step;
-        sp->thetai     = spp->thetai;
-        sp->thetaf     = spp->thetaf;
-        sp->direction  = spp->direction;
+        sp->min        = ssp->min;
+        sp->max        = ssp->max;
+        sp->val        = ssp->val;
+        sp->step       = ssp->step;
+        sp->thetai     = ssp->thetai;
+        sp->thetaf     = ssp->thetaf;
+        sp->direction  = ssp->direction;
     }
     else if ( obj->objclass == FL_XYPLOT )
     {
         FLI_XYPLOT_SPEC *sp = obj->spec;
 
-        sp->xmajor         = spp->xmajor;
-        sp->xminor         = spp->xminor;
-        sp->ymajor         = spp->ymajor;
-        sp->yminor         = spp->yminor;
-        sp->xscale         = spp->xscale;
-        sp->yscale         = spp->yscale;
-        sp->xgrid          = spp->xgrid;
-        sp->ygrid          = spp->ygrid;
-        sp->xbase          = spp->xbase;
-        sp->ybase          = spp->ybase;
-        sp->grid_linestyle = spp->grid_linestyle;
-        sp->mark_active    = spp->mark_active;
+        sp->xmajor         = ssp->xmajor;
+        sp->xminor         = ssp->xminor;
+        sp->ymajor         = ssp->ymajor;
+        sp->yminor         = ssp->yminor;
+        sp->xscale         = ssp->xscale;
+        sp->yscale         = ssp->yscale;
+        sp->xgrid          = ssp->xgrid;
+        sp->ygrid          = ssp->ygrid;
+        sp->xbase          = ssp->xbase;
+        sp->ybase          = ssp->ybase;
+        sp->grid_linestyle = ssp->grid_linestyle;
+        sp->mark_active    = ssp->mark_active;
     }
     else if ( obj->objclass == FL_SCROLLBAR )
     {
         FLI_SCROLLBAR_SPEC *scbsp = obj->spec;
         FLI_SLIDER_SPEC *sp = scbsp->slider->spec;
 
-        sp->val    = spp->val;
-        sp->min    = spp->min;
-        sp->max    = spp->max;
-        sp->prec   = spp->prec;
-        sp->step   = spp->step;
-        sp->slsize = spp->slsize;
-        sp->ldelta = spp->ldelta;
-        sp->rdelta = spp->rdelta;
+        sp->val    = ssp->val;
+        sp->min    = ssp->min;
+        sp->max    = ssp->max;
+        sp->prec   = ssp->prec;
+        sp->step   = ssp->step;
+        sp->slsize = ssp->slsize;
+        sp->ldelta = ssp->ldelta;
+        sp->rdelta = ssp->rdelta;
     }
     else if ( obj->objclass == FL_SLIDER )
     {
         FLI_SPINNER_SPEC *sp = obj->spec;
 
-        sp->i_val  = spp->i_val;
-        sp->i_min  = spp->i_min;
-        sp->i_max  = spp->i_max;
-        sp->i_incr = spp->i_incr;
-        sp->f_val  = spp->f_val;
-        sp->f_min  = spp->f_min;
-        sp->f_max  = spp->f_max;
-        sp->f_incr = spp->f_incr;
-        sp->orient = spp->orient;
-        sp->prec   = spp->prec;
+        sp->i_val  = ssp->i_val;
+        sp->i_min  = ssp->i_min;
+        sp->i_max  = ssp->i_max;
+        sp->i_incr = ssp->i_incr;
+        sp->f_val  = ssp->f_val;
+        sp->f_min  = ssp->f_min;
+        sp->f_max  = ssp->f_max;
+        sp->f_incr = ssp->f_incr;
+        sp->orient = ssp->orient;
+        sp->prec   = ssp->prec;
     }
     else if ( obj->objclass == FL_INPUT )
     {
@@ -532,16 +514,17 @@ copy_superspec( FL_OBJECT * target,
 
     *t = *s;
 
+    t->content = NULL;
+    t->shortcut = NULL;
+    t->callback = NULL;
+    t->mode = NULL;
+    t->mval = NULL;
+
     /* Take care of pointers in the SuperSPEC */
 
     if ( s->nlines )
     {
         int cnt = s->nlines + 1;
-
-        t->mode = s->mode ? fl_malloc( cnt * sizeof *t->mode ) : NULL;
-
-        t->mval = s->mval ?
-                  fl_malloc( cnt * sizeof *t->mval ) : NULL;
 
         t->content = s->content ?
                      fl_malloc( cnt * sizeof * t->content) : NULL;
@@ -551,16 +534,15 @@ copy_superspec( FL_OBJECT * target,
 
         t->callback = s->callback ?
                       fl_malloc( cnt * sizeof *t->callback ) : NULL;
+
+        t->mode = s->mode ? fl_malloc( cnt * sizeof *t->mode ) : NULL;
+
+        t->mval = s->mval ?
+                  fl_malloc( cnt * sizeof *t->mval ) : NULL;
     }
 
     for ( i = 1; i <= s->nlines; i++ )
     {
-        if ( t->mode )
-            t->mode[ i ] = s->mode[ i ];
-
-        if ( t->mval )
-            t->mval[ i ] = s->mval[ i ];
-
         if ( t->content )
             t->content[ i ] = s->content[ i ] ?
                               fl_strdup( s->content[ i ] ) : NULL;
@@ -573,6 +555,12 @@ copy_superspec( FL_OBJECT * target,
             t->callback[ i ] = s->callback[ i ] ?
                                fl_strdup( s->callback[ i ] ) : NULL;
     }
+
+    if ( t->mode )
+        memcpy( t->mode, s->mode, ( s->nlines + 1 ) * sizeof *t->mode );
+
+    if ( t->mval )
+        memcpy( t->mval, s->mval, ( s->nlines + 1 ) * sizeof *t->mval );
 
     if ( t->misc_char )
         t->misc_char = fl_strdup( s->misc_char );

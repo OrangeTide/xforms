@@ -28,7 +28,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -1062,6 +1062,17 @@ fli_set_form_icon_data( FL_FORM  * form,
         fl_set_form_icon( form, p, s );
         fl_free( xpmattrib );
     }
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_free_pixmap( Pixmap id )
+{
+    if ( id != None )
+        XFreePixmap( fl_display, id );
 }
 
 

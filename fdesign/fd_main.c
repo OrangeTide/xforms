@@ -29,7 +29,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -624,8 +624,13 @@ pre_connect( int    argc,
             fdopt.unit = unit_val( argv[ ++i ] );
         else if ( strncmp( argv[ i ] + 1, "filter", 4 ) == 0 && i + 1 < argc )
             strcpy( filter, argv[ ++i ] );
-        else if ( strcmp( argv[ i ], "-I" ) == 0 && i + 1 < argc )
-            strcpy( xform_header, argv[ ++i ] );
+        else if ( strncmp( argv[ i ], "-I", 2 ) == 0 )
+        {
+            if ( argv[ i ][ 2 ] != '\0' )
+                strcpy( xform_header, argv[ i ] + 2 );
+            else if ( i + 1 < argc )
+                strcpy( xform_header, argv[ ++i ] );
+        }
         else if ( strcmp( argv[ i ], "-G" ) == 0 && i + 1 < argc )
             strcpy( glcanvas_header, argv[ ++i ] );
         else if ( strcmp( argv[ i ], "-bw" ) == 0 && i + 1 < argc )

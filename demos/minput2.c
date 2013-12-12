@@ -22,7 +22,7 @@
  * Input return setting and raw callback. Terrible hack.
  */
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -127,7 +127,8 @@ create_form_inputform( void )
 
     fdui->inputform = fl_bgn_form( FL_NO_BOX, 475, 485 );
 
-    obj = fl_add_box( FL_UP_BOX, 0, 0, 475, 485, "" );
+    fl_add_box( FL_UP_BOX, 0, 0, 475, 485, "" );
+
     fdui->input1 = obj = fl_add_input( FL_MULTILINE_INPUT, 15, 275, 350, 180,
                                        "" );
     fl_set_object_lalign( obj, FL_ALIGN_TOP );

@@ -21,7 +21,7 @@
 /* Demo for scaling forms. */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include <stdlib.h>
@@ -50,7 +50,7 @@ create_form_form(void)
 
     fdui->form = fl_bgn_form( FL_NO_BOX, 470, 370 );
 
-    obj = fl_add_box( FL_UP_BOX, 0, 0, 470, 370, "" );
+    fl_add_box( FL_UP_BOX, 0, 0, 470, 370, "" );
 
     obj = fl_add_box( FL_SHADOW_BOX, 30, 30, 410, 70, "Scaling Forms" );
     fl_set_object_color( obj, 9, 47 );

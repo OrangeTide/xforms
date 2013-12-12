@@ -31,7 +31,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -178,16 +178,20 @@ fl_add_formbrowser( int          type,
 FL_FORM *
 fl_get_formbrowser_topform( FL_OBJECT * ob )
 {
-    int topline = 0;
-    FLI_FORMBROWSER_SPEC *sp = ob->spec;
+    int topline;
+    FLI_FORMBROWSER_SPEC *sp;
 
     if ( ! IsFormBrowserClass( ob ) )
+    {
         M_err( "fl_get_formbrowser_topform", "%s not a formbrowser",
                ob ? ob->label : "null" );
-    else
-        topline = sp->top_form + 1;
+        return NULL;
+    }
 
-    return topline ? sp->form[ topline - 1 ] : 0;
+    sp = ob->spec;
+    topline = sp->top_form + 1;
+
+    return topline ? sp->form[ topline - 1 ] : NULL;
 }
 
 
@@ -245,7 +249,7 @@ int
 fl_addto_formbrowser( FL_OBJECT * ob,
                       FL_FORM   * form )
 {
-    FLI_FORMBROWSER_SPEC *sp = ob->spec;
+    FLI_FORMBROWSER_SPEC *sp;
 
     if ( ! IsFormBrowserClass( ob ) )
     {
@@ -253,16 +257,20 @@ fl_addto_formbrowser( FL_OBJECT * ob,
                ob ? ob->label : "null" );
         return 0;
     }
-    else if ( ! form )
+
+    if ( ! form )
     {
         M_err( "fl_addto_formbrowser", "Invalid argument" );
         return 0;
     }
-    else if ( form->attached )
+
+    if ( form->attached )
     {
         M_err( "fl_addto_formbrowser", "Already attached ?" );
         return 0;
     }
+
+    sp = ob->spec;
 
     if ( form->visible == FL_VISIBLE )
         fl_hide_form( form );
@@ -293,13 +301,10 @@ fl_addto_formbrowser( FL_OBJECT * ob,
 
 int
 fl_find_formbrowser_form_number( FL_OBJECT * ob,
-                                 FL_FORM   * candidate_form )
+                                 FL_FORM   * form )
 {
-    FLI_FORMBROWSER_SPEC *sp = ob->spec;
-    int f;
-    FL_FORM **form = sp->form;
-    int nforms = sp->nforms;
-    int num = 0;
+    FLI_FORMBROWSER_SPEC *sp;
+    int num;
 
     if ( ! IsFormBrowserClass( ob ) )
     {
@@ -307,22 +312,20 @@ fl_find_formbrowser_form_number( FL_OBJECT * ob,
                ob ? ob->label : "null" );
         return 0;
     }
-    else if ( ! candidate_form )
+
+    if ( ! form )
     {
         M_err( "fl_find_formbrowser_form_number", "Invalid argument" );
         return 0;
     }
 
-    for ( f = 0; f < nforms; f++ )
-    {
-        if ( form[ f ] == candidate_form )
-        {
-            num = f + 1;
-            break;
-        }
-    }
+    sp = ob->spec;
 
-    return num;
+    for ( num = 0; num < sp->nforms; num++ )
+        if ( sp->form[ num ] == form )
+            break;
+
+    return num == sp->nforms ? 0 : num + 1;
 }
 
 
@@ -331,11 +334,10 @@ fl_find_formbrowser_form_number( FL_OBJECT * ob,
 
 int
 fl_delete_formbrowser( FL_OBJECT * ob,
-                       FL_FORM   * candidate_form )
+                       FL_FORM   * form )
 {
-    FLI_FORMBROWSER_SPEC *sp = ob->spec;
-    int f = fl_find_formbrowser_form_number( ob, candidate_form );
-
+    FLI_FORMBROWSER_SPEC *sp;
+    int f;
 
     if ( ! IsFormBrowserClass( ob ) )
     {
@@ -343,16 +345,20 @@ fl_delete_formbrowser( FL_OBJECT * ob,
                ob ? ob->label : "null" );
         return -1;
     }
-    else if ( ! candidate_form )
+
+    if ( ! form )
     {
         M_err( "fl_delete_formbrowser", "Invalid argument" );
         return -1;
     }
 
+    sp = ob->spec;
+    f = fl_find_formbrowser_form_number( ob, form );
+
     if ( f )
         delete_form( sp, f - 1 );
 
-    return sp ? sp->nforms : -1;
+    return f ? sp->nforms : -1;
 }
 
 
@@ -377,8 +383,8 @@ FL_FORM *
 fl_delete_formbrowser_bynumber( FL_OBJECT * ob,
                                 int         num )
 {
-    FL_FORM *form = NULL;
-    FLI_FORMBROWSER_SPEC *sp = ob->spec;
+    FL_FORM *form;
+    FLI_FORMBROWSER_SPEC *sp;
 
     if ( ! IsFormBrowserClass( ob ) )
     {
@@ -386,7 +392,10 @@ fl_delete_formbrowser_bynumber( FL_OBJECT * ob,
                ob ? ob->label : "null" );
         return NULL;
     }
-    else if ( num <= 0 || num > sp->nforms )
+
+    sp = ob->spec;
+
+    if ( num <= 0 || num > sp->nforms )
     {
         M_err( "fl_delete_formbrowser_bynumber",
                "Invalid argument -- %d not between 1 and %d",
@@ -409,9 +418,8 @@ fl_replace_formbrowser( FL_OBJECT * ob,
                         int         num,
                         FL_FORM   * form )
 {
-    FL_FORM *old_form = NULL;
-    FLI_FORMBROWSER_SPEC *sp = ob->spec;
-    int i = num - 1;
+    FL_FORM *old_form;
+    FLI_FORMBROWSER_SPEC *sp;
 
     if ( ! IsFormBrowserClass( ob ) )
     {
@@ -419,7 +427,10 @@ fl_replace_formbrowser( FL_OBJECT * ob,
                ob ? ob->label : "null" );
         return NULL;
     }
-    else if ( num <= 0 || num > sp->nforms )
+
+    sp = ob->spec;
+
+    if ( num <= 0 || num > sp->nforms )
     {
         M_err( "fl_replace_formbrowser",
                "Invalid argument -- %d not between 1 and %d",
@@ -428,9 +439,9 @@ fl_replace_formbrowser( FL_OBJECT * ob,
     }
 
 
-    old_form = sp->form[ i ];
+    old_form = sp->form[ --num ];
     fl_hide_form( old_form );
-    sp->form[ i ] = form;
+    sp->form[ num ] = form;
     display_forms( sp );
 
     return old_form;
@@ -447,7 +458,7 @@ fl_get_formbrowser_area( FL_OBJECT * ob,
                          int       * w,
                          int       * h )
 {
-    FLI_FORMBROWSER_SPEC *sp = ob->spec;
+    FLI_FORMBROWSER_SPEC *sp;
 
     if ( ! IsFormBrowserClass( ob ) )
     {
@@ -455,6 +466,8 @@ fl_get_formbrowser_area( FL_OBJECT * ob,
                ob ? ob->label : "null" );
         return 0;
     }
+
+    sp = ob->spec;
 
     *x = sp->canvas->x;
     *y = sp->canvas->y;
@@ -473,10 +486,9 @@ fl_insert_formbrowser( FL_OBJECT * ob,
                        int         line,
                        FL_FORM   * new_form )
 {
-    int status = -1;
-    FLI_FORMBROWSER_SPEC *sp = ob->spec;
-    int nforms = sp->nforms;
-    FL_FORM **form = sp->form;
+    FLI_FORMBROWSER_SPEC *sp;
+    int nforms;
+    FL_FORM **form;
     int n = line - 1;
 
     if ( ! IsFormBrowserClass( ob ) )
@@ -486,25 +498,33 @@ fl_insert_formbrowser( FL_OBJECT * ob,
         return -1;
     }
 
+    sp = ob->spec;
+    nforms = sp->nforms;
+
     if ( line <= 0 || line > nforms )
     {
         M_err( "fl_insert_formbrowser", "Invalid argument" );
         return -1;
     }
 
-    form = fl_realloc( form, ( nforms + 1 ) * sizeof *form );
+    form = fl_realloc( sp->form, ( nforms + 1 ) * sizeof *form );
+
+    if ( ! form )
+    {
+        M_err( "fl_insert_formbrowser", "Running out of memory" );
+        return -1;
+    }
 
     parentize_form( new_form, ob );
 
     if ( n != nforms )
         memmove( form + n + 1, form + n, sizeof *form * ( nforms - n ) );
     form[ n ] = new_form;
-    status = sp->nforms = nforms + 1;
     sp->form = form;
-    status = sp->nforms;
+    sp->nforms++;
     display_forms( sp );
 
-    return status;
+    return sp->nforms;
 }
 
 
@@ -567,13 +587,17 @@ int
 fl_set_formbrowser_xoffset( FL_OBJECT * ob,
                             int         offset )
 {
-    FLI_FORMBROWSER_SPEC *sp = ob->spec;
+    FLI_FORMBROWSER_SPEC *sp;
     int current;
 
     if ( ! IsFormBrowserClass( ob ) )
+    {
         M_err( "fl_set_formbrowser_xoffset", "%s not a formbrowser",
                ob ? ob->label : "null" );
+        return 0;
+    }
 
+    sp = ob->spec;
     current = sp->left_edge;
 
     if ( sp->max_width < sp->canvas->w )
@@ -598,8 +622,11 @@ int
 fl_get_formbrowser_xoffset( FL_OBJECT * ob )
 {
     if ( ! IsFormBrowserClass( ob ) )
+    {
         M_err( "fl_get_formbrowser_xoffset", "%s not a formbrowser",
                ob ? ob->label : "null" );
+        return 0;
+    }
 
     return ( ( FLI_FORMBROWSER_SPEC * ) ob->spec )->left_edge;
 }
@@ -618,10 +645,14 @@ fl_set_formbrowser_yoffset( FL_OBJECT * ob,
         f;
 
     if ( ! IsFormBrowserClass( ob ) )
+    {
         M_err( "fl_set_formbrowser_yoffset", "%s not a formbrowser",
                ob ? ob->label : "null" );
+        return 0;
+    }
 
     sp = ob->spec;
+    current = fl_get_formbrowser_yoffset( ob );
 
     if ( sp->max_height < sp->canvas->h )
         offset = 0;
@@ -629,8 +660,6 @@ fl_set_formbrowser_yoffset( FL_OBJECT * ob,
         offset = 0;
     if ( offset > sp->max_height - sp->canvas->h )
         offset = sp->max_height - sp->canvas->h;
-
-    current = fl_get_formbrowser_yoffset( ob );
 
     h = sp->max_height;
     for ( f = sp->nforms - 1; f >= 0 && offset < h; f-- )
@@ -652,14 +681,18 @@ fl_set_formbrowser_yoffset( FL_OBJECT * ob,
 int
 fl_get_formbrowser_yoffset( FL_OBJECT * ob )
 {
-    FLI_FORMBROWSER_SPEC *sp = ob->spec;
+    FLI_FORMBROWSER_SPEC *sp;
     int h,
         f;
 
     if ( ! IsFormBrowserClass( ob ) )
+    {
         M_err( "fl_get_formbrowser_yoffset", "%s not a formbrowser",
                ob ? ob->label : "null" );
+        return 0;
+    }
 
+    sp = ob->spec;
     for ( h = f = 0; f < sp->top_form; f++ )
         h += sp->form[ f ]->h;
 
@@ -692,21 +725,22 @@ fl_get_formbrowser_form( FL_OBJECT * ob,
                          int         n )
 {
     FL_FORM *form = NULL;
+    FLI_FORMBROWSER_SPEC *sp;
 
     if ( ! IsFormBrowserClass( ob ) )
+    {
         M_err( "fl_get_formbrowser_form", "%s not a formbrowser",
                ob ? ob->label : "null" );
-    else
-    {
-        FLI_FORMBROWSER_SPEC *sp = ob->spec;
-        int nforms = sp->nforms;
-
-        if ( n >= 1 && n <= nforms )
-            form = sp->form[ n - 1 ];
-        else
-            M_err( "fl_get_formbrowser_form",
-                   "%d is not an allowable form number", n );
+        return NULL;
     }
+
+    sp = ob->spec;
+
+    if ( n >= 1 && n <= sp->nforms )
+        form = sp->form[ n - 1 ];
+    else
+        M_err( "fl_get_formbrowser_form",
+               "%d is not an allowable form number", n );
 
     return form;
 }
@@ -738,7 +772,6 @@ display_forms( FLI_FORMBROWSER_SPEC * sp )
         if ( form[ f ]->visible )
             fl_hide_form( form[ f ] );
 
-    y_pos = 0;
     fli_inherit_attributes( sp->parent, sp->vsl );
     fli_inherit_attributes( sp->parent, sp->hsl );
 

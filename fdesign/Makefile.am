@@ -11,12 +11,11 @@ man_MANS = fdesign.1
 fdesign.1:
 	cp -p $(srcdir)/fdesign.man fdesign.1
 
-# forms.h is a generated file
-INCLUDES = -I../lib -I../lib/include -I./xpm -I$(top_srcdir)/lib $(X_CFLAGS)
+INCLUDES = -I./xpm $(X_CFLAGS)
 
 bin_PROGRAMS = fdesign
 
-fdesign_LDADD = ../lib/libforms.la $(X_LIBS) $(X_PRE_LIBS) $(XPM_LIB) -lX11 $(LIBS) $(X_EXTRA_LIBS)
+fdesign_LDADD = $(top_srcdir)/lib/libforms.la $(X_LIBS) $(X_PRE_LIBS) $(XPM_LIB) -lX11 $(LIBS) $(X_EXTRA_LIBS)
 
 fdesign_SOURCES = \
 	fd_attribs.c \

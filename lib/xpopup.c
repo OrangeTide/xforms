@@ -32,7 +32,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -700,7 +700,7 @@ fl_addtopup( int          n,
     ret = parse_entry( n, str, ap );
     va_end( ap );
 
-    return ret = 0 ? n : -1;
+    return ret == 0 ? n : -1;
 }
 
 

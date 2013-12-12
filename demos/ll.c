@@ -19,7 +19,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include "include/forms.h"
@@ -179,7 +179,7 @@ create_form_axypform( void )
 
     fdui->axypform = fl_bgn_form( FL_NO_BOX, 431, 301 );
 
-    obj = fl_add_box( FL_UP_BOX, 0, 0, 431, 301, "" );
+    fl_add_box( FL_UP_BOX, 0, 0, 431, 301, "" );
 
     fdui->xyplot = obj = fl_add_xyplot( FL_ACTIVE_XYPLOT,
                                         20, 50, 285, 235, "" );
@@ -203,7 +203,7 @@ create_form_axypform( void )
     fdui->status = obj = fl_add_text( FL_NORMAL_TEXT, 45, 15, 170, 25, "" );
     fl_set_object_boxtype( obj, FL_DOWN_BOX );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 325, 250, 90, 30, "Done" );
+    fl_add_button( FL_NORMAL_BUTTON, 325, 250, 90, 30, "Done" );
 
     obj = fl_add_checkbutton( FL_PUSH_BUTTON, 315, 120, 85, 25, "NoTics" );
     fl_set_object_color( obj, FL_COL1, FL_BLUE );

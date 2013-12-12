@@ -35,7 +35,6 @@ EXTRA_DIST = allbutton.fd \
 	roundb.xpm \
 	scb.xpm \
 	sld.xpm \
-	static.fd \
 	tab.xpm \
 	text.xpm \
 	timer.xpm \
