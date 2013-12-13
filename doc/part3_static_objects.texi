@@ -632,8 +632,8 @@ void fl_set_pixmap_align(FL_OBJECT *obj, int align,
                          int dx, int dy);
 @end example
 @noindent
-where @code{align} is the same as that used for labels. @xref{Label
-Attributes and Fonts}, for a list. @code{dx} and @code{dy} are extra
+where @code{align} is the same as that used for labels, @pxref{Label
+Attributes and Fonts} for a list. @code{dx} and @code{dy} are extra
 margins to leave in addition to the object border width. By default,
 @code{dx} and @code{dy} are set to 3. Note that although you can place
 a pixmap outside of the bounding box, it probably is not a good idea.

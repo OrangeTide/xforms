@@ -736,7 +736,7 @@ create the entry (including all "special" characters), while
 @code{label} and @code{accel} are the texts shown for the entry on the
 left and right. @code{entry} is the pointer to the structure for the
 entry selected and @code{popup} to the (sub-) popup the entry belongs
-to (@pxref{Part III Popups}, for more details on these structures).
+to (@pxref{Part III Popups} for more details on these structures).
 
 If the callback function already does all the work required on
 selection of the item have it return the value @code{FL_IGNORE} to

@@ -1733,7 +1733,7 @@ following routine
 void fl_set_form_icon(FL_FORM *form, Pixmap icon, Pixmap mask);
 @end example
 @noindent
-where @code{icon} can be any valid pixmap ID. (@xref{Pixmap Object},
+where @code{icon} can be any valid pixmap ID. (@pxref{Pixmap Object}
 for some of the routines that can be used to create pixmaps.) Note
 that a previously set icon if not freed or modified in anyway.
 
@@ -1908,7 +1908,7 @@ For non-form windows, i.e., those created with
 @code{@ref{fl_winopen()}} or similar routines by the application
 program, the following means of interaction are provided (note that
 these do not work on form windows, for which a different set of
-functions exist. @xref{Windowing Support}, for details.)
+functions exist, @pxref{Windowing Support} for details.)
 
 You may set up a callback routine (of type @code{FL_APPEVENT_CB} for
 all user events using

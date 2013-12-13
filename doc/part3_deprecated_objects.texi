@@ -144,7 +144,7 @@ create several entries as once if the string you pass to
 @code{@ref{fl_addto_choice()}} contains @code{'|'} characters - these
 aren't shown but instead are treated as separators between the strings
 for the entries. Some extra control sequences, starting with the
-character @code{'%'} can also be embedded (@xref{Creating XPopups}),
+character @code{'%'} can also be embedded (@pxref{Creating XPopups}),
 thus a literal @code{'%'} in a string must be escaped by doubling
 it.
 

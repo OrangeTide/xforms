@@ -202,7 +202,7 @@ The text can be placed inside a box using the routine
 Attributes}. Again, the text can be multi-lined or underlined by
 embedding respectively the newline (@code{\n}) or @code{<Ctrl>H}
 (@code{\010} or @code{'\b'}) in the label. The style, size and color
-of the text can be controlled and changed in many ways. @xref{Label
+of the text can be controlled and changed in many ways, @pxref{Label
 Attributes and Fonts}.
 
 Note that there is almost no difference between a box with a label and
@@ -259,9 +259,9 @@ A push button remains pushed and is only released when the user pushes
 it again.
 
 A touch button is like a normal button except that as long as the user
-keeps the mouse pressed it is returned to the application program.
-(@xref{Part I Doing Interaction, , Doing Interaction}, on the details
-of interaction.)
+keeps the mouse pressed it is returned to the application program
+(@pxref{Part I Doing Interaction, , Doing Interaction} on the details
+of interaction).
 
 A radio button is a push button with additional extra property:
 Whenever the user pushes a radio button, all other pushed radio
@@ -321,7 +321,7 @@ switches the light on, and releasing the button switches it off. To
 add a light button use @code{@ref{fl_add_lightbutton()}} with the same
 parameters as for normal buttons. The other routines are exactly the
 same as for normal buttons. The color of the light can be controlled
-with the routine @code{@ref{fl_set_object_color()}}. @xref{Changing
+with the routine @code{@ref{fl_set_object_color()}}, @pxref{Changing
 Attributes}.
 @item Round buttons
 are buttons that are round. Use @code{@ref{fl_add_roundbutton()}} to
@@ -519,8 +519,8 @@ pseudo-object (of class @code{FL_END_GROUP}), marking the groups end,
 but since this object can't be used its address isn't returned.
 
 Groups can't be nested. Groups are useful for two reasons. First of
-all it is possible to hide groups of objects. (@xref{Hiding and
-Showing}, below.) This is often very handy. We can, for example,
+all it is possible to hide groups of objects. (@pxref{Hiding and
+Showing} below.) This is often very handy. We can, for example,
 display part of a form only when the user asks for it (see demo
 program @file{group.c}. Some attributes are naturally multi-objects,
 e.g., to glue several objects together using the gravity attribute.

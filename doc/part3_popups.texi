@@ -202,8 +202,8 @@ be done using @code{%s}.
 
 @item %s
 Sets one or more shortcut keys for an entry. Requires a string with
-the shortcuts in the arguments following the @code{entries} string.
-@xref{Shortcuts}, for details on how to define shortcuts. Please note
+the shortcuts in the arguments following the @code{entries} string,
+@pxref{Shortcuts} for details on how to define shortcuts. Please note
 that the character in the label identical to the shortcut character is
 only shown as underlined if @code{%S} isn't used.
 
@@ -571,7 +571,7 @@ it doesn't matter which one comes first.
 The @code{callback} member is a function to be invoked when the entry
 is selected (irrelevant for sub-popup entries). @code{shortcut} is a
 string, encoding which keyboard shortcut keys can be used to select
-the item (@pxref{Shortcuts}, for details on how such a string has to
+the item (@pxref{Shortcuts} for details on how such a string has to
 be assembled).
 
 @code{type} describes the type of the entry and must be one of
