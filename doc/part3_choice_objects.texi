@@ -138,11 +138,11 @@ used. The functions address must be given in the arguments following
 the @code{items} string.
 
 @item %d
-Marks the item as disabled, i.e.@: it can't be selected and its text
+Marks the item as disabled, i.e., it can't be selected and its text
 is per default drawn in a different color
 
 @item %h
-Marks the item as hidden, i.e.@: it is not shown while in this state.
+Marks the item as hidden, i.e., it is not shown while in this state.
 
 @item %S
 For items with shortcut keys it's quite common to have them shown on
@@ -249,7 +249,7 @@ finally, @code{popup} is the popup associated with the select object.
 
 Normally, when a new item is selected this is reported back to the
 caller either by calling the select objects callback (if one exists)
-or by returning the object as the result of a call of e.g.@:
+or by returning the object as the result of a call of e.g.,
 @code{@ref{fl_do_forms()}}. But if the callback for the item itself
 returns @code{FL_IGNORE} then the latter doesn't happen. This can be
 useful for cases where all work for a change of the selection can
@@ -326,7 +326,7 @@ It returns a pointer to a structure of type
 @code{@ref{FL_POPUP_RETURN}} as already described above, containing
 all needed information about the selected item.
 
-For some actions, e.g.@: deletion of an item etc., it is necessary to
+For some actions, e.g., deletion of an item etc., it is necessary to
 know the popup entry that represents it. Therefore it's possible to
 search the list of items according to several criteria:
 @findex fl_get_select_item_by_value()
@@ -369,7 +369,7 @@ Please note that all these functions return a structure of type
 @code{@ref{FL_POPUP_ENTRY}} (and not @code{@ref{FL_POPUP_RETURN}},
 which gives you direct access to the entry in the popup for the item.
 
-Using e.g.@: the result of one of the functions above you can also set
+Using e.g., the result of one of the functions above you can also set
 the currently selected item via your program using
 @findex fl_set_select_item()
 @anchor{fl_set_select_item()}
@@ -433,7 +433,7 @@ It's possible to remove all items from a select object by calling
 int fl_clear_select(FL_OBJECT *obj);
 @end example
 @noindent
-Afterwards you have to call again e.g.@:
+Afterwards you have to call again e.g.,
 @code{@ref{fl_add_select_items()}} to set new entries. Note that if
 you used @code{@ref{fl_set_select_popup()}} to set a popup for the
 select object then that popup gets deleted automatically on calling
@@ -679,7 +679,7 @@ check-marker when in "on" state.
 
 @tindex FL_POPUP_RADIO
 @item FL_POPUP_RADIO
-A radio item, i.e.@: it belongs to a group of items of which only one
+A radio item, i.e., it belongs to a group of items of which only one
 can be in "on" state at a time. They are drawn with a circle to the
 left with the circle for the "selected" item being filled with a
 color.
@@ -701,7 +701,7 @@ The item is disabled and can't be selected.
 
 @tindex FL_POPUP_HIDDEN
 @item FL_POPUP_HIDDEN
-The item is hidden, i.e.@: does not get shown (and thus can't be
+The item is hidden, i.e., does not get shown (and thus can't be
 selected).
 
 @tindex FL_POPUP_CHECKED
@@ -855,7 +855,7 @@ structure with informations about the selected item (as already
 discussed above when talking about callbacks) or @code{NULL} if
 no selection was made the last time the nmenu object was used.
 
-For some actions, e.g.@: deletion of an item etc., it is necessary to
+For some actions, e.g., deletion of an item etc., it is necessary to
 know the popup entry that represents it. Therefore it's possible to
 search the list of items according to several criteria:
 @findex fl_get_nmenu_item_by_value()
@@ -885,7 +885,7 @@ type @code{@ref{FL_POPUP_ENTRY}} (and not
 entry in the popup for the item.
 
 
-Using e.g.@: the results of the above searches a nmenu item can be
+Using e.g., the results of the above searches a nmenu item can be
 deleted:
 @findex fl_delete_nmenu_item()
 @anchor{fl_delete_nmenu_item()}
@@ -975,7 +975,7 @@ in fl_clear_nmenu(FL_OBJECT *obj);
 While not "active" the background of the nmenu object is drawn in the
 color that can be controlled via the first color argument,
 @code{col1}, of @code{@ref{fl_set_object_color()}}. When "active"
-(i.e.@: while the popup is shown) its background is drawn in the color
+(i.e., while the popup is shown) its background is drawn in the color
 of second color argument, @code{col2}, of the same function. The color
 of the label when "inactive" is controlled via
 @code{@ref{fl_set_object_lcolor()}}. When in "active" state the color
@@ -1232,7 +1232,7 @@ void fl_addto_browser(FL_OBJECT *obj, const char *text);
 The difference to @code{@ref{fl_add_browser_line()}} and
 @code{@ref{fl_add_browser_line_f()}} is that with these
 calls the browser will be shifted such that the newly appended line is
-visible. This is useful when e.g.@: using the browser to display
+visible. This is useful when e.g., using the browser to display
 messages.
 
 Sometimes it may be more convenient to add characters to a browser
@@ -1311,10 +1311,10 @@ types specifed in the format string.
 \
 As in the case of @code{@ref{fl_insert_browser_line()}} and
 @code{@ref{fl_insert_browser_line_f()}} newline characters embedded
-into the replacement text don't have any special meaning, i.e.@: they
+into the replacement text don't have any special meaning, i.e., they
 don't result in replacement of more than a single line.
 
-Making many changes to a visible browser after another, e.g.@:
+Making many changes to a visible browser after another, e.g.,
 clearing it and then adding a number of new lines, is slow because the
 browser is redrawn on each and every change. This can be avoided by
 using calls of @code{@ref{fl_freeze_form()}} and
@@ -1408,7 +1408,7 @@ Please note that this count only includes lines that are shown
 completely in the browser, lines that are partially obscured aren't
 counted in.
 
-To obtain the last selection made by the user, e.g.@: when the browser
+To obtain the last selection made by the user, e.g., when the browser
 is returned, the application program can use the routine
 @findex fl_get_browser()
 @anchor{fl_get_browser()}
@@ -1666,15 +1666,15 @@ Always on.
 Always off.
 @tindex FL_AUTO
 @item FL_AUTO
-On only when needed (i.e.@: there are more lines/chars than could be
+On only when needed (i.e., there are more lines/chars than could be
 shown at once in the browser).
 @end table
 @noindent
 @code{FL_AUTO} is the default.
 
 Please note that when you switch the scrollbars off the text can't be
-scrolled by the user anymore at all (i.e.@: also not using methods
-that don't use scrollbars, e.g.@: using the cursor keys).
+scrolled by the user anymore at all (i.e., also not using methods
+that don't use scrollbars, e.g., using the cursor keys).
 
 Sometimes, it may be desirable for the application to obtain the
 scrollbar positions when they change (e.g., to use the scrollbars of
@@ -1712,7 +1712,7 @@ callback function.
 
 As an alternative you could request that the browser object gets
 returned (or a callback invoked) when the the scrollbar positions are
-changed. This can be done e.g.@: by passing
+changed. This can be done e.g., by passing
 @code{@ref{FL_RETURN_CHANGED}} (if necessary @code{OR}'ed with flags
 for also returning on selection/deselections). Within the code for
 dealing with the event you could check if this is a change event by

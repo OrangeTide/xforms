@@ -118,7 +118,7 @@ object its size is increased or decreased by the step size.
 @section Aligning Objects
 
 Sometimes you have a number of objects and you want to align them in
-some way, e.g. centered or all starting at the same left position,
+some way, e.g., centered or all starting at the same left position,
 etc. To this end press the button labeled "Align". A special form will
 appear in the top right corner. You can leave this form visible as
 long as you want. You can hide it using the button labeled "Dismiss"
@@ -143,7 +143,7 @@ left to right or bottom to top order.
 @end ifnothtml
 
 The "Undo" button undoes the last alignment change. It is an undo with
-a depth of 1, i.e.@: you can only undo the last change and an undo
+a depth of 1, i.e., you can only undo the last change and an undo
 after an undo will undo itself. Note however, that any modification to
 the selected objects invalidates the undo buffer.
 
@@ -163,7 +163,7 @@ later it will be drawn over the buttons, thus hiding the buttons (if
 you put a framebox over a button, the button will be visible but
 appears to be inactive!). This is definitely not what you want. The
 Form Designer makes it possible to raise objects (bring them to the
-top) or lower them (put them at the bottom). So you can lower e.g.@: a
+top) or lower them (put them at the bottom). So you can lower e.g., a
 box to move it under some buttons. Raising or lowering objects is very
 simple. First select the objects and next press the function key
 @code{<F2>} to lower the selection or @code{<F3>} to raise it.
@@ -259,14 +259,14 @@ ugly).
 Nearly all objects have a label that can be drawn at different
 positions within or outside of the object. The input field labeled
 "Label" lets you set the label string (it may also include return
-characters, i.e. @code{\n}, for line breaks).
+characters, i.e., @code{\n}, for line breaks).
 
 An object may have a name by which it can be accessed within the
 program. This name must be a valid C (or simple C++) variable
 identifier and can be set via the input field labeled "Name". You
 need to make sure that there are no objects with the same name!
 
-If instead of having e.g.@: the function @code{@ref{fl_do_forms()}}
+If instead of having e.g., the function @code{@ref{fl_do_forms()}}
 return when an object is triggered a callback may be invoked instead.
 You can set the name of the callback function in the input field
 labeled "Callback". Obviously, this must be a valid C or C++ function
@@ -274,7 +274,7 @@ name. When a callback function is set you must also specify the
 argument passed to the callback function together with the object's
 address via the input field labeled "Argument". This normally will be
 a (long) integer (defaulting to 0 if not specified). Using this value
-it is e.g.@: possible to distinguish between different objects when all
+it is e.g., possible to distinguish between different objects when all
 use the same callback function.
 
 
@@ -332,7 +332,7 @@ form for selecting the color.
 
 While it's rather obvious what the label color is, the meaning of
 "Color 1" and "Color 2" varies a bit with the class and type of the
-object. E.g.@: for (normal buttons the first color is the normal color
+object. E.g., for (normal buttons the first color is the normal color
 of the button while the second one is the color it's drawn in while
 the button is pressed, while for a browser that allows selection the
 first color is the background color and the second color is the color
@@ -387,7 +387,7 @@ will be saved in a buffer. You can put it back into the form (or in
 another form) by pasting, using @code{<F10>}. Note that only the last
 collection of deleted objects is saved in the buffer.
 
-It is also possible to put a copy of the selection (i.e.@: without
+It is also possible to put a copy of the selection (i.e., without
 removing the original object(s)) into the buffer using @code{<F9>}.
 The content of the bufer can now be put into the same or another form.
 This allows for a simple mechanism of making multiple copies of a set
@@ -408,7 +408,7 @@ group anymore.
 
 As described in the tutorial about the Forms Library, sets of radio
 buttons must be placed inside groups. Groups are also useful for other
-purposes. E.g.@: you can hide a group inside an application program
+purposes. E.g., you can hide a group inside an application program
 with one command. Hence, the Form Designer has some mechanism to deal
 with groups.
 
@@ -478,6 +478,6 @@ You can play with the form as long as you want. When ready, press the
 "Stop Testing" button.
 
 Note that any changes you made to the form while testing (including
-its size) do not show up when saving the form. E.g.@: filling in an
+its size) do not show up when saving the form. E.g., filling in an
 input field or setting a slider does not mean that in the saved code
 the input field will be filled in or the slider's preset value.

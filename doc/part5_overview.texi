@@ -497,7 +497,7 @@ void fl_set_tabstop(const char *s);
 where @code{s} is a string whose width in pixels is to be used as the
 tab length. The font used to calculate the width is the same font that
 is used to render the string in which the tab is embedded. The default
-@code{"aaaaaaaa"}, i.e.@: eight @code{'a'}s.
+@code{"aaaaaaaa"}, i.e., eight @code{'a'}s.
 
 Before we proceed further, some comments about double buffering are in
 order. Since Xlib does not support double buffering, Forms Library
@@ -820,7 +820,7 @@ FL_OBJECT *fl_addto_group(FL_OBJECT *group);
 @end example
 @noindent
 Both functions return their argument on success and @code{NULL} on
-failure (e.g. because a different group or form is still open).
+failure (e.g., because a different group or form is still open).
 On success further objects can be appended to the form or group.
 
 To remove an object from a form use
@@ -1303,7 +1303,7 @@ void fl_set_form_callback(FL_FORM *form,
 binds a callback routine to an entire form.
 
 It is sometimes useful to obtain the last X event from within a callback
-function, e.g.@: to implement different functionalities depending on
+function, e.g., to implement different functionalities depending on
 which button triggers the callback. For this, the following routine
 can be used from within a callback function.
 @findex fl_last_event()
@@ -1942,7 +1942,7 @@ specified, which will be called when an event of type
 @code{xevent_type} is pending for the window. If @code{xevent_type} is
 0 it signifies a callback for all event for window @code{win}. Note
 that the Forms Library does not solicit any event for the caller,
-i.e.@: the Forms Library assumes the caller opens the window and
+i.e., the Forms Library assumes the caller opens the window and
 solicits all events before calling these routines.
 
 To let the Forms Library handle event solicitation, the following
@@ -2121,7 +2121,7 @@ the main loop is idle. The time interval between invocations of the
 idle callback can vary considerably depending on interface activity
 and other factors. A range between 50 and @w{300 msec} should be
 expected. While the idle callback is executed it won't be called again
-(i.e.@: no call of any XForms function from within the idle callback
+(i.e., no call of any XForms function from within the idle callback
 function will call the idle callback function), so it does not need to
 be reentrant.
 
@@ -2189,7 +2189,7 @@ These are:
 @item FL_OBJECT *FL_EVENT
 This is a special object returned by @code{@ref{fl_do_forms()}} etc.@:
 when an X event is received that isn't coming from a form under the
-control of the library, e.g.@: for a  window that was opened directly
+control of the library, e.g., for a  window that was opened directly
 via Xlib functions. Upon receiving this special event the application
 program can and must remove the pending event from the queue using
 @code{@ref{fl_XNextEvent()}}.

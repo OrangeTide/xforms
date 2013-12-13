@@ -38,7 +38,7 @@ object changes its state and how this is returned to the application
 program. All this is described in detail in the following sections.
 
 Object attributes can be divided into generic and object specific
-ones. For generic attributes (e.g.@: the object label size), the
+ones. For generic attributes (e.g., the object label size), the
 routines that change them always start with @code{fl_set_object_xxx()}
 where @code{xxx} is the name of the attribute. When a specific object
 is created and added to a form, it inherits many aspects of the
@@ -100,7 +100,7 @@ groups of objects.
 @item FormBrowser
 A browser you can drop forms into.
 @item Timer
-A timer that runs from a set time towards 0. Can e.g. be used to do
+A timer that runs from a set time towards 0. Can e.g., be used to do
 default actions after some time has elapsed.
 @item XYPlot
 Shows simple 2D xy-plot from a tabulated function or a datafile. Data

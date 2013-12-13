@@ -20,7 +20,7 @@ The main module communicates with the object class modules by means of
 events (messages if you prefer). Each object has to have a handle
 routine known to the main module so that it can be called whenever
 something needs to be done. One of the arguments passed to the handle
-routine is the type of event, e.g. @code{FL_DRAW}, indicating that the
+routine is the type of event, e.g., @code{FL_DRAW}, indicating that the
 object needs to be redrawn.
 
 Each object class consists of two components. One component, both its
@@ -97,7 +97,7 @@ that sets particular values for the object and
 fl_get_NEW(FL_OBJECT *obj, ...);
 @end example
 @noindent
-that returns some particular information about the object. See e.g.@:
+that returns some particular information about the object. See e.g.,
 the routines @code{@ref{fl_set_button()}} and
 @code{@ref{fl_get_button()}}.
 

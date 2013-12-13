@@ -145,7 +145,7 @@ hold down the @code{<Shift>} key while moving the slider.
 Please note: the @code{@ref{FL_VERT_PROGRESS_BAR}} and
 @code{@ref{FL_HOR_PROGRESS_BAR}} aren't actually valuator objects
 (they don't react to any user interaction) but are vor visualization
-only (i.e.@: showing a progress bar that is changed by the program
+only (i.e., showing a progress bar that is changed by the program
 only), they appear hear because they are directly derived from the
 @code{@ref{FL_VERT_FILL_SLIDER}} and @code{@ref{FL_VERT_FILL_SLIDER}}
 slider. Thus the only way to change the value of objects of these
@@ -227,7 +227,7 @@ void fl_get_slider_bounds(FL_OBJECT *obj, double *min, double *max);
 @c used in scrollbars (and doesn't do anything for normal sliders)
 
 @c In a number of situations you may like slider values to be rounded to
-@c some values, e.g. to integer values. To this end use the routine
+@c some values, e.g., to integer values. To this end use the routine
 @c @findex fl_set_slider_step()
 @c @anchor{fl_set_slider_step()}
 @c @example
@@ -309,7 +309,7 @@ void fl_set_slider_precision(FL_OBJECT *obj, int prec);
 @end example
 @noindent
 sets the precision with which the value of the slider is shown. This
-only applies to sliders showing their value, i.e.@: valsliders. The
+only applies to sliders showing their value, i.e., valsliders. The
 argument must be between 0 and
 @tindex FL_SLIDER_MAX_PREC
 @code{FL_SLIDER_MAX_PREC}
@@ -558,7 +558,7 @@ void fl_get_scrollbar_bounds(FL_OBJECT *obj, double *min, double *max);
 @c has any effect!
 
 @c In a number of situations you would like scrollbar values to be
-@c rounded to some values, e.g. to integer values. To this end use the
+@c rounded to some values, e.g., to integer values. To this end use the
 @c routine
 @c @findex fl_set_scrollbar_step()
 @c @anchor{fl_set_scrollbar_step()}
@@ -803,7 +803,7 @@ where a true value for @code{yes_no} indicates that cross-over is
 allowed.
 
 In a number of situations you might want dial values to be rounded to
-some values, e.g. to integer values. To this end use the routine
+some values, e.g., to integer values. To this end use the routine
 @findex fl_set_dial_step()
 @anchor{fl_set_dial_step()}
 @example
@@ -923,7 +923,7 @@ Cross-hair inside a box.
 @tindex FL_OVERLAY_POSITIONER
 @anchor{FL_OVERLAY_POSITIONER}
 @item FL_OVERLAY_POSITIONER
-Cross-hair inside a transparent box (i.e.@ drawn in in XOR mode).
+Cross-hair inside a transparent box (i.e.,drawn in in XOR mode).
 
 @tindex FL_INVISIBLE_POSITIONER
 @anchor{FL_INVISIBLE_POSITIONER}
@@ -1058,7 +1058,7 @@ void fl_get_positioner_ybounds(FL_OBJECT *obj,
 @noindent
 
 In a number of situations you might like positioner values to be
-rounded to some values, e.g. to integer values. To this end use the
+rounded to some values, e.g., to integer values. To this end use the
 routines
 @findex fl_set_positioner_xstep()
 @anchor{fl_set_positioner_xstep()}
@@ -1181,7 +1181,7 @@ the counter value is changed the counter is returned to the
 application program or its callback is invoked.
 
 In some applications you might want the counter to be returned to the
-application program (or the callback invoked) e.g.@: whenever the
+application program (or the callback invoked) e.g., whenever the
 value changes and not only when the mouse is released. To this end use
 @example
 void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
@@ -1376,7 +1376,7 @@ counters.
 
 A spinner object is a combination of a (numerical) input field with
 two (touch) buttons that allow to increment or decrement the value in
-the (editable) input field. I.e.@: the user can change the spinners
+the (editable) input field. I.e., the user can change the spinners
 value by either editing the value of the input field or by using the
 up/down buttons shown beside the input field.
 
@@ -1578,7 +1578,7 @@ FL_OBJECT *fl_get_spinner_down_button(FL_OBJECT *obj);
 @end example
 @noindent
 They return the addresses of the objects the spinner object is made up
-from, i.e. that of the input field and the buttons for increasing and
+from, i.e., that of the input field and the buttons for increasing and
 decreasing the spinner's value. These then can be used to set or query
 the way the individual component objects are drawn. The addresses of these
 sub-objects shouldn't be used for any other purposes, especially their
@@ -1737,7 +1737,7 @@ int fl_set_thumbwheel_crossover(FL_OBJECT *obj, int yes_no);
 @end example
 
 In a number of situations you might like thumbwheel values to be
-rounded to some values, e.g. to integer values. To this end use the
+rounded to some values, e.g., to integer values. To this end use the
 routine
 @findex fl_set_thumbwheel_step()
 @anchor{fl_set_thumbwheel_step()}

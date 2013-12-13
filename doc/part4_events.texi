@@ -208,13 +208,13 @@ action. Clock and timer objects use this type of event.
 @item FL_UPDATE
 An @code{FL_UPDATE} event, like the @code{@ref{FL_STEP}} event, also
 gets send about every @w{50 msec} (but less often under high load) to
-objects while they are "pushed", i.e.@: between receiving a
+objects while they are "pushed", i.e., between receiving a
 @code{@ref{FL_PUSH}} and a @code{@ref{FL_RELEASE}} event if their
 @code{obj->want_update} field is set. Like for the @code{FL_STEP}
 event the handling routine receives a synthetic @code{MotionNotify}
 event as the XEvent. This is typically used by objects that have to
 perform tasks at regular time intervals while they are "pushed"
-(e.g.@: counters that need to count up or down while the mouse is
+(e.g., counters that need to count up or down while the mouse is
 pushed on one of its buttons).
 
 @tindex FL_ATTRIB
@@ -224,7 +224,7 @@ An @code{FL_ATTRIB} event is sent to an object (via calling the
 handler function each object type must define for this purpose)
 whenever one of it's properties changes, be it its size, position, box
 type, border width, colors, label, label color, style or alignment
-etc. This can e.g.@: be used by the object to do preparations for
+etc. This can e.g., be used by the object to do preparations for
 later drawing of it or check that what got set is reasonable. It
 should not use this event to actually draw anything (this is to be
 done only when an @code{@ref{FL_DRAW}} event is received). When the
@@ -268,7 +268,7 @@ redrawn or partially redrawn. Always do this using the routine
 The Forms Library has a mechanism of dealing with keyboard shortcuts.
 In this way the user can use the keyboard rather than the mouse for
 particular actions. Obviously, only "active" objects can have
-shortcuts (i.e.@: not objects like boxes, texts etc.).
+shortcuts (i.e., not objects like boxes, texts etc.).
 
 The mechanism works as follows. There is a routine
 @findex fl_set_object_shortcut()
@@ -285,12 +285,12 @@ object. The precise format is as follows: Any character in the string
 is considered as a shortcut, except @code{'^'} and @code{'#'}, which
 stand for combinations with the @code{<Ctrl>} and @code{<Alt>} keys.
 (The case of the key following @code{'#'} or @code{'^'} is not
-important, i.e.@: no distiction is made between e.g. @code{"^C"} and
+important, i.e., no distiction is made between e.g., @code{"^C"} and
 @code{"^c"}, both encode the key combination @code{<Crl>C} as well as
 @code{<Crtl>C}.) The key @code{'^'} itself can be set as a shortcut
 key by using @code{"^^"} in the string defining the shortcut. The key
 @code{'#'} can be obtained as a shortcut by using th string
-@code{"^#"}. So, e.g.@: @code{"#^#"} encodes @code{<ALT>#}. The
+@code{"^#"}. So, e.g., @code{"#^#"} encodes @code{<ALT>#}. The
 @code{<Esc>} key can be given as @code{"^["}.
 
 Another special character not mentioned yet is @code{'&'}, which
@@ -332,7 +332,7 @@ Now, whenever the user presses one of these keys, an
 is passed to the handle routine (in the argument @code{key}).
 Combinations with the @code{<Alt>} key are given by adding
 @code{@ref{FL_ALT_MASK}} (currently the 25th bit, i.e.,
-@code{0x1000000}) to the ASCII value of the key. E.g.@: the key
+@code{0x1000000}) to the ASCII value of the key. E.g., the key
 combinations @code{<Alt>E} and @code{<Alt>e} are passed as
 @code{@ref{FL_ALT_MASK} + 'E'}. The object can now take action
 accordingly. If you use shortcuts to manipulate class object specific
@@ -357,7 +357,7 @@ contain @code{@ref{FL_KEY_TAB}} bit, input is focussed on the next
 input field. Otherwise the key is sent to the current input field.
 This means that input objects only get a @code{<Tab>} or
 @code{<Return>} key sent to them if in the @code{obj->wantkey} field
-the @code{@ref{FL_KEY_TAB}} bit is set. This is e.g.@: used in
+the @code{@ref{FL_KEY_TAB}} bit is set. This is e.g., used in
 multi-line input fields. If the object wants all cursor keys
 (including @code{<PgUp>} etc.), the @code{obj->wantkey} field must
 have the @code{@ref{FL_KEY_SPECIAL}} bit set.
@@ -382,7 +382,7 @@ Object receives the @code{<Tab>}, @code{<Return>} as well as the
 @anchor{FL_KEY_SPECIAL}
 @item FL_KEY_SPECIAL
 The object receives all keys with a KeySym above 255 which aren't
-already covered by @code{FL_KEY_NORMAL} and @code{FL_KEY_TAB} (e.g.@:
+already covered by @code{FL_KEY_NORMAL} and @code{FL_KEY_TAB} (e.g.,
 function keys etc.)
 
 @tindex FL_KEY_ALL
@@ -391,6 +391,6 @@ function keys etc.)
 Object receives all keys.
 @end table
 @noindent
-This way it is possible for a non-input object (i.e.@: if
+This way it is possible for a non-input object (i.e., if
 @code{obj->input} is zero) to obtain special keyboard event by setting
 @code{obj->wantkey} to @code{@ref{FL_KEY_SPECIAL}}.

@@ -93,7 +93,7 @@ function only if the drawing routine uses the @code{cspecv} field of
 button.
 
 We use two examples to show how new buttons are created. The first
-example is taken from the button class in the Forms Library, i.e.@:
+example is taken from the button class in the Forms Library, i.e.,
 its real working source code that implements the button class. To
 illustrate the entire process of creating this class, let us call this
 button class @code{FL_NBUTTON}.
@@ -222,7 +222,7 @@ are changeable by the application program via
 @code{@ref{fl_set_object_color()}}). Note that this decision on color
 use is somewhat arbitrary, we could have easily made @code{obj->col2}
 the color of the button when pushed and use @code{obj->spec->cspecl}
-for the cross color (another routine named e.g.@:
+for the cross color (another routine named e.g.,
 @code{fl_set_crossbutton_crosscol()} should be provided to change the
 cross color in this case).
 

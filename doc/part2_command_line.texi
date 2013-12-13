@@ -23,18 +23,18 @@ area.
 Normally fdesign does its work interactively. This option causes it to
 simply read a list of fdesign output files (the @code{.fd} files) and
 emit the corresponding C-routines and header files. This can be useful
-e.g.@: in automatically compiling packages in Makefiles. Note that
+e.g., in automatically compiling packages in Makefiles. Note that
 the input @code{.fd} will only be read but never modified when this
 option is used.
 @item -migrate @i{fd-file-list}
 When fdesign is invoked with the @code{-convert} option it just
 creates new @code{.c} and @code{.h} files but leaves the
-@code{.fd} files unmodified. In some situations, e.g.@: if you
+@code{.fd} files unmodified. In some situations, e.g., if you
 also want to automatically upgrade @code{.fd} files created with
 older versions of fdesign, you can instead use the @code{-migrate}
 option which does all what the @code{-convert} option does but
 also writes out a new version of the @code{.fd} file it just
-read in. It also does a few extra checks, e.g.@: it will test
+read in. It also does a few extra checks, e.g., it will test
 if XBM and XPM image files used for bitmaps and pixmaps actually
 exist (if they don't the newly generated @code{.fd} file won't
 reference them anymore, so carefully look out for error messages
@@ -64,7 +64,7 @@ default, the header file name will be enclosed in angle brackets
 ('@code{<}' and '@code{>}') unless the name of the include file
 specified is already enclosed in double quote ('@code{"}'). Useful on
 systems where @file{forms.h} is renamed to something else or if you
-need an application header file with e.g.@: definitions of
+need an application header file with e.g., definitions of
 constants/defines for the UI that itself includes the @code{forms.h}
 file.
 @item -main
@@ -101,7 +101,7 @@ fdesign recognizes the following resources:
 @tab string (position only)
 @tab Attributes window Geometry
 @item @code{attributes.background}
-@tab string (e.g.@: gray80)
+@tab string (e.g., gray80)
 @tab Attributes window background
 @item @code{align.geometry}
 @tab string (position only)

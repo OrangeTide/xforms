@@ -1,7 +1,7 @@
 @node Part III Input Objects
 @chapter Input Objects
 
-It is often required to obtain textual input from the user, e.g. a
+It is often required to obtain textual input from the user, e.g., a
 file name, some fields in a database, etc. To this end input fields
 exist in the Forms Library. An input field is a field that can be
 edited by the user using the keyboard.
@@ -48,7 +48,7 @@ Any type of text can be typed into this field.
 @tindex FL_FLOAT_INPUT
 @anchor{FL_FLOAT_INPUT}
 @item FL_FLOAT_INPUT
-Only a floating point numbers can be typed in (e.g. -23.2e12). The
+Only a floating point numbers can be typed in (e.g., -23.2e12). The
 resulting string will be accepted by @code{strtod()} in its entirety
 (but may be too big to be represented by an @code{int} or
 @code{long}).
@@ -56,7 +56,7 @@ resulting string will be accepted by @code{strtod()} in its entirety
 @tindex FL_INT_INPUT
 @anchor{FL_INT_INPUT}
 @item FL_INT_INPUT
-Only an integers can be typed in (e.g. -86). The resulting string will
+Only an integers can be typed in (e.g., -86). The resulting string will
 be accepted by @code{strtol()} in its entirety (but may be too big to
 be represented by an @code{float} or @code{double}).
 
@@ -217,7 +217,7 @@ the end (regardless if the field was changed or not)
 See demo @file{objreturn.c} for an example use of this.
 
 A few additional notes: when you read "the fields has been changed"
-this includes the case that the user e.g.@: deleted a character and
+this includes the case that the user e.g., deleted a character and
 then added it back again. Also this case is reported as a "change" (a
 delete alone isn't) so the term "changed" does not necessarily mean
 that the content of the field has changed but that the user made
@@ -236,7 +236,7 @@ input object the input field edited retains the focus.
 
 Up to version 1.0.90 this was handled a bit differently: an "end
 of edit" event was not reported back to the program when the user
-clicked on a non-input object, i.e. changed to a different input
+clicked on a non-input object, i.e., changed to a different input
 object. This let to some problems when the interaction with the
 clicked-on non-input object dependet on the new content of the
 input object, just having been edited, but which hadn't been
@@ -368,7 +368,7 @@ validator function set for the input, otherwise
 
 There are two slightly different input modes for input objects. In the
 "normal" mode, when the input field is entered not using the mouse
-(e.g.@: by using of the <Tab> key) the cursor is placed again at the
+(e.g., by using of the <Tab> key) the cursor is placed again at the
 position it was when the field was left (or at the end of a possibly
 existing string when it's entered for the first time). When an input
 object has a maximum number of allowed characters set (via the
@@ -427,12 +427,12 @@ many (appropriate) arguments as there are format specifiers.
 Only a limited check on the string passed to the function is done in
 that only printable characters (according to the @code{isprint()}
 function) and, in the case of @code{@ref{FL_MULTILINE_INPUT}} objects,
-new-lines (@code{'\n'}) are accepted (i.e.@: all that don't fit are
+new-lines (@code{'\n'}) are accepted (i.e., all that don't fit are
 skipped). Use an empty string (or a @code{NULL} pointer as the second
 argument) to clear an input field.
 
 Setting the content of an input field does not trigger an object
-event, i.e.@: the object callback is not called. In some situations
+event, i.e., the object callback is not called. In some situations
 you might want to have the callback invoked. For this, you may use
 the function @code{@ref{fl_call_object_callback()}}.
 
@@ -444,7 +444,7 @@ const char *fl_get_input(FL_OBJECT *obj);
 @end example
 @noindent
 This function returns a char pointer for all input types. Thus for
-numerical input types e.g.@: @code{strtol(3)}, @code{atoi(3)},
+numerical input types e.g., @code{strtol(3)}, @code{atoi(3)},
 @code{strtod(3)}, @code{atof(3)} or @code{sscanf(3)} should be used to
 convert the string to the proper data type you need. For multiline
 input, the returned pointer points to the entire content with possibly
@@ -527,7 +527,7 @@ fl_set_input_cursorpos(ob, 4, 1);
 @end example
 @noindent
 places the the cursor after the first character of the word
-@code{"arbitrary"}, i.e.@: directly after the first @code{a}.
+@code{"arbitrary"}, i.e., directly after the first @code{a}.
 
 By default, if an input field of type @code{@ref{FL_MULTILINE_INPUT}}
 contains more text than can be shown, scrollbars will appear with
@@ -761,7 +761,7 @@ with the @code{km} argument pointing of a user supplied structure
 which after the call will be set up with the current settings for
 the edit keys.
 
-In filling the keymap structure, ASCII characters (i.e.@: characters
+In filling the keymap structure, ASCII characters (i.e., characters
 with values below 128, including the control characters with values
 below 32) should be specified by their ASCII codes (@code{<Ctrl> C}
 is 3 etc.), while all others by their @code{Keysym}s (@code{XK_F1}

@@ -81,11 +81,11 @@ The default is @file{/usr/lib/X11/rgb.txt}. The environment variable
 @code{RGBFile} can be used to change this default.
 @item -pw @i{width}
 This option changes the paper width used to center the GUI on a
-printed page. By default the width is that of US Letter (i.e.@: 8.5
+printed page. By default the width is that of US Letter (i.e., 8.5
 inches) unless the environment variable @code{PAPER} is defined.
 @item -ph @i{height}
 This option changes the paper height used to center the output on the
-printed page. The default height is that of US Letter (i.e.@: 11
+printed page. The default height is that of US Letter (i.e., 11
 inches) unless the environment variable @code{PAPER} is defined.
 @item -paper @i{format}
 This option specifies one of the standard paper names (thus setting

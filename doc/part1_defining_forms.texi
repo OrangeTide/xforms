@@ -291,15 +291,14 @@ button use the routine
 void fl_set_button(FL_OBJECT *obj, int pushed);
 @end example
 @noindent
-@code{pushed} indicates whether the button should appear to be
-pushed (1) or released (0). Note that this does not invoke a
-callback routine bound to the button or results in the button
-getting returned to the program, i.e.@: only the visual appearance
-of the button is changed and what it returns when asked for its
-state (and, in the case of a radio button, possibly that of another
-radio button in the same group). To also get the callback invoked or
-the button returned to the program additonally call e.g.@:
-@code{@ref{fl_trigger_object()}}.
+@code{pushed} indicates whether the button should appear to be pushed
+(1) or released (0). Note that this does not invoke a callback routine
+bound to the button or results in the button getting returned to the
+program, i.e., only the visual appearance of the button is changed
+and what it returns when asked for its state (and, in the case of a
+radio button, possibly that of another radio button in the same
+group). To also get the callback invoked or the button returned to the
+program additonally call e.g., @code{@ref{fl_trigger_object()}}.
 
 To figure out whether a button appears as pushed or not use
 @findex fl_get_button()
@@ -414,7 +413,7 @@ normal sliders can be used.
 @node Input Fields
 @section Input Fields
 
-It is often required to obtain textual input from the user, e.g. a file
+It is often required to obtain textual input from the user, e.g., a file
 name, some fields in a database, etc. To this end input fields exist in
 the Forms Library. An input field is a field that can be edited by the
 user using the keyboard. To add an input field to a form use
@@ -614,7 +613,7 @@ int fl_object_is_active(FL_OBJECT *obj);
 Normally you also want to give the user a visual indication that the
 object is not active. This can, for example, be done by changing the
 label color to grey (see below). This is not done automatically, so
-unless you set e.g.@: a different color the objects appearance won't
+unless you set e.g., a different color the objects appearance won't
 change on deactivation (or re-activation).
 
 It is possible to simulate the action of an object being triggered from
@@ -626,9 +625,9 @@ void fl_trigger_object(FL_OBJECT *obj);
 @noindent
 Calling this routine on an object @code{obj} results in the object
 returned to the application program or its callback being called if it
-exists. Note however, there is no visual feedback, i.e.@:
-@code{fl_trigger_object(button)} will not make the button object
-named @code{button} appear to be pushed.
+exists. Note however, there is no visual feedback, i.e.,
+@code{fl_trigger_object(button)} will not make the button object named
+@code{button} appear to be pushed.
 
 
 @node Changing Attributes
@@ -676,7 +675,7 @@ the bitmap. For sliders @code{col1} is the color of the background of
 the slider and @code{col2} is the color of the slider itself. Finally,
 for input objects @code{col1} is the color of the input field when it
 is not selected and @code{col2} is the color when it has input focus,
-i.e.@: the user can enter text. For all types of objects, the default
+i.e., the user can enter text. For all types of objects, the default
 colors can be found in the file @file{forms.h}. For example, for input
 fields the default colors are @code{FL_INPUT_COL1} and
 @code{FL_INPUT_COL2}. Form Designer comes in very handy in
@@ -1502,7 +1501,7 @@ logically or'ed with the constant
 @anchor{FL_ALIGN_INSIDE}
 .
 
-There's also a function for the reverse conversion, i.e.@: from a
+There's also a function for the reverse conversion, i.e., from a
 calue for inside to outside alignment
 @findex fl_to_outside_lalign()
 @anchor{fl_to_outside_lalign()}
@@ -1654,14 +1653,15 @@ object is redrawn immediately to make the change visible. This can be
 undesirable when you change a number of attributes of the same object.
 You only want the changed object to be drawn after the last change.
 Drawing it after each change will give a flickering effect on the
-screen. This gets even worse when you e.g. want to hide a few objects.
-After each object you hide the entire form is redrawn. In addition to
-the flickering, it is also time consuming. Thus it is more efficient to
-tell the library to temporarily not redraw the form while changes are
-being made. This can be done by "freezing" the form. While a form is
-being frozen it is not redrawn, all changes made are instead buffered
-internally. Only when you unfreeze the form, all changes made in the
-meantime are drawn at once. For freezing and unfreezing two calls exist:
+screen. This gets even worse when you, for example, just want to hide
+a few objects. After each object you hide the entire form is redrawn.
+In addition to the flickering, it is also time consuming. Thus it is
+more efficient to tell the library to temporarily not redraw the form
+while changes are being made. This can be done by "freezing" the form.
+While a form is being frozen it is not redrawn, all changes made are
+instead buffered internally. Only when you unfreeze the form, all
+changes made in the meantime are drawn at once. For freezing and
+unfreezing two calls exist:
 @findex fl_freeze_form()
 @example
 void fl_freeze_form(FL_FORM *form);
@@ -1739,15 +1739,15 @@ See Fig. 3.6 for how some of them look.
 
 It is possible to use the symbols in different orientations. When the
 symbol name is preceded by a digit @code{1}-@code{9} it is rotated
-like on the numerical keypad, i.e.@: @code{6} (and also @code{5})
+like on the numerical keypad, i.e., @code{6} (and also @code{5})
 result in no rotation, @code{9} a rotation of @w{45 degrees}
 counter-clockwise, @code{8} a rotation of @w{90 degrees}, etc. Hence
 the order is @code{6}, @code{9}, @code{8}, @code{7}, @code{4},
 @code{1}, @code{2}, @code{3}. (Just think of the keypad as consisting
-of arrow keys with 6 pointing in the default orientation, i.e.@: to
+of arrow keys with 6 pointing in the default orientation, i.e., to
 the right). So to get an arrow that is pointing to the left top use a
 label @code{@@7->}. To put the symbol in other orientations, put a 0
-after the @code{@@}, followed by the angle (counter-clockwise). E.g.@:
+after the @code{@@}, followed by the angle (counter-clockwise). E.g.,
 to draw an arrow at an angle of 30 degrees you can use @code{@@030->}.
 
 The symbol will be scaled to fit in the bounding box. When the bounding
@@ -1763,7 +1763,7 @@ decrement) in pixels. For example, to draw a square that is @w{3
 pixels} smaller in size than the default size use @code{@@-3square}.
 If a single sequence of @code{+} or @code{-} and a single digit does
 not suffice, it can repeated, the effect is cumulative. Of course,
-this can also be combined with a rotation etc., so i.e.@:
+this can also be combined with a rotation etc., so i.e.,
 @code{@@-9-3030->} (the order in which the different sequences are
 used doesn't matter) will result in an arrow drawn @w{12 pixels}
 smaller than normal and rotated by @w{30 degrees} counter-clockwise.
@@ -1774,7 +1774,7 @@ box it is to be drawn into, with a bit of room left around it. Thus
 the size of the symbol should in most cases be fine without any
 further fine-tuning. If you increase the size for whatever reasons
 please consider that the symbol automatically gets clipped to the area
-it is will be drawn into, i.e.@: increments that result in the symbol
+it is will be drawn into, i.e., increments that result in the symbol
 becoming larger than the box it is to be drawn into should be avoided.
 
 @ifhtml
@@ -1856,7 +1856,7 @@ On success @code{1} is returned, otherwise @code{0}.
 @section Adding and Removing Objects
 
 In some situations you might want to add objects to an already
-existing form (i.e.@: a form for which @code{@code{fl_end_form()}}
+existing form (i.e., a form for which @code{@code{fl_end_form()}}
 has already been called. Reopening a form for the addition of further
 objects can be done by using the call
 @findex fl_addto_form()
@@ -1869,7 +1869,7 @@ functions for adding objects (like @code{@ref{fl_add_button()}} etc.).
 When done with adding objects to the form again call
 @code{@ref{fl_end_form()}}. It is possible to add objects to forms
 that are being displayed, but this is not always a good idea because
-not everything behaves well (e.g.@: strange things might happen when a
+not everything behaves well (e.g., strange things might happen when a
 group is started but not yet finished).
 
 To remove an object from a form simply use
@@ -1880,7 +1880,7 @@ void fl_delete_object(FL_OBJECT *obj);
 @noindent
 It removes the object from the form it currently belongs to and also
 from a group it may belong to. The argument can also be the
-pseudo-object starting a group (i.e.@: the return value of
+pseudo-object starting a group (i.e., the return value of
 @code{@ref{fl_bgn_group()}}) in which case the whole group of objects
 will be removed from the form.
 

@@ -9,14 +9,14 @@ changing the object's properties directly. Below we consider some of
 them that are likely to be used in new classes.
 @table @code
 @item int objclass
-This indicates the class of the object (e.g.@: @code{FL_BUTTON},
+This indicates the class of the object (e.g., @code{FL_BUTTON},
 @code{FL_SLIDER}, @code{FL_NEW} etc.) The user can query the class of
 an object using the function @code{@ref{fl_get_object_objclass()}}.
 
 @item int type
 This indicates the type of the object within the class. Types are
 integer constants that should be defined in a header file named after
-the object class, e.g.@: @file{NEW.h}. Their use is completely free.
+the object class, e.g., @file{NEW.h}. Their use is completely free.
 For example, in the slider class the type is used to distinguish
 between horizontal and vertical sliders. At least one type should
 exist and the user should always provide it (just for consistency).
@@ -25,7 +25,7 @@ of an object using the function @code{@ref{fl_get_object_type()}}.
 
 @item int boxtype
 This is the type of the bounding box for the object. The handling
-routine for the object, e.g.@: @code{handle_NEW()}, has to take care
+routine for the object, e.g., @code{handle_NEW()}, has to take care
 that this is actually drawn. Note that there is a routine for drawing
 boxes, see below. The user can change or query the boxtype of an
 object with the functions @code{@ref{fl_set_object_boxtype()}} and
@@ -34,7 +34,7 @@ object with the functions @code{@ref{fl_set_object_boxtype()}} and
 @item FL_Coord x, y, w, h
 These are the coordinates and sizes that indicate the bounding box of
 the object. They always have to be provided when adding an object. The
-system uses them e.g.@: to determine if the object is below the mouse.
+system uses them e.g., to determine if the object is below the mouse.
 The class routines should use them to draw the object in the correct
 size, etc. Note that these values will change when the user resizes
 the form window. So never assume anything about their values but
@@ -84,7 +84,7 @@ colors with @code{@ref{fl_get_object_color()}}. The routine
 This is a pointer to an allocated text string. This can be used by
 class routines to provide a label for the object. The class routines
 may not forget to allocate storage for it when it sets the pointer
-itself, i.e.@: doesn't use @code{@ref{fl_set_object_label()}} - an
+itself, i.e., doesn't use @code{@ref{fl_set_object_label()}} - an
 empty label should be the empty string and not just a @code{NULL}
 pointer. The user can change it using the routines
 @code{@ref{fl_set_object_label()}} and
@@ -92,7 +92,7 @@ pointer. The user can change it using the routines
 @code{@ref{fl_get_object_label()}}. The label must be drawn by the
 routine handling the object when it receives a @code{FL_DRAWLABEL}
 event (or it could be part of the code for @code{FL_DRAW} event). For
-non-offsetted labels, i.e.@: the alignment is relative to the entire
+non-offsetted labels, i.e., the alignment is relative to the entire
 bounding box, simply calling @code{@ref{fl_draw_object_label()}}
 should be enough.
 
@@ -107,7 +107,7 @@ freely use this. The user can set it with @code{@ref{fl_set_object_lsize()}}.
 and test it with @code{@ref{fl_get_object_lsize()}}.
 
 @item int lstyle
-The style of the font the label os drawn in, i.e.@: the number of the
+The style of the font the label os drawn in, i.e., the number of the
 font in which it should be drawn. The class routines can freely use
 this. The user can set it with @code{@ref{fl_set_object_lstyle()}}
 and test it with @code{@ref{fl_get_object_lstyle()}}.
@@ -156,7 +156,7 @@ screen, for this also the form the object belongs to needs to be
 visible, in which case @code{@ref{fl_form_is_visible()}} returns true.
 
 @item int active
-Indicates whether the object is active, i.e.@: wants to receive events
+Indicates whether the object is active, i.e., wants to receive events
 other than @code{FL_DRAW}.
 
 Static objects, such as text and boxes are inactive. This property
@@ -182,7 +182,7 @@ are normally used to switch between input objects). By setting this
 field to @code{FL_KEY_TAB} enforces that the object receives also
 these two keys as well as the @code{<Up>} and @code{<Down>} arrow keys
 and @code{<PgUp>} and @code{<PgDn>} when it has the focus. To receive
-other special keys (e.g.@: function keys) @code{FL_KEY_SPECIAL} must
+other special keys (e.g., function keys) @code{FL_KEY_SPECIAL} must
 be set in @code{wantkey}. By setting @code{wantkey} to
 @code{FL_KEY_ALL} all keys are sent to the object.
 
@@ -281,7 +281,7 @@ the object.
 The argument to be passed to the callback routine when invoked.
 
 @item int how_return
-Determines under what circumstances the object is returned by e.g.@:
+Determines under what circumstances the object is returned by e.g.,
 @code{@ref{fl_do_forms()}} or the callback function for the object is
 invoked. This can be either
 @table @code
@@ -301,11 +301,11 @@ Return object or invoke callback only when interaction has ended and
 the state of the object has changed.
 
 @item @ref{FL_RETURN_SELECTION}
-Return object or invoke callback if e.g.@: in a browser a line
+Return object or invoke callback if e.g., in a browser a line
 was selected.
 
 @item @ref{FL_RETURN_SELECTION}
-Return object or invoke callback if e.g.@: in a browser a line
+Return object or invoke callback if e.g., in a browser a line
 was deselected.
 
 @item @ref{FL_RETURN_ALWAYS}
@@ -325,7 +325,7 @@ pruned to what the object is supposed to return according to the
 @code{how_return} element). Can be either
 @table @code
 @item @ref{FL_RETURN_NONE}
-Handling function did @code{FL_RETURN_NONE} (i.e.@: @code{0}).
+Handling function did @code{FL_RETURN_NONE} (i.e., @code{0}).
 
 @item @ref{FL_RETURN_CHANGED}
 Handling function detected a change of the objects state.
@@ -390,7 +390,7 @@ void fl_add_child(FL_OBJECT *parent, FL_OBJECT *child);
 
 When creating a composite object you will typically add callbacks
 for the child object that handle what happens on events for these
-child objects (e.g.@: for the scrollbar the buttons have callbacks
+child objects (e.g., for the scrollbar the buttons have callbacks
 that update the internal state for the scrollbar object and result
 in the slider getting shifted). Within these callback functions
 the @code{returned} elements of the parent can be changed to
@@ -399,7 +399,7 @@ influence if and what gets reported to the application via
 
 There is rarely any need for the new object class to know how the
 object is added to a form and how the Forms Library manages the
-geometry, e.g.@: does an object have its own window etc. Nonetheless
+geometry, e.g., does an object have its own window etc. Nonetheless
 if this information is required, use @code{@ref{FL_ObjWin()}} on the
 object to obtain the window resource ID of the window the object
 belongs to. Beware that an object window ID may be shared with other

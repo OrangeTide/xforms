@@ -21,7 +21,7 @@
 
 An important aspect of a new object class (or a free object) is how to
 draw it. As indicated above this should happen when the event
-@code{FL_DRAW} is received by the object. The place and size, i.e.@:
+@code{FL_DRAW} is received by the object. The place and size, i.e.,
 the bounding box, of the object are indicated by the object tructure
 fields @code{obj->x}, @code{obj->y}, @code{obj->w} and @code{obj->h}.
 Forms are drawn in the Forms Library default visual or the user
@@ -148,7 +148,7 @@ understands, use the following routine
 unsigned long fl_get_pixel(FL_COLOR col);
 @end example
 @noindent
-To e.g.@: get the pixel value of the red color, use
+To e.g., get the pixel value of the red color, use
 @example
 unsigned long red_pixel;
 red_pixel = fl_get_pixel(FL_RED);
@@ -196,7 +196,7 @@ void fl_free_colors(FL_COLOR *cols, int n);
 @noindent
 This function frees the @code{n} colors stored in the array of
 colormap indices @code{cols}. You shouldn't do that for the reserved
-colors, i.e.@: colors with indices below @code{FL_FREE_COL1}.
+colors, i.e., colors with indices below @code{FL_FREE_COL1}.
 
 In case the pixel values (instead of the index into the colormap) are
 known, the following routine can be used to free the colors from the
@@ -303,7 +303,7 @@ used for drawing (but not for output of text, see below). @code{x},
 to and are relative to the window/form that will be drawn to. In this
 way you can prevent drawing over other objects.
 
-Under some circumstances XForms also does it's own clipping, i.e.@:
+Under some circumstances XForms also does it's own clipping, i.e.,
 while drawing due to a exposure event. This is called "global
 clipping". Thus the clipping area you have set via a call of
 @code{@ref{fl_set_clipping()}} may get restricted even further due
@@ -319,7 +319,7 @@ int fl_is_clipped(int include_global);
 @noindent
 which returns @code{1} if clipping is switched on and @code{0}
 otherwise. The @code{include_global} argument tells the function
-if global clipping is to be included in the answer or not (i.e.@:
+if global clipping is to be included in the answer or not (i.e.,
 if the argument is @code{0} only clipping set via
 @code{@ref{fl_set_clipping()}} is reported).
 
@@ -335,7 +335,7 @@ On return the four pointer arguments are set to the position and size
 of the clipping rectangle (at least if clipping is switched on) and
 the qreturn value of this function is the same as that of
 @code{@ref{fl_is_clipped()}}. The @code{include_global} argument has
-the same meaning as for @code{@ref{fl_is_clipped()}}, i.e.@: it
+the same meaning as for @code{@ref{fl_is_clipped()}}, i.e., it
 controls if the effects of global clipping is included in the results.
 
 When finished with drawing always use
@@ -581,7 +581,7 @@ points, @code{@ref{fl_polyl()}} the ouline of a polygon and
 @code{@ref{fl_polybound()}} a filled polygon with a black outline.
 
 Note: @strong{all} polygon routines require that the array
-@code{xpoint} has spaces for @strong{@code{n+1}} points, i.e.@: one
+@code{xpoint} has spaces for @strong{@code{n+1}} points, i.e., one
 more than then number of points you intend to draw!
 
 To draw an ellipse. either filled, open (with the outline drawn in the
@@ -652,7 +652,7 @@ void fl_arcf(FL_Coord x, FL_Coord y, FL_Coord radius,
 @code{x} and @code{y} are the coordinates of the center and @code{r}
 is the radius. @code{start_theta} and @code{end_theta} are the
 starting and ending angles of the arc in units of tenths of a degree
-(where 0 stands for a direction of 3 o'clock, i.e.@: the right-most
+(where 0 stands for a direction of 3 o'clock, i.e., the right-most
 point of a circle), and @code{x} and @code{y} are the center of the
 arc. If the difference between @code{theta_end} and @code{theta_start}
 is larger than 3600 (360 degrees), drawing is truncated to 360
@@ -861,7 +861,7 @@ void fl_drw_box(int style, FL_Coord x, FL_Coord y,
                 FL_COLOR col, int bw);
 @end example
 @noindent
-@code{style} is the type of the box, e.g.@: @code{FL_DOWN_BOX}.
+@code{style} is the type of the box, e.g., @code{FL_DOWN_BOX}.
 @code{x}, @code{y}, @code{w}, and @code{h} indicate the size of the
 box. @code{col} is the color and @code{bw} is the width of the
 boundary, which typically should be given the value @code{obj->bw} or
@@ -929,7 +929,7 @@ before which to draw the cursor (-1 means show no cursor). This
 routine does no interpretion of the special character @code{@@} nor
 does it add padding around the text.
 
-Given a bounding box and the size of an object (e.g.@: a label) to
+Given a bounding box and the size of an object (e.g., a label) to
 draw, the following routine can be used to obtain the position of
 where to draw it with a certain alignment and including padding:
 @findex fl_get_align_xy()

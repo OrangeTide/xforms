@@ -4,7 +4,7 @@
 To save the set of forms created select the item "Save" or "Save As"
 from the "File" menu. You will be prompted for a file name using the
 file selector if the latter is selected. Choose a name that ends with
-@code{.fd}, e.g. @file{ttt.fd}.
+@code{.fd}, e.g., @file{ttt.fd}.
 
 The program will now generate three files: @file{ttt.c}, @file{ttt.h}
 and @file{ttt.fd}. If these files already exist, backup copies of

@@ -96,7 +96,7 @@ chance that they interfere with some mechanisms of the library.
 Consider the case of setting a raw callback handler for mouse press
 and release events, in which the handler returns @code{0} for mouse
 press events but @code{FL_PREEMPT} on relese events. In that case the
-mouse press event results in the normal processing and e.g.@: a button
+mouse press event results in the normal processing and e.g., a button
 below the mouse will receive it (and be drawn correspondingly). To be
 drawn again in its normal way it also needs to receive the release
 event (even if the mouse isn't on top of it anymore when the mouse
@@ -151,7 +151,7 @@ calling the built-in handler.
 
 See demo program @file{preemptive.c} for an example.
 
-A similar mechanism exists for registering a post-handler, i.e.@: a
+A similar mechanism exists for registering a post-handler, i.e., a
 handler invoked after the built-in handler is finished, by using
 @findex fl_set_object_posthandler()
 @example

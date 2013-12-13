@@ -146,7 +146,7 @@ button.
 @anchor{FL_LABELBUTTON}
 @item FL_LABELBUTTON
 A button that does not appear to be a button, only its label is
-shown, can be used e.g.@: for hyperlinks.
+shown, can be used e.g., for hyperlinks.
 
 @tindex FL_SCROLLBARBUTTON
 @anchor{FL_SCROLLBARBUTTON}
@@ -182,7 +182,7 @@ Stays pushed until user pushes it again.
 @tindex FL_MENU_BUTTON
 @anchor{FL_MENU_BUTTON}
 @item FL_MENU_BUTTON
-Returned when pushed, useful e.g.@: for opening a popup when
+Returned when pushed, useful e.g., for opening a popup when
 pushed.
 
 @tindex FL_TOUCH_BUTTON
@@ -312,7 +312,7 @@ void fl_set_button(FL_OBJECT *obj, int pushed);
 pushed this automatically releases the currently pushed radio button
 in the same form (or group). Also note that this routine only
 simulates the visual appearance but does not affect the program flow
-in any way, i.e.@: setting a button as being pushed does not invoke
+in any way, i.e., setting a button as being pushed does not invoke
 its callback or results in the button becoming returned to the
 program. For that follow up the call of @code{@ref{fl_set_button()}}
 with a call of @code{@ref{fl_trigger_object()}} (or
@@ -374,7 +374,7 @@ The value returned via @code{mbuttons} is the same value as would
 be used in @code{@ref{fl_set_button_mouse_buttons()}}.
 
 In a number of situations it is useful to define a keyboard equivalent
-for a button. You might e.g.@: want to define that @code{<Ctrl>Q} has
+for a button. You might e.g., want to define that @code{<Ctrl>Q} has
 the same meaning as pressing the "Quit" button. This can be achieved
 using the following call:
 @findex fl_set_button_shortcut()
@@ -386,7 +386,7 @@ void fl_set_button_shortcut(FL_OBJECT *obj, const char *str,
 @noindent
 Note that @code{str} is a string, not a single character. This string
 is a list of all the characters to become keyboard shortcuts for the
-button. E.g.@: if you use string "^QQq" the button will react on the
+button. E.g., if you use string "^QQq" the button will react on the
 keys @code{q}, @code{Q} and @code{<Ctrl>Q}. (As you see you can use
 the symbol @code{^} to indicate the control key. Similarly you can use
 the symbol @code{#} to indicate the @code{<Alt>} key.) Be careful with
@@ -404,7 +404,7 @@ If the third parameter @code{showUL} is true and one of the letters in
 the object label matches the shortcut the matching letter will be
 underlined. This applies to non-printable characters (such as
 @code{#A}) as well in the sense that if the label contains the letter
-@code{a} or @code{A} it will be underlined (i.e.@: special characters
+@code{a} or @code{A} it will be underlined (i.e., special characters
 such as @code{#} and @code{^} are ignored when matching). A false
 value (0) for @code{showUL} turns off underlining without affecting
 the shortcut. Note that although the entire object label is searched

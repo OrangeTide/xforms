@@ -51,7 +51,7 @@ void fl_show_messages_f(const char * fmt, ...);
 @end example
 @noindent
 The only required argument @code{fmt} is a format string as you would
-use it for e.g.@: @code{printf(3)}, which then is followed by as many
+use it for e.g., @code{printf(3)}, which then is followed by as many
 arguments as there are format specifiers in the format string. The
 string resulting from expanding the format string, using the
 remaining arguments, can have arbitrary length and embedded newline
@@ -127,7 +127,7 @@ void fl_show_alert2(int centered, const char *fmt, ...);
 @end example
 @noindent
 @code{centered} controls if the alert message is centered and
-@code{fmt} must be a format string as e.g.@: used for
+@code{fmt} must be a format string as e.g., used for
 @code{printf(3)}. After the format string as many further arguments
 are required as there are format specifiers in the format string. The
 string resulting from expanding the format string, using the rest of
@@ -279,7 +279,7 @@ textual input.
 
 Removing the input field programmatically by calling
 @code{@ref{fl_hide_input()}} results in @code{NULL} being returned by
-@code{@ref{fl_show_input()}}, i.e.@: it's equivalent to pressing the
+@code{@ref{fl_show_input()}}, i.e., it's equivalent to pressing the
 @code{Cancel} button.
 
 A similar but simpler routine can also be used to obtain textual input
@@ -356,7 +356,7 @@ below). The @code{block} argument is a flag indicating if the function
 should wait for the child process to finish. If the argument
 @code{block} is true (non-zero), the function waits until the command
 @code{cmd} completes and then returns the exit status of the command
-@code{cmd} (i.e. the status one gets form @code{wait()} or
+@code{cmd} (i.e., the status one gets form @code{wait()} or
 @code{waitpid()}, so use @code{WEXITSTATUS()} on it if you want the
 return or @code{exit()} value from the program started)). If the
 argument @code{block} is false (0), the function returns immediately
@@ -452,7 +452,7 @@ void fl_set_command_log_position(int x, int y);
 @noindent
 where @code{x} and @code{y} are the coordinates of the upper-left
 corner of the form relative to the root window. The logging of the
-output is accumulative, i.e.@: @code{@ref{fl_exe_command()}} does not
+output is accumulative, i.e., @code{@ref{fl_exe_command()}} does not
 clear the browser. To clear the browser, use the following routine
 @findex fl_clear_command_log()
 @anchor{fl_clear_command_log()}
@@ -536,7 +536,7 @@ const char *fl_show_fselector(const char *message,
 @noindent
 A form will be shown in which all files in directory @code{directory}
 are listed that satisfy the pattern @code{pattern} (see Fig 6.1).
-@code{pattern} can be any kind of regular expression, e.g.@:
+@code{pattern} can be any kind of regular expression, e.g.,
 @code{[a-f]*.c}, which would list all files starting with a letter
 between @code{a} and @code{f} and ending with @code{.c}. @code{default}
 is the default file name. @code{message} is the message string placed at
@@ -917,7 +917,7 @@ int ffilter(const char *name, int type) @{
 @}
 @end example
 @noindent
-i.e.@: per default only directories, normal files and symbolic links
+i.e., per default only directories, normal files and symbolic links
 are shown (the first argument of the function, the file name, isn't
 used by the default filter).
 

@@ -204,7 +204,7 @@ and @code{FL_MOUSE}.
 @tindex FL_INACTIVE_FREE
 @item FL_INACTIVE_FREE
 The object only receives @code{FL_DRAW} events. This should be used
-for objects without interaction (e.g. a picture).
+for objects without interaction (e.g., a picture).
 @tindex FL_INPUT_FREE
 @item FL_INPUT_FREE
 Same as @code{FL_NORMAL_FREE} but the object also receives
@@ -517,7 +517,7 @@ void draw_triangle(int fill, int x, int y,
 Although more or less standard stuff, some explanation is in order. As
 you have probably guessed, @code{@ref{fl_winget()}} returns the
 current "active" window, defined to be the window the object receiving
-dispatcher's messages (@code{FL_DRAW} e.g.) belongs to@footnote{If
+the dispatcher's messages (@code{FL_DRAW} etc.) belongs to@footnote{If
 @code{@ref{fl_winget()}} is called while not handling messages, the
 return value must be checked.}. Similarly the routine
 @code{@ref{fl_get_display()}} returns the current connection to the X

@@ -938,7 +938,7 @@ File extension, if this field is @code{NULL}, @code{short_name} will
 be substituted
 @item type
 The image type. This field generally is one of the supported image
-types (e.g.@: @code{FL_IMAGE_RGB}), but it does not have to. For image
+types (e.g., @code{FL_IMAGE_RGB}), but it does not have to. For image
 file formats that are capable of holding more than one type of images,
 this field can be set to indicate this by ORing the supported types
 together (e.g., @code{FL_IMAGE_RGB|FL_IMAGE_GRAY}). However, when
@@ -947,7 +947,7 @@ in the file.
 @item identify
 This function should return 1 if the file pointed to by the file
 pointer passed in is the expected image format (by checking signature
-e.g.). It should return a negative number if the file is not
+etc.). It should return a negative number if the file is not
 recognized. The decision if the file pointer should be rewound or not
 is between this function and the description function.
 @item description
@@ -1165,7 +1165,7 @@ For output, an additional argument is required. The additional
 argument @code{formats} specifies the image format accepted by the
 external filter. In this case, this is the pnm format. It is important
 that if the filter accepts more than one format, you should specify
-the formats in decreasing generality, i.e. ppm, pgm, pbm.
+the formats in decreasing generality, i.e., ppm, pgm, pbm.
 
 With these functions in place, finally we're ready to add iris support
 into the library
@@ -1256,7 +1256,7 @@ need a GUI system to work. As a matter of fact, for the most part it
 doesn't even need an X connection to work (obviously without a
 connection, you won't be able to display images). For this reason,
 some of the typical (and necessary) tasks, such as progress and error
-reporting, are by default implemented only to use text output (i.e.@:
+reporting, are by default implemented only to use text output (i.e.,
 to @code{stderr}). Obviously, with a GUI in place this is not quite
 adequate. Hooks are available for application program to re-define
 what to do with these tasks.
@@ -1511,8 +1511,8 @@ int flimage_tint(FL_IMAGE *im, unsigned int packed, double opacity);
 where the parameter @code{packed} is a packed RGB color, specifying
 the color of the glass. @code{opacity} specifies how much the color of
 the image is absorbed by the glass. A value of 0 means the glass is
-totally transparent, i.e.@: the glass has no effect3, while a value of
-1.0 means total opaqueness, i.e.@: all you see is the color of the
+totally transparent, i.e., the glass has no effect3, while a value of
+1.0 means total opaqueness, i.e., all you see is the color of the
 glass. Any value between these two extremes results in a color that is
 a combination of the pixel color and the glass color. For example, to
 tint a part of the image bluish, you can set @code{packed} to
@@ -1621,7 +1621,7 @@ of the image.
 
 The second function uses the parameters supplied by the user to crop
 the image. @code{xl} and @code{xr} are the offsets into the image from
-the left and the right sides, respectively, i.e.@: if both @code{xl}
+the left and the right sides, respectively, i.e., if both @code{xl}
 and @code{xr} are 1, the cropping removes the first column and the
 last column from the image. Parameters @code{yt} and @code{yb} specify
 the offsets into the image from the top and bottom of the image
@@ -1764,7 +1764,7 @@ coordinates in the original image and transforming those into new
 coordinates, we start from the new coordinates and use inverse warping
 to obtain the coordinates of the pixel in the original image. This
 requires that the inverse of the warp matrix must exist (which is the
-case if @code{w[0][0] * w[1][1] != w[0][1] * w[1][0]}, i.e.@: the warp
+case if @code{w[0][0] * w[1][1] != w[0][1] * w[1][0]}, i.e., the warp
 matrix has a non-vanishing determinante). With inverse warping the
 transformation becomes a re-sampling of the original image, and
 subpixel sampling (anti-aliasing) can be easily implemented.
@@ -1816,7 +1816,7 @@ m[1][0] = -m[0][1];
 flimage_warp(im, mat, 0, 0, FLIMAGE_SUBPIXEL); 
 @end example
 @noindent
-Please note that the transformation is done in-place, i.e.@: after the
+Please note that the transformation is done in-place, i.e., after the
 function returns the image structure pointer, @code{im}, points to the
 rotated image.
 
@@ -1926,7 +1926,7 @@ By default, the offsets @code{im->xdist_offset} and
 @code{im->xdist_scale} and @code{im->ydist_scale} to 1.
 
 The function returns the current number of strings for the image. The
-interpretation of text used also used elsewhere applies, i.e.@: if
+interpretation of text used also used elsewhere applies, i.e., if
 @code{str} starts with character @code{@@} a symbol is drawn.
 
 There is another function, maybe more convenient depending on the
@@ -2002,7 +2002,7 @@ markers). The marker name must consist of regular ASCII characters.
 DOT} etc., see Chapter 27 for a complete list. @code{fill} indicates
 if the marker should be filled or not. @code{x} and @code{y} are the
 coordinates of the center of the marker in physical coordinates
-(i.e.@: the same transformation as described above for annotated texts
+(i.e., the same transformation as described above for annotated texts
 is applied), @code{w} and @code{h} are the size of the bounding box of
 the marker, again in physical coordinates. Every marker has a natural
 orientation from which you can rotate it. The angle of rotation is

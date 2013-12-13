@@ -6,7 +6,7 @@ only shown for a short time in their own window and, while they are
 shown, no interaction with other objects is possible. So they don't
 fit directly into the normal event loop where one waits for user
 actions via @code{@ref{fl_do_forms()}}. Instead, when used stand-alone
-(e.g.@: for a context menu) they are shown on a call of the function
+(e.g., for a context menu) they are shown on a call of the function
 @code{@ref{fl_popup_do()}}, which returns when the the user is done
 with the popup and it has been removed from the screen. Only idle
 callbacks and timers etc.@: are executed in the background while a
@@ -77,7 +77,7 @@ and @code{NULL} on failure. The first argument, @code{entries}, is a
 pointer to the popup the new entry (or entries) is added to. The
 second argument, @code{entries}, encodes information about the entries
 to add. In the most simple case it consists just of the entries texts,
-separated by @code{|} characters, e.g. @w{@code{"Item 1|Item 2|Item
+separated by @code{|} characters, e.g., @w{@code{"Item 1|Item 2|Item
 3"}}. This would create three simple entries in the popup with labels
 @code{"Item 1"}, @code{"Item 2"} and @code{"Item 3"}.
 
@@ -88,13 +88,13 @@ There's no built-in limit to the number of entries than be added to a
 popup. @code{@ref{fl_popup_add_entries()}} can be called repeatedly to
 append further entries to a popup.
 
-It often is necessary to have more complex entries. E.g.@: one may
+It often is necessary to have more complex entries. E.g., one may
 want to have keyboard shortcuts for entries, which are shown on the
 right hand side of an entry, one may want to have sub-popups or set
 callbacks etc. This can be achieved by embedding special character
 sequences within the string describing the entries and passing further
 arguments to the function, similar to the use of a format string in
-e.g.@: @code{printf(3)}. All special sequences start with a @code{%}.
+e.g., @code{printf(3)}. All special sequences start with a @code{%}.
 
 The following sequences are recognized:
 @table @code
@@ -159,7 +159,7 @@ Mutually exclusive with @code{%m}, @code{%r}, @code{%R} and @code{%l}.
 
 @item %r
 @itemx %R
-This makes the entry a "radio" entry, i.e.@: it becomes part of a
+This makes the entry a "radio" entry, i.e., it becomes part of a
 group of entries of which only one can be "on" at a time. The group,
 an integer value (don't use @code{INT_MIN} and @code{INT_MIN}), must
 be given in the arguments following the @code{entries} string.
@@ -172,7 +172,7 @@ switched to "off" state.
 
 If the entry gets created with @code{%r} the entry is in "off" state,
 if created with @code{%R} it's in "on" state (in that case all entries
-created before in "on" state are reset to "off" state, i.e.@: the
+created before in "on" state are reset to "off" state, i.e., the
 one created last "wins").
 
 Mutually exclusive with @code{%m}, @code{%t}, @code{%T} and @code{%l}.
@@ -187,10 +187,10 @@ Mutually exclusive with @code{%m}, @code{%t}, @code{%T}, @code{%} and
 @code{%R}.
 
 @item %d
-Marks the entry as disabled, i.e.@: it can't be selected and its text is
+Marks the entry as disabled, i.e., it can't be selected and its text is
 per default drawn in a different color
 @item %h
-Marks the entry as hidden, i.e.@: it is not shown while in this state.
+Marks the entry as hidden, i.e., it is not shown while in this state.
 
 @item %S
 For entries with shortcut keys it's quite common to have them shown on
@@ -212,7 +212,7 @@ Use this to put a @code{%} character within the text of an entry.
 @end table
 
 Please note that since @code{@ref{fl_popup_add_entries()}} is a
-variadic function (i.e.@: it takes a variable number of arguments)
+variadic function (i.e., it takes a variable number of arguments)
 only very limited error checking is possible and thus it is of
 importance that the arguments passed to the function have exactly the
 required types!
@@ -279,7 +279,7 @@ Leave callbacks are not called when a selection has been made.
 Instead, only the selection callback for the selected entry is
 invoked.
 
-A "sub-popup entry", i.e.@: an entry that when entered results in a
+A "sub-popup entry", i.e., an entry that when entered results in a
 sub-popup to open, also can have an enter callback. Its leave
 callback is not called when the user moves the mouse onto the
 sub-popup but only once the sub-popup has been closed again and the
@@ -334,9 +334,9 @@ The @code{text} member is exactly the string used to create the entry,
 including all the special sequences starting with @code{'%'}.
 @code{label} is what's left after all those sequences as well as
 backspace characters have been removed, tabs replaced by single spaces
-and the string is split at @code{"%S"}. I.e.@: it's exactly what's
+and the string is split at @code{"%S"}. I.e., it's exactly what's
 drawn left-flushed for the entry in the popup. @code{accel} is then
-what's left after clean-up and came after @code{"%S"}, i.e.@: it's
+what's left after clean-up and came after @code{"%S"}, i.e., it's
 what appears as the right-flushed text of the entry. Please note that
 one or more of these pointers could under some circumstances be
 @code{NULL}.
@@ -418,7 +418,7 @@ No special state is set for the entry, the default.
 @anchor{FL_POPUP_DISABLED}
 @tindex FL_POPUP_DISABLED
 @item FL_POPUP_DISABLED
-The entry is disabled, i.e.@: isn't selectable (and normally is drawn in
+The entry is disabled, i.e., isn't selectable (and normally is drawn in
 a way to indicate this).
 @anchor{FL_POPUP_HIDDEN}
 @tindex FL_POPUP_HIDDEN
@@ -458,7 +458,7 @@ Thus the @code{prev} and @code{next} members of the structure are
 pointers to popups created earlier or later. If a popup is a sub-popup
 of another popup then @code{parent} points to the next higher level
 popup (otherwise it's @code{NULL}). In case there's a cascade of
-popups the @code{top_parent} member points to the "root" popup (i.e.@:
+popups the @code{top_parent} member points to the "root" popup (i.e.,
 the top-level popup), while for popups that aren't sub-popups it
 always points back to the popup itself (in that case @code{parent} is
 @code{NULL}).
@@ -527,7 +527,7 @@ FL_POPUP *fl_popup_create(Window win, const char *title,
 @end example
 @noindent
 The @code{win} and @code{title} arguments are the same as used in
-@code{@ref{fl_popup_add()}}, i.e.@: they are parent window for the
+@code{@ref{fl_popup_add()}}, i.e., they are parent window for the
 popup (or @code{@ref{fl_root}} or @code{None}) and the (optional, can
 be @code{NULL}) title for the popup.
 
@@ -591,7 +591,7 @@ disabled and non-selectable, the second will keep the entry from being
 drawn at all, and the third one puts the entry into "on" state
 (relevant for toggle and radio entries only). If you try to set
 @code{@ref{FL_POPUP_CHECKED}} for more than a single radio entry the
-last one you set if for "wins", i.e.@: only this one will be in "on"
+last one you set if for "wins", i.e., only this one will be in "on"
 state. See below for a more detailed discussion of these entry
 properties.
 
@@ -604,7 +604,7 @@ to remedy the situation in case such things are needed).
 The function returns a pointer to the newly created popup (or
 @code{NULL} on failure). You are guaranteed that each entry has been
 assigned a unique value, starting at 0 and which is identical to the
-index of corresponding element in the @code{items} array, i.e.@: the
+index of corresponding element in the @code{items} array, i.e., the
 first element results in an entry assigned 0, the second entry gets
 1 etc.
 
@@ -648,7 +648,7 @@ its keyboard shortcut. It's a radio entry that is in "on" state. The
 third entry is like the second, labels are @code{"Item 3"} and
 @code{"^3"} and it reacts to @code{<Crtl>3}, except that it's in "off"
 state. The second and third label belong to the same group (with the
-group number set to @code{INT_MIN}), i.e.@: when the third entry gets
+group number set to @code{INT_MIN}), i.e., when the third entry gets
 selected the second one gets switched to "off" state (and vice versa).
 
 Before the fourth entry a separator line will be drawn (that's the
@@ -713,7 +713,7 @@ FL_POPUP_RETURN *fl_popup_do(FL_POPUP *popup);
 @end example
 @noindent
 is called. It only returns when the user either selects an entry or
-closes it in some other way (e.g.@: by clicking outside the popup's
+closes it in some other way (e.g., by clicking outside the popup's
 area). When a selection was made the function returns a pointer to a
 @code{@ref{FL_POPUP_RETURN}} structure with information about the
 entry that was selected (please note that the structure is internal
@@ -761,7 +761,7 @@ Finally the structure used in all those callback invocations is
 returned from @code{@ref{fl_popup_do()}}. This chain of callback calls
 is interrupted when one of the callbacks returns a value of
 @code{FL_IGNORE} (-1). In that case no further callbacks are invoked
-and @code{@ref{fl_popup_do()}} returns @code{NULL}, i.e.@: from the
+and @code{@ref{fl_popup_do()}} returns @code{NULL}, i.e., from the
 callers perspective it looks as if no selection has been made. This
 can be useful when one of the callbacks was already was able to do all
 the work required on a selection.
@@ -851,7 +851,7 @@ int fl_popup_get_size(FL_POPUP *popup, unsigned int *w, unsigned int
 @noindent
 The function returns 0 on success and -1 on error (in case the
 supplied @code{popup} argument isn't valid). Please note that the
-reported values are only valid until the popup is changed, e.g.@: by
+reported values are only valid until the popup is changed, e.g., by
 adding, deleting or changing entries or changing the appearance of the
 popup. 
 
@@ -998,7 +998,7 @@ FL_POPUP_ENTRY *fl_popup_entry_get_by_label_f(FL_POPUP *popup,
 Thus, since an entry created via a string like
 @code{"I\bt%Tem\t1%SCtrl+X"} will shown with a left-flushed label part
 of @code{"Item 1"}, this will be found when searching with either this
-string or a format string fo e.g. @code{"Item %d"} and a following
+string or a format string fo e.g., @code{"Item %d"} and a following
 integer argument of @code{1}.
 
 Another way to search for an entry is by its value as either specified
@@ -1293,7 +1293,7 @@ entries.
 sub-popup associated with the entry or @code{NULL} on failure.
 
 To change the sub-popup of an entry a valid sub-popup must be passed
-to @code{@ref{fl_popup_entry_set_subpopup()}}, i.e.@: the sub-popup
+to @code{@ref{fl_popup_entry_set_subpopup()}}, i.e., the sub-popup
 must not already be a sub-popup of another entry or the popup the
 entry belongs to itself. You also can't set a new sub-popup while the
 old sub-popup associated with the entry or the popup to become the new

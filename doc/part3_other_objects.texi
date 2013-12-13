@@ -455,7 +455,7 @@ int fl_set_xyplot_log_minor_xtics(FL_OBJECT *obj, int yesno);
 int fl_set_xyplot_log_minor_ytics(FL_OBJECT *obj, int yesno);
 @end example
 @noindent
-With this enabled e.g.@: the minor tics between 1 and 10 (when the
+With this enabled e.g., the minor tics between 1 and 10 (when the
 interval is to be divided into 5 subintervals) will be drawn at the
 positions 2, 4, 6, and 8 instead of at 10^0.2, 10^0.4, 10^0.6 and
 10^0.8. The functions return the previous setting.
@@ -777,7 +777,7 @@ options). If you for example specify @code{FL_ALIGN_LEFT}, the text
 will appear on the left of the point and flushed toward the point (see
 Fig. 21.1). This is mostly consistent with the label alignment except
 that now the bounding box (of the point) is of zero dimension. Normal
-text interpretation applies, i.e.@: if text starts with @code{@@} a
+text interpretation applies, i.e., if text starts with @code{@@} a
 symbol is drawn.
 
 To remove an inset text, use the following routine
@@ -791,7 +791,7 @@ Another kind of inset is the "keys" to the plots. A key is the
 combination of drawing a segment of the plot line style with a piece
 of text that describes what the corrsponding line represents.
 Obviously, keys are most useful when you have more than one plot
-(i.e.@: overlays). To add a key to a particular plot, use the
+(i.e., overlays). To add a key to a particular plot, use the
 following routine
 @findex fl_set_xyplot_key()
 @anchor{fl_set_xyplot_key()}
@@ -928,7 +928,7 @@ where @code{sx} and @code{sy} are the screen coordinates and @code{wx}
 and @code{wy} are the world coordinates.
 
 Finally, there's a function for returning the coordinates of the
-area of the object used for drawing the data (i.e. the area, when
+area of the object used for drawing the data (i.e., the area, when
 axes are displayed, which is enclosed by the axes):
 @findex fl_get_xyplot_screen_area()
 @anchor{fl_get_xyplot_screen_area()}
@@ -1084,12 +1084,12 @@ void fl_add_canvas_handler(FL_OBJECT *obj, int event,
                            FL_HANDLE_CANVAS handler, void *user_data);
 @end example
 @noindent
-where @code{event} is the @code{XEvent} type, e.g. @code{Expose} etc.
+where @code{event} is the @code{XEvent} type, e.g., @code{Expose} etc.
 The @code{@ref{fl_add_canvas_handler()}} function first registers a
 procedure with the event dispatching system of the Forms Library, then
 it figures out the event masks corresponding to the event @code{event}
 and invokes @code{@ref{fl_addto_selected_xevent()}} to solicit the
-event from the server. Other book keeping (e.g.@: drawing the box that
+event from the server. Other book keeping (e.g., drawing the box that
 encloses the canvas, etc.) is done by the object handler.
 
 When a canvas handler is installed the library tries to set the
@@ -1104,7 +1104,7 @@ are two functions to add or delete from the mask,
 @code{@ref{fl_addto_selected_xevent()}} and
 @code{@ref{fl_remove_selected_xevent()}}.
 
-By default, when a mouse motion handler (i.e.@: for the
+By default, when a mouse motion handler (i.e., for the
 @code{MotionNotify} events) is registered, it is assumed that, while
 the application wants to be informed about mouse movements, it's not
 interested in a continous motion monitoring (tracking), thus per
@@ -1178,8 +1178,8 @@ by using @code{form->window} if you want to (un)map a form or
 @node Other Canvas Routines
 @subsection Other Canvas Routines
 
-Upon canvas creation, all its window related attributes, e.g.@:
-visual, depth and colormap etc., are inherited from its parent (i.e.@:
+Upon canvas creation, all its window related attributes, e.g.,
+visual, depth and colormap etc., are inherited from its parent (i.e.,
 the window of the form the canvas belongs to). To modify any
 attributes of the canvas, use the following routine
 @findex fl_set_canvas_attributes()
@@ -1220,11 +1220,11 @@ should also change the canvas depth to match the visual.
 
 Caution should also applied when using
 @code{@ref{fl_set_canvas_colormap()}}: when the canvas window goes
-away, e.g.@: as a result of a call of @code{@ref{fl_hide_form()}}, the
+away, e.g., as a result of a call of @code{@ref{fl_hide_form()}}, the
 colormap associated with the canvas is freed (destroyed). This likely
 will cause problems if a single colormap is used for multiple canvases
 as each canvas will attempt to free the same colormap, resulting in
-an X error. If your application works this way, i.e.@: the same
+an X error. If your application works this way, i.e., the same
 colormap is used on multiple canvases (via
 @code{@ref{fl_set_canvas_colormap()}}), you should use the following
 routine to prevent the canvas from freeing the colormap:
@@ -1241,7 +1241,7 @@ internal flag so the colormap isn't freed when the canvas goes away.
 By default, canvases are decorated with an @code{FL_DOWN_FRAME}. To
 change the decoration, change the the boxtype of the canvas and the
 boxtype will be translated into a frame that best approximates the
-appearance of the request boxtype (e.g.@: a @code{FL_DOWN_BOX} is
+appearance of the request boxtype (e.g., a @code{FL_DOWN_BOX} is
 translated into a @code{FL_DOWN_FRAME} etc). Note that not all frame
 types are appropriate for decorations.
 
@@ -1372,7 +1372,7 @@ GLXContext fl_get_glcanvas_context(FL_OBJECT *obj);
 
 Note that by default the rendering context created by a glcanvas uses
 direct rendering (i.e., by-passing the Xserver). To change this
-default, i.e.@: to always render through the Xserver, use the following
+default, i.e., to always render through the Xserver, use the following
 routine:
 @findex fl_set_glcanvas_direct()
 @anchor{fl_set_glcanvas_direct()}

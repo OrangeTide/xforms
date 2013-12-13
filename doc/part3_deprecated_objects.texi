@@ -445,8 +445,8 @@ an item is selected.
 @node Other Menu Routines
 @subsection Other Menu Routines
 
-There are two ways to populate a menu, i.e.@: add items. The first one
-is a bit more complex but allows for more flexibility, e.g.@: later
+There are two ways to populate a menu, i.e., add items. The first one
+is a bit more complex but allows for more flexibility, e.g., later
 adding and removing items, associating callbacks with individual items
 etc. For the more simple (and in many cases sufficient) method see the
 function @code{@ref{fl_set_menu_entries()}}.
@@ -460,7 +460,7 @@ void fl_set_menu(FL_OBJECT *obj, const char *menustr, ...);
 @noindent
 @code{menustr} describes the menu in the form used by XPopups
 (@pxref{XPopup}). In the simplest case, it just contains the texts fr
-the menu items, separated by a bar (@code{'|'}), e.g.@:
+the menu items, separated by a bar (@code{'|'}), e.g.,
 @code{"First|Second|Third"}. But it's also possible to employ special
 tags (@pxref{Creating XPopups}) that can be used to indicate special
 attributes (radio, toggle and greyed-out, for example). Whenever the
@@ -481,7 +481,7 @@ arguments.
 
 In case you don't set menu item IDs they are assigned automatically
 with the first item obtaining the menu item ID 1, the next 2 etc.,
-i.e.@: it directly reflects the position of the item in the menu.
+i.e., it directly reflects the position of the item in the menu.
 
 It is also possible to add menu items to an existing menu using a call
 of
@@ -638,7 +638,7 @@ No special display characteristic, the default.
 @tindex FL_PUP_BOX
 @anchor{FL_PUP_BOX}
 @item FL_PUP_BOX
-"Binary" entry, i.e.@: an entry that stands for a choice that can
+"Binary" entry, i.e., an entry that stands for a choice that can
 be switched on and off. Displayed with an unchecked box to the
 left.
 
@@ -653,7 +653,7 @@ with a diamoned-shaped box at the left.
 @anchor{FL_PUP_GREY}
 @item FL_PUP_GREY
 To be OR-ed with one of the above to make that item appear
-greyed-out and disable it (i.e.@: not selectable anymore).
+greyed-out and disable it (i.e., not selectable anymore).
 
 @tindex FL_PUP_CHECK
 @anchor{FL_PUP_CHECK}
@@ -823,7 +823,7 @@ XPopup identifier (or -1 on failure). @code{@ref{fl_defpup()}} in
 addition accepts a pointer @code{str} to the texts for menu items
 (optionally also some more arguments, see below). More than one item
 can be specified by using a vertical bar (@code{|}) between the items,
-e.g.@: @code{"foo|bar"} adds two menu items. The @code{parent}
+e.g., @code{"foo|bar"} adds two menu items. The @code{parent}
 parameter specifies the window to which the XPopup belongs. In a
 situation where the XPopup is used inside an object callback
 @code{FL_ObjWin(obj)} will do. If @code{parent} is @code{None} the
@@ -834,7 +834,7 @@ Calling @code{@ref{fl_defpup()}} with the @code{str} argument set to
 
 It is possible to specify XPopup and item properties, such as
 shortcuts, callbacks etc., together with the items texts using a
-format string system similar as used for e.g.@: @code{oprint(3)}. If
+format string system similar as used for e.g., @code{oprint(3)}. If
 XPopup or item properties require arguments, they must be passed to
 @code{@ref{fl_defpup()}} following the @code{str} argument.
 
@@ -852,7 +852,7 @@ function. The callback function must return a non-negative integer. If
 such a callback function has been registered for a XPopup and you
 select its third item, in the simplest case 3 will be passed as a
 parameter to the callback function (more complicated situations would
-involve that the item had been assigned a different value. e.g. using
+involve that the item had been assigned a different value. e.g., using
 @code{%x}, see below, or that there's also a callback bound to the
 item itself, in which case the global XPopup callback would receive
 the return value of the items callback function).
@@ -898,7 +898,7 @@ with the @code{<Alt>} key, @code{^} for simultaneous pressing of
 Assigns a numerical value to this item. This value must be positive.
 This new value overrides the default position-based value assigned to
 this item. Different from most other flags, the value @code{n} must be
-entered as part of the text string (i.e.@: do not try to use the
+entered as part of the text string (i.e., do not try to use the
 arguments following @code{str} to specify this value!) and must be
 number larger than 0. It is the programmers responsibility to make
 sure that the items value does not clash with those of other items of
@@ -986,8 +986,8 @@ second function call.
 Normally a XPopup get opened when the left mouse button has been
 pressed down and get closed again when the left mouse button is
 released. But there are a number of ways to achieve a "hanging"
-XPopup, i.e.@: that the XPopup that says open, even though the left
-mouse button isn't pressed down anymore. This happens e.g.@: when the
+XPopup, i.e., that the XPopup that says open, even though the left
+mouse button isn't pressed down anymore. This happens e.g., when the
 user releases the mouse button in the title area of the XPopup or when
 the XPopup was opened via a keyboard shortcut. In that case it's also
 possible to navigate through the items and select via the keyboard.
@@ -1164,7 +1164,7 @@ button on top of the item to be selected. If you don't want to make a
 selection release the mouse button somewhere outside the area of the
 XPopup.
 
-If you have a "hanging" XPopup, i.e.@: a XPopup that's open even
+If you have a "hanging" XPopup, i.e., a XPopup that's open even
 though the mouse button isn't pressed anymore you can select by
 clicking on an item or use the cursor @code{Up} and @code{Down} keys
 to navigate through the items and select by pressing the
@@ -1219,11 +1219,11 @@ value associated with the item (position or value set via @code{%x}),
 and @code{cb} is the address of the callback function.
 
 Please note that Xpopup objects are a bit special in XForms. Normal
-objects get returned by e.g.@: @code{@ref{fl_do_forms()}} (or an
+objects get returned by e.g., @code{@ref{fl_do_forms()}} (or an
 associated callback gets invoked). But since Xpopup objects are meant
 to be sub-objects of other objects (like @code{FL_CHOICE} and
 @code{L_MENU} objects) and don't get invoked directly by a call of
-e.g.@: @code{@ref{fl_do_forms()}} but instead by a call of
+e.g., @code{@ref{fl_do_forms()}} but instead by a call of
 @code{@ref{fl_dopup()}} they can't get returned to the application.
 Instead the caller of @code{@ref{fl_dopup()}} (normally some internal
 function of a @code{FL_CHOICE} or @code{FL_MENU} object) has to deal
@@ -1317,7 +1317,7 @@ const char *fl_getpup_text(int popup_id, int item_val);
 @end example
 
 In some situations, especially when the popup is activated by
-non-pointer events (e.g.@: as a result of a keyboard shortcut), the
+non-pointer events (e.g., as a result of a keyboard shortcut), the
 default placement of popups based on mouse location might not be
 adequate or appropriate, thus XPopup provides the following routine to
 override the default placement
@@ -1329,7 +1329,7 @@ void fl_setpup_position(int x, int y);
 @noindent
 where @code{x} and @code{y} specify the location where the top-left
 corner of the popup should be. @code{x} and @code{y} must be given in
-screen coordinates (i.e.@: relative to the root window) with the
+screen coordinates (i.e., relative to the root window) with the
 origin at the top-left corner of the screen. This routine should be
 used immediately before invoking @code{@ref{fl_dopup()}}, the position
 is not remembered afterwards.

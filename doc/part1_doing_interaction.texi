@@ -134,7 +134,7 @@ the window manager's default.
 @end table
 
 As mentioned above, some of the settings will result in a fixed size
-of the form (i.e.@: a size that can't be changed by the user per
+of the form (i.e., a size that can't be changed by the user per
 default). In some cases this can be avoided by OR'ing the value with
 @anchor{FL_FREE_SIZE}
 @tindex FL_FREE_SIZE
@@ -586,7 +586,7 @@ Also a text never changes state.
 A button is returned when the user presses a mouse button on it and then
 releases the button. The change is not reported before the user releases
 the mouse button, except with touch buttons which are returned all the
-time as long as the user keeps the mouse pressed on it. (See e.g.@:
+time as long as the user keeps the mouse pressed on it. (See e.g.,
 @file{touchbutton.c} for the use of touch buttons.)
 
 @item slider
@@ -651,7 +651,7 @@ indefinitely and never returns. The program exits via one of the
 callback functions.
 
 There is also the possibility to conrol under which exact conditions
-the object gets returned. An application that e.g.@: doesn't want to
+the object gets returned. An application that e.g., doesn't want to
 be notified about each change of a slider but instead only want a
 single notification after the mouse button has been released and
 the value of the slider was changed in the process would call
@@ -688,13 +688,13 @@ the state of the object changed.
 @anchor{FL_RETURN_SELECTION}
 @tindex FL_RETURN_SELECTION
 @item FL_RETURN_SELECTION
-Return when e.g.@: a line in a @code{@ref{FL_MULTI_BROWSER}} browser
+Return when e.g., a line in a @code{@ref{FL_MULTI_BROWSER}} browser
 was selected.
 
 @anchor{FL_RETURN_DESELECTION}
 @tindex FL_RETURN_DESELECTION
 @item FL_RETURN_DESELECTION
-Return when e.g.@: a line in a @code{@ref{FL_MULTI_BROWSER}} browser
+Return when e.g., a line in a @code{@ref{FL_MULTI_BROWSER}} browser
 was deselected.
 
 @anchor{FL_RETURN_ALWAYS}
@@ -707,7 +707,7 @@ to the object.
 @tindex FL_RETURN_NONE
 @item FL_RETURN_NONE
 Never notiy the application about interactions with this object
-(i.e.@: never return it nor invoke its callback). Note: this is not
+(i.e., never return it nor invoke its callback). Note: this is not
 meant for deactivation of an object, it will still seem to work as
 normal, it just doesn't get returned to the application nor does is
 callbak get invoked.
@@ -731,23 +731,24 @@ at once) ask instead for the logical @code{OR} of these two.
 @code{@ref{FL_RETURN_ALWAYS}} includes all conditions except
 @code{@ref{FL_RETURN_END_CHANGED}}.
 
-Once an object is returned (or its callback invoked) you can determine
-the reason it was returned by calling
+Once an object has been returned (or its callback is invoked) you can
+determine the reason why it was returned by calling
 @findex fl_get_object_return_state()
 @anchor{fl_get_object_return_state()}
 @example
 int fl_get_object_return_state(FL_OBBJECT *obj);
 @end example
-The returned value is logical @code{OR} of the conditions that led to
-the object getting returned, where the conditions can be
+This returns the logical @code{OR} of the conditions that led to the
+object being returned, where the conditions can be
 @code{@ref{FL_RETURN_CHANGED}}, @code{@ref{FL_RETURN_END}},
-@code{@ref{FL_RETURN_SELECTION}} and @code{@ref{FL_RETURN_DESELECTION}}.
-(The @code{@ref{FL_RETURN_END_CHANGED}} condition is satisfied
-if both @code{@ref{FL_RETURN_END}} and @code{@ref{FL_RETURN_CHANGED}}
-are set.)
+@code{@ref{FL_RETURN_SELECTION}} and
+@code{@ref{FL_RETURN_DESELECTION}}. (The
+@code{@ref{FL_RETURN_END_CHANGED}} condition is satisfied if both
+@code{@ref{FL_RETURN_END}} and @code{@ref{FL_RETURN_CHANGED}} are
+set.)
 
 Please note that calling this function only makes sense in a callback
-for an object or when the object has been just returned by e.g.@:
+for an object or when the object has been just returned by e.g.,
 @code{@ref{fl_do_forms()}}. Further interactions with the object
 overwrite the value!
 
@@ -757,7 +758,7 @@ overwrite the value!
 
 The interaction mentioned above is adequate for many application
 programs but not for all. When the program also has to perform tasks
-when no user action takes place (e.g. redrawing a rotating image all the
+when no user action takes place (e.g., redrawing a rotating image all the
 time), some other means of interaction are needed.
 
 There exist two different, but somewhat similar, mechanisms in the
@@ -788,7 +789,7 @@ is called
 typedef int (*FL_APPEVENT_CB)(XEvent *xev, void *user_data);
 @end example
 @noindent
-i.e.@: a function with the signature
+i.e., a function with the signature
 @example
 int idle_callback(XEvent *xev, void *user_data);
 @end example
@@ -797,7 +798,7 @@ where @code{user_data} is the void pointer passed to the system in
 @code{@ref{fl_set_idle_callback()}} through which some information
 about the application can be passed. The return value of the callback
 function is currently not used. @code{xev} is a pointer to a
-synthetic@footnote{I.e. @code{xev->xmotion.send_event} is true.}
+synthetic@footnote{I.e., @code{xev->xmotion.send_event} is true.}
 @code{MotionNotify} event from which some information about mouse
 position etc. can be obtained. To remove the idle callback, use
 @code{@ref{fl_set_idle_callback()}} with callback set to @code{NULL}.

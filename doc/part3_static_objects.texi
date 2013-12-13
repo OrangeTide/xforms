@@ -495,7 +495,7 @@ should be displayed using @code{XCopyPlane()}.
 
 The label color as set by @code{@ref{fl_set_object_lcolor()}} controls
 both the foreground color of the bitmap and the color of the label
-(i.e.@: they are always identical).
+(i.e., they are always identical).
 
 The first color argument (@code{col1}) to
 @code{@ref{fl_set_object_color()}} sets the background color of the
@@ -604,7 +604,7 @@ Pixmap fl_get_pixmap_pixmap(FL_OBJECT *obj, Pixmap *id,
 @end example
 
 In some situations, you might already have a pixmap resource ID,
-e.g.@: from @code{@ref{fl_read_pixmapfile()}} (see below in the
+e.g., from @code{@ref{fl_read_pixmapfile()}} (see below in the
 "Remarks" subsection). Then you can use the following routine to
 change the the pixmap
 @findex fl_set_pixmap_pixmap()
@@ -708,7 +708,7 @@ void fl_free_pixmap(Pixmap id);
 You will need the XPM library (version 3.4c or later)m developed by
 Arnaud Le Hors and Groupe Bull, to use pixmaps. The XPM library is
 avalialble as a package for most distributions, but can also be
-obtained from many X mirror sites, e.g.@: via anonymous FTP from
+obtained from many X mirror sites, e.g., via anonymous FTP from
 (@uref{ftp://ftp.x.org/contrib/libraries/}. Its home page is
 @uref{http://old.koalateam.com/lehors/xpm.html}.
 
@@ -823,10 +823,10 @@ Functions}, for other time related routines.
 The chart object gives you an easy way to display a number of
 different types of charts like bar-charts, pie-charts, line-charts
 etc. They can either be used to display some fixed chart or a changing
-chart (e.g. a strip-chart). Values in the chart can be changed and new
+chart (e.g., a strip-chart). Values in the chart can be changed and new
 values can be added which makes the chart move to the left, i.e., new
 entries appear at the right and old entries disappear at the left.
-This can be used to e.g. monitor processes.
+This can be used to e.g., monitor processes.
 
 @ifnottex
 

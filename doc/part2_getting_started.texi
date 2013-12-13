@@ -78,7 +78,7 @@ the mouse. By grabbing the object at one of the four red corners you
 can change its size. It is also possible to select multiple objects
 and move or scale them simultaneously. See below for details.
 
-To change the object's attributes, e.g.@: its label, simply
+To change the object's attributes, e.g., its label, simply
 double-click on it with the left mouse button. Or single-click on it
 and then press the function key @code{<F1>} (or click on the button
 labeled "F1 attribs" in the control panel or select "Object

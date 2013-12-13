@@ -119,7 +119,7 @@ selected.
 
 In the releases before version 1.0.92 of the library only a callback
 for the folder was executed (if one was installed) on change of the
-selected folder bur not via e.g.@: @code{@ref{fl_do_forms()}} etc.
+selected folder bur not via e.g., @code{@ref{fl_do_forms()}} etc.
 This has changed with version 1.0.92. To get the old behaviour you
 have to build XForms with the @code{--enable-bwc-bs-hack} being set.
 
@@ -138,7 +138,7 @@ int fl_get_active_folder_number(FL_OBJECT *obj);
 const char *fl_get_active_folder_name(FL_OBJECT *obj);
 @end example
 @noindent
-All three functions essentially perform the same task, i.e.@: return a
+All three functions essentially perform the same task, i.e., return a
 handle of the active folder, but the kind of handle returned is
 different. The first function returns the form associated with the
 folder, the second function the folder sequence number starting from 1
@@ -194,11 +194,11 @@ boxtype other than @code{FL_FLAT_BOX} or @code{FL_NO_BOX} may not look
 nice. If the backface of the form is of @code{FL_FLAT_BOX} the
 associated tab will take on the color of the backface when activated.
 
-One thing to note is that each tab must have its own form, i.e.@: you
+One thing to note is that each tab must have its own form, i.e., you
 should not associate the same form with two different tabs. However,
 you can create copies of a form and use these copies.
 
-To access the individual forms on the tabfolder, e.g.@: in order to
+To access the individual forms on the tabfolder, e.g., in order to
 modify something on it, use the following routines
 @findex fl_get_tabfolder_folder_bynumber()
 @anchor{fl_get_tabfolder_folder_bynumber()}
@@ -376,7 +376,7 @@ functions must take the responsibility of switching the active folder.
 
 Some visual effects like colors and label font of the tab rider
 buttons can be set all at once by calling the corresponding functions
-(i.e.@: @code{@ref{fl_set_object_color()}},
+(i.e., @code{@ref{fl_set_object_color()}},
 @code{@ref{fl_set_object_lstyle()}} etc.) with the tabbed folder
 object as the first argument. Individual tab rider buttons can also be
 modified by calling those function with the corresponding return value

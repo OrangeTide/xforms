@@ -124,7 +124,7 @@ Window fl_winopen(const char *name);
 @noindent
 This will open a (top-level) window with the title @code{name}. A
 window so opened can be drawn into as soon as the function returns,
-i.e.@: @code{@ref{fl_winopen()}} waits until the window is ready to be
+i.e., @code{@ref{fl_winopen()}} waits until the window is ready to be
 drawn to.
 
 The newly opened window will have the following default attributes
@@ -403,7 +403,7 @@ void fl_winclose(Window win);
 @end example
 @noindent
 There will be no events generated from @code{@ref{fl_winclose()}},
-i.e.@: the function waits and gobbles up all events for window
+i.e., the function waits and gobbles up all events for window
 @code{win}. In addition, this routine also removes all callbacks
 associated with the closed window.
 
@@ -606,7 +606,7 @@ main loop invokes the lose selection callback of the prior owner and
 then the requesting object's callback function.
 
 The function returns a positive number if the requesting object owns
-the selection (i.e.@: the callback could beinvoked before the function
+the selection (i.e., the callback could beinvoked before the function
 returned) and 0 otherwise.
 
 If there is no selection the selection callback is called with an
