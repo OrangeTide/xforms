@@ -78,17 +78,18 @@ Menu is activated only by pressing and releasing the mouse on the arrow.
 @node Choice Interaction
 @subsection Choice Interaction
 
-There are two ways in which the user can pick a new choice. One way is
-using the right or middle mouse button. Pressing and releasing the
-right mouse button on the choice object selects the next choice in the
-list. When pressing the middle mouse button the previous choice is
-taken. Keeping the mouse pressed slowly cycles through the list. The
-other way is to use the left mouse button. In this case a menu appears
-from which the user can select the proper choice. Normally in both cases,
-whenever a choice is selected (even when it is the original one) the
-object is returned to the application program.
+Beside simply opening up the popup behind the choice object and
+selecting an entry with the left mouse button you can also use
+the middle and right mouse buttons and the scroll wheel: a short
+click with the middle mouse button selects the entry before the
+currently selected one, a click with the right mouse button the
+next. Keeping the middle or right mouse button pressed down slowly
+cycles trough the entries, backward or forward. The same can be
+down with the sroll wheel.
 
-You can control the condition under which the choice object gets
+In both cases, whenever a choice entry is selected (even when it
+is the original one) the object is returned to the application program.
+But you can control the condition under which the choice object gets
 returned to the application by using the function
 @example
 int fl_set_object_return(FL_OBJECT *obj, unsigned int when)
@@ -135,6 +136,17 @@ has number 1, etc. The two functions differ in that the first one
 accepts just a simple string while for the second the text is
 assembled from a format string as used by @code{printf()} etc. and
 the following arguments.
+
+Note that, because a choice object uses a popup, the string passed
+with @code{@ref{fl_addto_choice()}} cann also contain some additional
+information not directly shown in the entries text. E.g., you can
+create several entries as once if the string you pass to
+@code{@ref{fl_addto_choice()}} contains @code{'|'} characters - these
+aren't shown but instead are treated as separators between the strings
+for the entries. Some extra control sequences, starting with the
+character @code{'%'} can also be embedded (@xref{Creating XPopups}),
+thus a literal @code{'%'} in a string must be escaped by doubling
+it.
 
 To delete a line use:
 @findex fl_delete_choice()
@@ -459,21 +471,23 @@ void fl_set_menu(FL_OBJECT *obj, const char *menustr, ...);
 @end example
 @noindent
 @code{menustr} describes the menu in the form used by XPopups
-(@pxref{XPopup}). In the simplest case, it just contains the texts fr
+(@pxref{XPopup}). In the simplest case it just contains the texts for
 the menu items, separated by a bar (@code{'|'}), e.g.,
 @code{"First|Second|Third"}. But it's also possible to employ special
 tags (@pxref{Creating XPopups}) that can be used to indicate special
-attributes (radio, toggle and greyed-out, for example). Whenever the
-user selects a menu item, a pointer to the menu object it belongs to
-is returned to the application program.
+attributes (radio, toggle and greyed-out, for example). For this usage
+the unspecified arguments (the @code{...} in the function call) can be
+used t add neceassary information. Whenever the user selects a menu
+item, a pointer to the menu object it belongs to is returned to the
+application program.
 
 Please note that if you call @code{@ref{fl_set_menu()}} on a menu that
 already contains items those items are removed. The function calls
 @code{@ref{fl_clear_menu()}} internally before the new items are
 added.
 
-If you explicitely assign a menu item ID to a menu using the special
-tag @code{%x} it is your responsibility to make sure that this ID
+If you explicitely assign a menu item ID to a menu, using the special
+tag @code{%x}, it is your responsibility to make sure that this ID
 isn't already used by a different menu item in the same menu. Failure
 to do so may make it impossible to use the menu properly. All
 functions working on items expect the menu item ID as one of their

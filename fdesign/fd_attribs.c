@@ -355,7 +355,6 @@ attrib_init( FD_generic_attrib * ui )
 {
     static int attrib_initialized;
     int i;
-    char buf[ 64 ];
     VN_pair *vp;
 
     if ( attrib_initialized )
@@ -412,8 +411,8 @@ attrib_init( FD_generic_attrib * ui )
             fsizes[ i ].sc = "Nn#n";
         }
 
-        sprintf( buf, "%2d  %s%%r1", fsizes[ i ].size, fsizes[ i ].name );
-        fl_addto_choice( ui->sizeobj, buf );
+        fl_addto_choice_f( ui->sizeobj,
+                           "%2d  %s%%r1", fsizes[ i ].size, fsizes[ i ].name );
         fl_set_choice_item_shortcut( ui->sizeobj, i + 1, fsizes[ i ].sc );
     }
 }
@@ -448,8 +447,8 @@ show_attributes( const FL_OBJECT * obj )
     if ( obj->objclass != FL_BOX )
     {
         for ( i = 0; i < find_class_maxtype( obj->objclass ); i++ )
-//            fl_addto_choice_f( fd_generic_attrib->typeobj,
-//                               "%s%%r1", find_type_name( obj->objclass, i ) );
+            fl_addto_choice_f( fd_generic_attrib->typeobj,
+                               "%s%%r1", find_type_name( obj->objclass, i ) );
 
         fl_set_choice( fd_generic_attrib->typeobj, obj->type + 1 );
     }

@@ -621,7 +621,7 @@ init_classes( void )
     bl++;
 
     fl_add_browser_line( fd_control->objectbrowser, "freeobject" );
-    add_class_def( VN( FL_FREE ), "free", fd_create_free, fd_add_free,
+    add_class_def( VN( FL_FREE ), "freeobject", fd_create_free, fd_add_free,
                    ++bl );
     add_type_def( FL_FREE, FL_NORMAL_FREE,     "NORMAL_FREE" );
     add_type_def( FL_FREE, FL_INACTIVE_FREE,   "INACTIVE_FREE" );

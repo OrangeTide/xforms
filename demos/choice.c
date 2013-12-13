@@ -103,8 +103,7 @@ main( int    argc,
     fl_addto_choice( sexobj,"Male" );
     fl_addto_choice( sexobj,"Female" );
     fl_addto_choice( childobj, "Zero|One|Two|Three|Four|Many" );
-    fl_addto_choice( licenceobj, "Yes" );
-    fl_addto_choice( licenceobj, "No" );
+    fl_addto_choice( licenceobj, "Yes|No" );
     fl_addto_choice( marriedobj, "Yes" );
     fl_addto_choice( marriedobj, "No" );
 
