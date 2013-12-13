@@ -11,6 +11,8 @@ AC_CONFIG_HEADERS([lib/config.h])
 AM_INIT_AUTOMAKE($PACKAGE_NAME, $PACKAGE_VERSION)
 AM_MAINTAINER_MODE
 
+AC_CONFIG_MACRO_DIR([config])
+
 ### This defines the version number of the installed .so files
 ### using libtool's versioning system.
 AC_SUBST(SO_VERSION, ["3:1:1"])

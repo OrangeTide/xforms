@@ -2,6 +2,8 @@ include $(top_srcdir)/config/common.am
 
 DISTCLEANFILES += xforms.spec config.status config.cache config.log config.h
 
+ACLOCAL_AMFLAGS = -I config
+
 MAINTAINERCLEANFILES += \
 	$(srcdir)/aclocal.m4 \
 	$(srcdir)/configure \
