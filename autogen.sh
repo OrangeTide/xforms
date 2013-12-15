@@ -7,13 +7,6 @@ AUTOMAKE="automake -a -c --foreign"
 AUTOCONF="autoconf"
 ACINCLUDE_FILES="libtool.m4 xformsinclude.m4 cygwin.m4"
 
-# Older versions of libtoolize doesn't copy libtool.m4, so we
-# provide one from an old libttool version
-
-if [ ! -e config/libtool.m4 ]; then
-	cp config/libtool.m4.might_be_needed config/libtool.m4
-fi
-
 if ( $LIBTOOLIZE --version ) < /dev/null > /dev/null 2>&1; then
 	echo "Running libtoolize"
 	$LIBTOOLIZE > /dev/null
@@ -22,7 +15,26 @@ else
 	exit
 fi
 
-# Check tha the version of autoconf we have is supported
+# Older versions of libtoolize don't copy libtool.m4, so we try to get
+# it manually from the directory where aclocal should have stored it
+
+if [ ! -e config/libtool.m4 ]; then
+	echo "Copying file libtool.m4"
+	if ( $ACLOCAL --version ) < /dev/null > /dev/null 2>&1; then
+		LM4=$($ACLOCAL --print-ac-dir)/libtool.m4
+		if [ -e $LM4 ]; then
+			cp $LM4 config
+		else
+			echo "-> Can't find required file $LM4"
+			exit
+		fi
+	else
+		echo "-> aclocal not found, aborting"
+		exit
+	fi
+fi
+
+# Check that the version of autoconf we have is supported
 
 autoversion=`$AUTOCONF --version | head -n 1`
 
