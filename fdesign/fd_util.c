@@ -33,7 +33,6 @@
 
 #include <ctype.h>
 
-#include "include/forms.h"
 #include "fd_main.h"
 
 static char ** dup_info_cache = NULL;

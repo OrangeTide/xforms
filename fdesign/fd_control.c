@@ -30,7 +30,6 @@
 #include "config.h"
 #endif
 
-#include "include/forms.h"
 #include "fd_main.h"
 #include "fd/ui_theforms.h"
 #include "private/pmenu.h"

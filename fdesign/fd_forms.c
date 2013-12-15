@@ -41,8 +41,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#include "include/forms.h"
-#include "flinternal.h"
 #include "fd_main.h"
 
 static FRM *forms = NULL;   /* The list of forms */
@@ -216,8 +214,7 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     if (    ! isascii( ( unsigned char ) *s )
          || ! ( isalpha( ( unsigned char ) *s ) || *s == '_' ) )
     {
-        fl_show_alert( "Error", "Invalid C identifier specified for form "
-                       "name:", s, 0 );
+        fl_show_alert( "Error", "Invalid C identifier for form name:", s, 0 );
         goto get_new_form_name;
     }
 
@@ -225,8 +222,8 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
         if (    ! isascii( ( unsigned char ) *sp )
              || ! ( isalnum( ( unsigned char ) *sp ) || *sp == '_' ) )
         {
-            fl_show_alert( "Error", "Invalid C identifier specified for form "
-                           "name:", s, 0 );
+            fl_show_alert( "Error", "Invalid C identifier for form name:",
+                           s, 0 );
             goto get_new_form_name;
         }
 
@@ -284,8 +281,7 @@ changename_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     if ( ! is_valid_c_name( s ) )
     {
-        fl_show_alert( "Error", "Invalid C identifier specified for form "
-                       "name:", s, 0 );
+        fl_show_alert( "Error", "Invalid C identifier for form name:", s, 0 );
         goto get_changed_form_name;
     }
 

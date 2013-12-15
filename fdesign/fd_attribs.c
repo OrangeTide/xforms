@@ -23,7 +23,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "include/forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
 #include "fd_iconinfo.h"
@@ -913,7 +912,7 @@ validate_attributes( FL_OBJECT * obj )
              && ! strcmp( name, cn ) )
         {
             fl_show_alert( "Error", "Invalid C identifier:",
-                           "Object has name as another one!", 0 );
+                           "Object has sam name as another one!", 0 );
             fl_set_focus_object( fd_generic_attrib->nameobj->form,
                                  fd_generic_attrib->nameobj );
             return 0;
@@ -935,7 +934,7 @@ validate_cvar_name_cb( FL_OBJECT * obj,
 
 
 /***************************************
- * Checks if the string of an iinput field  is a valid C indentifier
+ * Checks if the string of an input field  is a valid C indentifier
  ***************************************/
 
 static int
@@ -943,7 +942,6 @@ validate_cvar_name( FL_OBJECT  * obj,
                     const char * w )
 {
     const char *s = fl_get_input( obj );
-	char *m;
 
     if ( valid_c_identifier( s ) )
 		return 1;
@@ -955,16 +953,9 @@ validate_cvar_name( FL_OBJECT  * obj,
 	fl_set_folder_bynumber( fd_attrib->attrib_folder, 1 );
 
 	if ( ! w || ! *w )
-		m = fl_strdup( "Invalid C identifier:" );
-	else if ( ! ( asprintf( &m, "Invalid C identifier specified for %s:",
-							w ) ) )
-		m = NULL;
-
-	if ( m )
-	{
-		fl_show_alert( "Error", m, s, 0 );
-		fl_free( m );
-	}
+        fl_show_alert_f( 0, "Error\fInvalid C identifier:\n'%s'", s );
+    else
+        fl_show_alert_f( 0, "Error\fInvalid C identifier\nfor %s: '%s'", w, s );
 
 	fl_set_focus_object( obj->form, obj );
 	return 0;

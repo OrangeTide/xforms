@@ -1,6 +1,6 @@
 dnl Process with autoconf to generate configure script   -*- sh -*-
 
-AC_PREREQ(2.52)
+AC_PREREQ(2.59)
 AC_INIT([xforms],[1.0.94pre31],[xforms-development@nongnu.org])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(lib/forms.c)
@@ -20,12 +20,6 @@ AC_SUBST(SO_VERSION, ["3:1:1"])
 # fix the value of the prefixes.
 test "x$prefix" = xNONE && prefix=$ac_default_prefix
 test "x$exec_prefix" = xNONE && exec_prefix='${prefix}'
-
-### Set the execute permissions of some scripts correctly
-
-for file in config/install-sh ; do
-  chmod 755 ${srcdir}/${file}
-done
 
 # Check if the bwc-bs-hack is to be used
 
@@ -75,9 +69,14 @@ CHECK_WITH_CYGWIN
 # which returns an error condition when stripping fails.
 INSTALL_SCRIPT='${INSTALL}'
 
+AC_PROG_LIBTOOL
+
 ### Setup libtool
-AC_LIBTOOL_WIN32_DLL
-AM_PROG_LIBTOOL
+#AC_REQUIRE([AC_CANONICAL_HOST])_LT_SET_OPTION([LT_INIT],[win32-dll])
+#AC_DIAGNOSE([obsolete],[AC_LIBTOOL_WIN32_DLL: Remove this warning and the call to _LT_SET_OPTION when you
+#put the `win32-dll' option into LT_INIT's first parameter.])
+
+LT_INIT([])
 
 ### Add extra directories to check for libraries.
 XFORMS_WITH_DIR([extra-lib],[extra library directory],extra_lib, NONE)
@@ -133,6 +132,7 @@ if test $ac_cv_type_signal = "void" ; then
 fi
 AC_CHECK_FUNCS([snprintf strcasecmp strerror usleep nanosleep vsnprintf vasprintf sigaction])
 XFORMS_CHECK_DECL(snprintf, stdio.h)
+XFORMS_CHECK_DECL(asprintf, stdio.h)
 XFORMS_CHECK_DECL(vsnprintf, stdio.h)
 XFORMS_CHECK_DECL(vasprintf, stdio.h)
 XFORMS_CHECK_DECL(sigaction, signal.h)

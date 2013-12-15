@@ -20,12 +20,9 @@
 #include "config.h"
 #endif
 
-#include "include/forms.h"
-#include "flinternal.h"
 #include "fd_main.h"
 
 #include <string.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
 #include <float.h>
@@ -499,14 +496,13 @@ ff_match_spaceless_string( char ** p )
 
     if ( ep == ff.pos )
         *p = fl_strdup( "" );
-    else
+    else if ( ( *p = fl_malloc( ep - ff.pos + 2 ) ) )
     {
-        *p = fl_malloc( ep - ff.pos + 1 );
         fli_sstrcpy( *p, ff.pos, ep - ff.pos + 1 );
         ff.pos = ep;
     }
 
-    return 0;
+    return p ? 0 : -1;
 }
 
 
@@ -582,12 +578,12 @@ ff_match_objclass( int * p )
     if ( ! *class_name || ( class = class_val( class_name ) ) == -1 )
     {
         ff.pos = old_pos;
-        fli_safe_free( class_name );
+        fl_free( class_name );
         return -1;
     }
 
     *p = class;
-    fli_safe_free( class_name );
+    fl_free( class_name );
     return 0;
 }
 
@@ -608,12 +604,12 @@ ff_match_boxtype( int * p )
     if ( ! *boxtype_name || ( boxtype = boxtype_val( boxtype_name ) ) == -1 )
     {
         ff.pos = old_pos;
-        fli_safe_free( boxtype_name );
+        fl_free( boxtype_name );
         return -1;
     }
 
     *p = boxtype;
-    fli_safe_free( boxtype_name );
+    fl_free( boxtype_name );
     return 0;
 }
 
@@ -636,7 +632,7 @@ ff_match_color( FL_COLOR * p )
               && color != FL_NoColor ) )
     {
         ff.pos = old_pos;
-        fli_safe_free( color_name );
+        fl_free( color_name );
         return -1;
     }
 
@@ -644,7 +640,7 @@ ff_match_color( FL_COLOR * p )
     if ( *p == 0x8fffffff )
         *p = FL_NoColor;
 
-    fli_safe_free( color_name );
+    fl_free( color_name );
     return 0;
 }
 
@@ -674,14 +670,14 @@ ff_match_align( int * p )
     }
     else
     {
-        char *a1 = NULL,
-             *a2 = NULL,
+        char *a1,
+             *a2,
              o = *sp;
 
         *sp = '\0';
         if ( ff_match_spaceless_string( &a1 ) < 0 || ! *a1 )
         {
-            fli_safe_free( a1 );
+            fl_free( a1 );
             ff.pos = old_pos;
             *sp = o;
             return -1;
@@ -693,16 +689,18 @@ ff_match_align( int * p )
 
         if ( ff_match_spaceless_string( &a2 ) < 0 || ! *a2 )
         {
-            fli_safe_free( a1 );
-            fli_safe_free( a2 );
+            fl_free( a1 );
+            fl_free( a2 );
             ff.pos = old_pos;
             return -1;
         }
 
-        if ( ! asprintf( &align_name, "%s|%s", a1, a2 ) )
-            align_name = NULL;
-        fli_safe_free( a1 );
-        fli_safe_free( a2 );
+        align_name = fl_malloc( strlen( a1 ) + strlen( a2 ) + 2 );
+        if ( align_name )
+            sprintf( align_name, "%s|%s", a1, a2 );
+
+        fl_free( a1 );
+        fl_free( a2 );
     }
 
     if (    ! align_name
@@ -710,12 +708,12 @@ ff_match_align( int * p )
          || ( align = align_val( align_name ) ) == -1 )
     {
         ff.pos = old_pos;
-        fli_safe_free( align_name );
+        fl_free( align_name );
         return -1;
     }
 
     *p =  align;
-    fli_safe_free( align_name );
+    fl_free( align_name );
     return 0;
 }
 
@@ -727,7 +725,7 @@ ff_match_align( int * p )
 static int
 ff_match_lstyle( int * p )
 {
-    char *lstyle_name;
+    char *lstyle_name = NULL;
     int lstyle;
     char *old_pos = ff.pos;
     char *sp = strchr( ff.pos, '|' );
@@ -753,6 +751,7 @@ ff_match_lstyle( int * p )
         *sp = '\0';
         if ( ff_match_spaceless_string( &l1 ) < 0 )
         {
+            fl_free( l1 );
             *sp = o;
             return -1;
         }
@@ -764,14 +763,17 @@ ff_match_lstyle( int * p )
         if ( ff_match_spaceless_string( &l2 ) < 0 || ! *l2 )
         {
             ff.pos = old_pos;
-            fli_safe_free( l1 );
+            fl_free( l1 );
+            fl_free( l2 );
             return -1;
         }
 
-        if ( ! asprintf( &lstyle_name, "%s|%s", l1, l2 ) )
-            lstyle_name = NULL;
-        fli_safe_free( l1 );
-        fli_safe_free( l2 );
+        lstyle_name = fl_malloc( strlen( l1 ) + strlen( l2 ) + 2 );
+        if ( lstyle_name )
+            sprintf( lstyle_name, "%s|%s", l1, l2 );
+
+        fl_free( l1 );
+        fl_free( l2 );
     }
 
     if (    ! lstyle_name
@@ -779,12 +781,12 @@ ff_match_lstyle( int * p )
          || ( lstyle = style_val( lstyle_name ) ) == -1 )
     {
         ff.pos = old_pos;
-        fli_safe_free( lstyle_name );
+        fl_free( lstyle_name );
         return -1;
     }
 
     *p = lstyle;
-    fli_safe_free( lstyle_name );
+    fl_free( lstyle_name );
     return 0;
 }
 
@@ -802,15 +804,15 @@ ff_match_lsize( int * p )
     if ( ff_match_spaceless_string( &lsize_name ) < 0 )
         return -1;
 
-    if( ! *lsize_name || ( lsize = lsize_val( lsize_name ) ) == -1 )
+    if ( ! *lsize_name || ( lsize = lsize_val( lsize_name ) ) == -1 )
     {
-        fli_safe_free( lsize_name );
+        fl_free( lsize_name );
         ff.pos = old_pos;
         return -1;
     }
 
     *p = lsize;
-    fli_safe_free( lsize_name );
+    fl_free( lsize_name );
     return 0;
 }
 
@@ -830,13 +832,13 @@ ff_match_resize( int * p )
 
     if ( ! *resize_name || ( resize = resize_val( resize_name ) ) == -1 )
     {
-        fli_safe_free( resize_name );
+        fl_free( resize_name );
         ff.pos = old_pos;
         return -1;
     }
 
     *p = resize;
-    fli_safe_free( resize_name );
+    fl_free( resize_name );
     return 0;
 }
 
@@ -857,12 +859,12 @@ ff_match_gravity( int * p )
     if ( ! *gravity_name || ( gravity = gravity_val( gravity_name ) ) == -1 )
     {
         ff.pos = old_pos;
-        fli_safe_free( gravity_name );
+        fl_free( gravity_name );
         return -1;
     }
 
     *p = gravity;
-    fli_safe_free( gravity_name );
+    fl_free( gravity_name );
     return 0;
 }
 
@@ -883,12 +885,12 @@ ff_match_unit( int * p )
     if ( ! *unit_name || ( unit = unit_val( unit_name ) ) == -1 )
     {
         ff.pos = old_pos;
-        fli_safe_free( unit_name );
+        fl_free( unit_name );
         return -1;
     }
 
     *p = unit;
-    fli_safe_free( unit_name );
+    fl_free( unit_name );
     return 0;
 }
 

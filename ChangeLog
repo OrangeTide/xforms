@@ -1,3 +1,13 @@
+2013-12-15 Jens Thoms Toerring    <jt@toerring.de>
+
+	* A number of further tweaks to the build system to make
+	sure that it also works on older systens (tested CentOS 5)
+	applied. An installed version of libtool is now required
+	for generating the package from scratch (i.e. with the
+	'autogen.sh' script).
+	* A few things related to the build system issues in
+	fdesign have been fixed.
+
 2013-12-13 Jens Thoms Toerring    <jt@toerring.de>
 
 	* Bug fixes in fdesign: Some xpm files weren't read in

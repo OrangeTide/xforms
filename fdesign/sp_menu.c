@@ -30,13 +30,13 @@
 #include "config.h"
 #endif
 
-#include "include/forms.h"
+#include <ctype.h>
+
 #include "fd_main.h"
 #include "fd_spec.h"
 #include "sp_menu.h"
 #include "private/pmenu.h"
 #include "spec/menu_spec.h"
-#include <ctype.h>
 
 static FD_menuattrib *menu_attrib;
 static FL_OBJECT *curobj;

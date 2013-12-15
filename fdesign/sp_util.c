@@ -20,9 +20,9 @@
 #include "config.h"
 #endif
 
-#include "include/forms.h"
-#include "fd_main.h"
 #include <ctype.h>
+
+#include "fd_main.h"
 
 
 /***************************************

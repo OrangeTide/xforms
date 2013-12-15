@@ -30,10 +30,8 @@
 #include "config.h"
 #endif
 
-#include "include/forms.h"
-#include "flinternal.h"
-#include "fd/pallette.h"
 #include "fd_main.h"
+#include "fd/pallette.h"
 
 #include <stdlib.h>
 

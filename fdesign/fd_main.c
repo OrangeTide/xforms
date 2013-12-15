@@ -32,10 +32,8 @@
 #include "config.h"
 #endif
 
-#include "include/forms.h"
-#include "flinternal.h"
-#include "fd/ui_theforms.h"
 #include "fd_main.h"
+#include "fd/ui_theforms.h"
 #include "xpm/fd_logo.xpm"
 
 #include <stdio.h>

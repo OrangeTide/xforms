@@ -33,12 +33,9 @@
 #include "config.h"
 #endif
 
-#include "include/forms.h"
-#include "flinternal.h"
 #include "fd_main.h"
 #include "fd_spec.h"
 
-#include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 
@@ -613,23 +610,27 @@ load_object( void )
         if (    ff_read( "%k%t", &key, &type_name ) < 2
              || strcmp( key, "type" ) )
         {
-            fli_safe_free( key );
+            fl_free( key );
             return ff_err( "Expected object type" );
         }
 
-        fli_safe_free( key );
+        fl_free( key );
 
         if ( ( type = find_type_value( objclass, type_name ) ) < 0 )
         {
-            char *tmp;
+            char *tmp = fl_malloc(   strlen( "Invalid type for object class: " )
+                                   + strlen( type_name ) + 1 );
 
-            if ( ! asprintf( &tmp, "Invalid type \"%s\" for object class",
-                             type_name ) )
-                tmp = NULL;
+            if ( tmp )
+            {
+                sprintf( tmp, "Invalid type for object class: %s",
+                         type_name );
+                ff_err( tmp );
+                fl_free( tmp );
 
-            fli_safe_free( type_name );
-            ff_err( tmp );
-            fli_safe_free( type_name );
+            }
+
+            fl_free( type_name );
             return FF_READ_FAILURE;
         }
 
@@ -642,20 +643,22 @@ load_object( void )
         if (    ( r = ff_read( "%k%D%D%U%U", &key, &x, &y, &w, &h ) ) < 5
              || strcmp( key, "box" ) )
         {
-            fli_safe_free( key );
+            fl_free( key );
 
             if ( r == 0 )
                 ff_err( "Expected object box size" );
             else
             {
-                char *msg;
+                char *tmp = fl_malloc( strlen( "Expected object box sizes as "
+                                               "4 values, found only" ) + 20 );
 
-                if ( ! asprintf( &msg, "Expected object box sizes as 4 "
-                                 "values, found %d valid ones", r - 1 ) )
-                    msg = NULL;
-
-                ff_err( msg );
-                fli_safe_free( msg );
+                if ( tmp )
+                {
+                    sprintf( tmp, "Expected object box sizes as 4 "
+                             "values, found only %d", r - 1 );
+                    ff_err( tmp );
+                    fl_free( tmp );
+                }
             }
             
             return FF_READ_FAILURE;

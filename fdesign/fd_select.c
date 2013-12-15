@@ -37,7 +37,6 @@
 #include <ctype.h>
 #include <float.h>
 
-#include "include/forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
 #include "fd_iconinfo.h"
@@ -1615,7 +1614,7 @@ group_selection( void )
 
     if ( *s && ! is_valid_c_name( s ) )
     {
-        fl_show_alert( "Error", "Invalid C identifier specified for group "
+        fl_show_alert( "Error", "Invalid C identifier for group "
                        "name:", s, 0 );
         goto get_new_group_name;
     }

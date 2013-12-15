@@ -31,10 +31,8 @@
 #include "config.h"
 #endif
 
-#include "include/forms.h"
-#include "private/pcanvas.h"
-#include "flinternal.h"
 #include "fd_main.h"
+#include "private/pcanvas.h"
 
 
 /***************************************

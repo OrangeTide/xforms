@@ -30,7 +30,6 @@
 #include "config.h"
 #endif
 
-#include "include/forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
 #include "sp_positioner.h"

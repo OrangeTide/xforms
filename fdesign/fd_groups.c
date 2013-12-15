@@ -38,7 +38,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "include/forms.h"
 #include "fd_main.h"
 #include "fd/ui_theforms.h"
 

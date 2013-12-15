@@ -33,7 +33,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "include/forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
 #include "fd_iconinfo.h"
@@ -1742,14 +1741,18 @@ load_objclass_spec_info( FL_OBJECT * obj,
 
         if ( i >= sizeof attr_array / sizeof *attr_array )
         {
-            char *tmp ;
+            char *tmp = fl_malloc(   strlen( "Read invalid object specific "
+                                             "key: " )
+                                   + strlen( key ) + 1 );
 
-            if ( ! asprintf( &tmp, "Read invalid object specific "
-                             "key \"%s\"", key ) )
-                tmp = NULL;
+            if ( tmp )
+            {
+                sprintf( tmp, "Read invalid object specific key: %s", key );
+                ff_err( tmp );
+                fl_free( tmp );
+            }
+
             fli_safe_free( key );
-            ff_err( tmp );
-            fli_safe_free( tmp );
             return FF_READ_FAILURE;
         }
 

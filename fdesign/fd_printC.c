@@ -31,14 +31,11 @@
 #endif
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 
-#include "include/forms.h"
-#include "private/flsnprintf.h"
-#include "flinternal.h"
 #include "fd_main.h"
+#include "private/flsnprintf.h"
 #include "fd_spec.h"
 #include "sp_menu.h"
 

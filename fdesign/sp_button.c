@@ -30,8 +30,8 @@
 #include "config.h"
 #endif
 
-#include "include/forms.h"
 #include <ctype.h>
+
 #include "fd_main.h"
 #include "fd_spec.h"
 #include "fd_iconinfo.h"

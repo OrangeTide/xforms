@@ -184,7 +184,7 @@ fl_show_alert( const char * title,
 
     buf = fl_malloc(   ( str1 ? strlen( str1 ) : 0 ) + 1
                      + ( str2 ? strlen( str2 ) : 0 ) + 1 );
-    sprintf( buf,"%s\n%s", str1 ? str1 : "", str2 ? str2 : "" );
+    sprintf( buf, "%s\n%s", str1 ? str1 : "", str2 ? str2 : "" );
     show_it( title, buf, c );
     fl_free( buf );
 }

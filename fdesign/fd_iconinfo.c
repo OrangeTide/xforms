@@ -22,9 +22,18 @@
 
 #include <ctype.h>
 
-#include "include/forms.h"
 #include "fd_main.h"
 #include "fd_iconinfo.h"
+
+
+/***************************************
+ ***************************************/
+
+static int
+is_blank( char c )
+{
+    return c == ' ' || c == '\t';
+}
 
 
 /***************************************
@@ -156,13 +165,13 @@ read_line( FILE * fp )
 static const char *
 check_for_define( const char * line )
 {
-    while ( *line && isblank( *line ) )
+    while ( *line && is_blank( *line ) )
         line++;
 
     if ( ! *line || *line != '#' )
         return NULL;
 
-    while ( *++line && isblank( *line ) )
+    while ( *++line && is_blank( *line ) )
         /* empty */ ;
 
     if ( ! *line )
@@ -173,7 +182,7 @@ check_for_define( const char * line )
 
     line += 6;
 
-    while ( *line && isblank( *line ) )
+    while ( *line && is_blank( *line ) )
         line++;
 
     if ( ! ( isupper( *line ) || islower( *line ) || *line == '_' ) )
@@ -206,7 +215,7 @@ check_for_end( const char * line,
                  || *line == '_' ) )
         line++;
 
-    if ( ! isblank( *line ) )
+    if ( ! is_blank( *line ) )
         return NULL;
 
     len = line - start;
@@ -236,7 +245,7 @@ check_for_data( const char * line,
 
     /* Skip leading blanks */
 
-    while ( *line && isblank( *line ) )
+    while ( *line && is_blank( *line ) )
         line++;
 
     /* First word must be 'static', followed by a blank */
@@ -246,10 +255,10 @@ check_for_data( const char * line,
 
     line += 6;
 
-    if ( ! *line || ! isblank( *line ) )
+    if ( ! *line || ! is_blank( *line ) )
         return NULL;
 
-    while ( *++line && isblank( *line ) )
+    while ( *++line && is_blank( *line ) )
         /* empty */ ;
 
     /* Skip optional 'const', followed by a blank */
@@ -258,10 +267,10 @@ check_for_data( const char * line,
     {
         line += 5;
 
-        if ( ! *line || ! isblank( *line ) )
+        if ( ! *line || ! is_blank( *line ) )
             return NULL;
 
-        while ( *++line && isblank( *line ) )
+        while ( *++line && is_blank( *line ) )
             /* empty */ ;
     }
 
@@ -271,10 +280,10 @@ check_for_data( const char * line,
     {
         line += 8;
 
-        if ( ! *line || ! isblank( *line ) )
+        if ( ! *line || ! is_blank( *line ) )
             return NULL;
 
-        while ( *++line && isblank( *line ) )
+        while ( *++line && is_blank( *line ) )
             /* empty */ ;
     }
 
@@ -285,10 +294,10 @@ check_for_data( const char * line,
 
     line += 4;
 
-    if ( ! *line || ! ( isblank( *line ) || *line == '*' ) )
+    if ( ! *line || ! ( is_blank( *line ) || *line == '*' ) )
         return NULL;
 
-    while ( *++line && isblank( *line ) )
+    while ( *++line && is_blank( *line ) )
         /* empty */ ;
 
     /* Skip optional 'const', followed by a blank */
@@ -297,7 +306,7 @@ check_for_data( const char * line,
     {
         line += 5;
 
-        while ( *line && isblank( *line ) )
+        while ( *line && is_blank( *line ) )
             line++;
     }
 
@@ -308,7 +317,7 @@ check_for_data( const char * line,
         if ( ! *line || *line != '*' )
             return NULL;
 
-        while ( ++line && isblank( *line ) )
+        while ( ++line && is_blank( *line ) )
             /* empty */ ;
     }    
 
@@ -334,12 +343,12 @@ check_for_data( const char * line,
 
     /* A blank or a '[' must immediately followe the variable name */
 
-    if ( ! *line || ! ( isblank( *line ) || *line == '[' ) )
+    if ( ! *line || ! ( is_blank( *line ) || *line == '[' ) )
         return NULL;
 
     /* Make sure that the next non-blank char is a '[' */
 
-    while ( *line && isblank( *line ) )
+    while ( *line && is_blank( *line ) )
         line++;
 
     return *line == '[' ? name : NULL;

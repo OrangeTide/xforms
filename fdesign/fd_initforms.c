@@ -31,7 +31,6 @@
 #endif
 
 #include "fd_main.h"
-#include "flinternal.h"
 #include "fd/ui_attrib.h"       /* from  directory fd */
 #include "fd/ui_theforms.h" /* from  directory fd */
 

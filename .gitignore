@@ -7,8 +7,16 @@ config.log
 config.status
 config/Makefile
 config/Makefile.in
-config/install-sh
 config/missing
+config/config.guess
+config/config.sub
+config/libtool.m4
+config/ltmain.sh
+config/ltoptions.m4
+config/ltsugar.m4
+config/ltversion.m4
+config/lt~obsolete.m4
+config/install-sh
 configure
 *~
 *.o

@@ -33,6 +33,7 @@ int snprintf( char *,
               const char *,
               ...);
 #endif
+
 #ifndef HAVE_DECL_VSNPRINTF
 int vsnprintf( char *,
                size_t,

@@ -21,6 +21,9 @@ libforms_la_LDFLAGS = -no-undefined -Wl,--no-undefined -version-info @SO_VERSION
 
 libforms_la_LIBADD =  $(X_LIBS) $(XPM_LIB) -lX11
 
+nodist_libforms_la_SOURCES = config.h
+
+
 libforms_la_SOURCES = \
 	align.c \
 	appwin.c \
