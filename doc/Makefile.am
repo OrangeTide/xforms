@@ -66,18 +66,18 @@ all-local: $(html_docs) $(pdf_docs)
 install-data-local:
 	@$(NORMAL_INSTALL)
 	if [ -e xforms.pdf ]; then \
-		$(install_sh) -m 644 xforms.pdf $(docdir); \
+		$(install_sh) -m 644 xforms.pdf $(DESTDIR)$(docdir); \
 	fi
 	if [ -e xforms.html ]; then \
-		$(install_sh) -d $(htmldir); \
-		$(install_sh) -m 644 xforms.html/*.html $(htmldir); \
+		$(install_sh) -d $(DESTDIR)$(htmldir); \
+		$(install_sh) -m 644 xforms.html/*.html $(DESTDIR)$(htmldir); \
 	fi
 
 
 uninstall-local:
 	@$(NORMAL_UNINSTALL)
-	rm -rf $(htmldir)
-	rm -rf $(infodir)/xforms_images
+	rm -rf $(DESTDIR)$(htmldir)/xforms_images
+	rm -rf $(DESTDIR)$(infodir)/xforms_images
 
 xforms.5:
 	cp -p ./xforms.man xforms.5

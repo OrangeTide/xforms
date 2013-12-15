@@ -66,10 +66,10 @@ EXTRA_DIST = $(figures_png)
 
 install-data-local:
 	@$(NORMAL_INSTALL)
-	$(install_sh) -d  $(htmldir)/xforms_images
-	$(install_sh) -m 644 $(figures_png) $(htmldir)/xforms_images
-	$(install_sh) -d $(infodir)/xforms_images
-	$(install_sh) -m 644 $(figures_png) $(infodir)/xforms_images
+	$(install_sh) -d  $(DESTDIR)$(htmldir)/xforms_images
+	$(install_sh) -m 644 $(figures_png) $(DESTDIR)$(htmldir)/xforms_images
+	$(install_sh) -d $(DESTDIR)$(infodir)/xforms_images
+	$(install_sh) -m 644 $(figures_png) $(DESTDIR)$(infodir)/xforms_images
 
 # Creates eps files from all pngs for inclusion in info documentation
 # (as used by emacs info mode)
