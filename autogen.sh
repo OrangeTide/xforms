@@ -74,8 +74,8 @@ fi
 # There seem to have been versions where the install-sh script generated
 # by automae didn't had execute permissions...
 
-if [ ! -x config/istall-sh ]; then
-	chmod 755 config/istall-sh
+if [ ! -x config/install-sh ]; then
+	chmod 755 config/install-sh
 fi
 
 if ( $AUTOCONF --version ) < /dev/null > /dev/null 2>&1; then
