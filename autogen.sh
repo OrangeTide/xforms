@@ -7,6 +7,9 @@ AUTOMAKE="automake -a -c --foreign"
 AUTOCONF="autoconf"
 ACINCLUDE_FILES="libtool.m4 xformsinclude.m4 cygwin.m4"
 
+# Older versions of libtoolize doesn't copy libtool.m4, so we
+# provide one from an old libttool version
+
 if [ ! -e config/libtool.m4 ]; then
 	cp config/libtool.m4.might_be_needed config/libtool.m4
 fi
@@ -19,11 +22,8 @@ else
 	exit
 fi
 
-if [ -x config/istall-sh ]; then
-	chmod 755 config/istall-sh
-fi
+# Check tha the version of autoconf we have is supported
 
-# Discover what version of autoconf we are using.
 autoversion=`$AUTOCONF --version | head -n 1`
 
 echo "Using $autoversion"
@@ -40,11 +40,13 @@ case $autoversion in
 esac
 
 # Generate acinclude.m4
+
 echo "Generating acinclude.m4"
 rm -f acinclude.m4
 ( cd config; cat ${ACINCLUDE_FILES} ${EXTRA_ACINCLUDE_FILES} > ../acinclude.m4 )
 
 # Generate the Makefiles and the configure file
+
 if ( $ACLOCAL --version ) < /dev/null > /dev/null 2>&1; then
 	echo "Building macros"
 	$ACLOCAL
@@ -67,6 +69,13 @@ if ( $AUTOMAKE --version ) < /dev/null > /dev/null 2>&1; then
 else
 	echo "-> automake not found, aborting"
 	exit
+fi
+
+# There seem to have been versions where the install-sh script generated
+# by automae didn't had execute permissions...
+
+if [ ! -x config/istall-sh ]; then
+	chmod 755 config/istall-sh
 fi
 
 if ( $AUTOCONF --version ) < /dev/null > /dev/null 2>&1; then

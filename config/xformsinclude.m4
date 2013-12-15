@@ -219,7 +219,9 @@ AC_DEFUN([XFORMS_PROG_CC],
 [
 AC_LANG_COMPILER(C)
 
-### We might want to get or shut warnings.
+
+### We might want to get or shut up warnings.
+
 AC_ARG_ENABLE(warnings,
   [  --enable-warnings       tell the compiler to display more warnings],,
   [ if test $xforms_devel_version = yes && test $ac_cv_c_compiler_gnu = yes ; then
@@ -245,6 +247,7 @@ AC_ARG_ENABLE(debug,
     fi;])
 
 ### set up optimization
+
 AC_ARG_ENABLE(optimization,
   [  --enable-optimization[=value]   enable compiler optimisation default=-O],,
 	enable_optimization=yes;)
@@ -255,6 +258,7 @@ case $enable_optimization in
 esac
 
 # set the debug flags correctly.
+
 if test x$GCC = xyes; then
     if test "$ac_test_CFLAGS" = set; then
 	CFLAGS=$ac_save_CFLAGS
