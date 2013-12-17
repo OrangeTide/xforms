@@ -1,17 +1,17 @@
-Summary: XForms library
-Name: @PACKAGE@
-Version: @VERSION@
-Release: 1
-Source0: http://savannah.nongnu.org/download/xforms/%{name}-%{version}.tar.gz
-License: LGPL
-Group: System/Libraries
+Summary:       XForms library
+Name:          @PACKAGE@
+Version:       @VERSION@
+Release:       1
+Source0:       http://savannah.nongnu.org/download/xforms/%{name}-%{version}.tar.gz
+License:       LGPL
+Group:         System/Libraries
 BuildRequires: xpm
 BuildRequires: xpm-devel
 BuildRequires: libjpeg
 BuildRequires: libjpeg-devel
-BuildRoot: %{_tmppath}/%{name}-buildroot
-Prefix: %{_prefix}
-URL: http://xforms-toolkit.org/
+BuildRoot:     %{_tmppath}/%{name}-buildroot
+Prefix:        %{_prefix}
+URL:           http://xforms-toolkit.org/
 
 %description
 XForms is a GUI toolkit based on Xlib for X Window Systems. It
@@ -22,9 +22,9 @@ X-applications. In addition, the library is extensible and new objects
 can easily be created and added to the library.
 
 %package -n %{name}-devel
-Summary: XForms development header files
-Group: System/Libraries
-Provides: %{name}
+Summary:       XForms development header files
+Group:         System/Libraries
+Provides:      %{name}
 
 %description -n %{name}-devel
 XForms header files for development.
@@ -35,7 +35,7 @@ XForms header files for development.
 %build
 ./configure --prefix=%{_prefix} --mandir=%{_mandir} \
             --bindir=%{_bindir} --libdir=%{_libdir} \
-	        --without-warnings --disable-debug
+            --without-warnings --disable-debug \
             --enable-optimization=-O2
 make
 
