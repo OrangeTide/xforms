@@ -113,9 +113,7 @@ void
 mergeforms_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
                long        arg  FL_UNUSED_ARG )
 {
-    load_forms( FL_TRUE, NULL, 0 );
-    changed = FL_TRUE;
-    fli_safe_free( loadedfile );
+    load_forms( FL_TRUE, NULL );
 }
 
 
@@ -143,7 +141,7 @@ saveforms_as_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
 
 /***************************************
- * Load a new set of forms
+ * Load a new set of forms from a file
  ***************************************/
 
 void
@@ -156,8 +154,7 @@ loadforms_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
          && ! save_forms( NULL ) )
         return;
 
-    load_forms( FL_FALSE, NULL, 1 );
-    changed = FL_FALSE;
+    load_forms( FL_FALSE, NULL );
 }
 
 

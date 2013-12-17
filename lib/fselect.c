@@ -864,7 +864,13 @@ fl_show_fselector( const char * message,
         fli_sstrcpy( fs->pattern, pat, sizeof fs->pattern );
 
     if ( fname && *fname )
-        fli_sstrcpy( fs->filename, fname, sizeof fs->filename );
+    {
+        if ( strchr( fname, '/' ) )
+            fli_sstrcpy( fs->filename, strrchr( fname, '/' ) + 1,
+                         sizeof fs->filename );
+        else
+            fli_sstrcpy( fs->filename, fname, sizeof fs->filename );
+    }
 
     for ( i = 0; i < MAX_APPBUTT; i++ )
     {
@@ -920,7 +926,7 @@ fl_show_fselector( const char * message,
 
     do
     {
-        const char *tmp;
+        const char *tmp = NULL;
 
         obj = fl_do_only_forms( );
 

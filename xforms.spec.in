@@ -33,17 +33,19 @@ XForms header files for development.
 %setup -q -n %{name}-%{version}
 
 %build
-./configure --prefix=%{_prefix} --mandir=%{_mandir} --bindir=%{_bindir} \
-	--without-warnings --disable-debug --enable-optimization=-O2
+./configure --prefix=%{_prefix} --mandir=%{_mandir} \
+            --bindir=%{_bindir} --libdir=%{_libdir} \
+	        --without-warnings --disable-debug
+            --enable-optimization=-O2
 make
 
 
 %install
-rm -rf ${RPM_BUILD_ROOT}
-install -d -m 755 ${RPM_BUILD_ROOT}
-make DESTDIR=${RPM_BUILD_ROOT} install
-gzip -f9 ${RPM_BUILD_ROOT}%{_mandir}/man?/*
-allfiles=`find ${RPM_BUILD_ROOT}/usr -type f -print | sed "s@^${RPM_BUILD_ROOT}@@g"`
+rm -rf %{buildroot}
+install -d -m 755 %{buildroot}
+make DESTDIR=%{buildroot} install
+gzip -f9 %{buildroot}%{_mandir}/man?/*
+allfiles=`find %{buildroot}/usr -type f -print | sed "s@^%{buildroot}@@g"`
 echo "$allfiles" | grep -v "^/usr/include/" > \
 	%{_tmppath}/%{name}-%{version}-binfiles
 echo "$allfiles" | grep "^/usr/include/" > \
@@ -51,7 +53,7 @@ echo "$allfiles" | grep "^/usr/include/" > \
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 rm -f %{_tmppath}/%{name}-%{version}-binfiles
 rm -f %{_tmppath}/%{name}-%{version}-devfiles
 
@@ -65,11 +67,12 @@ rm -f %{_tmppath}/%{name}-%{version}-devfiles
 %defattr(-,root,root)
 
 %post -n %{name}
-#
-# Create symbolic links from libforms.so.1.2.0 to libforms.so, libforms.so.2
+
+# Create symbolic links from libforms.so.2.1.1 to libforms.so, libforms.so.2
+# etc.
 #
 # 1. Create a list of files that require symbolic links.
-#
+
 lib_prefix=${RPM_INSTALL_PREFIX}%{_libdir}
 sofiles=""
 for file in \
@@ -80,8 +83,9 @@ do
 	test -L "${file}" || sofiles="${sofiles} ${file}"
 done
 #
+
 # 2. Create the links.
-#
+
 for file in ${sofiles}
 do
 	test -f "${file}" || continue
@@ -90,10 +94,10 @@ do
 	symlink=`echo "${symlink}" | sed 's/\(\.so\).*/\1/'`
 	test "${file}" != "${symlink}" && ln -fs "${file}" "${symlink}"
 done
-#
+
 # Modify libforms.la et al. to prevent libtool from complaining
 # that the files have been moved.
-#
+
 test "${RPM_INSTALL_PREFIX}" = "/usr" && exit
 for la_name in libforms.la libformsGL.la libflimage.la
 do
@@ -102,11 +106,10 @@ do
 	echo "${tmp}" > ${la_path}
 done
 
-
 %postun -n %{name}
-#
-# Remove symbolic links libforms.so, libforms.so.1, etc
-#
+
+# Remove symbolic links libforms.so, libforms.so.2, etc
+
 lib_prefix=${RPM_INSTALL_PREFIX}%{_libdir}
 for file in \
 	"${lib_prefix}/libforms.so"* \

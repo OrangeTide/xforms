@@ -574,16 +574,14 @@ load_fd_header( void )
 
 int
 load_forms( int          merge,
-            const char * str,
-            int          record )
+            const char * str )
 {
     int i,
         saved_unit = fdopt.unit,
         r,
         nforms;
     FRM *new_forms;
-    char *fname,
-         *tmp;
+    char *fname;
 
     /* Try to open the .fd file */
 
@@ -672,20 +670,15 @@ load_forms( int          merge,
 
     set_form( fnumb > 0 ? 0 : -1 );
 
-    if ( merge )
-        changed = FL_TRUE;
-    else if ( record && ( tmp = strrchr( fname, '/' ) ) )
-    {
-        fli_safe_free( loadedfile );
-        *tmp = '\0';
-        loadedfile = rel2abs( fname );
-    }
+    fli_safe_free( loadedfile );
 
     if ( ! merge )
     {
-        fli_safe_free( loadedfile );
         loadedfile = rel2abs( fname );
+        changed = FL_FALSE;
     }
+    else
+        changed = FL_TRUE;
 
     fl_free( fname );
 
@@ -723,15 +716,28 @@ save_forms( const char *str )
     /* Get the filename if necessary */
 
     if ( ! str || ! * str )
-        str = fl_show_fselector( "Filename to save forms to", "",
-                                 "*.fd", loadedfile );
+    {
+        char *dir = NULL;
+
+        if ( loadedfile && strchr( loadedfile, '/' ) )
+        {
+            dir = fl_strdup( loadedfile );
+            *strrchr( dir, '/' ) = '\0';
+        }
+        else
+            dir = fl_strdup( "" );
+
+        str = fl_show_fselector( "Filename to save forms to", dir, "*.fd", "" );
+
+        fl_free( dir );
+    }
 
     if ( ! str )
         return 0;       /* cancel */
 
     if ( ! *str )
     {
-        fl_show_alert( "No forms were saved.", "", "", 0 );
+        fl_show_alert( "Warning", "No forms were saved.", "", 0 );
         return 0;
     }
 
@@ -757,7 +763,8 @@ save_forms( const char *str )
 
     if ( ( fp = fopen( fname, "w" ) ) == 0 )
     {
-        fl_show_alert( "Cannot create definition file!", "", "", 1 );
+        fl_show_alert_f( 1, "Error\fCannot open file\n%s\nfor writing",
+                         fname );
         return 0;
     }
 

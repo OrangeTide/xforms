@@ -694,7 +694,7 @@ pre_connect( int    argc,
     {
         reset_object_list( );
 
-        if ( load_forms( FL_FALSE, argv[ s ], 0 ) < 0 )
+        if ( load_forms( FL_FALSE, argv[ s ] ) < 0 )
         {
             fprintf( stderr, "Unable to load '%s'\n", argv[ s ] );
             exit( 1 );
@@ -946,7 +946,7 @@ main( int    argc,
          && access( tmp = append_fd_suffix( argv[ argc - 1 ] ), R_OK ) == 0 )
     {
         for ( s = 1; s < argc; s++ )
-            if ( load_forms( s == 1 ? FL_FALSE : FL_TRUE, argv[ s ], 0 ) < 0 )
+            if ( load_forms( s == 1 ? FL_FALSE : FL_TRUE, argv[ s ] ) < 0 )
                 break;
     }
     else

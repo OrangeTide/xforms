@@ -316,8 +316,7 @@ void reshape_form_background( FL_Coord,
 /* loads the forms from a file */
 
 int load_forms( int,
-                const char *,
-                int );
+                const char * );
 
 int save_forms( const char * );
 

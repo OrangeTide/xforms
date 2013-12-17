@@ -1,3 +1,9 @@
+2013-12-17 Jens Thoms Toerring    <jt@toerring.de>
+
+	* fdesign: Bug found by Serge Bromow with saving files
+	fixed.
+	* xforms.spec.in: Patch from Russ Herrold applied.
+
 2013-12-15 Jens Thoms Toerring    <jt@toerring.de>
 
 	* A number of further tweaks to the build system to make

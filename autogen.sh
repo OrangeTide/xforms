@@ -100,4 +100,4 @@ fi
 
 echo
 echo "Looks good, now run:"
-echo '  ./configure && make && make install'
+echo '  ./configure && make && sudo make install'
