@@ -1,17 +1,19 @@
-Summary:       XForms library
-Name:          @PACKAGE@
-Version:       @VERSION@
-Release:       1
-Source0:       http://savannah.nongnu.org/download/xforms/%{name}-%{version}.tar.gz
-License:       LGPL
-Group:         System/Libraries
-BuildRequires: xpm
-BuildRequires: xpm-devel
-BuildRequires: libjpeg
-BuildRequires: libjpeg-devel
-BuildRoot:     %{_tmppath}/%{name}-buildroot
-Prefix:        %{_prefix}
-URL:           http://xforms-toolkit.org/
+Summary:         XForms library
+Name:            @PACKAGE@
+Version:         @VERSION@
+Release:         1
+Source0:         http://savannah.nongnu.org/download/xforms/%{name}-%{version}.tar.gz
+License:         LGPL
+Group:           System/Libraries
+BuildRequires:   xpm
+BuildRequires:   xpm-devel
+BuildRequires:   libjpeg
+BuildRequires:   libjpeg-devel
+Requires(post):  info
+Requires(preun): info
+BuildRoot:       %{_tmppath}/%{name}-buildroot
+Prefix:          %{_prefix}
+URL:             http://xforms-toolkit.org/
 
 %description
 XForms is a GUI toolkit based on Xlib for X Window Systems. It
@@ -21,103 +23,124 @@ execution model that allows fast and easy construction of
 X-applications. In addition, the library is extensible and new objects
 can easily be created and added to the library.
 
-%package -n %{name}-devel
+
+# Beside the normal package create a "development" package, containing
+# the header files for the three libraries.  This is an architecture-
+# independent package.
+
+%package devel
 Summary:       XForms development header files
 Group:         System/Libraries
-Provides:      %{name}
+BuildArch:     noarch
 
-%description -n %{name}-devel
+%description devel
 XForms header files for development.
+
+
+# Also create a documentation package with the full documenttaion in
+# info, HTML and PDF format. This is an architecture-independent
+# package.
+
+%package doc
+Summary:       XForms documentation
+Group:         System/Libraries
+BuildArch:     noarch
+
+%description doc
+XForms info, HTML and PDF documentation
+
+
+# Unpack the tar-ball
 
 %prep
 %setup -q -n %{name}-%{version}
 
+
+# Build everything
+
 %build
-./configure --prefix=%{_prefix} --mandir=%{_mandir} \
-            --bindir=%{_bindir} --libdir=%{_libdir} \
-            --without-warnings --disable-debug \
+./configure --prefix=%{_prefix} \
+            --mandir=%{_mandir} \
+            --bindir=%{_bindir} \
+            --libdir=%{_libdir} \
+            --infodir=%{_infodir} \
+            --htmldir=%{_docdir}/%{name}/html \
+            --pdfdir=%{_docdir}/%{name} \
+            --enable-docs \
+            --without-warnings \
+            --disable-debug \
             --enable-optimization=-O2
 make
 
+
+# Install everything in %{buildroot}, afterwards delete the dir file
+# from %{_infodir}, it's not to be distributed and gets created (or
+# updated) during installation on the target machine
 
 %install
 rm -rf %{buildroot}
 install -d -m 755 %{buildroot}
 make DESTDIR=%{buildroot} install
-gzip -f9 %{buildroot}%{_mandir}/man?/*
-allfiles=`find %{buildroot}/usr -type f -print | sed "s@^%{buildroot}@@g"`
-echo "$allfiles" | grep -v "^/usr/include/" > \
-	%{_tmppath}/%{name}-%{version}-binfiles
-echo "$allfiles" | grep "^/usr/include/" > \
-	%{_tmppath}/%{name}-%{version}-devfiles
+rm -f %{buildroot}%{_infodir}/dir
 
 
 %clean
 rm -rf %{buildroot}
-rm -f %{_tmppath}/%{name}-%{version}-binfiles
-rm -f %{_tmppath}/%{name}-%{version}-devfiles
 
 
-%files -n %{name} -f %{_tmppath}/%{name}-%{version}-binfiles
+# Set up list of files in the binary package
+
+%files
+%{_libdir}
+%{_bindir}
+%{_mandir}
 %defattr(-,root,root)
 %doc COPYING.LIB Copyright ChangeLog INSTALL INSTALL.git README
 
 
-%files -n %{name}-devel -f %{_tmppath}/%{name}-%{version}-devfiles
+# Set up list of files going into the development package
+
+%files devel
+%{_includedir}
 %defattr(-,root,root)
 
-%post -n %{name}
 
-# Create symbolic links from libforms.so.2.1.1 to libforms.so, libforms.so.2
-# etc.
-#
-# 1. Create a list of files that require symbolic links.
+# Set up list of files distributed with the documentation package
 
-lib_prefix=${RPM_INSTALL_PREFIX}%{_libdir}
-sofiles=""
-for file in \
-	"${lib_prefix}/libforms.so"* \
-	"${lib_prefix}/libformsGL.so"* \
-	"${lib_prefix}/libflimage.so"*
-do
-	test -L "${file}" || sofiles="${sofiles} ${file}"
-done
-#
+%files doc
+%{_docdir}/%{name}
+%{_infodir}
+%defattr(-,root,root)
 
-# 2. Create the links.
 
-for file in ${sofiles}
-do
-	test -f "${file}" || continue
-	symlink=`echo "${file}" | sed 's/\(\.so\.[0-9]\).*/\1/'`
-	test "${file}" != "${symlink}" && ln -fs "${file}" "${symlink}"
-	symlink=`echo "${symlink}" | sed 's/\(\.so\).*/\1/'`
-	test "${file}" != "${symlink}" && ln -fs "${file}" "${symlink}"
-done
+# Run ldconfig after install on the target machine to make the dynamic
+# linker aware of the new libraries
 
-# Modify libforms.la et al. to prevent libtool from complaining
-# that the files have been moved.
+%post -p /sbin/ldconfig
 
-test "${RPM_INSTALL_PREFIX}" = "/usr" && exit
-for la_name in libforms.la libformsGL.la libflimage.la
-do
-	la_path="${lib_prefix}/${la_name}"
-	tmp=`sed "/^libdir=/s@/usr@${RPM_INSTALL_PREFIX}@" ${la_path}`
-	echo "${tmp}" > ${la_path}
-done
 
-%postun -n %{name}
+# Run ldconfig after deinstall on the target machine of libraries
 
-# Remove symbolic links libforms.so, libforms.so.2, etc
+%postun -p /sbin/ldconfig
 
-lib_prefix=${RPM_INSTALL_PREFIX}%{_libdir}
-for file in \
-	"${lib_prefix}/libforms.so"* \
-	"${lib_prefix}/libformsGL.so"* \
-	"${lib_prefix}/libflimage.so"*
-do
-	test -L "${file}" && rm -f "${file}"
-done
+
+# rpmbuild gzip's image files below %{_infodir}, undo this after install of
+# the documenttation on the target machine (the image files are for emacs'
+# info mode and won't be recognized when gzip'ed). Then update the info
+# dir file.
+
+%post doc
+gunzip %{_infodir}/xforms_images/*.png.gz
+/sbin/install-info %{_infodir}/%{name}.info %{_infodir}/dir || :
+
+
+# Remove the entry for the XForms info file from the dir file in %{_infdir}
+# when uninstalling the documentation package on the target machine. 
+
+%preun doc
+if [ $1 = 0 ] ; then
+  /sbin/install-info --delete %{_infodir}/%{name}.info %{_infodir}/dir || :
+fi
 
 
 %changelog

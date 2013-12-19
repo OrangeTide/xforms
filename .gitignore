@@ -8,6 +8,7 @@ config.status
 config/Makefile
 config/Makefile.in
 config/missing
+config/depcomp
 config/config.guess
 config/config.sub
 config/libtool.m4
@@ -201,6 +202,6 @@ libtool
 makelog
 xforms.spec
 semantic.cache
-*.tar.gz
+*.tar.gz*
 *.dvi
 doc/xforms.5

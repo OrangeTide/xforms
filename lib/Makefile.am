@@ -8,8 +8,7 @@ endif
 
 CLEANFILES = forms.h xforms.5
 
-EXTRA_DIST = dirent_vms.h \
-	         vms_readdir.c
+EXTRA_DIST = xforms.man dirent_vms.h vms_readdir.c
 
 SUBDIRS = bitmaps fd include private
 
@@ -23,6 +22,10 @@ libforms_la_LIBADD =  $(X_LIBS) $(XPM_LIB) -lX11
 
 nodist_libforms_la_SOURCES = config.h
 
+man_MANS = xforms.5
+
+xforms.5:
+	cp -p ./xforms.man xforms.5
 
 libforms_la_SOURCES = \
 	align.c \
