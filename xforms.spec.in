@@ -4,13 +4,21 @@ Version:         @VERSION@
 Release:         1
 Source0:         http://savannah.nongnu.org/download/xforms/%{name}-%{version}.tar.gz
 License:         LGPL
-Group:           System/Libraries
-BuildRequires:   xpm
-BuildRequires:   xpm-devel
+Group:           Development/Libraries
+
+# To build the libraries and prgrams we need these packages to be installed
+
+BuildRequires:   libXpm
+BuildRequires:   libXpm-devel
 BuildRequires:   libjpeg
 BuildRequires:   libjpeg-devel
+
+# Installing (and de-installing) the info format documentation requires
+# the info packes
+
 Requires(post):  info
 Requires(preun): info
+
 BuildRoot:       %{_tmppath}/%{name}-buildroot
 Prefix:          %{_prefix}
 URL:             http://xforms-toolkit.org/
@@ -25,16 +33,15 @@ can easily be created and added to the library.
 
 
 # Beside the normal package create a "development" package, containing
-# the header files for the three libraries.  This is an architecture-
-# independent package.
+# the header files for the three libraries, the static versions of the
+# libraries and the fdesign and fd2ps tools.
 
 %package devel
-Summary:       XForms development header files
-Group:         System/Libraries
-BuildArch:     noarch
+Summary:         XForms development header files
+Group:           Development/Libraries
 
 %description devel
-XForms header files for development.
+Header files, tools and static libraries for development with XForms.
 
 
 # Also create a documentation package with the full documenttaion in
@@ -42,21 +49,21 @@ XForms header files for development.
 # package.
 
 %package doc
-Summary:       XForms documentation
-Group:         System/Libraries
-BuildArch:     noarch
+Summary:         XForms documentation
+Group:           Development/Libraries
+BuildArch:       noarch
 
 %description doc
-XForms info, HTML and PDF documentation
+Info, HTML, PDF documentation and demo programs for XForms.
 
 
 # Unpack the tar-ball
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q
 
 
-# Build everything
+# Build everything ('make' can be done in parallel)
 
 %build
 ./configure --prefix=%{_prefix} \
@@ -70,42 +77,52 @@ XForms info, HTML and PDF documentation
             --without-warnings \
             --disable-debug \
             --enable-optimization=-O2
-make
+make %{?_smp_mflags}
 
 
 # Install everything in %{buildroot}, afterwards delete the dir file
-# from %{_infodir}, it's not to be distributed and gets created (or
-# updated) during installation on the target machine
+# from _infodir, it's not to be distributed and gets created (or
+# updated) during installation on the target machine. Remove generated
+# files from
 
 %install
 rm -rf %{buildroot}
 install -d -m 755 %{buildroot}
 make DESTDIR=%{buildroot} install
 rm -f %{buildroot}%{_infodir}/dir
+rm -rf %{_builddir}/%{name}-%{version}/demos/.deps
+cp -r %{_builddir}/%{name}-%{version}/demos %{buildroot}%{_docdir}/%{name}
 
 
 %clean
 rm -rf %{buildroot}
 
 
-# Set up list of files in the binary package
+# Set up list of files in the binary package: just the libraries and the
+# man page for the libforms library.
 
 %files
-%{_libdir}
-%{_bindir}
-%{_mandir}
+%{_libdir}/*.so.*
+%{_mandir}/man5
 %defattr(-,root,root)
-%doc COPYING.LIB Copyright ChangeLog INSTALL INSTALL.git README
+%doc COPYING.LIB Copyright ChangeLog README
 
 
-# Set up list of files going into the development package
+# Set up list of files going into the development package: header files,
+# static libraries, utility programs and their man pages
 
 %files devel
+%{_bindir}
 %{_includedir}
+%{_libdir}/*.so
+%{_libdir}/*.a
+%{_libdir}/*.la
+%{_mandir}/man1
 %defattr(-,root,root)
 
 
-# Set up list of files distributed with the documentation package
+# Set up list of files distributed with the documentation package:
+# info, HTML, PDF documentation and demo programs
 
 %files doc
 %{_docdir}/%{name}
@@ -134,7 +151,7 @@ gunzip %{_infodir}/xforms_images/*.png.gz
 /sbin/install-info %{_infodir}/%{name}.info %{_infodir}/dir || :
 
 
-# Remove the entry for the XForms info file from the dir file in %{_infdir}
+# Remove the entry for the XForms info file from the dir file in _infdir
 # when uninstalling the documentation package on the target machine. 
 
 %preun doc

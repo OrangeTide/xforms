@@ -36,11 +36,16 @@ SUBDIRS = config lib image $(GL) fdesign fd2ps $(DEMOS) $(DOCS)
 EXTRA_DIST = ChangeLog COPYING.LIB Copyright INSTALL INSTALL.git \
 			 README autogen.sh xforms.spec.in xforms.spec
 
+# Builds RPM packages (using the xforms.spec file), one (architecture-
+# dependend) binary package and a development, documentation and source
+# package
+
 rpmdist: dist
-	if [ -z "`type -path rpmbuild`" ]; \
-	then \
+	if [ -z "`type -path rpmbuild`" ]; then \
 		RPMBUILD=rpm; \
 	else \
 		RPMBUILD=rpmbuild; \
-	fi; $$RPMBUILD -ta $(PACKAGE)-$(VERSION).tar.gz ; saved_status=$$?; \
+	fi; \
+	$$RPMBUILD -ta $(PACKAGE)-$(VERSION).tar.gz; \
+	saved_status=$$?; \
 	exit $$saved_status
