@@ -1,11 +1,11 @@
-%define distname liforms
+%define distname libforms
 
 Summary:         XForms library
 Name:            @PACKAGE@
 Version:         @VERSION@
 Release:         1
 Source0:         http://savannah.nongnu.org/download/xforms/%{name}-%{version}.tar.gz
-License:         LGPL
+License:         LGPLv2+
 Group:           Development/Libraries
 
 # To build the libraries and prgrams we need these packages to be installed
