@@ -1,3 +1,5 @@
+%define distname liforms
+
 Summary:         XForms library
 Name:            @PACKAGE@
 Version:         @VERSION@
@@ -47,11 +49,20 @@ Header files, tools and static libraries for development with XForms.
 # Also create a documentation package with the full documenttaion in
 # info, HTML and PDF format. This is an architecture-independent
 # package.
+#
+# Note: older rpmbuild versoopn get very unhapppy when you try to build a
+# 'noarch' sub-package together with architecture-dependend packages,
+# spitting out weird error messages and refusing to build the packages, so
+# use 'noarch' here only with newer versions. Thanks to
+# http://holyhandgrenade.org/blog/2010/09/an-annoying-and-non-obvious-rpmbuild-feature-enhancement/
+# for disseminating this bit of information...
 
 %package doc
 Summary:         XForms documentation
 Group:           Development/Libraries
+%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6 || 0%{?centos} >= 6
 BuildArch:       noarch
+%endif
 
 %description doc
 Info, HTML, PDF documentation and demo programs for XForms.
@@ -71,8 +82,8 @@ Info, HTML, PDF documentation and demo programs for XForms.
             --bindir=%{_bindir} \
             --libdir=%{_libdir} \
             --infodir=%{_infodir} \
-            --htmldir=%{_docdir}/%{name}/html \
-            --pdfdir=%{_docdir}/%{name} \
+            --htmldir=%{_docdir}/%{distname}/html \
+            --pdfdir=%{_docdir}/%{distname} \
             --enable-docs \
             --without-warnings \
             --disable-debug \
@@ -91,7 +102,7 @@ install -d -m 755 %{buildroot}
 make DESTDIR=%{buildroot} install
 rm -f %{buildroot}%{_infodir}/dir
 rm -rf %{_builddir}/%{name}-%{version}/demos/.deps
-cp -r %{_builddir}/%{name}-%{version}/demos %{buildroot}%{_docdir}/%{name}
+cp -r %{_builddir}/%{name}-%{version}/demos %{buildroot}%{_docdir}/%{distname}
 
 
 %clean
@@ -125,7 +136,7 @@ rm -rf %{buildroot}
 # info, HTML, PDF documentation and demo programs
 
 %files doc
-%{_docdir}/%{name}
+%{_docdir}/%{distname}
 %{_infodir}
 %defattr(-,root,root)
 
@@ -149,6 +160,7 @@ rm -rf %{buildroot}
 %post doc
 gunzip %{_infodir}/xforms_images/*.png.gz
 /sbin/install-info %{_infodir}/%{name}.info %{_infodir}/dir || :
+ln -s %{_mandir}/man5/%{name}.5.gz %{_mandir}/man5/%{distname}.5.gz
 
 
 # Remove the entry for the XForms info file from the dir file in _infdir
@@ -157,6 +169,7 @@ gunzip %{_infodir}/xforms_images/*.png.gz
 %preun doc
 if [ $1 = 0 ] ; then
   /sbin/install-info --delete %{_infodir}/%{name}.info %{_infodir}/dir || :
+  rm %{_mandir}/man5/%{distname}.5.gz
 fi
 
 
