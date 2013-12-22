@@ -1,3 +1,8 @@
+2013-12-22 Jens Thoms Toerring    <jt@toerring.de>
+
+	* libforms.spec.in, Makefile.am: Lots of changes to
+	cleanly build rpm packages (with name 'libforms')
+
 2013-12-17 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign: Bug found by Serge Bromow with saving files

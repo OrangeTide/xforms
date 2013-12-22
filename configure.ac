@@ -223,7 +223,7 @@ AH_BOTTOM([
 
 ### Finish the work.
 AC_CONFIG_FILES([Makefile \
-       xforms.spec \
+       libforms.spec \
        lib/include/AAA.h \
        config/Makefile \
        lib/Makefile \

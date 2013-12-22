@@ -1,10 +1,12 @@
-%define distname libforms
+%define debug_package %{nil}
+%define debug_packages %{nil}
+%define origname @PACKAGE@
 
 Summary:         XForms library
-Name:            @PACKAGE@
+Name:            libforms
 Version:         @VERSION@
-Release:         1
-Source0:         http://savannah.nongnu.org/download/xforms/%{name}-%{version}.tar.gz
+Release:         1%{?dist}
+Source0:         %{name}-%{version}.tar.gz
 License:         LGPLv2+
 Group:           Development/Libraries
 
@@ -26,21 +28,22 @@ Prefix:          %{_prefix}
 URL:             http://xforms-toolkit.org/
 
 %description
-XForms is a GUI toolkit based on Xlib for X Window Systems. It
-features a rich set of objects, such as buttons, sliders, and menus
-etc. integrated into an easy and efficient object/event callback
-execution model that allows fast and easy construction of
-X-applications. In addition, the library is extensible and new objects
-can easily be created and added to the library.
+This is a GUI toolkit based on the X library for X Window Systems.
+It features a rich set of objects, such as buttons, sliders, and
+menus etc. integrated into an easy and efficient object/event
+callback execution model that allows fast and easy construction
+of X-applications. In addition, the library is extensible and new
+objects can easily be created and added to the library.
 
 
 # Beside the normal package create a "development" package, containing
 # the header files for the three libraries, the static versions of the
-# libraries and the fdesign and fd2ps tools.
+# libraries and the fdesign and fd2ps programs.
 
 %package devel
-Summary:         XForms development header files
+Summary:         Header files and tools
 Group:           Development/Libraries
+Requires:        %{name} = %{version}-%{release}
 
 %description devel
 Header files, tools and static libraries for development with XForms.
@@ -50,12 +53,10 @@ Header files, tools and static libraries for development with XForms.
 # info, HTML and PDF format. This is an architecture-independent
 # package.
 #
-# Note: older rpmbuild versoopn get very unhapppy when you try to build a
-# 'noarch' sub-package together with architecture-dependend packages,
-# spitting out weird error messages and refusing to build the packages, so
-# use 'noarch' here only with newer versions. Thanks to
-# http://holyhandgrenade.org/blog/2010/09/an-annoying-and-non-obvious-rpmbuild-feature-enhancement/
-# for disseminating this bit of information...
+# Note: older rpmbuild versions get very unhapppy when you try to build
+# a 'noarch' sub-package together with architecture-dependend packages,
+# spitting out weird error messages and refusing to build the packages,
+# so use 'noarch' only with newer versions.
 
 %package doc
 Summary:         XForms documentation
@@ -71,6 +72,7 @@ Info, HTML, PDF documentation and demo programs for XForms.
 # Unpack the tar-ball
 
 %prep
+echo @PACKAGE@
 %setup -q
 
 
@@ -82,8 +84,8 @@ Info, HTML, PDF documentation and demo programs for XForms.
             --bindir=%{_bindir} \
             --libdir=%{_libdir} \
             --infodir=%{_infodir} \
-            --htmldir=%{_docdir}/%{distname}/html \
-            --pdfdir=%{_docdir}/%{distname} \
+            --htmldir=%{_docdir}/%{name}/html \
+            --pdfdir=%{_docdir}/%{name} \
             --enable-docs \
             --without-warnings \
             --disable-debug \
@@ -91,18 +93,26 @@ Info, HTML, PDF documentation and demo programs for XForms.
 make %{?_smp_mflags}
 
 
-# Install everything in %{buildroot}, afterwards delete the dir file
-# from _infodir, it's not to be distributed and gets created (or
-# updated) during installation on the target machine. Remove generated
-# files from
+# Clear out the {buildroot} and install everything in {buildroot},
+# then apply the following tweaks:
+#  1) Telete the dir file from {_infodir}, it's not to be distributed
+#     and gets created (or updated) during installation on the target
+#     machine.
+#  2) Strip the fdesign and fd2ps programs
+#  3) Copy the directory with the demo programs to the documentation
+#     directory
+#  4) Create a symbolic link from the xforms.5 man page to libforms.5
+#     (do that in a subprocess to avoid changing the working directory).
 
 %install
 rm -rf %{buildroot}
 install -d -m 755 %{buildroot}
 make DESTDIR=%{buildroot} install
 rm -f %{buildroot}%{_infodir}/dir
-rm -rf %{_builddir}/%{name}-%{version}/demos/.deps
-cp -r %{_builddir}/%{name}-%{version}/demos %{buildroot}%{_docdir}/%{distname}
+/usr/bin/strip %{buildroot}%{_libdir}/*.so.*.*.*
+/usr/bin/strip %{buildroot}%{_bindir}/*
+cp -r %{_builddir}/%{name}-%{version}/demos %{buildroot}%{_docdir}/%{name}
+`cd %{buildroot}%{_mandir}/man5 && ln -s %{origname}.5.gz %{name}.5.gz`
 
 
 %clean
@@ -114,7 +124,7 @@ rm -rf %{buildroot}
 
 %files
 %{_libdir}/*.so.*
-%{_mandir}/man5
+%{_mandir}/man5/*
 %defattr(-,root,root)
 %doc COPYING.LIB Copyright ChangeLog README
 
@@ -123,12 +133,12 @@ rm -rf %{buildroot}
 # static libraries, utility programs and their man pages
 
 %files devel
-%{_bindir}
-%{_includedir}
+%{_bindir}/*
+%{_includedir}/*
 %{_libdir}/*.so
 %{_libdir}/*.a
 %{_libdir}/*.la
-%{_mandir}/man1
+%{_mandir}/man1/*
 %defattr(-,root,root)
 
 
@@ -136,44 +146,48 @@ rm -rf %{buildroot}
 # info, HTML, PDF documentation and demo programs
 
 %files doc
-%{_docdir}/%{distname}
-%{_infodir}
+%{_docdir}/%{name}/*
+%{_infodir}/*
 %defattr(-,root,root)
 
 
 # Run ldconfig after install on the target machine to make the dynamic
 # linker aware of the new libraries
 
-%post -p /sbin/ldconfig
+%post
+/sbin/ldconfig
 
 
 # Run ldconfig after deinstall on the target machine of libraries
 
-%postun -p /sbin/ldconfig
+%postun
+/sbin/ldconfig
 
 
-# rpmbuild gzip's image files below %{_infodir}, undo this after install of
-# the documenttation on the target machine (the image files are for emacs'
-# info mode and won't be recognized when gzip'ed). Then update the info
-# dir file.
+# Update the info dir file and undo the compression that rpmbuild
+# has applied to the image files below {_infodir} (these are image
+# file for use by emacs' info mode and can't be read when gzip'ed).
 
 %post doc
-gunzip %{_infodir}/xforms_images/*.png.gz
-/sbin/install-info %{_infodir}/%{name}.info %{_infodir}/dir || :
-ln -s %{_mandir}/man5/%{name}.5.gz %{_mandir}/man5/%{distname}.5.gz
+/sbin/install-info %{_infodir}/%{origname}.info %{_infodir}/dir || :
+gunzip %{_infodir}/%{origname}_images/*.png.gz
 
 
-# Remove the entry for the XForms info file from the dir file in _infdir
-# when uninstalling the documentation package on the target machine. 
+# Before uninstalling remove the entry for the XForms info file from
+# the dir file in {_infdir}. Also gzip the image files again because
+# that's what they were during installation
 
 %preun doc
 if [ $1 = 0 ] ; then
-  /sbin/install-info --delete %{_infodir}/%{name}.info %{_infodir}/dir || :
-  rm %{_mandir}/man5/%{distname}.5.gz
+  /sbin/install-info --delete %{_infodir}/%{origname}.info %{_infodir}/dir || :
+  gzip %{_infodir}/%{origname}_images/*.png
 fi
 
 
 %changelog
+* Sat Dec 21 2013  Jens Thoms Toerring <jt@toerring.de> 1.1.2.0-1
+- Spec file mostly rewritten for new 1.2.0 release
+
 * Thu Jun 1 2010 Jens Thoms Toerring <jt@toerring.de> 1.0.93sp1
 - New release 1.0.93sp1
 

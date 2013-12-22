@@ -1,6 +1,6 @@
 include $(top_srcdir)/config/common.am
 
-DISTCLEANFILES += xforms.spec config.status config.cache config.log config.h
+DISTCLEANFILES += libforms.spec config.status config.cache config.log config.h
 
 ACLOCAL_AMFLAGS = -I config
 
@@ -30,22 +30,24 @@ endif
 
 SUBDIRS = config lib image $(GL) fdesign fd2ps $(DEMOS) $(DOCS)
 
-# xforms.spec is needed as well as xforms.spec.in or else 'make rpmdist'
+# libforms.spec is needed as well as libforms.spec.in or else 'make rpmdist'
 # will fail.
 
 EXTRA_DIST = ChangeLog COPYING.LIB Copyright INSTALL INSTALL.git \
-			 README autogen.sh xforms.spec.in xforms.spec
+			 README README.rpm autogen.sh libforms.spec.in libforms.spec
 
-# Builds RPM packages (using the xforms.spec file), one (architecture-
+# Builds RPM packages (using the libforms.spec file), one (architecture-
 # dependend) binary package and a development, documentation and source
 # package
 
-rpmdist: dist
-	if [ -z "`type -path rpmbuild`" ]; then \
-		RPMBUILD=rpm; \
-	else \
-		RPMBUILD=rpmbuild; \
-	fi; \
-	$$RPMBUILD -ta $(PACKAGE)-$(VERSION).tar.gz; \
+libdist: dist
+	tar -vxf $(PACKAGE)-$(VERSION).tar.gz; \
+	rm -f $(PACKAGE)-$(VERSION).tar.gz; \
+	mv $(PACKAGE)-$(VERSION) libforms-$(VERSION); \
+	tar -czf libforms-$(VERSION).tar.gz libforms-$(VERSION); \
+	rm -rf libforms-$(VERSION);
+
+rpmdist: libdist
+	rpmbuild -ta libforms-$(VERSION).tar.gz; \
 	saved_status=$$?; \
 	exit $$saved_status
