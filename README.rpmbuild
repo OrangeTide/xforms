@@ -37,9 +37,6 @@ rpm packages for the XForms library.
 
      libforms-doc-v-r.d.a.rpm
 
-   Creating the complete documentation reqiures a number of extra
-   packages, at least info, texi2html, texinfo and ImageMagick.
-
 4) The resulting packages have been tested (on CentOS 6.5) with
    rpmlint. There were no errors, just a number of unavoidable
    warnings. These mostly are complaints from the spellchecker

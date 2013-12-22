@@ -1,6 +1,14 @@
-%define debug_package %{nil}
-%define debug_packages %{nil}
+# The original name of the software packae is 'xforms' but the
+# rpm package goes by the name 'libforms'.
+
 %define origname @PACKAGE@
+
+# Building a debug package doesn't seem to make much sense
+
+%define debug_package %{nil}
+
+
+# Here we start...
 
 Summary:         XForms library
 Name:            libforms
@@ -16,12 +24,6 @@ BuildRequires:   libXpm
 BuildRequires:   libXpm-devel
 BuildRequires:   libjpeg
 BuildRequires:   libjpeg-devel
-
-# Installing (and de-installing) the info format documentation requires
-# the info packes
-
-Requires(post):  info
-Requires(preun): info
 
 BuildRoot:       %{_tmppath}/%{name}-buildroot
 Prefix:          %{_prefix}
@@ -61,6 +63,12 @@ Header files, tools and static libraries for development with XForms.
 %package doc
 Summary:         XForms documentation
 Group:           Development/Libraries
+Requires(post):  info
+Requires(preun): info
+BuildRequires:   texi2html
+BuildRequires:   texinfo
+BuildRequires:   texinfo-tex
+BuildRequires:   ImageMagick
 %if 0%{?fedora} >= 10 || 0%{?rhel} >= 6 || 0%{?centos} >= 6
 BuildArch:       noarch
 %endif
@@ -72,7 +80,6 @@ Info, HTML, PDF documentation and demo programs for XForms.
 # Unpack the tar-ball
 
 %prep
-echo @PACKAGE@
 %setup -q
 
 

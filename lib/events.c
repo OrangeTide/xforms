@@ -418,7 +418,7 @@ fli_filter_returns( FL_OBJECT * obj )
 FL_OBJECT *
 fli_object_qread( void )
 {
-    int event;
+    int event = -1;
     FL_OBJECT *obj = get_from_obj_queue( &event );
 
     if ( obj == FL_EVENT )

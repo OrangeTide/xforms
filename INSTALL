@@ -71,6 +71,24 @@ The simplest way to compile this package is:
 	 the PDF and HTML documentation you addtionally willneed
 	 'pdftex' and ;'texi2html'.
 
+
+Limitations of build process
+============================
+
+   If you build the package as a non-privileged user and then try
+to install it as the root user in an environment where the root user
+does not have write permissions in the users directories, like it
+can be the case on systems using NFS, the installation will fail.
+The reason is that during the install stage the libformsGL and
+libflimage libraries need to be "relinked" (the versions created
+during the initial build process rely on the libforms library
+stored in the user directories and must be relinked to use the
+now globally available version of libforms). Unfortunately, no
+fix for this problem (i.e. forcing libtool to write the newly
+created shared libraries into a different directory than the
+user's) has been found yet.
+
+
 Compilers and Options
 =====================
 
@@ -84,7 +102,8 @@ is an example:
 
      ./configure CC=c89 CFLAGS=-O2 LIBS=-lposix
 
-   *Note Defining Variables::, for more details.
+*Note "Defining Variables" below for more details.
+
 
 Compiling For Multiple Architectures
 ====================================
@@ -126,6 +145,7 @@ you can set and what kinds of files go in them.
 with an extra prefix or suffix on their names by giving `configure' the
 option `--program-prefix=PREFIX' or `--program-suffix=SUFFIX'.
 
+
 Optional Features
 =================
 
@@ -140,6 +160,7 @@ package recognizes.
 find the X include and library files automatically, but if it doesn't,
 you can use the `configure' options `--x-includes=DIR' and
 `--x-libraries=DIR' to specify their locations.
+
 
 Specifying the System Type
 ==========================
@@ -171,6 +192,7 @@ platform different from the build platform, you should specify the
 "host" platform (i.e., that on which the generated programs will
 eventually be run) with `--host=TYPE'.
 
+
 Sharing Defaults
 ================
 
@@ -181,6 +203,7 @@ default values for variables like `CC', `cache_file', and `prefix'.
 `PREFIX/etc/config.site' if it exists.  Or, you can set the
 `CONFIG_SITE' environment variable to the location of the site script.
 A warning: not all `configure' scripts look for a site script.
+
 
 Defining Variables
 ==================
@@ -195,6 +218,7 @@ them in the `configure' command line, using `VAR=value'.  For example:
 
 will cause the specified gcc to be used as the C compiler (unless it is
 overridden in the site shell script).
+
 
 `configure' Invocation
 ======================
@@ -233,6 +257,7 @@ operates.
 
 `configure' also accepts some other, not widely useful, options.  Run
 `configure --help' for more details.
+
 
 Problems
 ========
