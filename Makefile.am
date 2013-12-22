@@ -33,8 +33,8 @@ SUBDIRS = config lib image $(GL) fdesign fd2ps $(DEMOS) $(DOCS)
 # libforms.spec is needed as well as libforms.spec.in or else 'make rpmdist'
 # will fail.
 
-EXTRA_DIST = ChangeLog COPYING.LIB Copyright INSTALL INSTALL.git \
-			 README README.rpm autogen.sh libforms.spec.in libforms.spec
+EXTRA_DIST = ChangeLog COPYING.LIB Copyright INSTALL INSTALL.git README \
+			 README.rpmbuild autogen.sh libforms.spec.in libforms.spec
 
 # Builds RPM packages (using the libforms.spec file), one (architecture-
 # dependend) binary package and a development, documentation and source

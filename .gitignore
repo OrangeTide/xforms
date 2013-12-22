@@ -200,7 +200,7 @@ lib/stamp-h1
 lib/xforms.5
 libtool
 makelog
-xforms.spec
+libforms.spec
 semantic.cache
 *.tar.gz*
 *.dvi
