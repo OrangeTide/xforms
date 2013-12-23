@@ -7,6 +7,16 @@ AUTOMAKE="automake -a -c --foreign"
 AUTOCONF="autoconf"
 ACINCLUDE_FILES="libtool.m4 xformsinclude.m4 cygwin.m4"
 
+# Make sure there's no file named 'libtool.m4' in the 'config'
+# subdirectory, otherwise there might be trouble (wrong content
+# of the file for the libtool version installed on the machine
+# and subsequent failure to create a working'configure' script)
+
+rm -f config/libtool.m4
+
+# Let libtoolize do its magic, preparing everything for
+# working with libtool.
+
 if ( $LIBTOOLIZE --version ) < /dev/null > /dev/null 2>&1; then
 	echo "Running libtoolize"
 	$LIBTOOLIZE > /dev/null
