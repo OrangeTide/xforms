@@ -24,14 +24,17 @@ rpm packages for the XForms library.
    packages to be installed).
 
 3) Some build dependencies in libforms.spec may need a bit of
-   tweaking, especially the ones for bui;lding the documentation.
-   As I noticed some of the programs used for creating the
-   documenation are provided by different packages on different
-   distributions. E.g. '/usr/bin/texi2dvi' is from the 'texinfo-tex'
-   package on CentOS (which then automatically requires the
-   'texinfo' package) while on openSUSE it's from the 'texinfo'
-   package itself (and the dependeny on the 'texinfo-tex' package
-   is then probably superfluous)
+   tweaking. First of all the 'mesa-libGL-devel' package, re-
+   quired fro building the GL forms library, seems to be spelt
+   with 'Mesa-libGL-devel' on e.g. openSUSE 13.1. Then there are
+   the dependencies for building the documentation. As I noticed
+   some of the programs used for creating the documenation are
+   provided by different packages on different distributions.
+   E.g. '/usr/bin/texi2dvi' is from the 'texinfo-tex' package on
+   CentOS (which then automatically requires the 'texinfo' package)
+   while on openSUSE it's from the 'texinfo' package itself (and
+   the dependeny on the 'texinfo-tex' package is then probably
+   superfluous)
 
 4) Runing 'make rpmdist' creates three packages with (in most cases)
    names of the form

@@ -24,6 +24,7 @@ Group:           Development/Libraries
 
 BuildRequires:   libXpm-devel
 BuildRequires:   libjpeg-devel
+BuildRequires:   mesa-libGL-devel
 
 BuildRoot:       %{_tmppath}/%{name}-buildroot
 Prefix:          %{_prefix}
@@ -94,10 +95,12 @@ Info, HTML, PDF documentation and demo programs for XForms.
             --htmldir=%{_docdir}/%{name}/html \
             --pdfdir=%{_docdir}/%{name} \
             --enable-docs \
-            --without-warnings \
+            --disable-demos \
+            --disable-warnings \
             --disable-debug \
             --enable-optimization=-O2
 make %{?_smp_mflags}
+rm -rf demos/.deps
 
 
 # Clear out the {buildroot} and install everything in {buildroot},

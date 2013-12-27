@@ -4,7 +4,9 @@
 	build of the documentation for (open)SUSE. Removed build
 	dependencies on libXpm and libjpeg packages, which are
 	already required by the libXpm-devel and libjpeg-devel
-	packages we depend on.
+	packages we depend on. Also added 'mesa-libGL-devel' as
+	another build dependency (otherwise libformsGL isn't
+	contained in the RPM).
 
 2013-12-22 Jens Thoms Toerring    <jt@toerring.de>
 
