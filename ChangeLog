@@ -1,3 +1,11 @@
+2013-12-27 Jens Thoms Toerring    <jt@toerring.de>
+
+	* libforms.spec.in: Check added if noarch package can be
+	build of the documentation for (open)SUSE. Removed build
+	dependencies on libXpm and libjpeg packages, which are
+	already required by the libXpm-devel and libjpeg-devel
+	packages we depend on.
+
 2013-12-22 Jens Thoms Toerring    <jt@toerring.de>
 
 	* libforms.spec.in, Makefile.am: Lots of changes to

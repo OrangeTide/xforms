@@ -23,7 +23,18 @@ rpm packages for the XForms library.
    (note that this requires the autoconf, automale and libtool
    packages to be installed).
 
-3) Runing 'make rpmdist' creates three packages with names of the form
+3) Some build dependencies in libforms.spec may need a bit of
+   tweaking, especially the ones for bui;lding the documentation.
+   As I noticed some of the programs used for creating the
+   documenation are provided by different packages on different
+   distributions. E.g. '/usr/bin/texi2dvi' is from the 'texinfo-tex'
+   package on CentOS (which then automatically requires the
+   'texinfo' package) while on openSUSE it's from the 'texinfo'
+   package itself (and the dependeny on the 'texinfo-tex' package
+   is then probably superfluous)
+
+4) Runing 'make rpmdist' creates three packages with (in most cases)
+   names of the form
 
      libforms-v-r.d.a,rpm
      libforms-devel-v-r.d.a.rpm
@@ -32,12 +43,12 @@ rpm packages for the XForms library.
    where 'v' is the version of the package, 'r' its release number,
    'd' the distributions name and 'a' the architecture the rpm package
    was build for (the third, documentation package is architecture-
-   independent, but note that, due to a rpmbuild bug, on systems
+   independent, but note that, due to a rpmbuild issue, on systems
    with an older rpmbuild program it will also have a name of
 
      libforms-doc-v-r.d.a.rpm
 
-4) The resulting packages have been tested (on CentOS 6.5) with
+5) The resulting packages have been tested (on CentOS 6.5) with
    rpmlint. There were no errors, just a number of unavoidable
    warnings. These mostly are complaints from the spellchecker
    about the word 'XForms' and then there's a larger number of
@@ -50,4 +61,4 @@ rpm packages for the XForms library.
    about them not being UTF-8 files and also wants them to be
    gzip'ed (which emacs' info mode unforunately doesn't like...).
 
-   All packages should also cleanly deinstall.
+All packages should also cleanly deinstall.
