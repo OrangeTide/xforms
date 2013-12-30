@@ -281,16 +281,11 @@ spec_to_superspec( FL_OBJECT * obj )
     {
         FLI_SPINNER_SPEC *sp = obj->spec;
 
-        ssp->i_val  = sp->i_val;
-        ssp->i_min  = sp->i_min;
-        ssp->i_max  = sp->i_max;
-        ssp->i_incr = sp->i_incr;
-        ssp->f_val  = sp->f_val;
-        ssp->f_min  = sp->f_min;
-        ssp->f_max  = sp->f_max;
-        ssp->f_incr = sp->f_incr;
+        ssp->val = fl_get_spinner_value( obj );
+        fl_get_spinner_bounds( obj, &ssp->min, &ssp->max );
+        ssp->step = fl_get_spinner_step( obj );
+        ssp->prec = fl_get_spinner_precision( obj );
         ssp->orient = sp->orient;
-        ssp->prec   = sp->prec;
     }
 
     return ssp;
@@ -413,22 +408,25 @@ superspec_to_spec( FL_OBJECT * obj )
     }
     else if ( obj->objclass == FL_SPINNER )
     {
-        fl_set_spinner_value( obj, ssp->dval );
-        fl_set_spinner_bounds( obj, ssp->dmin, ssp->dmax );
-        fl_set_spinner_step( obj, ssp->dstep );
+        FLI_SPINNER_SPEC *sp = obj->spec;
+
+        fl_set_spinner_value( obj, ssp->val );
+        fl_set_spinner_bounds( obj, ssp->min, ssp->max );
+        fl_set_spinner_step( obj, ssp->step );
         fl_set_spinner_precision( obj, ssp->prec );
+        sp->orient = ssp->orient;
     }
     else if ( obj->objclass == FL_DIAL )
     {
         FLI_DIAL_SPEC *sp = obj->spec;
 
-        sp->min        = ssp->min;
-        sp->max        = ssp->max;
-        sp->val        = ssp->val;
-        sp->step       = ssp->step;
-        sp->thetai     = ssp->thetai;
-        sp->thetaf     = ssp->thetaf;
-        sp->direction  = ssp->direction;
+        sp->min       = ssp->min;
+        sp->max       = ssp->max;
+        sp->val       = ssp->val;
+        sp->step      = ssp->step;
+        sp->thetai    = ssp->thetai;
+        sp->thetaf    = ssp->thetaf;
+        sp->direction = ssp->direction;
     }
     else if ( obj->objclass == FL_XYPLOT )
     {
@@ -465,16 +463,11 @@ superspec_to_spec( FL_OBJECT * obj )
     {
         FLI_SPINNER_SPEC *sp = obj->spec;
 
-        sp->i_val  = ssp->i_val;
-        sp->i_min  = ssp->i_min;
-        sp->i_max  = ssp->i_max;
-        sp->i_incr = ssp->i_incr;
-        sp->f_val  = ssp->f_val;
-        sp->f_min  = ssp->f_min;
-        sp->f_max  = ssp->f_max;
-        sp->f_incr = ssp->f_incr;
-        sp->orient = ssp->orient;
-        sp->prec   = ssp->prec;
+        ssp->val = fl_get_spinner_value( obj );
+        fl_get_spinner_bounds( obj, &ssp->min, &ssp->max );
+        ssp->step = fl_get_spinner_step( obj );
+        ssp->prec = fl_get_spinner_precision( obj );
+        ssp->orient = sp->orient;
     }
     else if ( obj->objclass == FL_INPUT )
     {

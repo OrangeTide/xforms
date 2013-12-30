@@ -839,7 +839,7 @@ select_all( void )
  * Clone curobj's attributes to the currently selected objects
  ***************************************/
 
-void
+static void
 change_selected_objects( FL_OBJECT * curobj )
 {
     int i;
@@ -848,6 +848,10 @@ change_selected_objects( FL_OBJECT * curobj )
     for ( i = 0; i < selnumb; i++ )
     {
         ob = selobj[ i ];
+
+        if ( ob == curobj )
+            continue;
+
         if ( ob->objclass != FL_BEGIN_GROUP && ob->objclass != FL_END_GROUP )
         {
             spec_change_type( ob, curobj->type );
@@ -874,8 +878,8 @@ change_selection( void )
 
     if ( selnumb == 0 )
     {
-        fl_show_alert( "", "Please select an object first",
-                       "by single-clicking on that object", 0 );
+        fl_show_alert( "", "Please select object to edit",
+                           "by single-clicking on it", 0 );
         return;
     }
 
@@ -1710,6 +1714,8 @@ copy_object( FL_OBJECT * obj,
          cbname[ MAX_VAR_LEN ],
          argname[ MAX_VAR_LEN ];
     FL_OBJECT *obj2;
+    char *label;
+    char *s;
 
     obj2 = add_an_object( obj->objclass, obj->type, obj->x, obj->y,
                           obj->w, obj->h );
@@ -1717,6 +1723,13 @@ copy_object( FL_OBJECT * obj,
     get_object_name( obj, name, cbname, argname );
     set_object_name( obj2, exact ? name : "", cbname, argname );
     set_attribs( obj2, obj );
+
+    s = label = fl_strdup( obj->label );
+    while ( ( s = strchr( s, '\010' ) ) )
+        memmove( s, s + 1, strlen( s ) + 1 );
+        
+    fl_set_object_label( obj2, label );
+    fl_free( label );
 
     /* Also copy the object specific info */
 
@@ -1740,9 +1753,6 @@ static void
 set_attribs( FL_OBJECT * obj,
              FL_OBJECT * src )
 {
-    char *label;
-    char *s;
-
     obj->boxtype = src->boxtype;
     obj->col1    = src->col1;
     obj->col2    = src->col2;
@@ -1758,14 +1768,7 @@ set_attribs( FL_OBJECT * obj,
             obj->align = FL_SLIDER_ALIGN;
     }
     else
-        obj->align   = src->align;
-
-    s = label = fl_strdup( src->label );
-    while ( ( s = strchr( s, '\010' ) ) )
-        memmove( s, s + 1, strlen( s ) + 1 );
-        
-    fl_set_object_label( obj, label );
-    fl_free( label );
+        obj->align = src->align;
 
     obj->nwgravity  = src->nwgravity;
     obj->segravity  = src->segravity;

@@ -717,7 +717,9 @@ test_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     for ( ob = cur_form->first; ob; ob = ob->next, i++, p++ )
     {
-        spec_to_superspec( ob );
+        if ( ! ob->parent )
+            spec_to_superspec( ob );
+
         p->x = ob->x;
         p->y = ob->y;
         p->w = ob->w;
@@ -786,7 +788,9 @@ stoptest_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     for ( ob = cur_form->first; ob; ob = ob->next, p++ )
     {
-        superspec_to_spec( ob );
+        if ( ! ob->parent )
+            superspec_to_spec( ob );
+
         ob->x = p->x;
         ob->y = p->y;
         ob->w = p->w;
@@ -799,8 +803,6 @@ stoptest_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     fl_activate_form( fd_control->control );
 }
 
-
-/** do alignment */
 
 /***************************************
  * Shows the align form

@@ -1,3 +1,10 @@
+2013-12-30 Jens Thoms Toerring    <jt@toerring.de>
+
+	* fdesign: Bug found by Werner Heisch fixed when
+	editing several objects at once fixed (all got the
+	same label string). Also bug in reset of spinner after
+	testing removed.
+
 2013-12-27 Jens Thoms Toerring    <jt@toerring.de>
 
 	* libforms.spec.in: Check added if noarch package can be

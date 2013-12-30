@@ -192,7 +192,6 @@ void select_all( void );                /* Selects all objectsin the form */
 
 void change_selection( void );          /* Changes the atributes of the
                                            selection */
-void change_selected_objects( FL_OBJECT * );
 
 void align_selection( int );            /* Aligns the objects in the
                                            selection */
@@ -755,15 +754,6 @@ typedef struct {
     int              no_title;
     int              mark_active;
     int            * mval;
-    int              reserverd[ 12 ];
-    int              i_val;
-    int              i_min;
-    int              i_max;
-    int              i_incr;
-    double           f_val;
-    double           f_min;
-    double           f_max;
-    double           f_incr;
     int              orient;
 } SuperSPEC;
 

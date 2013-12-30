@@ -55,7 +55,10 @@ The simplest way to compile this package is:
   4. Type `make install' to install the programs and any data files and
      documentation.
 
-  5. You can remove the program binaries and object files from the
+  5. Since new libaries have been installed it might be necessary
+     to run '/sbin/ldconfig'.
+
+  6. You can remove the program binaries and object files from the
      source code directory by typing `make clean'.  To also remove the
      files that `configure' created (so you can compile the package for
      a different kind of computer), type `make distclean'.  There is
@@ -64,12 +67,12 @@ The simplest way to compile this package is:
      all sorts of other programs in order to regenerate files that came
      with the distribution.
 
-  6. To create the documenation use the '--enable-docs' option when
+  7. To create the documenation use the '--enable-docs' option when
      running './configure'. In this case running 'make' will also
 	 attempt to create the documentation. Note that this at least
 	 requires the 'makeinfo' to be installed, for creating also
-	 the PDF and HTML documentation you addtionally willneed
-	 'pdftex' and ;'texi2html'.
+	 the PDF and HTML documentation you also will need 'pdftex'
+     or similar (e.g. 'texi2dvi') and ;'texi2html'.
 
 
 Limitations of build process
