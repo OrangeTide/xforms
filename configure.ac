@@ -1,7 +1,7 @@
 dnl Process with autoconf to generate configure script   -*- sh -*-
 
 AC_PREREQ(2.59)
-AC_INIT([xforms],[1.0.94pre33],[xforms-development@nongnu.org])
+AC_INIT([xforms],[1.2.0],[xforms-development@nongnu.org])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(lib/forms.c)
 XFORMS_CHECK_VERSION
@@ -15,9 +15,10 @@ AC_CONFIG_MACRO_DIR([config])
 
 ### This defines the version number of the installed .so files
 ### using libtool's versioning system.
-AC_SUBST(SO_VERSION, ["3:1:1"])
 
-# fix the value of the prefixes.
+AC_SUBST(SO_VERSION, ["3:0:1"])
+
+# Fix the value of the prefixes.
 
 test "x$prefix" = xNONE && prefix=$ac_default_prefix
 test "x$exec_prefix" = xNONE && exec_prefix='${prefix}'
@@ -31,7 +32,7 @@ AC_ARG_ENABLE(bwc_bs_hack,
  test x$enable_bwc_bs_hack = xyes)
 
 
-# Cjeck of old style edit keys are to be used
+# Check if old style edit keys are to be used
 
 AC_ARG_ENABLE(classic_editkeys,
  [AS_HELP_STRING([--enable-classic-editkeys],
@@ -53,8 +54,9 @@ AC_ARG_ENABLE(docs,
   [build documentation (needs makeinfo)])])
  AM_CONDITIONAL(BUILD_DOCS, test x$enable_docs = xyes)
 
-# If docs are to be built check for presence of texi2html and pdftex, needed
-# for building the html and pdf versions of the docs, respectively
+# If docs are to be built check for presence of texi2html and pdftex (or
+# similar), needed for building the html and pdf versions of the docs,
+# respectively
 
 if test BUILD_DOCS; then
   XFORMS_CHECK_TEXI2HTML
@@ -73,7 +75,7 @@ AC_PROG_MAKE_SET
 
 #### AC_PROG_RANLIB   has become obsolete    
 
-### check for special systems
+### Check for special systems
 
 AC_ISC_POSIX
 AC_AIX
@@ -89,9 +91,10 @@ CHECK_WITH_CYGWIN
 
 INSTALL_SCRIPT='${INSTALL}'
 
+### Setup libtool
+
 AC_PROG_LIBTOOL
 
-### Setup libtool
 #AC_REQUIRE([AC_CANONICAL_HOST])_LT_SET_OPTION([LT_INIT],[win32-dll])
 #AC_DIAGNOSE([obsolete],[AC_LIBTOOL_WIN32_DLL: Remove this warning and the call to _LT_SET_OPTION when you
 #put the `win32-dll' option into LT_INIT's first parameter.])
@@ -175,9 +178,6 @@ VERSION_INFO="Configuration:\n
   Linker flags:                   ${LDFLAGS}\n"
 
 
-### Not used for now.
-### AC_SUBST(VERSION_INFO)
-
 AC_SUBST(X_LIBS)
 AC_SUBST(X_PRE_LIBS)
 
@@ -222,6 +222,7 @@ AH_BOTTOM([
 ])
 
 ### Finish the work.
+
 AC_CONFIG_FILES([Makefile \
        libforms.spec \
        lib/include/AAA.h \

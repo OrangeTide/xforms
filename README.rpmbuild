@@ -1,67 +1,69 @@
-This file contains information for people that want to build
-rpm packages for the XForms library.
+This file contains information for people that want to build rpm
+packages for the XForms library and its documetation.
 
-1) While the name of this library is known as is 'xforms' (and has for
-   been so for at least 20 years) most distributions use a name starting
-   with 'libforms' - for the obvious reason that the most important
-   part is a shared library. This requires a bit of tweaking to create
-   a package with the correct name but which now is fully automated.
+1) While the name this library is known as is 'xforms' (and has for
+   been so for at least 20 years) most distributions use a name
+   starting with `libforms' - for the obvious reason that the most
+   important part is a shared library. This requires a bit of
+   tweaking to create a package with the correct name but which
+   now is fully automated.
 
-2) To create the rpm package simply run
+2) After having run
+
+     ./configure --enable docs
+
+   successfully create the rpm package with
 
      make rpmdist
 
-   This, of course, requires that the Makefile exist. To create it
-   run
+   Should you start from the git repository use
 
-     ./configure
-
-   or, if you start from the git repository, use
-
-     ./autogen.sh && ./configure
+     ./autogen.sh && ./configure --enable-docs
 
    (note that this requires the autoconf, automale and libtool
    packages to be installed).
 
-3) Some build dependencies in libforms.spec may need a bit of
-   tweaking. First of all the 'mesa-libGL-devel' package, re-
+3) Some build dependencies in `libforms.spec' may need a bit of
+   tweaking. First of all the `mesa-libGL-devel' package, re-
    quired fro building the GL forms library, seems to be spelt
-   with 'Mesa-libGL-devel' on e.g. openSUSE 13.1. Then there are
+   as `Mesa-libGL-devel' on e.g. openSUSE 13.1. Then there are
    the dependencies for building the documentation. As I noticed
    some of the programs used for creating the documenation are
    provided by different packages on different distributions.
-   E.g. '/usr/bin/texi2dvi' is from the 'texinfo-tex' package on
-   CentOS (which then automatically requires the 'texinfo' package)
-   while on openSUSE it's from the 'texinfo' package itself (and
-   the dependeny on the 'texinfo-tex' package is then probably
+   E.g., `/usr/bin/texi2dvi' is ib the `texinfo-tex' package on
+   CentOS (which then automatically requires the `texinfo' package)
+   while on openSUSE 13.1 it's from the `texinfo' package itself
+   (and the dependeny on the `texinfo-tex' package is then probably
    superfluous)
 
-4) Runing 'make rpmdist' creates three packages with (in most cases)
+4) Runing `make rpmdist' creates three packages with (in most cases)
    names of the form
 
-     libforms-v-r.d.a,rpm
+     libforms-v-r.d.a.rpm
      libforms-devel-v-r.d.a.rpm
      libforms-doc-v-r.d.noarch.rpm
 
-   where 'v' is the version of the package, 'r' its release number,
-   'd' the distributions name and 'a' the architecture the rpm package
-   was build for (the third, documentation package is architecture-
-   independent, but note that, due to a rpmbuild issue, on systems
-   with an older rpmbuild program it will also have a name of
+   where `v' is the version of the package, `r' its release number,
+   `d' the distributions name and `a' the architecture the rpm package
+   was build for (the third package for the documentation is architec-
+   tureindependent, but note that due to a rpmbuild issue on systems
+   with an older `rpmbuild' program it will also have a name of
 
      libforms-doc-v-r.d.a.rpm
 
-5) The resulting packages have been tested (on CentOS 6.5) with
-   rpmlint. There were no errors, just a number of unavoidable
-   warnings. These mostly are complaints from the spellchecker
-   about the word 'XForms' and then there's a larger number of
-   warnings for the documentation package. All these result from
-   the fact that rpmbuild and rpmlint don't expect anything else
-   than .info files in the info directory. But this doesn't take
-   into account that emacs in info mode is able to display images
-   embeded in the info documentation - and they need to be stored
-   somewhere below the info directory. But then rpmlint complains
-   about them not being UTF-8 files and also wants them to be
-   gzip'ed (which emacs' info mode unforunately doesn't like...).
+   with `a' not being `noarch' but e.g. `x68_64'.
 
-All packages should also cleanly deinstall.
+5) The resulting packages have been tested (on CentOS 6.5) with
+   `rpmlint'. There were no errors, just a number of unavoidable
+   warnings. These mostly are complaints from the spellchecker
+   about the word `XForms' and then there's a larger number of
+   warnings for the documentation package. All these result from
+   the fact that `rpmbuild' and `rpmlint' don't expect anything
+   else than `.info' files in the info directory. But this doesn't
+   take into account that `emacs' in info mode is able to display
+   images embeded in the info documentation - and they need to be
+   stored somewhere below the info directory. But then `rpmlint'
+   complains about them not being UTF-8 files and also wants them
+   to be gzip'ed (which emacs' info mode unforunately doesn't like...).
+
+All packages should be cleanly deinstallable.

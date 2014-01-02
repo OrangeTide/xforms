@@ -1,8 +1,7 @@
-Copyright (C) 1994, 1995, 1996, 1999, 2000, 2001, 2002 Free Software
-Foundation, Inc.
+This file is derived from the Free Software Foundation documentation;
+the Free Software Foundation gives unlimited permission to copy,
+distribute and modify it.
 
-   This file is free documentation; the Free Software Foundation gives
-unlimited permission to copy, distribute and modify it.
 
 Basic Installation
 ==================
@@ -36,7 +35,7 @@ may remove or edit it.
 `configure.ac' if you want to change it or regenerate `configure' using
 a newer version of `autoconf'.
 
-The simplest way to compile this package is:
+The simplest way to compile and install this package is:
 
   1. `cd' to the directory containing the package's source code and type
      `./configure' to configure the package for your system.  If you're
@@ -44,21 +43,28 @@ The simplest way to compile this package is:
      `sh ./configure' instead to prevent `csh' from trying to execute
      `configure' itself.
 
+     The `configure' script accepts a lot of options that influence
+     the build process and what gets built. E,g., unless `--enable-docs'
+     is passed to it no documentation will generated. And to also
+     build the demo programs please use `--enable-demos'. For a full
+     list if all available options run `./confugure --help'.
+
      Running `configure' takes a while.  While running it prints some
      messages telling which features it's checking for.
 
-  2. Type `make' to compile the package.
+  2. Type `make' to compile the package. You may invoke `make' with
+     the `-j' option (and the number of process to run in parallel)
+     to speed up the build process.
 
-  3. Optionally, type `make check' to run any self-tests that come with
-     the package.
-
-  4. Type `make install' to install the programs and any data files and
+  3. Type `make install' to install the programs and any data files and
      documentation.
 
-  5. Since new libaries have been installed it might be necessary
-     to run '/sbin/ldconfig'.
+  4. Since new libaries have been installed it may be necessary to
+     run `/sbin/ldconfig' (otherwise you may get complaints that the
+     libforms library could not be found when e.g. trying to run
+     fdesign).
 
-  6. You can remove the program binaries and object files from the
+  5. You can remove the program binaries and object files from the
      source code directory by typing `make clean'.  To also remove the
      files that `configure' created (so you can compile the package for
      a different kind of computer), type `make distclean'.  There is
@@ -67,29 +73,21 @@ The simplest way to compile this package is:
      all sorts of other programs in order to regenerate files that came
      with the distribution.
 
-  7. To create the documenation use the '--enable-docs' option when
-     running './configure'. In this case running 'make' will also
-	 attempt to create the documentation. Note that this at least
-	 requires the 'makeinfo' to be installed, for creating also
-	 the PDF and HTML documentation you also will need 'pdftex'
-     or similar (e.g. 'texi2dvi') and ;'texi2html'.
-
 
 Limitations of build process
 ============================
 
    If you build the package as a non-privileged user and then try
 to install it as the root user in an environment where the root user
-does not have write permissions in the users directories, like it
-can be the case on systems using NFS, the installation will fail.
-The reason is that during the install stage the libformsGL and
-libflimage libraries need to be "relinked" (the versions created
-during the initial build process rely on the libforms library
-stored in the user directories and must be relinked to use the
-now globally available version of libforms). Unfortunately, no
-fix for this problem (i.e. forcing libtool to write the newly
-created shared libraries into a different directory than the
-user's) has been found yet.
+does not have write permissions in the users directories used in the
+build, like it can be the case on systems using NFS, installation
+will fail. The reason is that during the install stage the libformsGL
+and libflimage libraries need to be "relinked" (the versions created
+during the initial build process rely on the libforms library stored
+in the user directories and must be relinked to use the now globally
+available version of libforms). Unfortunately, no fix for this problem
+(i.e. forcing libtool to write the newly created shared libraries into
+a different directory than the user's) has been found yet.
 
 
 Compilers and Options
@@ -124,6 +122,7 @@ variable, you have to compile the package for one architecture at a
 time in the source code directory.  After you have installed the
 package for one architecture, use `make distclean' before reconfiguring
 for another architecture.
+
 
 Installation Names
 ==================
@@ -168,11 +167,11 @@ you can use the `configure' options `--x-includes=DIR' and
 Specifying the System Type
 ==========================
 
-   There may be some features `configure' cannot figure out
-automatically, but needs to determine by the type of machine the package
-will run on.  Usually, assuming the package is built to be run on the
-_same_ architectures, `configure' can figure that out, but if it prints
-a message saying it cannot guess the machine type, give it the
+   There may be some features `configure' cannot figure out automati-
+cally, but needs to determine by the type of machine the package will
+run on.  Usually, assuming the package is built to be run on the _same_
+architectures, `configure' can figure that out, but if it prints a
+message saying it cannot guess the machine type, give it the
 `--build=TYPE' option.  TYPE can either be a short name for the system
 type, such as `sun4', or a canonical name which has the form:
 
@@ -270,10 +269,10 @@ warnings at the end that tell you about problems encountered.
 
 Error messages are about programs or libraries that are necessary
 for building the XForms library. You need to locate and install
-these programs before running `configure' again and then compiling
-the library by running 'make'. 
+these programs or libraries before running `configure' again and
+then compiling the library by running 'make'. 
 
 Warnings don't indicate that the library can't be huild, just that
 one or more programs aren't available that are needed for building
-additional stuff like the documentation. You can disregard them
+additional materiela like the documentation. You can disregard them
 or install the missing program(s) and run `configure' again.

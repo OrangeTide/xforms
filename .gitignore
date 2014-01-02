@@ -36,8 +36,6 @@ configure
 *.tps
 *.vr
 *.vrs
-.cvsignore
-CVS
 Makefile.in
 demos/.deps/
 demos/.libs/
@@ -205,3 +203,4 @@ semantic.cache
 *.tar.gz*
 *.dvi
 doc/xforms.5
+*.sig

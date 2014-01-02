@@ -1,8 +1,8 @@
 dnl Some useful functions for xforms configure.in                 -*- sh -*-
 dnl Author: Jean-Marc Lasgouttes (lasgouttes@lyx.org)
-dnl         Lars Gullik Bj�nnes (larsbj@lyx.org)
+dnl         Lars Gullik Bjønnes (larsbj@lyx.org)
 dnl         Allan Rae (rae@lyx.org)
-dnl         Jens Thoms Toerring (jt@toerring.de)
+dnl         Jens Thoms Törring (jt@toerring.de)
 
 
 ### Check for version and warn when a development version is used
