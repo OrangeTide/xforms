@@ -3466,7 +3466,10 @@ fl_get_object_bbox( FL_OBJECT * obj,
     get_object_rect( obj, &rect, 0 );
 
     *x = rect.x;
-    *y = rect.y;
+    if ( ! fli_inverted_y || ! obj->form )
+        *y = rect.y;
+    else
+        *y = obj->form->h - rect.height - rect.y;
     *w = rect.width;
     *h = rect.height;
 }
@@ -3557,9 +3560,6 @@ get_object_rect( FL_OBJECT * obj,
         XRectangle lr;
         fli_combine_rectangles( rect, get_label_rect( obj, &lr ) );
     }
-
-    if ( fli_inverted_y && obj->form )
-        rect->y = obj->form->h - rect->y;
 }
 
 

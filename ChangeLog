@@ -1,3 +1,10 @@
+2014-01-05 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/xyplot.c: Stupid bug fixed that could crash the
+	program when using an xyplot object.
+	* lib/forms.c, lib/object.c: Handling of coordinates
+	after call of fl_flip_yorigin() wasn't correct.
+
 2014-01-02 Jens Thoms Toerring    <jt@toerring.de>
 
 	* Final corrections for new 1.2.0 release

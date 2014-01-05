@@ -243,11 +243,13 @@ draw_points( FL_OBJECT * ob  FL_UNUSED_ARG,
              int         w,
              int         h )
 {
+    FL_POINT *pe = p + n;
+
     w /= 2;
     h /= h;
 
     if ( flx->win != None )
-        for ( ; p < p + n; p++ )
+        for ( ; p < pe; p++ )
         {
             XSegment seg[ ] = { { p->x - w, p->y,     p->x + w, p->y     },
                                 { p->x,     p->y - h, p->x,     p->y + h },

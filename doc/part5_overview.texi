@@ -482,6 +482,19 @@ void fl_flip_yorigin(void);
 Note however that this function must be called prior to
 @code{@ref{fl_initialize()}} and is a no-op after that.
 
+If this function has been called functions like
+@code{@ref{fl_get_object_position()}} or
+@code{@ref{fl_get_object_bbox()}}, reporting an objects positions and
+bounding box, will return @code{y}-coordinates in the old-fashioned
+coordinate system with the origin at the left bottom corner of the
+form. Similarly, the functions for setting or changing an objects
+position (@code{@ref{fl_set_object_position()}} and
+@code{@ref{fl_move_object()}}) then expect to receive arguments for
+the @code{y}-coordinates in this system. The @code{y}-coordinate
+stored in the object itself (i.e., @code{obj->y}) is always for the
+normal coordinate system with the origin at the top left corner.
+
+
 For proportional font, substituting tabs with spaces is not always
 appropriate because this most likely will fail to align text properly.
 Instead, a tab is treated as an absolute measure of distance, in

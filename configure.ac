@@ -1,7 +1,7 @@
 dnl Process with autoconf to generate configure script   -*- sh -*-
 
 AC_PREREQ(2.59)
-AC_INIT([xforms],[1.2.0],[xforms-development@nongnu.org])
+AC_INIT([xforms],[1.2.1],[xforms-development@nongnu.org])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(lib/forms.c)
 XFORMS_CHECK_VERSION
@@ -16,7 +16,7 @@ AC_CONFIG_MACRO_DIR([config])
 ### This defines the version number of the installed .so files
 ### using libtool's versioning system.
 
-AC_SUBST(SO_VERSION, ["3:0:1"])
+AC_SUBST(SO_VERSION, ["3:1:1"])
 
 # Fix the value of the prefixes.
 
