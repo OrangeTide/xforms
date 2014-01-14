@@ -45,7 +45,6 @@ static void handle_ClientMessage_event( FL_FORM * form,
 static int form_event_queued( XEvent *,
                               int );
 
-
 /* Waiting time (in ms) for fl_check_forms() and fl_check_only_forms().
    Originally this value was 10 ms. */
 
@@ -57,7 +56,6 @@ static int form_event_queued( XEvent *,
 
 static int delta_msec = FLI_TIMER_RES;
 static XEvent st_xev;
-
 
 extern void ( * fli_handle_signal )( void );       /* defined in signal.c */
 extern int ( * fli_handle_clipboard )( void * );   /* defined in clipboard.c */
@@ -891,8 +889,9 @@ get_next_event_or_idle( int        wait_io,
     {
         XNextEvent( flx->display, xev );
 
-        /* Find the form the event is for - if it's for none of "our" forms
-           it must be for e.g. a canvas window and must be put on the internal
+        /* Find the form the event is for - if it's for one of "our" forms just
+           return, indicating that there;s something to be done, otherwise it
+           must be for e.g. a canvas window and thus has be put on the internal
            event queue */
 
         if ( ( *form = fli_find_event_form( xev ) ) != NULL )
@@ -911,6 +910,7 @@ get_next_event_or_idle( int        wait_io,
                               ExposureMask
                             | PointerMotionMask
                             | ButtonMotionMask );
+
         fl_XPutBackEvent( xev );
     }
     else

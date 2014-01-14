@@ -1,5 +1,12 @@
 2014-01-05 Jens Thoms Toerring    <jt@toerring.de>
 
+	* lib/events.c: Newer Gnome desktop versions send a
+	seemingly bogus _XIM_PROTOCOL message (for a window
+	we never opened) that resulted in fl_do_forms() re-
+	turning prematurely.
+
+2014-01-05 Jens Thoms Toerring    <jt@toerring.de>
+
 	* lib/xyplot.c: Stupid bug fixed that could crash the
 	program when using an xyplot object.
 	* lib/forms.c, lib/object.c: Handling of coordinates
