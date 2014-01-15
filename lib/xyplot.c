@@ -1677,6 +1677,7 @@ draw_xyplot( FL_OBJECT * ob )
     FL_Coord bw = FL_abs( ob->bw );
 
     draw_to_pixmap =    ob->use_pixmap
+                     && ob->flpixmap
                      && ob->form->window == ob->flpixmap->pixmap;
 
     fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );

@@ -1,4 +1,9 @@
-2014-01-05 Jens Thoms Toerring    <jt@toerring.de>
+2014-01-15 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/xyplot.c: Bug reported by Arie van Wettum
+	fixed.
+
+2014-01-14 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/events.c: Newer Gnome desktop versions send a
 	seemingly bogus _XIM_PROTOCOL message (for a window
