@@ -88,10 +88,16 @@ fli_default_xswa( void )
 */
                          | StructureNotifyMask;
 
-    /* for input method */
+    /* Add event mask flags required by the input method/context */
 
     if( fli_context->xic )
-       st_xswa.event_mask |= FocusChangeMask;
+    {
+        long int fevents;
+
+        if ( ! XGetICValues( fli_context->xic, XNFilterEvents,
+                             &fevents, NULL ) )
+            st_xswa.event_mask |= fevents;
+    }
 
     st_xswa.backing_store = fli_cntl.backingStore;
     st_wmask = CWEventMask | CWBackingStore;
@@ -626,7 +632,7 @@ fli_create_window( Window       parent,
     st_xswa.colormap = m;
     st_wmask |= CWColormap;
 
-    /* no decoration means unmanagered windows */
+    /* No decoration means unmanagered windows */
 
     if (    st_wmborder == FL_NOBORDER
          && ( st_xsh.flags & fli_wmstuff.pos_request)

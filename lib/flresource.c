@@ -879,8 +879,8 @@ fli_init_context( void )
     fli_context->hscb          = FL_HOR_THIN_SCROLLBAR;
     fli_context->vscb          = FL_VERT_THIN_SCROLLBAR;
     fli_context->navigate_mask = ShiftMask;   /* to navigate input field */
-    fli_context->xim           = NULL;
-    fli_context->xic           = NULL;
+    fli_context->xim = NULL;
+    fli_context->xic = NULL;
 }
 
 

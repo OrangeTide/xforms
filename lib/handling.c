@@ -99,12 +99,6 @@ fli_XLookupString( XKeyEvent * xkey,
     {
         Status status;
 
-        if ( XFilterEvent( ( XEvent * ) xkey, None ) )
-        {
-            *ks = NoSymbol;
-            return 0;
-        }
-
         len = XmbLookupString( fli_context->xic, xkey, buf, buflen, ks,
                                &status );
 
@@ -889,13 +883,20 @@ get_next_event_or_idle( int        wait_io,
     {
         XNextEvent( flx->display, xev );
 
+        /* There might be an input manager that wants the event - FilterEvent()
+           returns true if this is the case and we are supposed to disregard
+           the event */
+
+        if ( fli_context->xic && XFilterEvent( xev, None ) )
+            return 0;
+
         /* Find the form the event is for - if it's for one of "our" forms just
            return, indicating that there;s something to be done, otherwise it
            must be for e.g. a canvas window and thus has be put on the internal
            event queue */
 
         if ( ( *form = fli_find_event_form( xev ) ) != NULL )
-           return 1;
+            return 1;
 
         /* Please note: we do event compression before the user ever sees the
            events. This is a bit questionable, at least for mouse movements,

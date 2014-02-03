@@ -709,7 +709,6 @@ void
 fl_XPutBackEvent( XEvent * xev )
 {
     static int mm;
-    static int first_time = 1;
 
     if ( xev->type != ClientMessage && fli_handle_event_callbacks( xev ) )
         return;
@@ -719,31 +718,12 @@ fl_XPutBackEvent( XEvent * xev )
     if ( xev->type == NoExpose )
     {
         if ( ++mm % 20 == 0 )
-            M_warn( "fl_XPutbackEvent", "20 NoExpose discarded" );
-        return;
-    }
-
-    /* After the first window gets opened newer versions of the Gnome desktop
-       send a ClientMessage with an "_XIM_PROTOCOL" for a window that doesn't
-       exist. Since it's not the window of one of our forms the event handling
-       functions assumes it's for a window a user opened out of our control
-       and tries to push the event onto the internal event queue. This in
-       turn leads to fl_do_forms() returning for this bogus event. To avoid
-       this we throw away the event if it's the first ever attempted to
-       insert into the event queue. */
-
-    if ( first_time )
-    {
-        first_time = 0;
-
-        if ( xev->type == ClientMessage
-             && ! strcmp( XGetAtomName( flx->display,
-                              ( ( XClientMessageEvent * ) xev )->message_type ),
-                          "_XIM_PROTOCOL" ) )
         {
-            M_warn( "fl_XPutbackEvent", "Throwing away _XIM_PROTOCOL message" );
-            return;
+            M_warn( "fl_XPutbackEvent", "20 NoExpose discarded" );
+            mm = 0;
         }
+
+        return;
     }
 
     fli_xevent_name( "fl_XPutBackEvent", xev );
