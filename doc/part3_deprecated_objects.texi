@@ -482,16 +482,21 @@ item, a pointer to the menu object it belongs to is returned to the
 application program.
 
 Please note that if you call @code{@ref{fl_set_menu()}} on a menu that
-already contains items those items are removed. The function calls
-@code{@ref{fl_clear_menu()}} internally before the new items are
-added.
+already contains items the existing items are replaced by the new
+ones - the function calls @code{@ref{fl_clear_menu()}} internally 
+before the new items are added.
 
 If you explicitely assign a menu item ID to a menu, using the special
 tag @code{%x}, it is your responsibility to make sure that this ID
 isn't already used by a different menu item in the same menu. Failure
 to do so may make it impossible to use the menu properly. All
 functions working on items expect the menu item ID as one of their
-arguments.
+arguments. Also note that only values that fit into a @code{char} can
+be used, so the range is restricted to the interval @w{@code{[-128,
+127]}} on most machines with a signed @code{char} type and to
+@w{@code{[0, 255]}} on those with an unsigned @code{char} type. For
+portability reasons it's thus to be recommended to restrict the range
+to @w{@code{[0, 127]}}.
 
 In case you don't set menu item IDs they are assigned automatically
 with the first item obtaining the menu item ID 1, the next 2 etc.,

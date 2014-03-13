@@ -27,7 +27,7 @@
 #include "config.h"
 #endif
 
-#include "include/forms.h"
+#include <forms.h>
 #include <stdlib.h>
 
 FL_FORM *pup;
@@ -318,11 +318,12 @@ do_menu( FL_OBJECT * ob,
          long        data  FL_UNUSED_ARG )
 {
     char buf[ 128 ];
+    FL_POPUP_RETURN *ret = fl_get_nmenu_item( ob );
 
-    if ( fl_get_menu( ob ) >= 0 )
-       sprintf( buf, "%d (%s)", fl_get_menu( ob ), fl_get_menu_text( ob ) );
+    if ( ret->val >= 0 )
+        sprintf( buf, "%ld (%s)", ret->val, ret->text );
     else
-       sprintf( buf, "%d", fl_get_menu( ob ) );
+        sprintf( buf, "%ld", ret->val );
 
     fl_set_object_label( pret, buf );
 }

@@ -108,6 +108,8 @@ menu_cb( FL_OBJECT * obj,
     int i,
         item = fl_get_menu( obj );
 
+    fprintf( stderr, "%d\n", item );
+
     if ( item <= 0 || set[ m ] == item )
         return;
 

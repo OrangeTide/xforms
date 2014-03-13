@@ -22,7 +22,7 @@
 
 typedef enum {
     FL_INT_SPINNER,
-    FL_FLOAT_SPINNER,
+    FL_FLOAT_SPINNER
 } FL_SPINNER_TYPE;
 
 FL_EXPORT FL_OBJECT * fl_create_spinner( int            type,

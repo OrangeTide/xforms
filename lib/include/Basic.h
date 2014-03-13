@@ -58,7 +58,7 @@ enum {
 
     /* WM_DELETE_WINDOW callback return */
 
-    FL_IGNORE      = -1,
+    FL_IGNORE      = -1
 };
 
 /* Max  directory length  */
@@ -154,14 +154,14 @@ typedef enum {
 typedef enum {
     FL_PLACE_FREE       =   0,      /* size remain resizable      */
     FL_PLACE_MOUSE      =   1,      /* mouse centered on form     */
-    FL_PLACE_CENTER     =   2,      /* center of the screen       */
-    FL_PLACE_POSITION   =   4,      /* specific position          */
-    FL_PLACE_SIZE       =   8,      /* specific size              */
-    FL_PLACE_GEOMETRY   =  16,      /* specific size and position */
-    FL_PLACE_ASPECT     =  32,      /* keep aspect ratio          */
-    FL_PLACE_FULLSCREEN =  64,      /* scale to fit to screen     */
-    FL_PLACE_HOTSPOT    = 128,      /* so mouse fall on (x,y)     */
-    FL_PLACE_ICONIC     = 256,      /* start in iconified form    */
+    FL_PLACE_CENTER     =   2,         /* center of the screen       */
+    FL_PLACE_POSITION   =   4,         /* specific position          */
+    FL_PLACE_SIZE       =   8,         /* specific size              */
+    FL_PLACE_GEOMETRY   =  16,         /* specific size and position */
+    FL_PLACE_ASPECT     =  32,         /* keep aspect ratio          */
+    FL_PLACE_FULLSCREEN =  64,         /* scale to fit to screen     */
+    FL_PLACE_HOTSPOT    = 128,         /* so mouse fall on (x,y)     */
+    FL_PLACE_ICONIC     = 256,         /* start in iconified form    */
 
     /* Modifiers */
 
@@ -178,7 +178,7 @@ typedef enum {
 enum {
     FL_FULLBORDER = 1,      /* normal                                  */
     FL_TRANSIENT,           /* set TRANSIENT_FOR property              */
-    FL_NOBORDER,            /* use override_redirect to supress decor. */
+    FL_NOBORDER             /* use override_redirect to supress decor. */
  };
 
 /* All box types */
@@ -537,7 +537,6 @@ typedef enum {
 	FL_MOVE      = FL_MOTION,
     FL_KEYBOARD  = FL_KEYPRESS,
     FL_MOUSE     = FL_UPDATE
-
 } FL_EVENTS;
 
 

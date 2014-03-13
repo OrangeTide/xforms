@@ -1045,7 +1045,7 @@ fl_set_clipping( FL_Coord x,
  ***************************************/
 
 void
-fl_unset_clipping( )
+fl_unset_clipping( void )
 {
     unset_clipping( FLI_NORMAL_CLIP, flx->gc );
 }

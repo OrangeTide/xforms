@@ -771,7 +771,7 @@ FL_EXPORT void fl_set_clipping( FL_Coord x,
                                 FL_Coord w,
                                 FL_Coord h );
 
-FL_EXPORT void fl_unset_clipping( );
+FL_EXPORT void fl_unset_clipping( void );
 
 FL_EXPORT void fl_set_text_clipping( FL_Coord x,
                                      FL_Coord y,

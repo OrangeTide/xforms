@@ -272,7 +272,7 @@ handle_menu( FL_OBJECT * ob,
 
         case FL_ENTER:
             if ( ob->type == FL_TOUCH_MENU && do_menu( ob ) > 0 )
-                    ret |= FL_RETURN_CHANGED;
+                ret |= FL_RETURN_CHANGED;
             break;
 
         case FL_PUSH:
@@ -822,7 +822,7 @@ fl_get_menu( FL_OBJECT * ob )
     }
 #endif
 
-    return val_to_index( ob, sp->val );
+    return sp->val > 0 && sp->val <= sp->numitems ? sp->mval[ sp->val ] : -1;
 }
 
 
