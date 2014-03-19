@@ -1,3 +1,7 @@
+2014-03-19 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/objects.c: Another attempt at speeding-up redraws
+
 2014-03-18 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/objects.c: Speed-up for redraws

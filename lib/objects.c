@@ -557,6 +557,7 @@ fl_delete_object( FL_OBJECT * obj )
     }
 
     lose_focus( obj ); 
+
     if ( obj == fli_int.pushobj )
         fli_int.pushobj = NULL;
     if ( obj == fli_int.mouseobj )
@@ -2159,14 +2160,11 @@ mark_object_for_redraw( FL_OBJECT * obj )
 
     obj->redraw = 1;
 
-    for ( o = obj->child; o; o = o->nc )
-        mark_object_for_redraw( o );
-
     /* If an object is marked as being under another object we have to find
        the object(s) it is beneath and also mark them for a redraw. For the
        special case that the object to be redraw is the first object of
        the form (i.e. the one for the background) we don't have to check
-       if the other object are on top of it, they all are and need a redraw. */
+       if the other object are on top of it, they all are. */
 
     if ( obj == bg_object( obj->form ) )
     {
@@ -2184,21 +2182,30 @@ mark_object_for_redraw( FL_OBJECT * obj )
     else if ( obj->is_under )
     {
         /* If it hasn't been done yet pre-calculate the sizes of all
-           objects possibly concerned a*/
+           objects possibly concerned */
 
         int need_finish = prep_recalc( obj->form, obj );
+        int cnt = 0;
 
         for ( o = obj->next; o; o = o->next )
         {
             if (    o->redraw
                  || ! o->visible
-                 || o->parent
+                 || ( o->parent && ! o->parent->visible )
                  || o->objclass == FL_BEGIN_GROUP
                  || o->objclass == FL_END_GROUP )
                 continue;
 
             if ( objects_intersect( obj, o ) )
+            {
                 mark_object_for_redraw( o );
+
+                /* Since we know how many objects are on top of our object
+                   we can stop if all of them have been marked for redraw. */
+
+                if ( ++cnt >= obj->is_under )
+                    break;
+            }
         }
 
         if ( need_finish )
@@ -2246,33 +2253,37 @@ fl_redraw_object( FL_OBJECT * obj )
 
 
 /***************************************
- * Function to test if the areas of two objects (and their labels) intersect
+ * Function to test if the areas of two objects (including their labels if
+ * they're outside the object) intersect
  ***************************************/
 
 static int
 objects_intersect( FL_OBJECT * obj1,
                    FL_OBJECT * obj2 )
 {
-    FL_RECT r[ 2 ];
-
     if ( tmp_vdata )
-    {        r[ 0 ] = * ( FL_RECT * ) obj1->u_vdata;
-        r[ 1 ] = * ( FL_RECT * ) obj2->u_vdata;
+    {
+        FL_RECT *r1 = obj1->u_vdata,
+                *r2 = obj2->u_vdata;
+
+        return    r1->x + r1->width  > r2->x
+               && r2->x + r2->width  > r1->x
+               && r1->y + r1->height > r2->y
+               && r2->y + r2->height > r1->y;
+
     }
     else
     {
-        get_object_rect( obj1, r,     0 );
-        get_object_rect( obj2, r + 1, 0 );
-    }
+        FL_RECT r1, r2;
 
-    return      (    (    r[ 0 ].x <= r[ 1 ].x
-                       && r[ 0 ].x + r[ 0 ].width > r[ 1 ].x )
-                  || (    r[ 1 ].x <= r[ 0 ].x
-                       && r[ 1 ].x + r[ 1 ].width > r[ 0 ].x ) )
-            && (    (    r[ 0 ].y <= r[ 1 ].y
-                      && r[ 0 ].y + r[ 0 ].height > r[ 1 ].y )
-                 || (    r[ 1 ].y <= r[ 0 ].y
-                      && r[ 1 ].y + r[ 1 ].height > r[ 0 ].y ) );
+        get_object_rect( obj1, &r1, 0 );
+        get_object_rect( obj2, &r2, 0 );
+
+        return    r1.x + r1.width  > r2.x
+               && r2.x + r2.width  > r2.x
+               && r1.y + r1.height > r2.y
+               && r2.y + r2.height > r1.y;
+    }
 }
 
 
@@ -3110,13 +3121,15 @@ fl_call_object_callback( FL_OBJECT * obj )
  * its successors in the forms list of objects (objects are always sorted in
  * a way that objects earlier in the list are drawn under those following
  * it). We don't need to look at objects that have a parent since for
- * them the tests for the parent objects will do.
+ * them the tests for the parent objects will do. It returns the number
+ * of objects that are "over" the object.
  ***************************************/
 
 static int
 object_is_under( FL_OBJECT * obj )
 {
     FL_OBJECT *o;
+    int cnt = 0;
 
     /* The first object of a form is always below all others */
 
@@ -3136,10 +3149,10 @@ object_is_under( FL_OBJECT * obj )
             continue;
 
         if ( objects_intersect( obj, o ) )
-            return 1;
+            cnt++;
     }
 
-    return 0;
+    return cnt;
 }
 
 
