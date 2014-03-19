@@ -53,6 +53,10 @@ static void mark_object_for_redraw( FL_OBJECT * );
 static int object_is_under( FL_OBJECT * );
 static void checked_hide_tooltip( FL_OBJECT *,
                                   XEvent    * );
+static int prep_recalc( FL_FORM   * form,
+                         FL_OBJECT * start_obj );
+static void finish_recalc( FL_FORM   * form,
+                           FL_OBJECT * start_obj );
 
 static FL_OBJECT *refocus;
 
@@ -1153,7 +1157,7 @@ fl_set_object_lcol( FL_OBJECT * obj,
 
         for ( obj = obj->next; obj && obj->objclass != FL_END_GROUP;
               obj = obj->next )
-            fl_set_object_lcolor( obj, lcol );
+            fl_set_object_lcol( obj, lcol );
 
         if ( form )
             fl_unfreeze_form( form );
@@ -2165,6 +2169,7 @@ mark_object_for_redraw( FL_OBJECT * obj )
        if the other object are on top of it, they all are and need a redraw. */
 
     if ( obj == bg_object( obj->form ) )
+    {
         for ( o = obj->next; o; o = o->next )
         {
             if (    ! o->visible
@@ -2175,7 +2180,14 @@ mark_object_for_redraw( FL_OBJECT * obj )
 
             obj->redraw = 1;
         }
+    }
     else if ( obj->is_under )
+    {
+        /* If it hasn't been done yet pre-calculate the sizes of all
+           objects possibly concerned a*/
+
+        int need_finish = prep_recalc( obj->form, obj );
+
         for ( o = obj->next; o; o = o->next )
         {
             if (    o->redraw
@@ -2188,6 +2200,10 @@ mark_object_for_redraw( FL_OBJECT * obj )
             if ( objects_intersect( obj, o ) )
                 mark_object_for_redraw( o );
         }
+
+        if ( need_finish )
+            finish_recalc( obj->form, obj );
+    }
 }
 
 
@@ -2211,8 +2227,16 @@ fl_redraw_object( FL_OBJECT * obj )
     {
         FL_OBJECT *o = obj->next;
 
+        /* If it hasn't been done yet pre-calculate the sizes of all
+            objects possibly concerned */
+
+        int need_finish = prep_recalc( o->form, o );
+
         for ( ; o && o->objclass != FL_END_GROUP; o = o->next )
             mark_object_for_redraw( o );
+
+        if ( need_finish )
+            finish_recalc( obj->form, obj->next ); 
     }
     else
         mark_object_for_redraw( obj );
@@ -2232,8 +2256,7 @@ objects_intersect( FL_OBJECT * obj1,
     FL_RECT r[ 2 ];
 
     if ( tmp_vdata )
-    {
-        r[ 0 ] = * ( FL_RECT * ) obj1->u_vdata;
+    {        r[ 0 ] = * ( FL_RECT * ) obj1->u_vdata;
         r[ 1 ] = * ( FL_RECT * ) obj2->u_vdata;
     }
     else
@@ -3121,43 +3144,63 @@ object_is_under( FL_OBJECT * obj )
 
 
 /***************************************
- * Helper function for fli_recalc_intersections() - without this is a
- * O(N^2) operation with respect to the recalculations of the N
- * object bounding boxes. Here we use that the 'u_vdata' pointers
- * of the objects don't get used during fli_recalc_intersections()
- * and replace them all by pointers to pre-calculated bounding
- * boxes, thus reducing the number of recalculations to N (in
- * objects_intersect() it gets checked if 'tmp_vdata' is non-NULL
- * and then uses the pre-calculated bounding boxes).
+ * Helper function for fli_recalc_intersections() and other functions -
+ * without this is a O(N^2) operation with respect to the recalculations
+ * of the N object bounding boxes. Here we use that the 'u_vdata' pointers
+ * of the objects don't get used during fli_recalc_intersections() and
+ * replace them all by pointers to pre-calculated bounding boxes, thus
+ * reducing the number of recalculations to N (in objects_intersect() it
+ * gets checked if 'tmp_vdata' is non-NULL and then uses the pre-calculated
+ * bounding boxes).
  ***************************************/
 
-static void
-prep_recalc( FL_FORM * form )
+static int
+prep_recalc( FL_FORM   * form,
+             FL_OBJECT * start_obj )
 {
     FL_OBJECT *obj;
     int cnt = 0;
     int i = 0;
 
-    /* Couny how many objects the form contains */
+    if ( ! form || tmp_vdata )
+        return 0;
 
-    for ( obj = bg_object( form ); obj; obj = obj->next )
+    if ( ! start_obj )
+        start_obj = bg_object( form );
+
+    /* Count how many objects the form contains */
+
+    for ( obj = start_obj; obj; obj = obj->next )
         cnt++;
+
+    if ( cnt < 2 )
+        return 0;
 
     /* Get memory for temporary storing the 'u_vdata' pointers of all objects
        and as many FL_RECT's */
 
-    tmp_vdata = fl_malloc( cnt * sizeof *tmp_vdata );
-    tmp_rects = fl_malloc( cnt * sizeof *tmp_rects );
+    if ( ( tmp_vdata = fl_malloc( cnt * sizeof *tmp_vdata ) ) )
+    {
+        if ( ! ( tmp_rects = fl_malloc( cnt * sizeof *tmp_rects ) ) )
+        {
+            fli_safe_free( tmp_vdata );
+            return 0;
+        }
+    }
+    else
+        return 0;
 
     /* Save the 'u_vdata' pointers and replace them by pointers to the
        bounding box rectangles */
 
-    for ( obj = bg_object( form ); obj; obj = obj->next )
+    for ( obj = start_obj; obj; obj = obj->next )
     {
         tmp_vdata[ i ] = obj->u_vdata;
         obj->u_vdata = tmp_rects + i;
         get_object_rect( obj, tmp_rects + i++, 0 );
     }
+
+    return 1;
 }
 
 
@@ -3168,7 +3211,8 @@ prep_recalc( FL_FORM * form )
  ***************************************/
 
 static void
-finish_recalc( FL_FORM * form )
+finish_recalc( FL_FORM   * form,
+               FL_OBJECT * start_obj )
 {
     FL_OBJECT *obj;
     int i = 0;
@@ -3176,7 +3220,8 @@ finish_recalc( FL_FORM * form )
     if ( ! tmp_vdata )
         return;
 
-    for ( obj = bg_object( form ); obj; obj = obj->next )
+    for ( obj = start_obj ? start_obj : bg_object( form ); obj;
+          obj = obj->next )
         obj->u_vdata = tmp_vdata[ i++ ];
 
     fli_safe_free( tmp_rects );
@@ -3204,10 +3249,10 @@ fli_recalc_intersections( FL_FORM * form )
     if ( fl_current_form || ! form || ( form && form->frozen ) )
         return;
 
-    prep_recalc( form );
+    prep_recalc( form, NULL );
     for ( obj = bg_object( form ); obj && obj->next; obj = obj->next )
         obj->is_under = object_is_under( obj );
-    finish_recalc( form );
+    finish_recalc( form, NULL );
 }
 
 
@@ -3221,7 +3266,6 @@ fl_move_object( FL_OBJECT * obj,
 {
      FL_Coord x,
               y;
-
      if ( fli_inverted_y )
          dy = - dy;
 
