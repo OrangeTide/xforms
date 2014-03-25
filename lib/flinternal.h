@@ -138,9 +138,6 @@ enum {
 
 /* events.c or event related */
 
-FL_OBJECT * fli_handled_obj;
-FL_OBJECT * fli_handled_parent;
-
 void fli_obj_queue_delete( void );
 
 void fli_event_queue_delete( void );

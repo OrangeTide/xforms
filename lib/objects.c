@@ -39,6 +39,9 @@
 
 extern FL_FORM * fli_fast_free_object;     /* defined in forms.c */
 
+extern FL_OBJECT * fli_handled_obj;        /* defined in  events.c */
+extern FL_OBJECT * fli_handled_parent;     /* defined in  events.c */
+
 static void redraw( FL_FORM *,
                     int );
 static void lose_focus( FL_OBJECT * );
@@ -704,7 +707,8 @@ fl_free_object( FL_OBJECT * obj )
 
     if ( obj == fli_handled_obj )
         fli_handled_obj = NULL;
-    if ( obj == fli_handled_parent )        fli_handled_parent = NULL;
+    if ( obj == fli_handled_parent )
+        fli_handled_parent = NULL;
 
     fl_free( obj );
 }

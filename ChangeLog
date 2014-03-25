@@ -1,3 +1,10 @@
+2014-03-25 Jens Thoms Toerring    <jt@toerring.de>
+
+	* */Makefile.am: Removed '-Wl,--no-undefined' since
+	this linker flag is not available everywhere
+	* lib/flinternal.h: Removed stupid definition of variables
+	- thanks go to André Ludwig for noticing the problem.
+
 2014-03-19 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/objects.c: Another attempt at speeding-up redraws
