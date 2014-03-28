@@ -229,6 +229,11 @@ handle_clock( FL_OBJECT * ob,
 
     switch ( event )
     {
+        case FL_ATTRIB :
+            if ( ob->align & ~ FL_ALIGN_INSIDE )
+                ob->align = fl_to_outside_lalign( ob->align );
+            break;
+
         case FL_DRAW :
             fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h,
                         ob->col1, ob->bw );

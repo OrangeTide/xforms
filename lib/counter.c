@@ -453,6 +453,10 @@ handle_counter( FL_OBJECT * ob,
 
     switch ( event )
     {
+        case FL_ATTRIB :
+            ob->align = fl_to_outside_lalign( ob->align );
+            break;
+
         case FL_DRAW:
             draw_counter( ob );
             break;

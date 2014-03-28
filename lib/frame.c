@@ -45,17 +45,18 @@ handle_frame( FL_OBJECT * ob,
 {
     switch ( event )
     {
+        case FL_ATTRIB :
+            ob->align = fl_to_inside_lalign( ob->align );
+            break;
+
         case FL_DRAW:
             fl_drw_frame( ob->type, ob->x, ob->y, ob->w, ob->h,
                           ob->col1, ob->bw );
-            fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
-                         ob->lcol, ob->lstyle, ob->lsize, ob->label );
-            break;
+            /* fall through */
 
         case FL_DRAWLABEL:
-            if ( ! fl_is_center_lalign( ob->align ) )
-                fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
-                             ob->lcol, ob->lstyle, ob->lsize, ob->label );
+            fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
+                         ob->lcol, ob->lstyle, ob->lsize, ob->label );
             break;
     }
 

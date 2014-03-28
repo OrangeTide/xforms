@@ -239,6 +239,10 @@ handle_thumbwheel( FL_OBJECT * ob,
 
     switch ( ev )
     {
+        case FL_ATTRIB :
+            ob->align = fl_to_outside_lalign( ob->align );
+            break;
+
         case FL_DRAW:
             draw( ob );
             sp->draw_type = COMPLETE_DRAW;

@@ -454,17 +454,17 @@ show_attributes( const FL_OBJECT * obj )
 
     /* Fill in settings */
 
-	/* a. boxtype */
+	/* a) boxtype */
 
     fl_set_choice( fd_generic_attrib->boxobj, obj->boxtype + 1 );
 
-	/* b. label alignment */
+	/* b) label alignment */
 
     fl_set_choice_text( fd_generic_attrib->align, align_name( align, 0 ) + 9 );
     fl_set_choice( fd_generic_attrib->inside,
                    fl_is_outside_lalign( obj->align ) + 1 );
 
-	/* c. label font and style */
+	/* c) label font and style */
 
     lstyle  = obj->lstyle % FL_SHADOW_STYLE;
     spstyle = obj->lstyle / FL_SHADOW_STYLE;
@@ -475,7 +475,7 @@ show_attributes( const FL_OBJECT * obj )
     fl_set_choice( fd_generic_attrib->fontobj, lstyle + 1 );
     fl_set_choice( fd_generic_attrib->styleobj, spstyle + 1 );
 
-	/* d. label font size */
+	/* d) label font size */
 
     for ( oksize = i = 0; ! oksize && i < ( int ) NFSIZE; i++ )
         if ( ( oksize = ( obj->lsize == fsizes[ i ].size ) ) )
@@ -490,25 +490,25 @@ show_attributes( const FL_OBJECT * obj )
         fl_set_choice( fd_generic_attrib->sizeobj, NFSIZE );
     }
 
-    /* e. gravity settings */
+    /* e) gravity settings */
 
     fl_set_choice_text( fd_generic_attrib->nwgravity,
                         gravity_name( obj->nwgravity ) + 3 );
     fl_set_choice_text( fd_generic_attrib->segravity,
                         gravity_name( obj->segravity ) + 3 );
 
-	/* f. resize behaviour */
+	/* f) resize behaviour */
 
     fl_set_choice_text( fd_generic_attrib->resize,
                         resize_name( obj->resize ) + 3 );
 
-	/* g. Label string */
+	/* g) Label string */
 
     label = get_label( obj, 0 );
     fl_set_input( fd_generic_attrib->labelobj, label );
     fl_free( label );
 
-	/* h. name, callback function name and argument */
+	/* h) name, callback function name and argument */
 
     get_object_name( obj, objname, cbname, argname );
 
@@ -516,11 +516,11 @@ show_attributes( const FL_OBJECT * obj )
     fl_set_input( fd_generic_attrib->cbnameobj, cbname );
     fl_set_input( fd_generic_attrib->argobj, argname );
 
-	/* h. shortcut */
+	/* h) shortcut */
 
     fl_set_input( fd_generic_attrib->scobj, get_shortcut_string( obj ) );
 
-	/* i. object and label colors */
+	/* i) object and label colors */
 
     fl_set_object_color( fd_generic_attrib->col1obj, obj->col1, obj->col1 );
     fl_set_object_color( fd_generic_attrib->col2obj, obj->col2, obj->col2 );

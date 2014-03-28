@@ -140,12 +140,7 @@ handle_timer( FL_OBJECT * ob,
     {
         case FL_ATTRIB :
             if ( ob->type == FL_VALUE_TIMER )
-            {
-                if ( fl_is_center_lalign( ob->align ) )
-                    ob->align = FL_ALIGN_LEFT;
-                else
-                    ob->align = fl_to_outside_lalign( ob->align );
-            }
+                ob->align = fl_to_outside_lalign( ob->align );
             break;
 
         case FL_DRAW:
@@ -153,11 +148,17 @@ handle_timer( FL_OBJECT * ob,
             /* fall through */
 
         case FL_DRAWLABEL:
-            if (    ob->type != FL_HIDDEN_TIMER
-                 && ! ( ob->type == FL_VALUE_TIMER && update_only ) )
+            if (    ob->type == FL_HIDDEN_TIMER
+                 || ( ob->type == FL_VALUE_TIMER && update_only ) )
+                break;
+            if ( fl_is_outside_lalign( ob->align ) )
                 fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
                                     ob->lcol, ob->lstyle, ob->lsize,
                                     ob->label );
+            else
+                fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
+                             ob->lcol, ob->lstyle, ob->lsize,
+                             ob->label );
             break;
 
         case FL_RELEASE:

@@ -62,6 +62,7 @@ handle_scrollbar( FL_OBJECT * obj,
     {
         case FL_ATTRIB :
         case FL_RESIZED :
+            obj->align = fl_to_outside_lalign( obj->align );
             attrib_change( obj );
             get_geom( obj );
             break;

@@ -341,6 +341,10 @@ handle_dial( FL_OBJECT * obj,
 
     switch ( event )
     {
+        case FL_ATTRIB :
+            obj->align = fl_to_outside_lalign( obj->align );
+            break;
+
         case FL_DRAW:
             draw_dial( obj );
             break;

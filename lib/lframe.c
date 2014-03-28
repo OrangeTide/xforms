@@ -57,6 +57,18 @@ handle_lframe( FL_OBJECT * ob,
 
     switch ( event )
     {
+        case FL_ATTRIB :
+            if ( ! ( ob->align & ~ FL_ALIGN_INSIDE ) )
+                ob->align = FL_ALIGN_TOP;
+            else
+                ob->align = fl_to_outside_lalign( ob->align );
+
+            if ( ob->align == FL_ALIGN_RIGHT )
+                ob->align = FL_ALIGN_RIGHT_TOP;
+            if ( ob->align == FL_ALIGN_LEFT )
+                ob->align = FL_ALIGN_LEFT_TOP;
+            break;
+
         case FL_DRAW :
             fl_drw_frame( ob->type, ob->x, ob->y, ob->w, ob->h,
                           ob->col1, ob->bw );

@@ -118,7 +118,7 @@ typedef int ( * DrawString )( Display *,
  * this is also handled. Finally, parts of the text can be shown as selected.
  *
  * Arguments:
- *  align:       Alignmnet of the text relative to the box
+ *  align:       Alignment of the text relative to the box
  *  x, ym w, h:  postion and size of box
  *  clip:        0 = no clipping is to be used at all
  *               1 = clipping is to be done by this function

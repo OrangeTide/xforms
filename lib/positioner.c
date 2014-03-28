@@ -174,6 +174,10 @@ handle_positioner( FL_OBJECT * obj,
 
     switch ( event )
     {
+        case FL_ATTRIB :
+            obj->align = fl_to_outside_lalign( obj->align );
+            break;
+
         case FL_DRAW:
             if ( obj->type != FL_INVISIBLE_POSITIONER )
                 draw_positioner( obj );

@@ -128,6 +128,7 @@ handle_spinner( FL_OBJECT * obj,
     {
         case FL_ATTRIB :
         case FL_RESIZED :
+            obj->align = fl_to_outside_lalign( obj->align );
             sp->attrib = 1;
             break;
 

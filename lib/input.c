@@ -1451,10 +1451,8 @@ handle_input( FL_OBJECT * obj,
     switch ( event )
     {
         case FL_ATTRIB :
-            if ( ! ( obj->align & ~ FL_ALIGN_INSIDE ) )
-                obj->align = FL_ALIGN_LEFT;
-            else
-                obj->align = fl_to_outside_lalign( obj->align );
+            obj->align = fl_to_outside_lalign( obj->align );
+            break;
 
         case FL_RESIZED :
             check_scrollbar_size( obj );

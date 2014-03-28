@@ -522,6 +522,10 @@ handle_canvas( FL_OBJECT * ob,
 
     switch ( event )
     {
+        case FL_ATTRIB :
+            ob->align = fl_to_outside_lalign( ob->align );
+            break;
+
         case FL_DRAW:
             if ( ob->col1 != FL_NoColor )
                 sp->xswa.background_pixel = fl_get_pixel( ob->col1 );

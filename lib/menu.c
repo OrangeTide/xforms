@@ -246,6 +246,10 @@ handle_menu( FL_OBJECT * ob,
 
     switch ( event )
     {
+        case FL_ATTRIB :
+            ob->align = fl_to_inside_lalign( ob->align );
+            break;
+
         case FL_DRAW:
             /* Draw the object */
 
