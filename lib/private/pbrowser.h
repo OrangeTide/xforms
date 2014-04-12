@@ -27,8 +27,8 @@
 #ifndef PBROWSER_H_
 #define PBROWSER_H_
 
-#include "private/ptbox.h"
-#include "private/pscrollbar.h"
+#include "ptbox.h"
+#include "pscrollbar.h"
 
 
 typedef struct {

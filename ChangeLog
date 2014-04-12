@@ -1,3 +1,8 @@
+2014-04-12 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/fonts.c: Bug in font caching code, found by "Sunny",
+	that could result in crashes fixed.
+
 2014-03-27 Jens Thoms Toerring    <jt@toerring.de>
 
 	* Some minor fixes for object label alignment

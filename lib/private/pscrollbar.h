@@ -22,7 +22,7 @@
 #ifndef PSCROLLBAR_H_
 #define PSCROLLBAR_H_
 
-#include "private/pslider.h"
+#include "pslider.h"
 
 typedef struct {
     FL_OBJECT * slider;

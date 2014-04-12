@@ -62,7 +62,7 @@ static char * get_fname( const char *,
  *
  */
 
-static const char *fnts[ FL_MAXFONTS ] =
+static const char *default_fonts[ ] =
 {
     "-*-helvetica-medium-r-*-*-*-?-*-*-p-*-*-*",
     "-*-helvetica-bold-r-*-*-*-?-*-*-p-*-*-*",
@@ -83,6 +83,8 @@ static const char *fnts[ FL_MAXFONTS ] =
     "-*-charter-bold-r-*-*-*-?-*-*-*-*-*-*",
     "-*-charter-medium-i-*-*-*-?-*-*-*-*-*-*",
     "-*-charter-bold-i-*-*-*-?-*-*-*-*-*-*",
+
+    NULL
 };
 
 static FL_FONT fl_fonts[ FL_MAXFONTS ];
@@ -105,8 +107,8 @@ static const char *cv_fname( const char * );
 void
 fli_init_font( void )
 {
-    FL_FONT *flf = fl_fonts;
-    const char *const *f = fnts;
+    FL_FONT *flf;
+    const char *const *f = default_fonts;
     static int initialized;
 
     if ( initialized )
@@ -114,10 +116,10 @@ fli_init_font( void )
 
     initialized = 1;
 
-    /* If fl_set_font_name() is called before fl_initialize(), we need to
-       keep the change */
+    /* If fl_set_font_name() has been called before fl_initialize() we need
+       to keep the changes */
 
-    for ( ; *f; f++, flf++ )
+    for ( flf = fl_fonts, f = default_fonts; *f; f++, flf++ )
         if ( ! *flf->fname )
             strcpy( flf->fname, *f );
 
@@ -218,7 +220,8 @@ fl_set_font_name( int          n,
         int i;
 
         for ( i = 0; i < flf->nsize; i++ )
-            XFreeFont( flx->display, flf->fs[ i ] );
+            if ( flf->size[ i ] > 0 )
+                XFreeFont( flx->display, flf->fs[ i ] );
         *flf->fname = '\0';
     }
 
@@ -248,6 +251,20 @@ fl_set_font_name_f( int          n,
     ret = fl_set_font_name( n, buf );
     fl_free( buf );
     return ret;
+}
+
+
+/***************************************
+ * Returns the name of the indexed font
+ ***************************************/
+
+const char *
+fl_get_font_name( int n )
+{
+    if ( n < 0 || n >= FL_MAXFONTS )
+        return NULL;
+
+    return fl_fonts[ n ].fname;
 }
 
 
@@ -288,11 +305,22 @@ try_get_font_struct( int numb,
     FL_FONT *flf = fl_fonts;
     XFontStruct *fs = NULL;
     int n = 0,
-        i;
+        i,
+        is_subst = 0;
 
     if ( special_style( numb ) )
         numb %= FL_SHADOW_STYLE;
 
+    /* Avoid trying to use negative or zero font size */
+
+    if ( size <= 0 )
+    {
+        M_info( "try_get_font_struct",
+                "Bad font size requested (%d), using %d istead",
+                size, size < 0 ? -size : 1 );
+        size = size < 0 ? -size : 1;
+    }
+ 
     flf = fl_fonts + numb;
 
     if ( numb < 0 || numb >= FL_MAXFONTS || ! *flf->fname )
@@ -315,56 +343,40 @@ try_get_font_struct( int numb,
 
     strcpy( fli_curfnt, get_fname( flf->fname, size ) );
 
-    /* Search for requested size */
+    /* Search for requested size in the cached fonts - fonts with "negative
+       sizes" are replacement fonts found before */
 
-    for ( fs = NULL, i = 0; i < flf->nsize; i++ )
-        if ( size == flf->size[ i ] )
-        {
+    for ( fs = NULL, i = 0; ! fs && i < flf->nsize; i++ )
+        if ( size == abs( flf->size[ i ] ) )
             fs = flf->fs[ i ];
-#if FL_DEBUG >= ML_DEBUG
-            M_debug( "try_get_font_struct", "Cache hit: %s",
-                     fl_cur_fontname );
-#endif
-        }
 
-    /* If requested font is not found or cache is full, get the destination
-       cache for this size */
+    /* Return it if font has already been loaded (i.e. is in the cache) */
 
-    if ( ! fs && flf->nsize == FL_MAX_FONTSIZES )
-    {
-        XFreeFont( flx->display, flf->fs[ FL_MAX_FONTSIZES - 1 ] );
-        flf->nsize--;
-    }
+    if ( fs )
+        return fs;
 
-    /* Font is not cached, try to load it */
+    /* Try to load the font */
+
+    fs = XLoadQueryFont( flx->display, fli_curfnt );
+
+    /* If that didn't work try to find a replacement font, i.e. an already
+       loaded font with the nearest size or, if there's none, the very most
+       basic font. */
 
     if ( ! fs )
     {
-        n = flf->nsize;
-        flf->fs[ n ] = XLoadQueryFont( flx->display, fli_curfnt );
+       int mdiff = INT_MAX,
+           k;
 
-        if ( ( fs = flf->fs[ n ] ) )
-        {
-            flf->size[ n ] = size;
-            flf->nsize++;
-        }
-    }
+        if ( with_fail )
+            return NULL;
 
-    if ( ! fs && with_fail )
-        return NULL;
+        M_warn( "try_get_font_struct", "Can't load %s, using subsitute",
+                fli_curfnt );
 
-    /* Didn't get it. Try to find a substitute */
+        /* Search for a replacement with the nearest size */
 
-    if ( ! fs )
-    {
-        int mdiff = 1000,
-            k = -1;
-
-        M_warn( "try_get_font_struct", "Can't load %s", fli_curfnt );
-
-        /* Search for a replacement */
-
-        for ( i = 0; i < flf->nsize; i++ )
+        for ( k = -1, i = 0; i < flf->nsize; i++ )
         {
             if ( mdiff > FL_abs( size - flf->size[ i ] ) )
             {
@@ -373,15 +385,25 @@ try_get_font_struct( int numb,
             }
         }
 
-        fs = k == -1 ? ( flx->fs ? flx->fs : defaultfs ) : flf->fs[ k ];
+        if ( k != -1 )
+            fs = flf->fs[ k ];
+        else
+            fs = flx->fs ? flx->fs : defaultfs;
 
-        /* If we did not get it this time, we won't get it next time either,
-           so replace it with whatever we found  */
-
-        flf->size[ flf->nsize ] = size;
-        flf->fs[ flf->nsize ] = fs;
-        flf->nsize++;
+        is_subst = 1;
     }
+
+    /* If cache is full make space at the end */
+
+    if ( flf->nsize == FL_MAX_FONTSIZES )
+    {
+        if ( flf->size[ FL_MAX_FONTSIZES - 1 ] > 0 )
+            XFreeFont( flx->display, flf->fs[ FL_MAX_FONTSIZES - 1 ] );
+        flf->nsize--;
+    }
+
+    flf->fs[ flf->nsize ] = fs;
+    flf->size[ flf->nsize++ ] = is_subst ? - size : size;
 
     /* Here we are guranteed a valid font handle although there is no
        gurantee the font handle corresponds to the font requested */

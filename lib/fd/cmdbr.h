@@ -25,7 +25,7 @@
 #ifndef FD_cmd_h_
 #define FD_cmd_h_
 
-#include "include/forms.h"
+#include "../include/forms.h"
 
 /* Callbacks, globals and object handlers */
 

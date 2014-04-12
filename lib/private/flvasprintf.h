@@ -25,7 +25,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-#include "private/flsnprintf.h"
+#include "flsnprintf.h"
 
 #if defined ( HAVE_VASPRINTF ) && ! defined ( HAVE_DECL_VASPRINTF )
 int

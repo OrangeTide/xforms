@@ -1402,13 +1402,21 @@ before @code{@ref{fl_initialize()}}, it will return 0, but may fail later if
 the font name is not valid. To change the default font
 (helvetica-medium), a program should change font @code{FL_NORMAL_STYLE}.
 
-If a font name in XLFD is given, a question mark
-(@code{?}) in the point size position informs
-the Forms Library that variable size will be requested later. It is
-preferable that the complete XLFD name (i.e., with 14 dashes and
-possibly wildcards) be given because a complete name has the advantage
-that the font may be re-scalable if scalable fonts are available. This
-means that although both
+To get the name of a font at a certain index use
+@example
+@findex fl_get_font_name()
+@anchor{fl_get_font_name()}
+const char *fl_get_font_name(int index);
+@end example
+
+
+If a font name in XLFD is given, a question mark (@code{?}) in the
+point size position (i.e.; between the eighth and the nineth dash)
+informs the Forms Library that a scalable font should be requested
+later. It is preferable that the complete XLFD name (i.e., with 14
+dashes and possibly wildcards) be given because a complete name has
+the advantage that the font may be re-scalable if scalable fonts are
+available. This means that although both
 @example
 "-*-helvetica-medium-r-*-*-*-?-*-*-*-*-*-*"
 "-*-helvetica-medium-r-*-*-*-?-*-*"

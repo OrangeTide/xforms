@@ -1350,6 +1350,8 @@ FL_EXPORT int fl_set_font_name_f( int          n,
 								  const char * fmt,
 								  ... );
 
+FL_EXPORT const char * fl_get_font_name( int n );
+
 FL_EXPORT void fl_set_font( int numb,
                             int size );
 
