@@ -1,7 +1,7 @@
 This file contains information for people that want to build rpm
 packages for the XForms library and its documetation.
 
-1) While the name this library is known as is 'xforms' (and has for
+1) While the name this library is known as is 'xforms' (and has
    been so for at least 20 years) most distributions use a name
    starting with `libforms' - for the obvious reason that the most
    important part is a shared library. This requires a bit of
@@ -20,17 +20,17 @@ packages for the XForms library and its documetation.
 
      ./autogen.sh && ./configure --enable-docs
 
-   (note that this requires the autoconf, automale and libtool
+   (note that this requires the autoconf, automake and libtool
    packages to be installed).
 
 3) Some build dependencies in `libforms.spec' may need a bit of
    tweaking. First of all the `mesa-libGL-devel' package, re-
-   quired fro building the GL forms library, seems to be spelt
-   as `Mesa-libGL-devel' on e.g. openSUSE 13.1. Then there are
+   quired for building the GL forms library, seems to be spelt
+   as `Mesa-libGL-devel' on, e.g., openSUSE 13.1. Then there are
    the dependencies for building the documentation. As I noticed
    some of the programs used for creating the documenation are
    provided by different packages on different distributions.
-   E.g., `/usr/bin/texi2dvi' is ib the `texinfo-tex' package on
+   E.g., `/usr/bin/texi2dvi' is in the `texinfo-tex' package on
    CentOS (which then automatically requires the `texinfo' package)
    while on openSUSE 13.1 it's from the `texinfo' package itself
    (and the dependeny on the `texinfo-tex' package is then probably
@@ -55,8 +55,8 @@ packages for the XForms library and its documetation.
 
 5) The resulting packages have been tested (on CentOS 6.5) with
    `rpmlint'. There were no errors, just a number of unavoidable
-   warnings. These mostly are complaints from the spellchecker
-   about the word `XForms' and then there's a larger number of
+   warnings. These are mostly complaints from the spell-checker
+   about the word `XForms', and then there's a larger number of
    warnings for the documentation package. All these result from
    the fact that `rpmbuild' and `rpmlint' don't expect anything
    else than `.info' files in the info directory. But this doesn't
@@ -64,6 +64,7 @@ packages for the XForms library and its documetation.
    images embeded in the info documentation - and they need to be
    stored somewhere below the info directory. But then `rpmlint'
    complains about them not being UTF-8 files and also wants them
-   to be gzip'ed (which emacs' info mode unforunately doesn't like...).
+   to be gzip'ed (which emacs' info mode unfortunately doesn't
+   like...).
 
 All packages should be cleanly deinstallable.

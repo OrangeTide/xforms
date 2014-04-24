@@ -39,7 +39,7 @@
  ***************************************/
 
 static void
-draw_sbbutton( FL_OBJECT * ob )
+draw_scrollbutton( FL_OBJECT * ob )
 {
     FL_COLOR c1;
     FL_Coord abw = FL_abs( ob->bw );
@@ -103,7 +103,7 @@ fl_create_scrollbutton( int          type,
 {
     FL_OBJECT *ob;
 
-    fl_add_button_class( FL_SCROLLBUTTON, draw_sbbutton, 0 );
+    fl_add_button_class( FL_SCROLLBUTTON, draw_scrollbutton, 0 );
     ob = fl_create_generic_button( FL_SCROLLBUTTON, type, x, y, w, h, label );
     ob->boxtype = FL_UP_BOX;
     ob->col1    = FL_COL1;

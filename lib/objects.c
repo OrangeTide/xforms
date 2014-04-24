@@ -2164,6 +2164,9 @@ mark_object_for_redraw( FL_OBJECT * obj )
 
     obj->redraw = 1;
 
+    for ( o = obj->child; o; o = o->nc )
+        mark_object_for_redraw( o );
+
     /* If an object is marked as being under another object we have to find
        the object(s) it is beneath and also mark them for a redraw. For the
        special case that the object to be redraw is the first object of

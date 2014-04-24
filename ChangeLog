@@ -1,3 +1,8 @@
+2014-04-25 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/input.c: Bugs found by Lucas Sköldqvist in input
+	objects (hopefully) fixed.
+
 2014-04-12 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/fonts.c: Bug in font caching code, found by "Sunny",

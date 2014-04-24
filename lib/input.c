@@ -47,10 +47,10 @@
 #define H_PAD  ( sp->charh )    /* how much to scroll each time */
 
 enum {
-    COMPLETE,
-    PARTIAL,
-    VSLIDER,
-    HSLIDER = 4
+    COMPLETE = 0,
+    PARTIAL  = 1,
+    VSLIDER  = 2,
+    HSLIDER  = 4
 };
 
 
@@ -270,9 +270,6 @@ draw_input( FL_OBJECT * obj )
     sp->h = sp->input->h - 2 * ymargin;
 
     col = obj->focus ? obj->col2 : obj->col1;
-
-    /* Partial means only text has changed. Internally DrawImage string will
-       be used instead of normal string. --Unimplemented yet */
 
     if ( sp->drawtype == COMPLETE )
     {
@@ -533,7 +530,7 @@ delete_piece( FL_OBJECT * obj,
     memmove( sp->str + start, sp->str + end + 1, strlen( sp->str + end ) );
     sp->position = start;
 
-    /* this can be expensive TODO */
+    /* This can be expensive TODO */
 
     sp->lines = fl_get_input_numberoflines( obj );
     fl_get_input_cursorpos( obj, &sp->xpos, &sp->ypos );
@@ -872,8 +869,8 @@ handle_edit( FL_OBJECT * obj,
             while ( i < slen && sp->str[ i ] != ' ' && sp->str[ i ] != '\n' )
                 i++;
 #else
-            /* If the first character is neiter a letter or digit or an under-
-               score delete it and all other characters of the same kind.
+            /* If the first character is neiter a letter nor a digit nor an
+               underscore delete it and all other characters of the same kind.
                Otherwise delete all charaters that are letters. digit or
                underscores. This is the same behaviour as in e.g. Qt.
             */
@@ -1097,7 +1094,7 @@ handle_key( FL_OBJECT    * obj,
             key = XK_End;
     }
 
-    /* Translate all move key to cursor keys so we can distinguish edit/move
+    /* Translate all move keys to cursor keys so we can distinguish edit/move
        keys more easily */
 
     if ( key == kmap.moveto_next_line )
@@ -1170,7 +1167,7 @@ handle_key( FL_OBJECT    * obj,
         {
             int tmp = get_substring_width( obj, startpos, sp->position );
 
-            /* The extra 4 are there to have enough space for the cursor
+            /* The extra 4 are there to have enough room for the cursor
                when it's at the end of the line */
 
             if ( tmp - sp->xoffset > sp->w - 4 )
@@ -1189,6 +1186,7 @@ handle_key( FL_OBJECT    * obj,
                 strcpy( sp->str, tmpbuf );
                 sp->position = tmppos;
                 sp->xoffset = tmpxoffset;
+
                 if ( key == '\n' )
                 {
                     sp->lines--;
@@ -1274,7 +1272,8 @@ paste_it( FL_OBJECT           * obj,
     {
         int slen;
 
-        /* Must not allow single line input field contain tab or newline */
+        /* We must not allow single line input field to contain tabs or
+           newlines, remove them from the input */
 
         if ( obj->type == FL_NORMAL_INPUT || obj->type == FL_SECRET_INPUT )
         {
@@ -1287,7 +1286,7 @@ paste_it( FL_OBJECT           * obj,
                 nb = p - thebytes;
         }
 
-        /* Increase the buffer if necessary */
+        /* Increase the buffer as necessary */
 
         slen = strlen( sp->str );
         if ( sp->size <= slen + nb + 1 )
@@ -1296,7 +1295,8 @@ paste_it( FL_OBJECT           * obj,
             sp->str = fl_realloc( sp->str, sp->size );
         }
 
-        /* Shift text after cursor position and then insert the new text */
+        /* Shift text after cursor position to make room and then insert
+           the new text */
 
         memmove( sp->str + sp->position + nb, sp->str + sp->position,
                  slen - sp->position + 1 );
@@ -2269,18 +2269,17 @@ fl_set_default_editkeymap( void )
 }
 
 
-#if defined USE_CLASSIC_EDITKEYS
+#define Ctrl( c ) \
+( ( tolower( ( unsigned char ) c ) - 'a' + 1 ) | FL_CONTROL_MASK )
+#define Meta( c ) ( tolower( ( unsigned char ) c ) | FL_ALT_MASK )
 
 /***************************************
  ***************************************/
 
-#define Control( c ) ( ( c ) - 'a' + 1 )
-#define Meta( c )    ( ( c ) | FL_ALT_MASK )
-
 static void
 set_default_keymap( int force )
 {
-    static int initialized;
+    static int initialized = 0;
 
     if ( ! force && initialized )
         return;
@@ -2289,77 +2288,33 @@ set_default_keymap( int force )
 
     /* Emacs defaults */
 
-    kmap.moveto_next_char = Control( 'f' );
-    kmap.moveto_prev_char = Control( 'b' );
-    kmap.moveto_next_line = Control( 'n' );
-    kmap.moveto_prev_line = Control( 'p' );
+    kmap.moveto_next_char = Ctrl( 'f' );
+    kmap.moveto_prev_char = Ctrl( 'b' );
     kmap.moveto_prev_word = Meta( 'b' );
     kmap.moveto_next_word = Meta( 'f' );
 
-    kmap.moveto_bof = Meta( '<' );
-    kmap.moveto_eof = Meta( '>' );
-    kmap.moveto_bol = Control( 'a' );
-    kmap.moveto_eol = Control( 'e' );
+    kmap.moveto_bol       = Ctrl( 'a' );
+    kmap.moveto_eol       = Ctrl( 'e' );
 
-    kmap.del_prev_char = 127;
-    kmap.del_prev_word = Meta( 127 );
-    kmap.del_next_char = Control( 'd' );
-    kmap.del_next_word = Meta( 'd' );
-    kmap.del_to_eol = Control( 'k' );
-    kmap.del_to_eos = Meta( 'k' );
+    kmap.moveto_next_line = Ctrl( 'n' );
+    kmap.moveto_prev_line = Ctrl( 'p' );
 
-    kmap.backspace = Control( 'h' );
-    kmap.transpose = Control( 't' );
-    kmap.paste = Control( 'y' );
-    kmap.clear_field = Control( 'u' );
-}
+    kmap.moveto_bof       = Meta( '<' );
+    kmap.moveto_eof       = Meta( '>' );
 
+    kmap.del_next_char    = Ctrl( 'd' );
+    kmap.del_prev_char    = Ctrl( 'h' );
+    kmap.del_next_word    = Meta( 'd' );
+    kmap.del_prev_word    = Meta( 'h' );
 
-#else
-
-#define Ctrl( c ) ( islower( ( unsigned char ) c ) ? ( c ) - 'a' + 1 : ( c ) )
-
-/***************************************
- ***************************************/
-
-static void
-set_default_keymap( int force )
-{
-    static int initialized;
-
-    if ( ! force && initialized )
-        return;
-
-    initialized = 1;
-
-    /* Emacs defaults */
-
-    kmap.moveto_next_char = Ctrl( 'f' )  | FL_CONTROL_MASK;
-    kmap.moveto_prev_char = Ctrl( 'b' )  | FL_CONTROL_MASK;
-    kmap.moveto_next_line = Ctrl( 'n' )  | FL_CONTROL_MASK;
-    kmap.moveto_prev_line = Ctrl( 'p' )  | FL_CONTROL_MASK;
-    kmap.moveto_prev_word = 'b'          | FL_ALT_MASK;
-    kmap.moveto_next_word = 'f'          | FL_ALT_MASK;
-
-    kmap.moveto_bof       = '<'          | FL_ALT_MASK;
-    kmap.moveto_eof       = '>'          | FL_ALT_MASK;
-    kmap.moveto_bol       = Ctrl( 'a' )  | FL_CONTROL_MASK;
-    kmap.moveto_eol       = Ctrl( 'e' )  | FL_CONTROL_MASK;
-
-    kmap.del_prev_char    = '\b';
-    kmap.del_prev_word    = '\b'         | FL_CONTROL_MASK;
-    kmap.del_next_char    = 0x7f;
-    kmap.del_next_word    = 0x7f         | FL_CONTROL_MASK;
-    kmap.del_to_eol       = Ctrl( 'k' )  | FL_CONTROL_MASK;
-    kmap.del_to_bol       = 'k'          | FL_ALT_MASK;
+    kmap.del_to_eol       = Ctrl( 'k' );
+    kmap.del_to_bol       = Meta( 'k' );
 
     kmap.backspace        = '\b';
-    kmap.transpose        = Ctrl( 't' )  | FL_CONTROL_MASK;
-    kmap.paste            = Ctrl( 'y' )  | FL_CONTROL_MASK;
-    kmap.clear_field      = Ctrl( 'u' )  | FL_CONTROL_MASK;
+    kmap.transpose        = Ctrl( 't' );
+    kmap.paste            = Ctrl( 'y' );
+    kmap.clear_field      = Ctrl( 'u' );
 }
-
-#endif
 
 
 /***************************************
@@ -3057,7 +3012,8 @@ make_cursor_visible( FL_OBJECT      * obj,
                      int              prev )
 {
     FLI_INPUT_SPEC *sp = obj->spec;
-    int tt = get_substring_width( obj, startpos, sp->position );
+    int tt = sp->position >= startpos ?
+             get_substring_width( obj, startpos, sp->position ) : 0;
 
     /* The extra 4 are there to have enough space for the cursor
        when it's at the end of the line */
