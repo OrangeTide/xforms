@@ -419,7 +419,7 @@ handle_mouse( FL_OBJECT    * obj,
         else
             return FL_RETURN_NONE;
     }
-    else if ( key == FL_MBUTTON1 )
+    else if ( sp->react_to[ key - 1 ] )
         newval = get_newvalue( obj, mx, my );
     else
         return FL_RETURN_NONE;
@@ -470,10 +470,10 @@ handle_motion( FL_OBJECT * obj,
         return FL_RETURN_NONE;
 
     /* If we get here without the left mouse button being pressed we're
-       monitoring the mouse movements to change hightlighting of the knob
-       of a scrollbar */
+       monitoring the mouse movements to change hightlighting of the
+       knob of a scrollbar */
 
-    if ( key != FL_MBUTTON1 )
+    if ( IS_SCROLLBAR( obj ) && key != FL_MBUTTON1 )
     {
         int old_state = sp->mouse_off_knob;
 
@@ -491,7 +491,7 @@ handle_motion( FL_OBJECT * obj,
     /* For non-scrollbar objects we're going to update the sliders position -
        if a shift key is pressed we here fake a smaller mouse movement */
 
-    if ( ! IS_SCROLLBAR( obj ) )
+    if ( ! IS_SCROLLBAR( obj ) && sp->react_to[ key - 1 ] )
     {
         if ( shiftkey_down( ( ( XEvent * ) ev )->xmotion.state ) )
         {
@@ -532,7 +532,7 @@ handle_push( FL_OBJECT * obj,
     FLI_SLIDER_SPEC *sp = obj->spec;
     int ret;
 
-    if ( key != FL_MBUTTON1 && key != FL_MBUTTON2 && key != FL_MBUTTON3 )
+    if ( key < FL_MBUTTON1 || key > FL_MBUTTON3 )
         return FL_RETURN_NONE;
 
     sp->start_val = sp->val;
@@ -669,7 +669,7 @@ handle_release( FL_OBJECT * obj,
 
     /* Scrollwheel only is used with scrollbars */
 
-    if ( ! IS_SCROLLBAR( obj )
+    if (    ! IS_SCROLLBAR( obj )
          && ( key == FL_MBUTTON4 || key == FL_MBUTTON5 ) )
         return FL_RETURN_NONE;
 
@@ -752,14 +752,14 @@ handle_slider( FL_OBJECT * ob,
                 handle_leave( ob );
             break;
 
-        case FL_MOTION :
-            if ( ! ( ob->type & FL_VERT_PROGRESS_BAR ) )
-                ret |= handle_motion( ob, mx, my, key, ev );
-            break;
-
         case FL_PUSH :
             if ( ! ( ob->type & FL_VERT_PROGRESS_BAR ) )
                 ret |= handle_push( ob, mx, my, key, ev );
+            break;
+
+        case FL_MOTION :
+            if ( ! ( ob->type & FL_VERT_PROGRESS_BAR ) )
+                ret |= handle_motion( ob, mx, my, key, ev );
             break;
 
         case FL_UPDATE :
@@ -792,6 +792,7 @@ create_slider( int          objclass,
 {
     FL_OBJECT *ob;
     FLI_SLIDER_SPEC *sp;
+    int i;
 
     ob = fl_make_object( objclass, type, x, y, w, h, label, handle_slider );
     ob->boxtype = FL_SLIDER_BOXTYPE;
@@ -820,6 +821,12 @@ create_slider( int          objclass,
     sp->rdelta         = 0.05;
 
     fl_set_object_dblbuffer( ob, 1 );
+
+    /* Per default a slider reacts to the left mouse button only */
+
+    sp->react_to[ 0 ] = 1;
+    for ( i = 1; i < 3; i++ )
+        sp->react_to[ i ] = 0;
 
     return ob;
 }
@@ -1147,6 +1154,8 @@ fl_set_slider_filter( FL_OBJECT     * ob,
 
 
 /***************************************
+ * This function makes only sense for scrollbars and should't be
+ * used for simple sliders (for which it doesn't do anything).
  ***************************************/
 
 int
@@ -1157,6 +1166,8 @@ fl_get_slider_repeat( FL_OBJECT * ob )
 
 
 /***************************************
+ * This function makes only sense for scrollbars and should't be
+ * used for simple sliders (for which it doesn't do anything).
  ***************************************/
 
 void
@@ -1165,6 +1176,53 @@ fl_set_slider_repeat( FL_OBJECT * ob,
 {
     if ( millisec > 0 )
         ( ( FLI_SLIDER_SPEC * ) ob->spec )->repeat_ms = millisec;
+}
+
+
+/***************************************
+ * Function allows to set up to which mouse
+ * buttons the slider object will react.
+ ***************************************/
+
+void
+fl_set_slider_mouse_buttons( FL_OBJECT    * obj,
+                             unsigned int   mouse_buttons )
+{
+    FLI_SLIDER_SPEC *sp = obj->spec;
+    unsigned int i;
+
+    for ( i = 0; i < 3; i++, mouse_buttons >>= 1 )
+        sp->react_to[ i ] = mouse_buttons & 1;
+}
+
+
+/***************************************
+ * Function returns a value via 'mouse_buttons', indicating
+ * which mouse buttons the slider object will react to.
+ ***************************************/
+
+void
+fl_get_slider_mouse_buttons( FL_OBJECT    * obj,
+                             unsigned int * mouse_buttons )
+{
+    FLI_SLIDER_SPEC *sp;
+    int i;
+    unsigned int k;
+
+    if ( ! obj )
+    {
+        M_err( "fl_get_slider_mouse_buttons", "NULL object" );
+        return;
+    }
+
+    if ( ! mouse_buttons )
+        return;
+
+    sp = obj->spec;
+
+    *mouse_buttons = 0;
+    for ( i = 0, k = 1; i < 3; i++, k <<= 1 )
+        *mouse_buttons |= sp->react_to[ i ] ? k : 0;
 }
 
 

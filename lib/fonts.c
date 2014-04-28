@@ -304,8 +304,7 @@ try_get_font_struct( int numb,
 {
     FL_FONT *flf = fl_fonts;
     XFontStruct *fs = NULL;
-    int n = 0,
-        i,
+    int i,
         is_subst = 0;
 
     if ( special_style( numb ) )

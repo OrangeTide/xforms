@@ -56,6 +56,7 @@ create_form_form( void )
 
     obj = fl_add_slider( FL_VERT_SLIDER, 30, 50, 40, 220, "vert" );
     fl_set_object_color( obj, FL_INDIANRED, FL_PALEGREEN );
+    fl_set_slider_mouse_buttons( obj, 7 );
 
     obj = fl_add_slider( FL_VERT_FILL_SLIDER, 80, 50, 40, 220, "vert_fill" );
     fl_set_object_color( obj, FL_INDIANRED, FL_PALEGREEN );

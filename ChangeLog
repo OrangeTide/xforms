@@ -1,3 +1,12 @@
+2014-04-28 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/slider.c: Function for selecting mouse buttons added.
+	* lib/input.c: Validator for dates improved
+
+2014-04-26 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/input.c: Further bug fixes and code simplifications
+
 2014-04-25 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/input.c: Bugs found by Lucas Sköldqvist in input

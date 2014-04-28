@@ -94,4 +94,9 @@ FL_EXPORT void fl_set_scrollbar_return( FL_OBJECT    * ob,
 FL_EXPORT void fl_set_scrollbar_step( FL_OBJECT * ob,
                                       double      step );
 
+FL_EXPORT int fl_get_scrollbar_repeat( FL_OBJECT * obj );
+
+FL_EXPORT void fl_set_scrollbar_repeat( FL_OBJECT * obj,
+										int         millisec );
+
 #endif /* ! defined FL_SCROLLBAR_H */

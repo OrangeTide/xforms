@@ -2,7 +2,7 @@
 
 @setfilename xforms.info
 @settitle XForms (Forms Library) - Version 1.2@*A Graphical User Interface Toolkit for X
-@set lastupdate Aprik 12, 2014
+@set lastupdate Aprik 28, 2014
 @paragraphindent 0
 
 @titlepage

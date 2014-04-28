@@ -74,6 +74,7 @@ typedef struct {
     int           timeout_id;
     int           mouse_off_knob;
     int           was_shift;
+    int           react_to[ 5 ];
 } FLI_VALUATOR_SPEC;
 
 enum

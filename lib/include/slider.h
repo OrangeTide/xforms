@@ -154,9 +154,15 @@ FL_EXPORT void fl_set_slider_precision( FL_OBJECT * ob,
 FL_EXPORT void fl_set_slider_filter( FL_OBJECT     * ob,
                                      FL_VAL_FILTER   filter );
 
-FL_EXPORT int fl_get_slider_repeat( FL_OBJECT * );
+FL_EXPORT int fl_get_slider_repeat( FL_OBJECT * obj );
 
-FL_EXPORT void fl_set_slider_repeat( FL_OBJECT *,
-									 int );
+FL_EXPORT void fl_set_slider_repeat( FL_OBJECT * obj,
+									 int         millisec );
+
+FL_EXPORT void fl_set_slider_mouse_buttons( FL_OBJECT    * obj,
+											unsigned int   mouse_buttons );
+FL_EXPORT void fl_get_slider_mouse_buttons( FL_OBJECT    * obj,
+											unsigned int * mouse_buttons );
+
 
 #endif /* ! defined FL_SLIDER_H */

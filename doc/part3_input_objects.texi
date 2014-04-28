@@ -314,14 +314,14 @@ This still leaves the possibility that the input is valid for every
 character entered, but the string is invalid for the field because it
 is incomplete. For example, 12.0e is valid for a float input field for
 every character typed, but the final string is not a valid floating
-point number. To guard against this, the filter function is also called
-just prior to returning the object with the argument @code{c} (for the
-newly entered character) set to zero. If the validator returns
-@code{FL_INVALID} the object is not returned to the application
-program, but input focus can change to the next input field. If the
-return value @code{FL_INVALID | FL_RINGBELL}, the keyboard bell is
-sound and the object is not returned to the application program and
-the input focus remains in the object.
+point number. To guard against this, the filter function is also
+called just prior to returning the object with the argument @code{c}
+(for the newly entered character) set to zero. If the validator
+returns @code{FL_INVALID} the object is not returned to the
+application program, but input focus can change to the next input
+field. If the return value is @code{FL_INVALID | FL_RINGBELL} the
+keyboard bell is sound, the object is also not returned to the
+application program and the input focus remains in the object.
 
 
 To facilitate specialized input fields using validators, the following
@@ -398,7 +398,11 @@ The default. Use it to switch to the "normal" input mode
 @tindex FL_DOS_INPUT_MODE
 @anchor{FL_DOS_INPUT_MODE}
 @item FL_DOS_INPUT_MODE
-For selecting the DOS-like input mode
+For selecting the DOS-like input mode (in this mode, when a maximum
+number of characters has been set, as many characters already have
+been entered, and a new character is inserted somewhere in the middle
+the character at the very end gets deleted to make room for the new
+character)
 @end table
 @noindent
 The function returns the previous setting. Note that the function

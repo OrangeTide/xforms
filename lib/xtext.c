@@ -97,7 +97,7 @@ fli_free_xtext_workmem( void )
  ***************************************/
 
 int
-fli_get_maxpixel_line( void )
+fli_get_max_pixels_line( void )
 {
     return max_pixelline;
 }

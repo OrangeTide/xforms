@@ -140,13 +140,14 @@ Whenever the user changes the value of the slider using the mouse, the
 slider is returned (unless there's callback function associated with
 the object) by the interaction routines. The slider position is
 changed by moving the mouse inside the slider area. For fine control,
-hold down the @code{<Shift>} key while moving the slider.
+hold down the @code{<Shift>} key while usinf the slider, in that case
+the slider doesn't follow the mouse directly but at a lower speed.
 
 Please note: the @code{@ref{FL_VERT_PROGRESS_BAR}} and
 @code{@ref{FL_HOR_PROGRESS_BAR}} aren't actually valuator objects
 (they don't react to any user interaction) but are vor visualization
 only (i.e., showing a progress bar that is changed by the program
-only), they appear hear because they are directly derived from the
+only), they appear here because they are directly derived from the
 @code{@ref{FL_VERT_FILL_SLIDER}} and @code{@ref{FL_VERT_FILL_SLIDER}}
 slider. Thus the only way to change the value of objects of these
 types is by calling @code{@ref{fl_set_slider_value()}}! To obtain the
@@ -219,6 +220,32 @@ To obtain the current value or bounds of a slider use
 double fl_get_slider_value(FL_OBJECT *obj);
 void fl_get_slider_bounds(FL_OBJECT *obj, double *min, double *max);
 @end example
+
+
+Per default a slider only reacts to the left mouse button. But
+sometimes it can be useful to modify this. To set this call
+@findex fl_set_slider_mouse_buttons()
+@anchor{fl_set_slider_mouse_buttons()}
+@example
+void fl_set_slider_mouse_buttons(FL_OBJECT *obj,
+                                 int mbuttons);
+@end example
+@noindent
+@code{mbuttons} is the bitwise OR of the numbers 1 for the left mouse
+button, 2 for the middle and 4 for the right mouse button.
+
+To determine which mouse buttons a slider reacts to use
+@findex fl_get_slider_mouse_buttons()
+@anchor{fl_get_slider_mouse_buttons()}
+@example
+void fl_get_slider_mouse_buttons(FL_OBJECT *obj,
+                                 unsigned int *mbuttons);
+@end example
+@noindent
+The value returned via @code{mbuttons} is the same value as would
+be used in @code{@ref{fl_set_slider_mouse_buttons()}}.
+
+
 
 @c -----------------------------------------------------------------
 @c The following function still exist but the description is wrong.
@@ -340,25 +367,6 @@ const char *filter(FL_OBJECT *obj, double value, int prec) @{
 @end example
 
 
-Finally, the function
-@findex fl_get_slider_repeat()
-@anchor{fl_get_slider_repeat()}
-@findex fl_set_slider_repeat()
-@anchor{fl_set_slider_repeat()}
-@example
-int fl_get_slider_repeat(FL_OBJECT *obj);
-void fl_set_slider_repeat(FL_OBJECT *obj, int millisec)
-@end example
-@noindent
-allows to determine and control the time delay (in milliseconds)
-between jumps of the sliders knob when the mouse button is kept
-pressed down on the slider outside of the knobs area. The default
-value is @w{100 ms}. The delay for the very first jump is twice
-that long in order to avoid jumping to start too soon when only a
-single click was intended but the user is a bit slow in releasing
-the mouse button.
-
-
 @node Slider Remarks
 @subsection Remarks
 
@@ -372,13 +380,13 @@ sliders.
 @section Scrollbar Object
 
 Scrollbars are similar to sliders (as a matter of fact, scrollbars are
-made with sliders and scrollbuttons), and useful in letting the user
-indicate a value between some fixed bounds. Both horizontal and
-vertical scrollbars exist. They have a minimum, maximum and current
-value (all floating point values). The user can change this value by
-dragging the sliding bar with the mouse or press the scroll buttons.
-Whenever the value changes, it is reported to the application program
-via the callback function.
+made with sliders and scrollbuttons) and alse let the user indicate a
+value between some fixed bounds. Both horizontal and vertical
+scrollbars exist. They have a minimum, maximum and current value (all
+floating point values). The user can change this value by dragging the
+sliding bar with the mouse or by pressing the scroll buttons. Per
+default whenever the value changes, it is reported to the application
+program via the callback function.
 
 @ifnottex
 
@@ -599,6 +607,24 @@ To obtain the current increment settings, use the following routine
 @example
 void fl_get_scrollbar_increment(FL_OBJECT *obj, double *lj, double *sj);
 @end example
+
+With the function
+@findex fl_get_scrollbar_repeat()
+@anchor{fl_get_scrollbar_repeat()}
+@findex fl_set_scrollbar_repeat()
+@anchor{fl_set_scrollbar_repeat()}
+@example
+int fl_get_scrollbar_repeat(FL_OBJECT *obj);
+void fl_set_scrollbar_repeat(FL_OBJECT *obj, int millisec)
+@end example
+@noindent
+you can determine and control the time delay (in milliseconds) between
+jumps of the knob when the mouse button is kept pressed down outside
+of the knobs area. The default value is @w{100 ms}. The delay for the
+very first jump is twice that long in order to avoid jumping to start
+too soon when only a single click was intended but the user is a bit
+slow in releasing the mouse button.
+
 
 
 @node Scrollbar Attributes
@@ -983,7 +1009,7 @@ void fl_set_positioner_mouse_buttons(FL_OBJECT *obj,
 @code{mbuttons} is the bitwise OR of the numbers 1 for the left
 mouse button, 2 for the middle, 4 for the right mouse button, 8 for
 moving the scroll wheel up "button" and 16 for scrolling down
-"button". Per default a button reacts to all mouse buttons.
+"button".
 
 To determine which mouse buttons a positioner reacts to use
 @findex fl_get_positioner_mouse_buttons()
@@ -1297,10 +1323,10 @@ const char *filter(FL_OBJECT *obj, double value, int prec) @{
 @end example
 
 By default the counter value changes first slowly and the rate of
-change then accelerates until a final speed is reached. The default delay
-between the value changing is @w{600 ms} at the start and the final
-delay is @w{50 ms}. You can change the initial delay by a call of
-the function
+change then accelerates until a final speed is reached. The default
+delay between value changes is @w{600 ms} at the start and the final
+delay is @w{50 ms}. You can change the initial delay by a call of the
+function
 @findex fl_set_counter_repeat()
 @anchor{fl_set_counter_repeat()}
 @example

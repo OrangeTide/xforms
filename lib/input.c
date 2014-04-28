@@ -44,7 +44,6 @@
 #include "private/pinput.h"
 #include "private/flvasprintf.h"
 
-#define H_PAD  ( sp->charh )    /* how much to scroll each time */
 
 enum {
     COMPLETE = 0,
@@ -67,10 +66,6 @@ static int make_char_visible( FL_OBJECT *,
 
 static void copy_attributes( FL_OBJECT *,
                              FL_OBJECT * );
-
-static void make_cursor_visible( FL_OBJECT *,
-                                 int,
-                                 int );
 
 static int date_validator( FL_OBJECT *,
                            const char *,
@@ -137,7 +132,7 @@ check_scrollbar_size( FL_OBJECT * obj )
     int delta;
     int h_on = sp->h_on,
         v_on = sp->v_on;
-    int max_pixels = sp->max_pixels + H_PAD;
+    int max_pixels = sp->max_pixels;
 
     /* The test for sp->vscroll and sp->hscroll being set is only for
        fdesign which might change the object type of a normal input to
@@ -309,7 +304,7 @@ draw_input( FL_OBJECT * obj )
                                  sp->topline,
                                  sp->topline + sp->screenlines, 0 );
 
-    max_pixels_line = fli_get_maxpixel_line( ) + 1;
+    max_pixels_line = fli_get_max_pixels_line( ) + 1;
     sp->charh = fl_get_char_height( obj->lstyle, obj->lsize, 0, 0 );
 
     if (    max_pixels > sp->max_pixels
@@ -612,7 +607,6 @@ handle_movement( FL_OBJECT * obj,
     {
         fl_set_input_topline( obj, 1 );
         sp->position = 0;
-        sp->xoffset = 0;
         sp->ypos = 1;
     }
     else if ( IsPageDown( key ) )
@@ -627,7 +621,7 @@ handle_movement( FL_OBJECT * obj,
         fl_set_input_topline( obj, sp->topline - sp->screenlines / 2 );
     else if ( Is1LineUp( key ) )
         fl_set_input_topline( obj, sp->topline - 1 );
-    else if ( key == '\t' || key == 12 )
+    else if ( key == '\t' || key == '\f' )
         /* empty */ ;
     else if ( IsEnd( key ) )
     {
@@ -638,10 +632,7 @@ handle_movement( FL_OBJECT * obj,
     else if ( IsLeft( key ) )   /* Left key */
     {
         if ( shiftkey_down( kmask ) )
-        {
             sp->position = startpos;
-            sp->xoffset = 0;
-        }
         else if ( sp->position > 0 )
             sp->position--;
 
@@ -655,8 +646,6 @@ handle_movement( FL_OBJECT * obj,
             while ( startpos > 0 && sp->str[ startpos - 1 ] != '\n' )
                 startpos--;
         }
-
-        make_cursor_visible( obj, startpos, -1 );
     }
     else if ( IsRight( key ) || key == kmap.moveto_eol )
     {
@@ -667,13 +656,10 @@ handle_movement( FL_OBJECT * obj,
             if ( sp->str[ sp->position ] == '\n' )
             {
                 sp->ypos++;
-                sp->xoffset = 0;
                 startpos = sp->position + 1;
             }
             sp->position++;
         }
-
-        make_cursor_visible( obj, startpos, 1 );
     }
     else if ( IsUp( key ) )     /* Up key */
     {
@@ -735,19 +721,13 @@ handle_movement( FL_OBJECT * obj,
             }
         }
         else
-        {
             sp->position = slen;
-            sp->xoffset = 0;
-        }
 
         if ( ++sp->ypos > sp->lines )
             sp->ypos = sp->lines;
     }
     else if ( key == kmap.moveto_bol )
-    {
         sp->position = startpos;
-        sp->xoffset = 0;
-    }
     else if ( key == kmap.moveto_prev_word )
     {
 #if defined USE_CLASSIC_EDITKEYS
@@ -828,17 +808,14 @@ handle_movement( FL_OBJECT * obj,
 static int
 handle_edit( FL_OBJECT * obj,
              int         key,
-             int         slen,
-             int         startpos )
+             int         slen )
 {
     FLI_INPUT_SPEC *sp = obj->spec;
     int ret = FL_RETURN_CHANGED,
         i;
-    int prev = 1;
 
     if ( key == kmap.del_prev_char || key == kmap.backspace )
     {
-        prev = -1;
         if ( sp->endrange >= 0 )
             delete_piece( obj, sp->beginrange, sp->endrange - 1 );
         else if ( sp->position > 0 )
@@ -903,8 +880,6 @@ handle_edit( FL_OBJECT * obj,
         else
         {
 
-            prev = -1;
-
 #if defined USE_CLASSIC_EDITKEYS
             sp->position--;
             while (    sp->position > 0
@@ -947,9 +922,6 @@ handle_edit( FL_OBJECT * obj,
     }
     else if ( key == kmap.clear_field )
     {
-        prev = 0;
-        sp->xoffset = 0;
-
         if ( slen > 0 )
         {
             if ( slen > 1 )
@@ -985,8 +957,6 @@ handle_edit( FL_OBJECT * obj,
     {
         int j = sp->position;
 
-        prev = -1;
-
         if ( j == 0 )
             ret = FL_RETURN_NONE;
         else
@@ -1008,32 +978,25 @@ handle_edit( FL_OBJECT * obj,
     }
 #endif
     else if ( key == kmap.paste )
-    {
         paste_it( obj, ( unsigned char * ) cutbuf, strlen( cutbuf ) );
-    }
-    else if ( key == kmap.transpose )
+    else if ( key == kmap.transpose && sp->position > 0 )
     {
-        if ( sp->position > 0 )
-        {
-            char t;
+        char t;
 
-            if ( sp->position < slen && sp->str[ sp->position ] != '\n' )
-            {
-                t = sp->str[ sp->position - 1 ];
-                sp->str[ sp->position - 1 ] = sp->str[ sp->position ];
-                sp->str[ sp->position ] = t;
-                sp->position++;
-            }
-            else
-            {
-                t = sp->str[ sp->position - 2 ];
-                sp->str[ sp->position - 2 ] = sp->str[ sp->position - 1 ];
-                sp->str[ sp->position - 1 ] = t;
-            }
+        if ( sp->position < slen && sp->str[ sp->position ] != '\n' )
+        {
+            t = sp->str[ sp->position - 1 ];
+            sp->str[ sp->position - 1 ] = sp->str[ sp->position ];
+            sp->str[ sp->position ] = t;
+            sp->position++;
+        }
+        else
+        {
+            t = sp->str[ sp->position - 2 ];
+            sp->str[ sp->position - 2 ] = sp->str[ sp->position - 1 ];
+            sp->str[ sp->position - 1 ] = t;
         }
     }
-
-    make_cursor_visible( obj, startpos, prev );
 
     return ret;
 }
@@ -1044,6 +1007,94 @@ handle_edit( FL_OBJECT * obj,
  ***************************************/
 
 static int
+handle_normal_key( FL_OBJECT    * obj,
+                   int            key,
+                   int            slen )
+{
+    FLI_INPUT_SPEC *sp = obj->spec;
+    char *tmpbuf = NULL;
+    int tmppos = 0;
+    int ret = FL_RETURN_CHANGED;
+
+    /* Check that there's still room for a new character */
+
+    if (    sp->maxchars > 0
+         && slen >= sp->maxchars
+         && (    Input_Mode == FL_NORMAL_INPUT_MODE
+              || slen == sp->position ) )
+    {
+        fl_ringbell( 0 );
+        return FL_RETURN_NONE;
+    }
+
+    if ( sp->validate )
+    {
+        tmpbuf = fl_strdup( sp->str );
+        tmppos = sp->position;
+    }
+
+    /* If a range is marked remove it, it's replaced by the new character */
+
+    if ( sp->endrange >= 0 )
+    {
+        delete_piece( obj, sp->beginrange, sp->endrange - 1 );
+        slen = strlen( sp->str );
+    }
+
+    /* Merge the new character */
+
+    if (    Input_Mode == FL_DOS_INPUT_MODE
+        && sp->maxchars > 0
+        && slen == sp->maxchars )
+    {
+        memmove( sp->str + sp->position + 1, sp->str + sp->position,
+                 slen - sp->position );
+        sp->str[ sp->maxchars ] = '\0';
+    }
+    else
+        memmove( sp->str + sp->position + 1, sp->str + sp->position,
+                 slen - sp->position + 1 );
+    sp->str[ sp->position++ ] = key;
+
+    if ( key == '\n' )
+    {
+        sp->lines++;
+        sp->ypos++;
+    }
+
+    if ( sp->validate )
+    {
+        int ok = sp->validate( obj, tmpbuf, sp->str, key );
+
+        if ( ( ok & ~ FL_RINGBELL ) != FL_VALID )
+        {
+            ret = FL_RETURN_NONE;
+            strcpy( sp->str, tmpbuf );
+            sp->position = tmppos;
+
+            if ( key == '\n' )
+            {
+                sp->lines--;
+                sp->ypos--;
+            }
+        }
+
+        if ( ok & FL_RINGBELL )
+            fl_ringbell( 0 );
+        fl_free( tmpbuf );
+    }
+
+    return ret;
+}
+
+
+
+/***************************************
+ * Handles a key press, returns whether the content of the input field
+ * was changed
+ ***************************************/
+
+static int
 handle_key( FL_OBJECT    * obj,
             int            key,
             unsigned int   kmask )
@@ -1051,29 +1102,25 @@ handle_key( FL_OBJECT    * obj,
     int ret = FL_RETURN_NONE;
     FLI_INPUT_SPEC *sp = obj->spec;
     int slen;                  /* length of the string */
-    int startpos;              /* position of start of current line */
     int oldy = sp->ypos;
     int oldl = sp->lines;
     int oldx = sp->xoffset;
     int oldmax = sp->max_pixels;
 
-    /* Extend field size if required */
+    /* Increase the size of the buffer for the text if it's full */
 
     slen = strlen( sp->str );
+
     if ( sp->size == slen + 1 )
     {
         sp->size += 8;
         sp->str = fl_realloc( sp->str, sp->size );
     }
 
+    /* Silently translate carriage return to line feed */
+
     if ( obj->type == FL_MULTILINE_INPUT && key == '\r' )
         key = '\n';
-
-    /* Compute starting position of current line */
-
-    startpos = sp->position;
-    while ( startpos > 0 && sp->str[ startpos - 1 ] != '\n' )
-        startpos--;
 
 #if defined USE_CLASSIC_EDITKEYS
     if ( controlkey_down( kmask ) && key > 255 )
@@ -1115,90 +1162,7 @@ handle_key( FL_OBJECT    * obj,
         key = XK_PageUp;
 
     if ( IsRegular( key ) )     /* Normal keys and new line */
-    {
-        char *tmpbuf = 0;
-        int tmppos = 0,
-            tmpxoffset = 0;
-
-        if ( sp->endrange >= 0 )
-        {
-            delete_piece( obj, sp->beginrange, sp->endrange - 1 );
-            slen = strlen( sp->str );
-        }
-
-        if (    sp->maxchars > 0
-             && slen >= sp->maxchars
-             && (    Input_Mode == FL_NORMAL_INPUT_MODE
-                  || slen == sp->position ) )
-        {
-            fl_ringbell( 0 );
-            return FL_RETURN_NONE;
-        }
-
-        if ( sp->validate )
-        {
-            tmpbuf = fl_strdup( sp->str );
-            tmppos = sp->position;
-            tmpxoffset = sp->xoffset;
-        }
-
-        /* Merge the new character */
-
-        if (    Input_Mode == FL_DOS_INPUT_MODE
-             && sp->maxchars > 0
-             && slen == sp->maxchars )
-        {
-            memmove( sp->str + sp->position + 1, sp->str + sp->position,
-                     slen - sp->position );
-            sp->str[ sp->maxchars ] = '\0';
-        }
-        else
-            memmove( sp->str + sp->position + 1, sp->str + sp->position,
-                     slen - sp->position + 1 );
-        sp->str[ sp->position++ ] = key;
-
-        if ( key == '\n' )
-        {
-            sp->lines++;
-            sp->ypos++;
-            sp->xoffset = 0;
-        }
-        else
-        {
-            int tmp = get_substring_width( obj, startpos, sp->position );
-
-            /* The extra 4 are there to have enough room for the cursor
-               when it's at the end of the line */
-
-            if ( tmp - sp->xoffset > sp->w - 4 )
-                sp->xoffset = tmp - sp->w + 4 + H_PAD;
-        }
-
-        ret = FL_RETURN_CHANGED;
-
-        if ( sp->validate )
-        {
-            int ok = sp->validate( obj, tmpbuf, sp->str, key );
-
-            if ( ( ok & ~ FL_RINGBELL ) != FL_VALID )
-            {
-                ret = FL_RETURN_NONE;
-                strcpy( sp->str, tmpbuf );
-                sp->position = tmppos;
-                sp->xoffset = tmpxoffset;
-
-                if ( key == '\n' )
-                {
-                    sp->lines--;
-                    sp->ypos--;
-                }
-            }
-
-            if ( ok & FL_RINGBELL )
-                fl_ringbell( 0 );
-            fl_free( tmpbuf );
-        }
-    }
+        ret = handle_normal_key( obj, key, slen );
     else if (    IsCursorKey( key )
               || key == kmap.moveto_eol
               || key == kmap.moveto_bol
@@ -1208,9 +1172,20 @@ handle_key( FL_OBJECT    * obj,
               || Is1LineDown( key )
               || IsHalfPageUp( key )
               || IsHalfPageDown( key ) )
+    {
+        int startpos = 0;
+
+        if ( obj->type == FL_MULTILINE_INPUT )
+        {
+            startpos = sp->position;
+            while ( startpos > 0 && sp->str[ startpos - 1 ] != '\n' )
+                startpos--;
+        }
+
         handle_movement( obj, key, slen, startpos, kmask );
+    }
     else
-        ret = handle_edit( obj, key, slen, startpos );
+        ret = handle_edit( obj, key, slen );
 
     sp->endrange = -1;
 
@@ -1228,12 +1203,44 @@ handle_key( FL_OBJECT    * obj,
         sp->topline = sp->ypos = 1;
         oldmax = sp->max_pixels;
     }
+    else
+    {
+        int startpos = 0;
+        int width;
+
+        if ( obj->type == FL_MULTILINE_INPUT )
+        {
+            startpos = sp->position;
+            while ( startpos > 0 && sp->str[ startpos - 1 ] != '\n' )
+                startpos--;
+        }
+
+        width = fl_get_string_width( obj->lstyle, obj->lsize,
+                                     sp->str + startpos,
+                                     sp->position - startpos );
+
+        if ( width < sp->w - 4 )
+            sp->xoffset = 0;
+        else
+        {
+            if ( width - oldx > sp->w - 4 )
+                sp->xoffset = width - sp->w + 4;
+            else
+            {
+                int cw = fl_get_char_width( obj->lstyle, obj->lsize );
+                if ( width - oldx < cw )
+                sp->xoffset = width - cw;
+                else
+                    sp->xoffset = oldx;
+            }
+        }
+    }
 
     fl_freeze_form( obj->form );
 
-    if (    oldl != sp->lines
-         || oldy != sp->ypos
-         || oldx != sp->xoffset
+    if (    oldl   != sp->lines
+         || oldy   != sp->ypos
+         || oldx   != sp->xoffset
          || oldmax != sp->max_pixels )
     {
         check_scrollbar_size( obj );
@@ -1257,77 +1264,19 @@ paste_it( FL_OBJECT           * obj,
           const unsigned char * thebytes,
           int                   nb )
 {
-    int status = FL_RETURN_NONE;
-    FLI_INPUT_SPEC *sp = obj->spec;
-    unsigned char *p;
+    int ret = FL_RETURN_NONE;
 
-    /* For non-text input we must check each individual character */
+    while ( nb-- )
+        ret |= handle_key( obj, *thebytes++, 0 );
 
-    if (    obj->type == FL_FLOAT_INPUT
-         || obj->type == FL_INT_INPUT
-         || sp->maxchars > 0 )
-        for ( ; nb; nb-- )
-            status |= handle_key( obj, *thebytes++, 0 );
-    else
-    {
-        int slen;
-
-        /* We must not allow single line input field to contain tabs or
-           newlines, remove them from the input */
-
-        if ( obj->type == FL_NORMAL_INPUT || obj->type == FL_SECRET_INPUT )
-        {
-            if ( ( p =
-                    ( unsigned char * ) strchr( ( char * ) thebytes, '\t' ) ) )
-                nb = p - thebytes;
-            if (    ( p =
-                       ( unsigned char * ) strchr( ( char * ) thebytes, '\n' ) )
-                 && p - thebytes < nb )
-                nb = p - thebytes;
-        }
-
-        /* Increase the buffer as necessary */
-
-        slen = strlen( sp->str );
-        if ( sp->size <= slen + nb + 1 )
-        {
-            sp->size = slen + nb + 8;
-            sp->str = fl_realloc( sp->str, sp->size );
-        }
-
-        /* Shift text after cursor position to make room and then insert
-           the new text */
-
-        memmove( sp->str + sp->position + nb, sp->str + sp->position,
-                 slen - sp->position + 1 );
-        memcpy( sp->str + sp->position, thebytes, nb );
-        sp->position += nb;
-
-        sp->lines = fl_get_input_numberoflines( obj );
-        fl_get_input_cursorpos( obj, &sp->xpos, &sp->ypos );
-        fl_get_string_dimension( obj->lstyle, obj->lsize, sp->str, slen + nb,
-                                 &sp->max_pixels, &status );
-
-        fl_freeze_form( obj->form );
-
-        check_scrollbar_size( obj );
-        make_line_visible( obj, sp->ypos );
-        fl_redraw_object( sp->input );
-        redraw_scrollbar( obj );
-
-        fl_unfreeze_form( obj->form );
-        status = FL_RETURN_CHANGED;
-    }
-
-    return status;
+    return ret;
 }
 
 
 /***************************************
- * Callback that gets called when a selection is handled.
- * It might be called only after handling the input object
- * is done and in that case we have to insert the object
- * into the onject queue manually...
+ * Callback for handling selection. It might be called only after
+ * handling the input object is done and in that case we have to
+ * insert the object into the onject queue manually...
  ***************************************/
 
 /* handle X cut & paste ******************************* */
@@ -1441,12 +1390,27 @@ handle_input( FL_OBJECT * obj,
                ly = INT_MAX,
                paste;
     int ret = FL_RETURN_NONE,
-        val;
+        val,
+        state = 0;
 
-    if (    event == FL_RELEASE
-         && ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
-         && ! fli_mouse_wheel_to_keypress( &event, &key, ev ) )
-        return ret;
+    /* Convert scroll wheel events to up or down arrow key events */
+
+    if ( event == FL_KEYPRESS )
+        state = ( ( XKeyEvent * ) ev )->state;
+
+    if ( event == FL_PUSH )
+    {
+        if ( key == FL_MBUTTON4 )
+        {
+            event = FL_KEYPRESS;
+            key = XK_Up;
+        }
+        else if ( key == FL_MBUTTON5 )
+        {
+            event = FL_KEYPRESS;
+            key = XK_Down;
+        }
+    }
 
     switch ( event )
     {
@@ -1487,7 +1451,11 @@ handle_input( FL_OBJECT * obj,
 
         case FL_FOCUS:
             if ( obj->type == FL_MULTILINE_INPUT )
+            {
+                if ( sp->dummy->focus )
+                    break;
                 sp->dummy->focus = 1;
+            }
 
             // Put the cursor back into the position where it was (except
             // for DOS mode where it's always positioned at the start)
@@ -1504,13 +1472,9 @@ handle_input( FL_OBJECT * obj,
 
             sp->changed = 0;
             fl_redraw_object( sp->input );
-
             break;
 
         case FL_UNFOCUS:
-            if ( ! sp )
-                break;
-
             if ( obj->type == FL_MULTILINE_INPUT )
                 sp->dummy->focus = 0;
 
@@ -1555,6 +1519,8 @@ handle_input( FL_OBJECT * obj,
             break;
 
         case FL_RELEASE:
+            if ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
+                break;
             if ( key == FL_MBUTTON1 && motion )
                 do_XCut( obj, sp->beginrange, sp->endrange - 1 );
             motion = 0;
@@ -1562,6 +1528,8 @@ handle_input( FL_OBJECT * obj,
 
         case FL_DBLCLICK:
         case FL_TRPLCLICK:
+            if ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
+                break;
             if ( handle_select( mx, my, obj, 0,
                                 event == FL_DBLCLICK ?
                                 WORD_SELECT : LINE_SELECT ) )
@@ -1571,9 +1539,8 @@ handle_input( FL_OBJECT * obj,
             }
             break;
 
-        case FL_KEYPRESS:
-            if ( ( ret = handle_key( obj, key,
-                                     ( ( XKeyEvent * ) ev )->state ) ) )
+        case FL_KEYPRESS :
+            if ( ( ret = handle_key( obj, key, state ) ) )
             {
                 sp->changed = 1;
                 if ( obj->how_return == FL_RETURN_CHANGED )
@@ -2305,7 +2272,7 @@ set_default_keymap( int force )
     kmap.del_next_char    = Ctrl( 'd' );
     kmap.del_prev_char    = Ctrl( 'h' );
     kmap.del_next_word    = Meta( 'd' );
-    kmap.del_prev_word    = Meta( 'h' );
+    kmap.del_prev_word    = Meta( '\b' );
 
     kmap.del_to_eol       = Ctrl( 'k' );
     kmap.del_to_bol       = Meta( 'k' );
@@ -2391,7 +2358,7 @@ fl_validate_input( FL_OBJECT *obj )
 
 
 /***************************************
- * Validators for specialized inputs
+ * Validator for date
  ***************************************/
 
 #define IS_LEAP_YEAR( y )   \
@@ -2405,8 +2372,8 @@ date_validator( FL_OBJECT  * obj,
 {
     char *val,
          *s,
-         sepsep[ 4 ];
-    char ssep[ ] = { 0, 0 };
+         sepsep[ 3 ];
+    char ssep[ 2 ] = "";
     int i,
         len,
         ival[ ] = { 1, 1, 1 };
@@ -2426,41 +2393,65 @@ date_validator( FL_OBJECT  * obj,
     *ssep = sep;
     strcat( strcpy( sepsep, ssep ), ssep );
 
-    if (    ( newc != sep && newc != 0 && ! isdigit( ( unsigned char ) newc ) )
+
+    /* Allow only separator or digit, but no separator at the very start or
+       two separators in a row */
+
+    if (    (    newc != sep
+              && newc != '\0'
+              && ! isdigit( ( unsigned char ) newc ) )
          || *newstr == sep || strstr( newstr, sepsep ) )
         return invalid;
 
     s = fl_strdup( newstr );
 
-    for ( i = 0, val = strtok( s, ssep ); val; val = strtok( NULL, ssep ) )
-    {
-        /* Must allow incomplete input so 12/01 does not get rejected at 0 */
+    /* Split up the date string at the separators and convert to ints and
+       check that there aren't more than 2 digits for day and month and 4
+       for the year */
 
-        if ( val[ 1 ] == '\0' && val[ 0 ] == newstr[ len - 1 ] )
-        {
-            if ( newc != 0 )
-            {
-                fl_free( s );
-                return FL_VALID;
-            }
-        }
+    for ( i = 0, val = strtok( s, ssep ); i < 3 && val;
+          val = strtok( NULL, ssep ) )
+    {
+        if ( ( i < 2 && strlen( val ) > 2 ) || ( i == 2 && strlen( val ) > 4 ) )
+             return invalid;
 
         ival[ i++ ] = atoi( val );
+
+        if ( i <= 2 && strlen( val ) == 2 && ival[ i - 1 ] == 0 )
+            return invalid;
     }
 
     fl_free( s );
 
-    if ( i > 3 )
+    /* Allow one or more '0' at the start of the day pr month (but not as
+       the only digit, i.e. when the new character is the separator) */
+
+    if (    newc == sep
+         && (    ( i == 1 && ival[ 0 ] == 0 )
+              || ( i == 2 && ival[ 1 ] == 0 ) ) )
         return invalid;
 
-    if ( i != 3 && newc == 0 )
+    /* Don't allow another separator when we already got 3 items */
+
+    if ( i == 3 && newstr[ len - 1 ] == sep )
+       return invalid;
+
+    /* Always require 3 items when the user tries to leave the field
+       and make sure that day or month aren't 0 */
+
+    if (    newc == '\0'
+         && ( i != 3 || ival[ 0 ] == 0 || ival[ 1 ] == 0 ) )
         return invalid;
 
     m = fmt == FL_INPUT_MMDD ? 0 : 1;
     d = ! m;
 
-    if ( ival[ m ] < 1 || ival[ m ] > 12 || ival[ d ] < 1 || ival[ d ] > 31 )
+    /* Basic check for upper limits of day and month */
+
+    if ( ival[ m ] > 12 || ival[ d ] > 31 )
         return invalid;
+
+    /* More precise check for days in month */
 
     if (    ( ival[ d ] > 30 && ( ival[ m ] % 2 ) == 0 && ival[ m ] < 8 )
          || ( ival[ d ] > 30 && ( ival[ m ] % 2 ) != 0 && ival[ m ] > 8 ) )
@@ -2481,6 +2472,7 @@ date_validator( FL_OBJECT  * obj,
 
 
 /***************************************
+ * Validator for integer fields
  ***************************************/
 
 static int
@@ -2513,6 +2505,7 @@ int_validator( FL_OBJECT  * obj     FL_UNUSED_ARG,
 
 
 /***************************************
+ * Validator for floating point fields
  ***************************************/
 
 static int
@@ -3000,35 +2993,6 @@ fl_set_input_cursor_visible( FL_OBJECT * obj,
         sp->cursor_visible = visible;
         fl_redraw_object( obj );
     }
-}
-
-
-/***************************************
- ***************************************/
-
-static void
-make_cursor_visible( FL_OBJECT      * obj,
-                     int              startpos,
-                     int              prev )
-{
-    FLI_INPUT_SPEC *sp = obj->spec;
-    int tt = sp->position >= startpos ?
-             get_substring_width( obj, startpos, sp->position ) : 0;
-
-    /* The extra 4 are there to have enough space for the cursor
-       when it's at the end of the line */
-
-    if ( prev == -1 )
-    {
-        if ( tt - sp->xoffset > sp->w - 4 )
-            sp->xoffset = tt - sp->w + 4;
-        else if ( tt < sp->xoffset )
-            sp->xoffset = tt;
-        else if ( tt == 0 )
-            sp->xoffset = 0;
-    }
-    else if ( tt - sp->xoffset > sp->w - 4 )
-        sp->xoffset = tt - sp->w + 4;
 }
 
 

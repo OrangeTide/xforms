@@ -353,7 +353,7 @@ int fli_drw_string( int,
                     int,
                     FL_COLOR );
 
-int fli_get_maxpixel_line( void );
+int fli_get_max_pixels_line( void );
 
 int fli_get_string_widthTABfs( XFontStruct *,
                                const char *,

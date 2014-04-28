@@ -600,6 +600,29 @@ fl_set_scrollbar_step( FL_OBJECT * obj,
 }
 
 
+/***************************************
+ ***************************************/
+
+int
+fl_get_scrollbar_repeat( FL_OBJECT * obj )
+{
+    return
+        fl_get_slider_repeat( ( ( FLI_SCROLLBAR_SPEC * ) obj->spec )->slider );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_scrollbar_repeat( FL_OBJECT * obj,
+                         int         millisec )
+{
+    fl_set_slider_repeat( ( ( FLI_SCROLLBAR_SPEC * ) obj->spec )->slider,
+                          millisec );
+}
+
+
 /*
  * Local variables:
  * tab-width: 4
