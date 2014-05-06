@@ -864,7 +864,7 @@ FL_RECT * fli_intersect_rects( const FL_RECT *,
 void fli_xyplot_nice_label( float,
                             int,
                             float,
-                                   char * );
+                            char * );
 
 void fli_xyplot_compute_data_bounds( FL_OBJECT *,
                                      int *,

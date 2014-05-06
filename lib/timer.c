@@ -175,12 +175,12 @@ handle_timer( FL_OBJECT * ob,
                             - ( usec - sp->usec ) * 1.0e-6;
             update_only = 1;
 
-            /* Don't check for zero. we can overshoot by as much as 50msec. try
-               to split the error */
+            /* Don't check for zero, we can overshoot quite a bit. Instead try
+               to split the error by already returning 10 ms too early. */
 
-            if ( sp->time_left > 0.02 )
+            if ( sp->time_left > 0.01 )
             {
-                if ( ob->type == FL_VALUE_TIMER
+                if (    ob->type == FL_VALUE_TIMER
                      && ( int ) ( 10.0 * sp->time_left ) !=
                                               ( int ) ( 10.0 * lasttime_left ) )
                     fl_redraw_object( ob );

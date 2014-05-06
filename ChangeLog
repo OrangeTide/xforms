@@ -1,3 +1,9 @@
+2014-05-06 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/xyplot.c: fl_set_xyplot_mouse_buttons() and
+	fl_get_xyplot_mouse_buttons() added and clean-up of
+	code to fix memory leaks.
+
 2014-04-28 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/slider.c: Function for selecting mouse buttons added.

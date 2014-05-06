@@ -615,7 +615,7 @@ With the function
 @anchor{fl_set_scrollbar_repeat()}
 @example
 int fl_get_scrollbar_repeat(FL_OBJECT *obj);
-void fl_set_scrollbar_repeat(FL_OBJECT *obj, int millisec)
+void fl_set_scrollbar_repeat(FL_OBJECT *obj, int millisec);
 @end example
 @noindent
 you can determine and control the time delay (in milliseconds) between

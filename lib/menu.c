@@ -826,6 +826,9 @@ fl_get_menu( FL_OBJECT * ob )
     }
 #endif
 
+    if ( ISPUP( sp ) )
+        return sp->val;
+
     return sp->val > 0 && sp->val <= sp->numitems ? sp->mval[ sp->val ] : -1;
 }
 

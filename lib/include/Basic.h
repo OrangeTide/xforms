@@ -261,7 +261,7 @@ FL_EXPORT int fl_to_inside_lalign( int align );
 
 FL_EXPORT int fl_to_outside_lalign( int align );
 
-/* Mouse buttons. Don't have to be consecutive */
+/* Mouse buttons */
 
 enum {
     FL_MBUTTON1 = 1,
@@ -283,14 +283,14 @@ enum {
 #define FL_SCROLLUPMOUSE     FL_SCROLLUP_MOUSE
 #define FL_SCROLLDOWNMOUSE   FL_SCROLLDOWN_MOUSE
 
-/* control when to return input, slider and dial etc. object. */
+/* Flags for when to return an object */
 
-#define FL_RETURN_NONE         0U
-#define FL_RETURN_CHANGED      1U
-#define FL_RETURN_END          2U
-#define FL_RETURN_END_CHANGED  4U
-#define FL_RETURN_SELECTION    8U
-#define FL_RETURN_DESELECTION  16U
+#define FL_RETURN_NONE            0U
+#define FL_RETURN_CHANGED         1U
+#define FL_RETURN_END             2U
+#define FL_RETURN_END_CHANGED     4U
+#define FL_RETURN_SELECTION       8U
+#define FL_RETURN_DESELECTION    16U
 #define FL_RETURN_TRIGGERED    1024U
 #define FL_RETURN_ALWAYS       ( ~ FL_RETURN_END_CHANGED )
 

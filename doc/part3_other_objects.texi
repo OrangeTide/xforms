@@ -26,8 +26,9 @@ remains visible until the user presses the "OK" button or until a
 certain amount of time has passed.
 
 The precision of the timer is not very high. Don't count on anything
-better than, say, 50 milli-seconds. Run demo @file{timerprec.c} for an
-actual accuracy measurement.
+better than, say, 50 milli-seconds, especially when the system is
+rather busy. The timer can trigger early by up to @w{10 ms}. Run the
+demo @file{timerprec.c} for an actual accuracy measurement.
 
 
 @ifnottex
@@ -228,40 +229,52 @@ It shows an empty box on the screen with the label per default below it.
 The following types are available:
 @table @code
 @tindex FL_NORMAL_XYPLOT
+@anchor{FL_NORMAL_XYPLOT}
 @item FL_NORMAL_XYPLOT
 A solid line is drawn through the data points.
 @tindex FL_SQUARE_XYPLOT
+@anchor{FL_SQUARE_XYPLOT}
 @item FL_SQUARE_XYPLOT
 Data drawn as a solid line plus squares at data points.
 @tindex FL_CIRCLE_XYPLOT
+@anchor{FL_CIRCLE_XYPLOT}
 @item FL_CIRCLE_XYPLOT
 Data drawn as a solid line plus circles at data points.
 @tindex FL_FILL_XYPLOT
+@anchor{FL_FILL_XYPLOT}
 @item FL_FILL_XYPLOT
 Data drawn as a solid line with the area under the curve filled.
 @tindex FL_POINTS_XYPLOT
-@item FL_POINTS_XYPLOT
+@tindex FL_POINTS_XYPLOT
+@anchor{FL_POINTS_XYPLOT}
 Only data points are drawn with. per default, stars.
 @tindex FL_LINEPOINTS_XYPLOT
+@anchor{FL_LINEPOINTS_XYPLOT}
 @item FL_LINEPOINTS_XYPLOT
 Data drawn as a solid line plus, per default, stars at data point.
 @tindex FL_DASHED_XYPLOT
+@anchor{FL_DASHED_XYPLOT}
 @item FL_DASHED_XYPLOT
 Data drawn as a dashed line.
 @tindex FL_DOTTED_XYPLOT
+@anchor{FL_DOTTED_XYPLOT}
 @item FL_DOTTED_XYPLOT
 Data drawn as a dotted line.
 @tindex FL_DOTDASHED_XYPLOT
+@anchor{FL_DOTDASHED_XYPLOT}
 @item FL_DOTDASHED_XYPLOT
 Data drawn as a dash-dot-dash line.
 @tindex FL_IMPULSE_XYPLOT
+@anchor{FL_IMPULSE_XYPLOT}
 @item FL_IMPULSE_XYPLOT
 Data drawn by vertical lines.
 @tindex FL_ACTIVE_XYPLOT
+@anchor{FL_ACTIVE_XYPLOT}
 @item FL_ACTIVE_XYPLOT
 Data drawn as a solid line plus squares at data points, accepting
 manipulations.
 @tindex FL_EMPTY_XYPLOT
+@anchor{FL_EMPTY_XYPLOT}
 @item FL_EMPTY_XYPLOT
 Only the axes are drawn.
 @end table
@@ -329,7 +342,7 @@ where via @code{i} the data index (starting from 0) is returned while
 via @code{x} and @code{y} the actual data point gets returned. If no
 point has changed @code{i} will be set to -1.
 
-It is possible tp switch drawing of the squares that mark an active
+It is possible to switch drawing of the squares that mark an active
 plot on and off (default is on) using the following routine
 @findex fl_set_xyplot_mark_active()
 @anchor{fl_set_xyplot_mark_active()}
@@ -407,7 +420,9 @@ Once an XYPlot is in inspect mode, whenever the mouse is released and
 the mouse position is on one of the data point, the object is returned
 to the caller or its callback is invoked. You then can use
 @code{@ref{fl_get_xyplot()}} to find out which point the mouse was
-clicked on.
+clicked on. Note that for an object of type
+@code{@ref{FL_ACTIVE_XYPLOT}} the data can't be modified while in
+inspect mode!
 
 Another, perhaps even more general, way to obtain the values from an
 XYPlot is to use a posthandler or an overlay positioner. See demo
@@ -662,7 +677,9 @@ void fl_add_xyplot_overlay(FL_OBJECT *obj, int id, float *x, float *y,
 @noindent
 where @code{id} must be between 1 and
 @tindex FL_MAX_XYPLOTOVERLAY
-@code{FL_MAX_XYPLOTOVERLAY} (currently 32). Again, the data are copied
+@code{FL_MAX_XYPLOTOVERLAY} (currently 32). This limit can be raised
+(or lowered) by calling the function
+@code{@ref{fl_set_xyplot_maxoverlays()}}. Again, the data are copied
 to an internal buffer (old data are freed if necessary).
 
 As for the base data, a data file can be used to specify the (x,y)
@@ -727,7 +744,9 @@ default is 32) can be changed using the following routine
 int fl_set_xyplot_maxoverlays(FL_OBJECT *obj, int maxoverlays);
 @end example
 @noindent
-The function returns the previous maximum number of overlays.
+The function returns the previous maximum number of overlays. If the
+new number is smaller that what it was before overlays with IDs higher
+that the previous number are deleted.
 
 To obtain the number of data points, use the routine
 @findex fl_get_xyplot_numdata()
@@ -948,6 +967,30 @@ left hand corner and via @code{urx} and @code{ury} those of the
 upper right hand corner are returned. The first function returns
 the corner positions in screen coordinates (relative to the object),
 while the secoind returns them in "world" coordinates.
+
+
+Per default an XYPlot object only reacts to the left mouse button. But
+sometimes it can be useful to modify this. To set this call
+@findex fl_set_xyplot_mouse_buttons()
+@anchor{fl_set_xyplot_mouse_buttons()}
+@example
+void fl_set_xyplot_mouse_buttons(FL_OBJECT *obj,
+                                 int mbuttons);
+@end example
+@noindent
+@code{mbuttons} is the bitwise OR of the numbers 1 for the left mouse
+button, 2 for the middle and 4 for the right mouse button.
+
+To determine which mouse buttons an XYPlot object reacts to use
+@findex fl_get_xyplot_mouse_buttons()
+@anchor{fl_get_xyplot_mouse_buttons()}
+@example
+void fl_get_xyplot_mouse_buttons(FL_OBJECT *obj,
+                                 unsigned int *mbuttons);
+@end example
+@noindent
+The value returned via @code{mbuttons} is the same value as would
+be used in @code{@ref{fl_set_slider_mouse_buttons()}}.
 
 
 @node XYPlot Attributes

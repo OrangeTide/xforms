@@ -75,7 +75,7 @@ typedef struct {
     float             * grid;               /* interpolating grid[over+1]   */
     float               log_minor_xtics,    /* use logarithmix minor tics?  */
                         log_minor_ytics;
-    float             * wx,                 /* working array for interpolat.*/
+    float             * wx,                 /* working array for interpol.  */
                       * wy;
     FL_POINT          * xp;                 /* screen data                  */
     FL_POINT          * xpactive;           /* active(mouse) screen data    */
@@ -145,6 +145,7 @@ typedef struct {
     short              external_data;
     int                start_x;
     int                start_y;
+    int                react_to[ 3 ];
 } FLI_XYPLOT_SPEC;
 
 

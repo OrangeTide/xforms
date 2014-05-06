@@ -347,5 +347,10 @@ FL_EXPORT int fl_set_xyplot_log_minor_xtics( FL_OBJECT * obj,
 FL_EXPORT int fl_set_xyplot_log_minor_ytics( FL_OBJECT * obj,
 											 int         yesno );
 
+FL_EXPORT void fl_set_xyplot_mouse_buttons( FL_OBJECT    * obj,
+											unsigned int   mouse_buttons );
+
+FL_EXPORT void fl_get_xyplot_mouse_buttons( FL_OBJECT    * obj,
+											unsigned int * mouse_buttons );
 
 #endif  /* ! defined FL_XYPLOT_H */
