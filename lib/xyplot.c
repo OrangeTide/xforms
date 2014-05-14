@@ -1792,11 +1792,8 @@ find_data( FL_OBJECT * ob,
     int dy = 0;                  /* same here */
     FL_POINT *p = sp->xpactive;
 
-    if ( draw_to_pixmap )
-    {
-        mx -= ob->x;
-        my -= ob->y;
-    }
+    mx -= ob->x;
+    my -= ob->y;
 
     for ( i = found = 0; i < *sp->n && ! found; i++ )
     {
@@ -1854,7 +1851,7 @@ handle_mouse( FL_OBJECT * ob,
     float ymin = FL_min( sp->ymin, sp->ymax ),
           ymax = FL_max( sp->ymax, sp->ymin );
 
-    if ( *sp->n == 0 || ! sp->x || ! ( sp->active || sp->inspect ) )
+    if ( sp->n[ 0 ] == 0 || ! sp->x || ! ( sp->active || sp->inspect ) )
         return FL_RETURN_NONE;
 
     if ( lmx == mx && lmy == my )

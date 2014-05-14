@@ -169,8 +169,7 @@ spinner_callback( FL_OBJECT * obj,
     int max_len = 4 + sp->prec + log10( DBL_MAX );
     char *buf = NULL;
 
-    /* Don't react to editing the input field unless user ended interaction
-       with input field */
+    /* Don't react to editing the input field unless user ended interaction */
 
     if ( data == 0 && ! ( obj->returned & FL_RETURN_END ) )
         return;
@@ -238,7 +237,7 @@ spinner_callback( FL_OBJECT * obj,
     }
     else
     {
-        int old_f_val = sp->f_val;
+        double old_f_val = sp->f_val;
 
         if ( data == 0 )
         {

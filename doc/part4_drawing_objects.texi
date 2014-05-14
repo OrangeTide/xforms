@@ -698,8 +698,8 @@ void fl_line(FL_Coord x1, FL_Coord y1,
              FL_Coord x2, FL_Coord y2, FL_COLOR col);
 @end example
 
-There is also a routine to draw a line along the diagonal of a box (to
-draw a horizontal line set @code{h} to 1, not to 0):
+There is also a macro for drawing a line along the diagonal of a box
+(to draw a horizontal line set @code{h} to 1, not to 0):
 @findex fl_diagline()
 @anchor{fl_diagline()}
 @example

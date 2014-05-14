@@ -216,6 +216,7 @@ show_pixmap( FL_OBJECT * obj,
     int bits_w,
         bits_h,
         is_focus = focus && sp->focus_pixmap && psp->show_focus;
+    int bw = obj->boxtype != FL_NO_BOX ? FL_abs( obj->bw ) : 0;
 
     pixmap = is_focus ? sp->focus_pixmap : sp->pixmap;
     mask   = is_focus ? sp->focus_mask   : sp->mask;
@@ -231,10 +232,10 @@ show_pixmap( FL_OBJECT * obj,
         return;
     }
 
-    m_dest_x = dest_x = obj->x + FL_abs( obj->bw ) + psp->dx;
-    m_dest_y = dest_y = obj->y + FL_abs( obj->bw ) + psp->dy;
-    dest_w = obj->w - 2 * FL_abs( obj->bw ) - 2 * psp->dx;
-    dest_h = obj->h - 2 * FL_abs( obj->bw ) - 2 * psp->dy;
+    m_dest_x = dest_x = obj->x + bw + psp->dx;
+    m_dest_y = dest_y = obj->y + bw + psp->dy;
+    dest_w = obj->w - 2 * bw - 2 * psp->dx;
+    dest_h = obj->h - 2 * bw - 2 * psp->dy;
 
     src_x = 0;
     src_y = 0;
@@ -319,14 +320,13 @@ show_pixmap( FL_OBJECT * obj,
         }
     }
 
-    /* hopefully, XSetClipMask is smart */
+    /* Hopefully, XSetClipMask is smart */
 
     XSetClipMask( flx->display, psp->gc, mask );
     XSetClipOrigin( flx->display, psp->gc, m_dest_x, m_dest_y );
 
     XCopyArea( flx->display, pixmap, FL_ObjWin( obj ),
                psp->gc, src_x, src_y, dest_w, dest_h, dest_x, dest_y );
-
 }
 
 
@@ -392,7 +392,6 @@ draw_pixmap( FL_OBJECT * obj )
 
     fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
                 obj->col2, obj->bw );
-
     show_pixmap( obj, 0 );
 }
 

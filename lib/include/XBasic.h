@@ -250,8 +250,12 @@ FL_EXPORT void fl_dashedlinestyle( const char * dash,
 FL_EXPORT void fl_update_display( int block );
 
 
-#define fl_diagline( x, y, w, h, c )  \
-    fl_line( x, y, ( x ) + ( w ) - 1, ( y ) + ( h ) - 1, c )
+#define fl_diagline( x, y, w, h, c )                                          \
+    do                                                                        \
+    {                                                                         \
+        FL_COORD fli_x = ( x ), fli_y = ( y );                                \
+        fl_line( fli_x, fli_y, fli_x + ( w ) - 1, fli_y + ( h ) - 1, ( c ) ); \
+    } while ( 0 )
 
 /* Line attributes */
 
@@ -461,15 +465,15 @@ FL_EXPORT void fl_wintitle( Window       win,
                             const char * title );
 
 FL_EXPORT void fl_wintitle_f( Window       win,
-							  const char * fmt,
-							  ... );
+                              const char * fmt,
+                              ... );
 
 FL_EXPORT void fl_winicontitle( Window       win,
                                 const char * title );
 
 FL_EXPORT void fl_winicontitle_f( Window       win,
-								  const char * fmt,
-								  ... );
+                                  const char * fmt,
+                                  ... );
 
 FL_EXPORT void fl_winposition( FL_Coord x,
                                FL_Coord y );
@@ -872,3 +876,11 @@ typedef struct {
 #define FL_RGB2PIXEL  FL_RGB2PIXEL_
 
 #endif /* ! defined FL_XBASIC_H */
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */
