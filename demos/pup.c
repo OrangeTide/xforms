@@ -27,28 +27,28 @@
 #include "config.h"
 #endif
 
-#include <forms.h>
+#include "include/forms.h"
 #include <stdlib.h>
 
-FL_FORM *pup;
+static FL_FORM * pup;
 
-FL_OBJECT *done,
-          *pret,
-          *b1,
-          *b2,
-          *b3,
-          *menu;
+static FL_OBJECT * done,
+                 * pret,
+                 * b1,
+                 * b2,
+                 * b3,
+                 * menu;
 
-void create_form_pup( void );
+static void create_form_pup( void );
 
-void init_menu( void );
+static void init_menu( void );
 
-int post( FL_OBJECT *, 
-          int,
-          FL_Coord,
-          FL_Coord,
-          int,
-          void * );
+static int post( FL_OBJECT *, 
+                 int,
+                 FL_Coord,
+                 FL_Coord,
+                 int,
+                 void * );
 
 
 /***************************************
@@ -68,7 +68,7 @@ main( int    argc,
 
     create_form_pup( );
 
-    /* initialize */
+    /* Initialize */
 
     fl_set_object_posthandler( b1, post );
     fl_set_object_posthandler( b2, post );
@@ -77,18 +77,17 @@ main( int    argc,
     fl_show_form( pup, FL_PLACE_MOUSE, FL_TRANSIENT, "PupDemo" );
     init_menu( );
 
-    fl_do_forms( );
+    fl_do_forms( );     /* never returns */
 
     return 0;
 }
 
 
-/* post-handler */
-
 /***************************************
+ * post-handler
  ***************************************/
 
-int
+static int
 post( FL_OBJECT * ob,
       int         ev,
       FL_Coord    mx   FL_UNUSED_ARG,
@@ -139,7 +138,7 @@ post( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
-void
+static void
 show_return_val( FL_POPUP_RETURN *r )
 {
     char buf[ 128 ];
@@ -156,7 +155,7 @@ show_return_val( FL_POPUP_RETURN *r )
 /***************************************
  ***************************************/
 
-int
+static int
 style_cb( FL_POPUP_RETURN *r )
 {
     int style,
@@ -173,7 +172,7 @@ style_cb( FL_POPUP_RETURN *r )
 /***************************************
  ***************************************/
 
-int
+static int
 size_cb( FL_POPUP_RETURN *r )
 {
     int style;
@@ -189,7 +188,7 @@ size_cb( FL_POPUP_RETURN *r )
 /***************************************
  ***************************************/
 
-int
+static int
 mod_cb( FL_POPUP_RETURN *r )
 {
     int style,
@@ -205,7 +204,7 @@ mod_cb( FL_POPUP_RETURN *r )
 /***************************************
  ***************************************/
 
-int
+static int
 pol_cb( FL_POPUP_RETURN *r )
 {
     FL_POPUP_ENTRY *e;
@@ -221,7 +220,7 @@ pol_cb( FL_POPUP_RETURN *r )
 /***************************************
  ***************************************/
 
-void
+static void
 do_pup( FL_OBJECT * ob,
         long        q  FL_UNUSED_ARG )
 {
@@ -294,7 +293,7 @@ do_pup( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
-void
+static void
 init_menu( void )
 {
     FL_POPUP *mm,
@@ -313,7 +312,7 @@ init_menu( void )
 /***************************************
  ***************************************/
 
-void
+static void
 do_menu( FL_OBJECT * ob,
          long        data  FL_UNUSED_ARG )
 {
@@ -332,7 +331,7 @@ do_menu( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
-void
+static void
 done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
          long        data  FL_UNUSED_ARG )
 {
@@ -344,7 +343,18 @@ done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 /***************************************
  ***************************************/
 
-void create_form_pup( void )
+static void
+do_nothing( FL_OBJECT * ob    FL_UNUSED_ARG,
+            long        data  FL_UNUSED_ARG )
+{
+}
+
+
+/***************************************
+ ***************************************/
+
+static void
+create_form_pup( void )
 {
     FL_OBJECT *obj;
 
@@ -369,9 +379,12 @@ void create_form_pup( void )
     pret = obj = fl_add_text( FL_NORMAL_TEXT, 20, 60, 220, 30, "" );
     fl_set_object_lalign( obj, FL_ALIGN_CENTER );
 
-    b1 = fl_add_button( FL_NORMAL_BUTTON,  20, 10, 60, 30, "Button1" );
-    b2 = fl_add_button( FL_NORMAL_BUTTON,  90, 10, 60, 30, "Button2" );
+    b1 = fl_add_button( FL_NORMAL_BUTTON,   20, 10, 60, 30, "Button1" );
+    fl_set_object_callback( b1, do_nothing, 0 );
+    b2 = fl_add_button( FL_NORMAL_BUTTON,   90, 10, 60, 30, "Button2" );
+    fl_set_object_callback( b2, do_nothing, 0 );
     b3 = fl_add_button( FL_NORMAL_BUTTON,  160, 10, 60, 30, "Button3" );
+    fl_set_object_callback( b3, do_nothing, 0 );
 
     fl_end_form( );
 }
