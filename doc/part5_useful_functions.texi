@@ -73,6 +73,13 @@ of displaying in this visual class and 0 otherwise. If @code{warn} is
 set a warning is printed out in case the capability asked for isn't
 available.
 
+To find out the "depth" of the current display (basically the number
+of bits used for colors) use the function
+@findex fl_get_visual_depth
+@anchor{fl_get_visual_depth}
+@example
+int fl_get_visual_depth(void);
+@end example
 
 Finally
 @findex fl_msleep()

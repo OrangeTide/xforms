@@ -25,6 +25,7 @@
 #endif
 
 #include <stdio.h>
+#include <math.h>
 #include "include/forms.h"
 
 static FL_OBJECT * xval,
@@ -32,19 +33,15 @@ static FL_OBJECT * xval,
 
 
 /***************************************
- * callback routine
+ * Callback routine
  ***************************************/
 
 static void
-positioner_cb( FL_OBJECT * ob,
-               long        data   FL_UNUSED_ARG )
+positioner_cb( FL_OBJECT * obj,
+               long        data  FL_UNUSED_ARG )
 {
-    char str[ 30 ];
-
-    sprintf( str, "%f", fl_get_positioner_xvalue( ob ) );
-    fl_set_object_label( xval, str );
-    sprintf( str, "%f", fl_get_positioner_yvalue( ob ) );
-    fl_set_object_label( yval, str );
+    fl_set_object_label_f( xval, "%f", fl_get_positioner_xvalue( obj ) );
+    fl_set_object_label_f( yval, "%f", fl_get_positioner_yvalue( obj ) );
 }
 
 

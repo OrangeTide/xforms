@@ -783,6 +783,7 @@ fli_create_gc( Window win )
         XSetStipple( flx->display, *flgcs, FLI_INACTIVE_PATTERN );
         XSetGraphicsExposures( flx->display, *flgcs, 0 );
     }
+
     flx->textgc = fl_state[ fl_vmode ].textgc[ 0 ];
 
     /* Initialize a dimmed GC */

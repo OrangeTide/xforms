@@ -19,8 +19,6 @@
 #ifndef PINPUT_H
 #define PINPUT_H
 
-#define FL_VALIDATE    FL_INPUTVALIDATOR
-
 typedef struct {
     char        * str;              /* the input text                  */
     FL_COLOR      textcol;          /* text color                      */
@@ -35,7 +33,7 @@ typedef struct {
     int           maxchars;         /* limit for normal_input          */
     int           attrib1;
     int           attrib2;
-    FL_VALIDATE   validate;
+    FL_INPUT_VALIDATOR validate;
 
     /* scroll stuff. */
 

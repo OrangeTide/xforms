@@ -12,6 +12,7 @@ interaction with the user.
 * Messages and Questions::
 * Command Log::
 * Colormap::
+* Color Chooser::
 * File Selector::
 @end menu
 
@@ -517,6 +518,45 @@ int fl_show_colormap(int oldcol);
 decide not to change this color by pressing the @code{Cancel} button in
 the form. The procedure returns the index of the color selected (or the
 index of the old color).
+
+
+@node Color Chooser
+@section Color Chooser
+
+It's also not uncommon that an application lets the user use an
+arbitrary color (not necessarily already in the colormap). The color
+chooser shows a form that allows the user to select a new color
+either using a HSV color wheel and a slider for the intensity or
+by entering HSV or RGB values directly.
+
+@ifhtml
+@center @image{xforms_images/colchooser}
+@end ifhtml
+@ifnothtml
+@center @image{xforms_images/colchooser,15cm}
+@end ifnothtml
+
+To show such a form call
+@findex fl_show_color_chooser()
+@anchor{fl_show_color_chooser()}
+@example
+int fl_show_color_chooser(const int *rgb_in, int * rgb_out);
+@end example
+@noindent
+The first argument is a pointer to an array with the 3 RGB values
+to use for the color to be displayed when the color chooser is
+shown. If it is @code{NULL} white is used. The second argument is
+another pointer to an array for the 3 RGB values of the selected
+color to be returned on success. On success the function returns 1
+(and sets the @code{rgb_out} array), but if the user clicked on the
+"Cancel" button 0 gets returns (and the @code{rgb_out} array is not
+modified.
+
+Please keep in mind that there's no 1-to-1 mapping between the HSV
+and RGB color space, there are a lot more HSV than RGB triples
+and some colors don't even have a unique representation in HSV
+space like, for example, all shades of grey, including white and
+black.
 
 
 @node File Selector

@@ -167,13 +167,16 @@ FL_EXPORT void fl_get_input_format( FL_OBJECT * ob,
 
 FL_EXPORT const char * fl_get_input( FL_OBJECT * ob );
 
-typedef int ( * FL_INPUTVALIDATOR )(FL_OBJECT *,
-                                    const char *,
-                                    const char *,
-                                    int );
+typedef int ( * FL_INPUT_VALIDATOR )(FL_OBJECT  *,
+									 const char *,
+									 const char *,
+									 int );
 
-FL_EXPORT FL_INPUTVALIDATOR fl_set_input_filter( FL_OBJECT         * ob,
-                                                 FL_INPUTVALIDATOR   validate );
+#define FL_INPUTVALIDATOR FL_INPUT_VALIDATOR
+
+FL_EXPORT FL_INPUT_VALIDATOR
+fl_set_input_filter( FL_OBJECT          * ob,
+					 FL_INPUT_VALIDATOR   validate );
 
 FL_EXPORT int fl_validate_input( FL_OBJECT *obj );
 

@@ -216,7 +216,7 @@ show_pixmap( FL_OBJECT * obj,
     int bits_w,
         bits_h,
         is_focus = focus && sp->focus_pixmap && psp->show_focus;
-    int bw = obj->boxtype != FL_NO_BOX ? FL_abs( obj->bw ) : 0;
+    int bw = FL_abs( obj->bw );
 
     pixmap = is_focus ? sp->focus_pixmap : sp->pixmap;
     mask   = is_focus ? sp->focus_mask   : sp->mask;
@@ -836,8 +836,8 @@ fl_add_pixmapbutton( int          type,
  ***************************************/
 
 void
-fl_set_pixmap_data( FL_OBJECT  * obj,
-                    char      ** bits )
+fl_set_pixmap_data( FL_OBJECT   * obj,
+                    char       ** bits )
 {
     FL_BUTTON_STRUCT *sp;
     Window win;

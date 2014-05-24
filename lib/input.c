@@ -2298,12 +2298,12 @@ fl_set_input_maxchars( FL_OBJECT * obj,
 /***************************************
  ***************************************/
 
-FL_VALIDATE
-fl_set_input_filter( FL_OBJECT * obj,
-                     FL_VALIDATE validate )
+FL_INPUT_VALIDATOR
+fl_set_input_filter( FL_OBJECT          * obj,
+                     FL_INPUT_VALIDATOR   validate )
 {
     FLI_INPUT_SPEC *sp = obj->spec;
-    FL_VALIDATE old = sp->validate;
+    FL_INPUT_VALIDATOR old = sp->validate;
 
     sp->validate = validate;
     return old;

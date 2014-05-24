@@ -138,23 +138,6 @@ post( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
-static void
-show_return_val( FL_POPUP_RETURN *r )
-{
-    char buf[ 128 ];
-
-    if ( r )
-        sprintf( buf, "Returned %ld (%s)", r->val, r->label );
-    else
-       sprintf( buf, "Nothing returned" );
-
-    fl_set_object_label( pret, buf );
-}
-
-
-/***************************************
- ***************************************/
-
 static int
 style_cb( FL_POPUP_RETURN *r )
 {

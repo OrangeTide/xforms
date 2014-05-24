@@ -458,6 +458,7 @@ typedef enum {
 	FL_VIOLET,
 	FL_WHITESMOKE,
 	FL_YELLOWGREEN,
+    FL_COLOR_CHOOSER_COLOR = 255,
     FL_FREE_COL1 = 256,
     FL_FREE_COL2,
     FL_FREE_COL3,
@@ -1520,6 +1521,9 @@ FL_EXPORT void fl_show_errors( int y );
 #define FL_nint( a )              ( ( int ) ( ( a ) > 0 ?               \
                                               ( ( a ) + 0.5 ) :         \
                                               ( ( a ) - 0.5 ) ) )
+#define FL_nlong( a )             ( ( long ) ( ( a ) > 0 ?              \
+                                               ( ( a ) + 0.5 ) :        \
+                                               ( ( a ) - 0.5 ) ) )
 #define FL_clamp( a, amin, amax ) ( ( a ) < ( amin ) ?                  \
                                     ( amin ) : ( ( a ) > ( amax ) ?     \
                                                  ( amax ) : ( a ) ) )

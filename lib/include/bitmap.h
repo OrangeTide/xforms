@@ -94,8 +94,8 @@ FL_EXPORT FL_OBJECT * fl_add_pixmap( int          type,
                                      FL_Coord     h,
                                      const char * label );
 
-FL_EXPORT void fl_set_pixmap_data( FL_OBJECT  * ob,
-                                   char      ** bits );
+FL_EXPORT void fl_set_pixmap_data( FL_OBJECT   * ob,
+                                   char       ** bits );
 
 FL_EXPORT void fl_set_pixmap_file( FL_OBJECT  * ob,
                                    const char * fname );

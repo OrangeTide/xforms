@@ -3,7 +3,7 @@ include $(top_srcdir)/config/common.am
 EXTRA_DIST = Readme iconvert.1 demo.menu crossbut.h \
 	bm1.xbm bm2.xbm newmail.xbm nomail.xbm picture.xbm srs.xbm \
 	crab45.xpm crab_tran.xpm crab.xpm porsche.xpm \
-	test.xpm xconq.xpm xterm.xpm
+	test.xpm xconq.xpm xterm.xpm colorwheel.xpm
 
 SUBDIRS = fd
 
@@ -81,6 +81,7 @@ noinst_PROGRAMS = \
 	pmbrowse \
 	popup \
 	positioner \
+	positioner_overlay \
 	positionerXOR \
 	preemptive \
 	pup \
@@ -257,6 +258,7 @@ pmbrowse.$(OBJEXT): fd/pmbrowse_gui.c
 
 popup_SOURCES = popup.c
 positioner_SOURCES = positioner.c
+positioner_overlay_SOURCES = positioner_overlay.c
 positionerXOR_SOURCES = positionerXOR.c
 preemptive_SOURCES = preemptive.c
 pup_SOURCES = pup.c

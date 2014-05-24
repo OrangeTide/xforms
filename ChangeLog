@@ -1,3 +1,22 @@
+2014-05-23 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/goodie_colchooser.c: new goodie for picking arbitrary
+	colors interactively added.
+
+2014-05-23 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/positioner.c: major changes: range of values can now be
+	controlled via a validation function. New functions for setting
+	both alues at once and getting the current boundary settings.
+	Drawing now is done differently (instead of XOR current background
+	is stored and redrawn). Mouse is hidden while over positioner
+	and active.
+
+2014-05-22 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/positioner.c: step values are now also factored in
+	when a new x- or y-value gets set by the user.
+
 2014-05-14 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/spinner.c: Bug in handling of FL_FLOAT_SPINNER fixed.

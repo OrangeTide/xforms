@@ -59,7 +59,7 @@
 		    @canvas:OpenGL\nCanvas:gl
 		@other:Positioner:@positioner
 		    @positioner:Normal\nPositioner:positioner
-		    @positioner:Overlay\nPositioner:positionerXOR
+		    @positioner:Overlay\nPositioner:positioner_overlay
                 @other:XYPlot:@xyplot
 	            @xyplot:XYPlot\nTypes:xyplotall
 	            @xyplot:Active\nXYPlot:xyplotactive

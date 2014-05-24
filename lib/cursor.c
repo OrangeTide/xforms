@@ -61,12 +61,12 @@ typedef struct {
 
 static CurStruct prebuilt[ ] =
 {
-    { XC_watch,          0, 0, 0, 0, 0, { 0 } },
-    { XC_sb_right_arrow, 0, 0, 0, 0, 0, { 0 } },
-    { XC_hand2,          0, 0, 0, 0, 0, { 0 } },
-    { XC_top_left_arrow, 0, 0, 0, 0, 0, { 0 } },
-    { XC_tcross,         0, 0, 0, 0, 0, { 0 } },
-    { XC_pirate,         0, 0, 0, 0, 0, { 0 } }
+    { XC_watch,          0, 0, None, 0, 0, { 0 } },
+    { XC_sb_right_arrow, 0, 0, None, 0, 0, { 0 } },
+    { XC_hand2,          0, 0, None, 0, 0, { 0 } },
+    { XC_top_left_arrow, 0, 0, None, 0, 0, { 0 } },
+    { XC_tcross,         0, 0, None, 0, 0, { 0 } },
+    { XC_pirate,         0, 0, None, 0, 0, { 0 } }
 };
 
 static CurStruct *cursors = NULL;

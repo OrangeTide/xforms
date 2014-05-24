@@ -949,7 +949,7 @@ Cross-hair inside a box.
 @tindex FL_OVERLAY_POSITIONER
 @anchor{FL_OVERLAY_POSITIONER}
 @item FL_OVERLAY_POSITIONER
-Cross-hair inside a transparent box (i.e.,drawn in in XOR mode).
+Cross-hair inside a transparent box.
 
 @tindex FL_INVISIBLE_POSITIONER
 @anchor{FL_INVISIBLE_POSITIONER}
@@ -958,6 +958,11 @@ Completely invisible positioner, to be used just for the side effect
 of obtaining a position (typically an object is below below it that
 otherwise would receive user events).
 @end table
+
+Note that for exatly positioning a @code{@ref{FL_OVERLAY_POSITIONER}} or
+@code{@ref{FL_INVISIBLE_POSITIONER}} over another object you have to
+take account of the (absolute value of the) border widths of both the
+underlying obkject and the positioner.
 
 
 @node Positioner Interaction
@@ -1040,46 +1045,124 @@ It returns one of the constants @code{@ref{FL_LEFT_MOUSE}},
 @node Other Positioner Routines
 @subsection Other Positioner Routines
 
-To set the value of the positioner and the boundary values use the
-routines:
-@findex fl_set_positioner_xvalue()
-@anchor{fl_set_positioner_xvalue()}
+Usually, a positioner of type @code{@ref{FL_OVERLAY_POSITIONER}} is
+used on top if another object, e.g., a pixmap object. If the object
+below the positioner is changed, e.g., by setting a new pixmap for the
+pixmap object, tis may lead to visual artefacts since the postioner
+isn't aware of the changes of the underlying object. To avoid this
+call the function
+@findex fl_reset_positioner
+@anchor{fl_reset_positioner}
+@example
+void fl_reset_positioner(FL_OBJECT *obj);
+@end example
+before each change to an object below it.
+
+Per defauly the range that the @code{x} and @code{y} values of a
+positioner can assume are controlled via minimum and maximum values
+for both directions. These boundary values can be set by using the
+functions
+the routines:
 @findex fl_set_positioner_xbounds()
 @anchor{fl_set_positioner_xbounds()}
-@findex fl_set_positioner_yvalue()
-@anchor{fl_set_positioner_yvalue()}
 @findex fl_set_positioner_ybounds()
 @anchor{fl_set_positioner_ybounds()}
 @example
-void fl_set_positioner_xvalue(FL_OBJECT *obj, double val);
 void fl_set_positioner_xbounds(FL_OBJECT *obj, double min, double max);
-void fl_set_positioner_yvalue(FL_OBJECT *obj, double val);
-void fl_set_positioner_ybounds(FL_OBJECT *obj, double min, double max);
+int fl_set_positioner_ybounds(FL_OBJECT *obj, double min, double max);
 @end example
 @noindent
-By default the minimum values are 0.0, the maximum values are 1.0 and
-the actual values are 0.5. For boundaries in x-direction @code{min}
+When a new positioner object is created the minimum values are 0.0 and
+the maximum values are 1.0. For boundaries in x-direction @code{min}
 and @code{max} should be taken to mean the left- and right-most
-position, respectively, and for the y-boundaries @code{min} and @code{max}
-should be taken to mean the value at the bottom and value at the top
-of the positioner.
+position, respectively, and for the y-boundaries @code{min} and
+@code{max} should be taken to mean the value at the bottom and value
+at the top of the positioner, respectively.
+
+Note that the posituoners value may be changed automatically when
+setting new boundaries to make them satisfy the new conditions.
+
+For more complicated situations, i.e., when only a subset of the
+positioners value range may be used, a validation function can be
+installed (see the @file{positioner_overlay} demo program for an
+example):
+@tindex FL_POSITIONER_VALIDATOR
+@anchor{FL_POSITIONER_VALIDATOR}
+@findex fl_set_positioner_validator()
+@anchor{fl_set_positioner_validator()}
+@example
+typedef int (*FL_POSITIONER_VALIDATOR (FL_OBJECT * obj,
+									   double x, double y,
+									   double *x_repl, double *y_repl);
+
+FL_POSITIONER_VALIDATOR
+fl_set_positioner_validator(FL_OBJECT               * obj,
+							FL_POSITIONER_VALIDATOR   validator);
+@end example
+If a non-@code{NULL} pointer is passed to the function each time a new
+position is set the validation function is invoked. It can return either
+@tindex FL_POSITIONER_INVALID
+@anchor{FL_POSITIONER_INVALID}
+@code{FL_POSITIONER_INVALID} to indicate that the new valuea aren't
+acceptable, in which case the position remains unchanged. It may also
+return
+@tindex FL_POSITIONER_VALID
+@anchor{FL_POSITIONER_VALID}
+@code{FL_POSITIONER_VALID} if the values are acceptable. Finally,
+the function may also return modified values via the @code{x_repl}
+and @code{y_repl} pointers and return
+@tindex FL_POSITIONER_REPLACED
+@anchor{FL_POSITIONER_REPLACED}
+@code{FL_POSITIONER_REPLACED}. In this case the values returned are
+used. It's the responsibility of the validation function to make sure
+that the @code{x} and @code{y} values satisfy the boundary
+restrictions etc. If it doesn't the results are unpredictable.
+
+To switch off validation pass the function a @code{NULL} pointer.
+The function returns a pointer to the previously active validation
+function (or @code{NULL} if non had been set). Note that if a new
+validation function is set it is immediately called to check that
+the current position is still compatible with the new requirements.
+If the validation function returns @code{@ref{FL_POSITIONER_INVALID}}
+in this case the position can't be corrected to fit the new
+conditions. Thus if you write your validation function in a way that
+it may return this value it is advisable to set compilant values for
+the positions before installing the validation function.
+
+To programatically change the @code{x} and @code{y} position use
+@findex fl_set_positioner_values()
+@anchor{fl_set_positioner_values()}
+@findex fl_set_positioner_xvalue()
+@anchor{fl_set_positioner_xvalue()}
+@findex fl_set_positioner_yvalue()
+@anchor{fl_set_positioner_yvalue()}
+@example
+int fl_set_positioner_values(FL_OBJECT *obj, double xval, double yval);
+int fl_set_positioner_xvalue(FL_OBJECT *obj, double val);
+int fl_set_positioner_yvalue(FL_OBJECT *obj, double val);
+@end example
+These functions return either @code{@ref{FL_POSITIONER_VALID}} if the
+new position was acceptable or @code{@ref{FL_POSITIONER_REPLACED}}
+if the value passed to the function had to be modified due to
+constraints imposed by the boundaries the step sizes or a
+validation routine. If a validation routine is set the functions
+also may return @code{@ref{FL_POSITIONER_INVALID}} if that routine
+returned this value. 
 
 To obtain the current values of the positioner and the bounds use
 @findex fl_get_positioner_xvalue()
 @anchor{fl_get_positioner_xvalue()}
-@findex fl_get_positioner_xbounds()
-@anchor{fl_get_positioner_xbounds()}
 @findex fl_get_positioner_yvalue()
 @anchor{fl_get_positioner_yvalue()}
+@findex fl_get_positioner_xbounds()
+@anchor{fl_get_positioner_xbounds()}
 @findex fl_get_positioner_ybounds()
 @anchor{fl_get_positioner_ybounds()}
 @example
 double fl_get_positioner_xvalue(FL_OBJECT *obj);
-void fl_get_positioner_xbounds(FL_OBJECT *obj,
-                               double *min, double *max);
 double fl_get_positioner_yvalue(FL_OBJECT *obj);
-void fl_get_positioner_ybounds(FL_OBJECT *obj,
-                               double *min, double *max);
+void fl_get_positioner_xbounds(FL_OBJECT *obj, double *min, double *max);
+void fl_get_positioner_ybounds(FL_OBJECT *obj, double *min, double *max);
 @end example
 @noindent
 
@@ -1096,7 +1179,19 @@ void fl_set_positioner_ystep(FL_OBJECT *obj, double step);
 @end example
 @noindent
 After these calls positioner values will be rounded to multiples of
-@code{step}. Use a value of 0.0 for @code{step} to switch off rounding.
+@code{step}. Use a value of 0 for @code{step} to switch off rounding.
+
+The functions
+@findex fl_get_positioner_xstep()
+@anchor{fl_get_positioner_xstep()}
+@findex fl_get_positioner_ystep()
+@anchor{fl_get_positioner_ystep()}
+@example
+void fl_get_positioner_xstep(FL_OBJECT *obj);
+void fl_get_positioner_ystep(FL_OBJECT *obj);
+@end example
+@noindent
+return the current settings for the @code{x} and @code{y} step size.
 
 Sometimes, it makes more sense for a positioner to have an icon/pixmap
 as the background that represents a minified version of the area where

@@ -73,6 +73,7 @@ libforms_la_SOURCES = \
 	goodies.c \
 	goodie_sinput.c \
 	goodie_yesno.c \
+	goodie_colchooser.c \
 	handling.c \
 	input.c \
 	interpol.c \

@@ -281,4 +281,7 @@ FL_EXPORT void fl_set_fselector_filetype_marker( int,
 FL_EXPORT int fl_goodies_atclose( FL_FORM *,
                                   void * );
 
+FL_EXPORT int fl_show_color_chooser( const int * rgb_in,
+									 int       * rgb_out );
+
 #endif /* ! defined FL_GOODIES_H */

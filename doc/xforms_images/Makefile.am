@@ -6,6 +6,7 @@ figures_png = borderwidth.png \
 			  boxtypes.png \
 			  buttontypes.png \
 			  counters.png \
+			  colchooser.png \
 			  crossbutton.png \
 			  dials.png \
 			  fd_align.png \

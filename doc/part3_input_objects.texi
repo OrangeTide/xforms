@@ -278,15 +278,15 @@ Although an input of type @code{@ref{FL_RETURN_ALWAYS}} can be used in
 combination with the callback function to check the validity of
 characters that are entered into the input field, use of the following
 method may simplify this task considerably:
-@tindex FL_INPUTVALIDATOR
-@anchor{FL_INPUTVALIDATOR}
+@tindex FL_INPUT_VALIDATOR
+@anchor{FL_INPUT_VALIDATOR}
 @findex fl_set_input_filter()
 @anchor{fl_set_input_filter()}
 @example
-typedef int (*FL_INPUTVALIDATOR)(FL_OBJECT *obj, const char *old,
+typedef int (*FL_INPUT_VALIDATOR)(FL_OBJECT *obj, const char *old,
                                  const char *cur, int c);
-FL_INPUTVALIDATOR fl_set_input_filter(FL_OBJECT *obj,
-                                      FL_INPUTVALIDATOR filter);
+FL_INPUT_VALIDATOR fl_set_input_filter(FL_OBJECT *obj,
+                                       FL_INPUT_VALIDATOR filter);
 @end example
 @noindent
 @anchor{FL_VALID}
