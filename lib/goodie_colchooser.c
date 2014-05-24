@@ -581,6 +581,7 @@ fl_show_color_chooser( const int * rgb_in,
 	COLOR_CHOOSER *cc = get_cc( );
 	FL_OBJECT *obj;
 	int irgb[  ] = { 255, 255, 255 };
+    int i;
 
 	/* Check that we have a non-NULL pointer for returning the selected
 	   color */
@@ -600,7 +601,12 @@ fl_show_color_chooser( const int * rgb_in,
 	/* Put it into the start configuration, either with the user supplied
 	   color or white. */
 
-	memcpy( cc->rgb, rgb_in ? rgb_in : irgb, 3 * sizeof *rgb_in );
+    if ( rgb_in )
+        for ( i = RED; i <= BLUE; i++ )
+            cc->rgb[ i ] = FL_clamp( rgb_in[ i ], 0, 255 );
+    else
+        memcpy( cc->rgb, irgb, 3 * sizeof *irgb );
+
 	set_rgb_inputs( cc );
 	rgb2hsv( cc->rgb, cc->hsv );
 	set_hsv_inputs( cc );
@@ -641,35 +647,6 @@ fli_color_chooser_cleanup( void )
     if ( cc->form )
 		fl_free_form( cc->form );
 }
-
-
-#if 1
-
-/***************************************
- * Simple est case
- ***************************************/
-
-int
-main( int    argc,
-      char * argv[ ] )
-{
-	int ret;
-	int rgb[ 3 ] = { 101, 242, 73 };
-
-	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
-
-	ret =  fl_show_color_chooser( rgb, rgb );
-
-	if ( ret )
-		printf( "You oicked %d, %d, %d\n",
-				rgb[ RED ], rgb[ GREEN ], rgb[ BLUE ] );
-	else
-		printf( "You didn't select a color\n" );
-
-	return 0;
-}
-
-#endif
 
 
 /*
