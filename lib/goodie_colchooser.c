@@ -525,7 +525,7 @@ create_color_chooser_form( COLOR_CHOOSER * cc )
 	fl_set_object_callback( cc->green, rgb_input_cb, GREEN );
 	cc->green->u_vdata = cc;
 
-	fl_add_text( FL_NORMAL_TEXT, 460, 130, 55, 30, "Bue:" );
+	fl_add_text( FL_NORMAL_TEXT, 460, 130, 55, 30, "Blue:" );
     cc->blue = fl_add_input( FL_INT_INPUT, 515, 130, 80, 30, "" );
 	fl_set_object_callback( cc->blue, rgb_input_cb, BLUE );
 	cc->blue->u_vdata = cc;
