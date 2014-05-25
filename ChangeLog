@@ -1,3 +1,9 @@
+2014-05-24 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib.bitmaps/colorwheel.xpm: number of colors reduced since
+	this bitap alone wa resposible for over one third of the
+	size of the library.
+
 2014-05-23 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/goodie_colchooser.c: new goodie for picking arbitrary
