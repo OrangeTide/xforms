@@ -304,7 +304,7 @@ otherwise
 @code{FL_VALID}. If @code{FL_INVALID} is returned, the new character
 is discarded and the input field remains unmodified. The function
 returns the old filter. While the built-in filters also sound the
-keyboard bell, this don't happpens if a custom filter only returns
+keyboard bell, this doesn't happpen if a custom filter only returns
 @code{FL_INVALID}. To also sound the keyboard bell logically or it
 with
 @tindex FL_RINGBELL
@@ -314,7 +314,7 @@ This still leaves the possibility that the input is valid for every
 character entered, but the string is invalid for the field because it
 is incomplete. For example, 12.0e is valid for a float input field for
 every character typed, but the final string is not a valid floating
-point number. To guard against this, the filter function is also
+point number. To guard against such cases the filter function is also
 called just prior to returning the object with the argument @code{c}
 (for the newly entered character) set to zero. If the validator
 returns @code{FL_INVALID} the object is not returned to the

@@ -1100,8 +1100,6 @@ void fli_set_ul_property( int prop,
 
 int fli_is_valid_dir( const char * name );
 
-void fli_color_chooser_cleanup( void );
-
 #endif /* ! defined FL_INTERNAL_H */
 
 
