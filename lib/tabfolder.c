@@ -413,8 +413,8 @@ switch_folder( FL_OBJECT * ob,
                                ob->parent->type != FL_BOTTOM_TABFOLDER ?
                                FL_TOPTAB_UPBOX : FL_BOTTOMTAB_UPBOX );
 
-        fl_drw_frame( FL_UP_FRAME, sp->canvas->x, sp->canvas->y, sp->canvas->w,
-                      sp->canvas->h, sp->canvas->col1, sp->canvas->bw );
+        fl_draw_frame( FL_UP_FRAME, sp->canvas->x, sp->canvas->y, sp->canvas->w,
+                       sp->canvas->h, sp->canvas->col1, sp->canvas->bw );
         fl_hide_form( sp->forms[ sp->active_folder ] );
         sp->forms[ sp->active_folder ]->parent_obj = NULL;
         sp->last_active = sp->active_folder;

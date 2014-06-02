@@ -52,8 +52,8 @@ handle_text( FL_OBJECT * ob,
             break;
 
         case FL_DRAW:
-            fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1,
-                        ob->bw );
+            fl_draw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1,
+                         ob->bw );
             /* fall through */
 
         case FL_DRAWLABEL:

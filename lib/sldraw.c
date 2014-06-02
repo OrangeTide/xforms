@@ -167,11 +167,11 @@ fli_calc_slider_size( FL_OBJECT          * ob,
  ***************************************/
 
 void
-fli_drw_slider( FL_OBJECT  * ob,
-                FL_COLOR     col1,
-                FL_COLOR     col2,
-                const char * str,
-                int          d )
+fli_draw_slider( FL_OBJECT  * ob,
+                 FL_COLOR     col1,
+                 FL_COLOR     col2,
+                 const char * str,
+                 int          d )
 {
     FLI_SLIDER_SPEC *sp = ob->spec;
     FL_COORD x = ob->x + sp->x,
@@ -222,28 +222,28 @@ fli_drw_slider( FL_OBJECT  * ob,
         else
             btype = btype == FL_SHADOW_BOX ? FL_BORDER_BOX : btype;
 
-        fl_drw_box( btype, x, y, w, h, col1, actual_bw );
+        fl_draw_box( btype, x, y, w, h, col1, actual_bw );
     }
 
     if ( sltype == FL_VERT_NICE_SLIDER || sltype == FL_VERT_NICE_SLIDER2 )
     {
-        fl_drw_box( FL_FLAT_BOX, x + w / 2 - 2, y + absbw,
-                    4, h - 2 * absbw, FL_BLACK, 0 );
-        fl_drw_box( FL_UP_BOX, xsl, ysl, wsl, hsl, col1,
-                    IS_FLATBOX( ob->boxtype ) ? -1 : bw );
-        fl_drw_box( FL_DOWN_BOX, xsl + 2, ysl + hsl / 2 - 2,
-                    wsl - 4, 5, col2, 1 );
+        fl_draw_box( FL_FLAT_BOX, x + w / 2 - 2, y + absbw,
+                     4, h - 2 * absbw, FL_BLACK, 0 );
+        fl_draw_box( FL_UP_BOX, xsl, ysl, wsl, hsl, col1,
+                     IS_FLATBOX( ob->boxtype ) ? -1 : bw );
+        fl_draw_box( FL_DOWN_BOX, xsl + 2, ysl + hsl / 2 - 2,
+                     wsl - 4, 5, col2, 1 );
     }
     else if ( sltype == FL_HOR_NICE_SLIDER || sltype == FL_HOR_NICE_SLIDER2 )
     {
         int yoff = hsl > 15 ? 3 : 2;
 
-        fl_drw_box( FL_FLAT_BOX, x + absbw, y + h / 2 - 2,
-                    w - 2 * absbw, 4, FL_BLACK, 0 );
-        fl_drw_box( FL_UP_BOX, xsl, ysl, wsl, hsl, col1,
-                    IS_FLATBOX( ob->boxtype ) ? -1 : bw );
-        fl_drw_box( FL_DOWN_BOX, xsl + wsl / 2 - 2, ysl + yoff,
-                    5, hsl - 2 * yoff, col2, 1 /* absbw - 2 */ );
+        fl_draw_box( FL_FLAT_BOX, x + absbw, y + h / 2 - 2,
+                     w - 2 * absbw, 4, FL_BLACK, 0 );
+        fl_draw_box( FL_UP_BOX, xsl, ysl, wsl, hsl, col1,
+                     IS_FLATBOX( ob->boxtype ) ? -1 : bw );
+        fl_draw_box( FL_DOWN_BOX, xsl + wsl / 2 - 2, ysl + yoff,
+                     5, hsl - 2 * yoff, col2, 1 /* absbw - 2 */ );
     }
     else
     {
@@ -310,7 +310,7 @@ fli_drw_slider( FL_OBJECT  * ob,
 
         if ( d & FLI_SLIDER_KNOB )
         {
-            fl_drw_box( slbox, xsl, ysl, wsl, hsl, col2, bw2 );
+            fl_draw_box( slbox, xsl, ysl, wsl, hsl, col2, bw2 );
 
             if (    sltype == FL_VERT_BROWSER_SLIDER
                  || sltype == FL_VERT_BROWSER_SLIDER2 )
@@ -319,14 +319,14 @@ fli_drw_slider( FL_OBJECT  * ob,
 
                 int extra = bw2 < 0;
 
-                fl_drw_text( FL_ALIGN_CENTER,
-                             xsl - extra, ysl, wsl + 2 * extra, hsl, 0,
-                             FL_NORMAL_STYLE, FL_TINY_SIZE, "@RippleLines" );
+                fl_draw_text( FL_ALIGN_CENTER,
+                              xsl - extra, ysl, wsl + 2 * extra, hsl, 0,
+                              FL_NORMAL_STYLE, FL_TINY_SIZE, "@RippleLines" );
             }
             else if (    sltype == FL_HOR_BROWSER_SLIDER
                       || sltype == FL_HOR_BROWSER_SLIDER2 )
-                fl_drw_text( FL_ALIGN_CENTER, xsl - 1, ysl, wsl, hsl,
-                             0, 10, 1, "@2RippleLines" );
+                fl_draw_text( FL_ALIGN_CENTER, xsl - 1, ysl, wsl, hsl,
+                              0, 10, 1, "@2RippleLines" );
         }
     }
 
@@ -335,8 +335,8 @@ fli_drw_slider( FL_OBJECT  * ob,
 
     /* Draw the label */
 
-    fl_drw_text( FL_ALIGN_CENTER, xsl, ysl, wsl, hsl, 0, FL_NORMAL_STYLE,
-                 FL_TINY_SIZE, str );
+    fl_draw_text( FL_ALIGN_CENTER, xsl, ysl, wsl, hsl, 0, FL_NORMAL_STYLE,
+                  FL_TINY_SIZE, str );
 }
 
 

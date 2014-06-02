@@ -77,7 +77,8 @@ draw( FL_OBJECT * ob )
              c2;
 
     if ( sp->draw_type == COMPLETE_DRAW )
-        fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
+        fl_draw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1,
+                     ob->bw );
 
     x = ob->x + absbw;
     y = ob->y + absbw;

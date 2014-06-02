@@ -528,7 +528,7 @@ int
 fl_show_color_chooser( const int * rgb_in,
                        int       * rgb_out )
 {
-    static COLOR_CHOOSER cc = { NULL };
+    static COLOR_CHOOSER cc;
     FL_OBJECT *obj;
     int irgb[ ] = { 255, 255, 255 };
     int i;

@@ -131,29 +131,29 @@ draw_motion( FL_OBJECT * ob )
         }
 
         XSetClipRectangles( flx->display, flx->gc, 0, 0, xrec, 2, Unsorted );
-        fl_drw_box( FL_FLAT_BOX, ob->x + sp->x + abbw, ob->y + sp->y + abbw,
-                    sp->w - 2 * abbw, sp->h - 2 * abbw, ob->col1, 0 );
+        fl_draw_box( FL_FLAT_BOX, ob->x + sp->x + abbw, ob->y + sp->y + abbw,
+                     sp->w - 2 * abbw, sp->h - 2 * abbw, ob->col1, 0 );
     }
     else if (    ob->type == FL_HOR_THIN_SLIDER
               || ob->type == FL_VERT_THIN_SLIDER
               || ob->type == FL_HOR_BASIC_SLIDER
               || ob->type == FL_VERT_BASIC_SLIDER )
-        fl_drw_box( FL_FLAT_BOX, ob->x + sp->x, ob->y + sp->y,
-                    sp->w, sp->h, ob->col1, 1 );
+        fl_draw_box( FL_FLAT_BOX, ob->x + sp->x, ob->y + sp->y,
+                     sp->w, sp->h, ob->col1, 1 );
     else if (    ob->type == FL_HOR_BROWSER_SLIDER2
               || ob->type == FL_VERT_BROWSER_SLIDER2 )
-        fl_drw_box( ob->boxtype, ob->x + sp->x, ob->y + sp->y,
-                    sp->w, sp->h, ob->col1, ob->bw > 0 ? 1 : -1 );
+        fl_draw_box( ob->boxtype, ob->x + sp->x, ob->y + sp->y,
+                     sp->w, sp->h, ob->col1, ob->bw > 0 ? 1 : -1 );
     else
-        fl_drw_box( FL_UP_BOX, ob->x + sp->x, ob->y + sp->y,
-                    sp->w, sp->h, ob->col1, ob->bw > 0 ? 1 : -1 );
+        fl_draw_box( FL_UP_BOX, ob->x + sp->x, ob->y + sp->y,
+                     sp->w, sp->h, ob->col1, ob->bw > 0 ? 1 : -1 );
 
     fl_unset_clipping( );
 
     col = ( IS_SCROLLBAR( ob ) && sp->mouse == FLI_SLIDER_KNOB ) ?
           FL_MCOL : ob->col2;
 
-    fli_drw_slider( ob, ob->col1, col, NULL, FLI_SLIDER_KNOB );
+    fli_draw_slider( ob, ob->col1, col, NULL, FLI_SLIDER_KNOB );
 }
 
 
@@ -185,9 +185,9 @@ draw_slider( FL_OBJECT * ob )
         else
             sprintf( valstr, "%.*f", sp->prec, sp->val );
 
-        fl_drw_box( ob->boxtype, bx, by, bw, bh, ob->col1, ob->bw );
-        fl_drw_text_beside( FL_ALIGN_CENTER, bx, by, bw, bh,
-                            ob->lcol, ob->lstyle, ob->lsize, valstr );
+        fl_draw_box( ob->boxtype, bx, by, bw, bh, ob->col1, ob->bw );
+        fl_draw_text_beside( FL_ALIGN_CENTER, bx, by, bw, bh,
+                             ob->lcol, ob->lstyle, ob->lsize, valstr );
     }
 
     if (    ( sp->draw_type == SLIDER_MOTION || sp->draw_type == SLIDER_JUMP )
@@ -201,12 +201,12 @@ draw_slider( FL_OBJECT * ob )
 
     if ( fl_is_center_lalign( ob->align ) )
     {
-        fli_drw_slider( ob, ob->col1, ob->col2,
-                        IS_FILL( ob ) ? NULL : ob->label,
-                        FLI_SLIDER_ALL & ~sp->mouse );
+        fli_draw_slider( ob, ob->col1, ob->col2,
+                         IS_FILL( ob ) ? NULL : ob->label,
+                         FLI_SLIDER_ALL & ~sp->mouse );
         
         /* Added 10/21/00 TCZ: need this to get the inside label right
-           otherwise fli_drw_slider() draws the lable centered on the
+           otherwise fli_draw_slider() draws the lable centered on the
            xfilled part!*/
 
         if ( IS_FILL( ob ) )
@@ -214,8 +214,8 @@ draw_slider( FL_OBJECT * ob )
     }
     else
     {
-        fli_drw_slider( ob, ob->col1, ob->col2, "",
-                        FLI_SLIDER_ALL & ~sp->mouse );
+        fli_draw_slider( ob, ob->col1, ob->col2, "",
+                         FLI_SLIDER_ALL & ~sp->mouse );
 
         if ( fl_is_inside_lalign( ob->align ) )
             fl_draw_object_label( ob );
@@ -224,8 +224,8 @@ draw_slider( FL_OBJECT * ob )
     }
 
     if ( sp->mouse != FLI_SLIDER_NONE )
-        fli_drw_slider( ob, ob->col1, sp->mouse ? FL_MCOL : ob->col2,
-                        "", sp->mouse );
+        fli_draw_slider( ob, ob->col1, sp->mouse ? FL_MCOL : ob->col2,
+                         "", sp->mouse );
 }
 
 

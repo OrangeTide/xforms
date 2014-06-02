@@ -76,7 +76,7 @@ draw_choice( FL_OBJECT * ob )
 
     c1 = ob->belowmouse ? FL_CHOICE_MCOL : ob->col1;
 
-    fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, c1, ob->bw );
+    fl_draw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, c1, ob->bw );
 
     if ( ob->type == FL_NORMAL_CHOICE2 )
     {
@@ -85,16 +85,17 @@ draw_choice( FL_OBJECT * ob )
         int dbh = FL_max( absbw - 1, 1 );
         int align = fl_to_outside_lalign( sp->align );
 
-        fl_drw_box( FL_UP_BOX,
-                    ob->x + ob->w - dw - absbw - 2, ob->y + ( ob->h - dh ) / 2,
-                    dw, dh, ob->col1, - dbh );
+        fl_draw_box( FL_UP_BOX,
+                     ob->x + ob->w - dw - absbw - 2,
+                     ob->y + ( ob->h - dh ) / 2,
+                     dw, dh, ob->col1, - dbh );
 
         off1 = fl_is_center_lalign( align ) ? ( dw / 2 ) : 0;
         off2 = align == FL_ALIGN_RIGHT ? dw : 0;
     }
 
-    fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h, ob->lcol,
-                        ob->lstyle, ob->lsize, ob->label );
+    fl_draw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h, ob->lcol,
+                         ob->lstyle, ob->lsize, ob->label );
 
     /* String can conceivably contain "type flags". need to get rid of them
        on the fly */
@@ -114,9 +115,9 @@ draw_choice( FL_OBJECT * ob )
 
         fl_set_text_clipping( ob->x + absbw, ob->y,
                               ob->w - 2 * absbw, ob->h );
-        fl_drw_text( sp->align, ob->x - off1, ob->y, ob->w - off2,
-                     ob->h, ob->col2, sp->fontstyle, sp->fontsize,
-                     str + ( str && ( *str == '\010' ) ) );
+        fl_draw_text( sp->align, ob->x - off1, ob->y, ob->w - off2,
+                      ob->h, ob->col2, sp->fontstyle, sp->fontsize,
+                      str + ( str && ( *str == '\010' ) ) );
         fl_unset_text_clipping( );
         fl_free( str );
     }
@@ -142,22 +143,22 @@ draw_droplist_choice( FL_OBJECT * ob )
 
     /* Arrows */
 
-    fl_drw_box( sp->pushed ? FL_DOWN_BOX : FL_UP_BOX, ob->x + dx, ob->y,
-                dw, ob->h, c1, bw );
+    fl_draw_box( sp->pushed ? FL_DOWN_BOX : FL_UP_BOX, ob->x + dx, ob->y,
+                 dw, ob->h, c1, bw );
     if ( sp->no_title & ALIGN_BOTTOM_MASK )
-        fl_drw_text( FL_ALIGN_CENTER, ob->x + dx + 2, ob->y + 2,
-                     dw - 4, ob->h - 4,
-                     FL_BLACK, 0, 0, "@#8->" );
+        fl_draw_text( FL_ALIGN_CENTER, ob->x + dx + 2, ob->y + 2,
+                      dw - 4, ob->h - 4,
+                      FL_BLACK, 0, 0, "@#8->" );
     else
-        fl_drw_text( FL_ALIGN_CENTER, ob->x + dx + 2, ob->y + 2,
-                     dw - 4, ob->h - 4,
-                     FL_BLACK, 0, 0, "@#2->" );
+        fl_draw_text( FL_ALIGN_CENTER, ob->x + dx + 2, ob->y + 2,
+                      dw - 4, ob->h - 4,
+                      FL_BLACK, 0, 0, "@#2->" );
 
     /* Choice box */
 
-    fl_drw_box( ob->boxtype, ob->x, ob->y, dx, ob->h, ob->col1, ob->bw );
-    fl_drw_text_beside( ob->align, ob->x, ob->y, dx, ob->h, ob->lcol,
-                        ob->lstyle, ob->lsize, ob->label );
+    fl_draw_box( ob->boxtype, ob->x, ob->y, dx, ob->h, ob->col1, ob->bw );
+    fl_draw_text_beside( ob->align, ob->x, ob->y, dx, ob->h, ob->lcol,
+                         ob->lstyle, ob->lsize, ob->label );
 
     /* String can conceivably contain "type flags", need to get rid of them
        on the fly */
@@ -177,9 +178,9 @@ draw_droplist_choice( FL_OBJECT * ob )
 
         fl_set_text_clipping( ob->x + FL_abs( ob->bw ), ob->y,
                               ob->w - 2 * FL_abs( ob->bw ), ob->h );
-        fl_drw_text( sp->align, ob->x, ob->y, dx, ob->h, ob->col2,
-                     sp->fontstyle, sp->fontsize,
-                     str + ( str && ( *str == '\010' ) ) );
+        fl_draw_text( sp->align, ob->x, ob->y, dx, ob->h, ob->col2,
+                      sp->fontstyle, sp->fontsize,
+                      str + ( str && ( *str == '\010' ) ) );
         fl_unset_text_clipping( );
         fl_free( str );
     }
@@ -337,8 +338,8 @@ handle_choice( FL_OBJECT * ob,
             break;
 
         case FL_DRAWLABEL:
-            fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h, ob->lcol,
-                                ob->lstyle, ob->lsize, ob->label );
+            fl_draw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
+                                 ob->lcol, ob->lstyle, ob->lsize, ob->label );
             break;
 
         case FL_PUSH:

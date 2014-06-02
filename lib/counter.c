@@ -117,44 +117,44 @@ draw_counter( FL_OBJECT * ob )
 
     if ( ob->type == FL_NORMAL_COUNTER && sp->draw_type & OB0 )
     {
-        fl_drw_box( btype[ 0 ], sp->xx[ 0 ], ob->y, sp->ww[ 0 ], ob->h,
-                    ob->col1, ob->bw );
-        fl_drw_text( FL_ALIGN_CENTER, sp->xx[ 0 ], ob->y, sp->ww[ 0 ], ob->h,
-                     ob->col2, 0, 0, "@#<<" );
+        fl_draw_box( btype[ 0 ], sp->xx[ 0 ], ob->y, sp->ww[ 0 ], ob->h,
+                     ob->col1, ob->bw );
+        fl_draw_text( FL_ALIGN_CENTER, sp->xx[ 0 ], ob->y, sp->ww[ 0 ], ob->h,
+                      ob->col2, 0, 0, "@#<<" );
     }
 
     if ( sp->draw_type & OB1 )
     {
-        fl_drw_box( btype[ 1 ], sp->xx[ 1 ], ob->y, sp->ww[ 1 ], ob->h,
-                    ob->col1, ob->bw );
-        fl_drw_text( FL_ALIGN_CENTER, sp->xx[ 1 ], ob->y, sp->ww[ 1 ], ob->h,
-                     ob->col2, 0, 0, "@#<" );
+        fl_draw_box( btype[ 1 ], sp->xx[ 1 ], ob->y, sp->ww[ 1 ], ob->h,
+                     ob->col1, ob->bw );
+        fl_draw_text( FL_ALIGN_CENTER, sp->xx[ 1 ], ob->y, sp->ww[ 1 ], ob->h,
+                      ob->col2, 0, 0, "@#<" );
     }
 
     if ( sp->draw_type & OB4 )
     {
-        fl_drw_box( btype[ 4 ], sp->xx[ 4 ], ob->y, sp->ww[ 4 ], ob->h,
-                    ob->col1, ob->bw );
+        fl_draw_box( btype[ 4 ], sp->xx[ 4 ], ob->y, sp->ww[ 4 ], ob->h,
+                     ob->col1, ob->bw );
         fl_set_text_clipping( sp->xx[ 4 ], ob->y, sp->ww[ 4 ], ob->h );
-        fl_drw_text( FL_ALIGN_CENTER, sp->xx[ 4 ], ob->y, sp->ww[ 4 ], ob->h,
-                     ob->lcol, ob->lstyle, ob->lsize, str );
+        fl_draw_text( FL_ALIGN_CENTER, sp->xx[ 4 ], ob->y, sp->ww[ 4 ], ob->h,
+                      ob->lcol, ob->lstyle, ob->lsize, str );
         fl_unset_text_clipping( );
     }
 
     if ( sp->draw_type & OB2 )
     {
-        fl_drw_box( btype[ 2 ], sp->xx[ 2 ], ob->y, sp->ww[ 2 ], ob->h,
-                    ob->col1, ob->bw );
-        fl_drw_text( FL_ALIGN_CENTER, sp->xx[ 2 ], ob->y, sp->ww[ 2 ], ob->h,
-                     ob->col2, 0, 0, "@#>" );
+        fl_draw_box( btype[ 2 ], sp->xx[ 2 ], ob->y, sp->ww[ 2 ], ob->h,
+                     ob->col1, ob->bw );
+        fl_draw_text( FL_ALIGN_CENTER, sp->xx[ 2 ], ob->y, sp->ww[ 2 ], ob->h,
+                      ob->col2, 0, 0, "@#>" );
     }
 
     if ( ob->type == FL_NORMAL_COUNTER && sp->draw_type & OB3 )
     {
-        fl_drw_box( btype[ 3 ], sp->xx[ 3 ], ob->y, sp->ww[ 3 ], ob->h,
-                    ob->col1, ob->bw );
-        fl_drw_text( FL_ALIGN_CENTER, sp->xx[ 3 ], ob->y, sp->ww[ 3 ], ob->h,
-                     ob->col2, 0, 0, "@#>>" );
+        fl_draw_box( btype[ 3 ], sp->xx[ 3 ], ob->y, sp->ww[ 3 ], ob->h,
+                     ob->col1, ob->bw );
+        fl_draw_text( FL_ALIGN_CENTER, sp->xx[ 3 ], ob->y, sp->ww[ 3 ], ob->h,
+                      ob->col2, 0, 0, "@#>>" );
     }
 
     if ( sp->draw_type == ALL )

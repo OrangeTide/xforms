@@ -229,9 +229,9 @@ draw_dead_area( FL_OBJECT * obj )
     if ( FL_ObjWin( sp->tb ) )
     {
         fl_winset( FL_ObjWin( sp->tb ) );
-        fl_drw_box( FL_FLAT_BOX, obj->x + obj->w - sp->vw,
-                    obj->y + obj->h - sp->hh, sp->vw, sp->hh,
-                    sp->vsl->col1, 1 );
+        fl_draw_box( FL_FLAT_BOX, obj->x + obj->w - sp->vw,
+                     obj->y + obj->h - sp->hh, sp->vw, sp->hh,
+                     sp->vsl->col1, 1 );
     }
 }
 

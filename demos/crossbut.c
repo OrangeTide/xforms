@@ -55,7 +55,7 @@ draw_crossbutton( FL_OBJECT * ob )
 
     /* Draw the bounding box first */
 
-    fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
+    fl_draw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
 
     /* Draw the box that contains the cross */
 
@@ -67,26 +67,27 @@ draw_crossbutton( FL_OBJECT * ob )
 
     if ( sp->val )
     {
-        fl_drw_box( FL_DOWN_BOX, xx, yy, ww, hh, ob->col1, ob->bw );
-        fl_drw_text( FL_ALIGN_CENTER, xx - 2, yy - 2, ww + 4, hh + 4,
-                     ob->col2, 0, 0, "@9plus");
+        fl_draw_box( FL_DOWN_BOX, xx, yy, ww, hh, ob->col1, ob->bw );
+        fl_draw_text( FL_ALIGN_CENTER, xx - 2, yy - 2, ww + 4, hh + 4,
+                      ob->col2, 0, 0, "@9plus");
     }
     else
-        fl_drw_box( FL_UP_BOX, xx, yy, ww, hh, ob->col1, ob->bw );
+        fl_draw_box( FL_UP_BOX, xx, yy, ww, hh, ob->col1, ob->bw );
 
     /* label */
 
     if ( fl_is_center_lalign( ob->align ) )
-        fl_drw_text( FL_ALIGN_LEFT, xx + ww + 3, ob->y, 0, ob->h,
-                     ob->lcol, ob->lstyle, ob->lsize, ob->label );
+        fl_draw_text( FL_ALIGN_LEFT, xx + ww + 3, ob->y, 0, ob->h,
+                      ob->lcol, ob->lstyle, ob->lsize, ob->label );
     else
         fl_draw_object_label_outside( ob );
 
     if ( ob->type == FL_RETURN_BUTTON )
-        fl_drw_text( FL_ALIGN_CENTER,
-                     ob->x + ob->w - 0.8 * ob->h,
-                     ob->y + 0.2 * ob->h,
-                     0.6 * ob->h, 0.6 * ob->h, ob->lcol, 0, 0, "@returnarrow" );
+        fl_draw_text( FL_ALIGN_CENTER,
+                      ob->x + ob->w - 0.8 * ob->h,
+                      ob->y + 0.2 * ob->h,
+                      0.6 * ob->h, 0.6 * ob->h, ob->lcol, 0, 0,
+                      "@returnarrow" );
 }
 
 

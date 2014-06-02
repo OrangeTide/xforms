@@ -104,15 +104,15 @@ draw_timer( FL_OBJECT * ob )
     else
         col = ob->col2;
 
-    fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, col, ob->bw );
+    fl_draw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, col, ob->bw );
 
     if ( ob->type == FL_VALUE_TIMER && sp->time_left > 0.0 )
     {
         double time_shown = sp->up ? sp->timer - sp->time_left : sp->time_left;
 
         str = ( sp->filter ? sp->filter : default_filter )( ob, time_shown );
-        fl_drw_text( FL_ALIGN_CENTER, ob->x, ob->y, ob->w, ob->h,
-                     ob->lcol, ob->lstyle, ob->lsize, str );
+        fl_draw_text( FL_ALIGN_CENTER, ob->x, ob->y, ob->w, ob->h,
+                      ob->lcol, ob->lstyle, ob->lsize, str );
     }
 }
 
@@ -152,13 +152,13 @@ handle_timer( FL_OBJECT * ob,
                  || ( ob->type == FL_VALUE_TIMER && update_only ) )
                 break;
             if ( fl_is_outside_lalign( ob->align ) )
-                fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
-                                    ob->lcol, ob->lstyle, ob->lsize,
-                                    ob->label );
+                fl_draw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
+                                     ob->lcol, ob->lstyle, ob->lsize,
+                                     ob->label );
             else
-                fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
-                             ob->lcol, ob->lstyle, ob->lsize,
-                             ob->label );
+                fl_draw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
+                              ob->lcol, ob->lstyle, ob->lsize,
+                              ob->label );
             break;
 
         case FL_RELEASE:

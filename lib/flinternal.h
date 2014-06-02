@@ -323,35 +323,35 @@ int fli_get_pos_in_string( int,
                            int *,
                            int * );
 
-int fli_drw_stringTAB( Window,
-                       GC,
-                       int,
-                       int,
-                       int,
-                       int,
-                       const char *,
-                       int,
-                       int );
+int fli_draw_stringTAB( Window,
+                        GC,
+                        int,
+                        int,
+                        int,
+                        int,
+                        const char *,
+                        int,
+                        int );
 
-int fli_drw_string( int,
-                    FL_Coord,
-                    FL_Coord,
-                    FL_Coord,
-                    FL_Coord,
-                    int,
-                    FL_COLOR,
-                    FL_COLOR,
-                    FL_COLOR,
-                    int,
-                    int,
-                    int,
-                    int,
-                    int,
-                    const char *,
-                    int,
-                    int,
-                    int,
-                    FL_COLOR );
+int fli_draw_string( int,
+                     FL_Coord,
+                     FL_Coord,
+                     FL_Coord,
+                     FL_Coord,
+                     int,
+                     FL_COLOR,
+                     FL_COLOR,
+                     FL_COLOR,
+                     int,
+                     int,
+                     int,
+                     int,
+                     int,
+                     const char *,
+                     int,
+                     int,
+                     int,
+                     FL_COLOR );
 
 int fli_get_max_pixels_line( void );
 
@@ -418,19 +418,19 @@ enum {
 void fli_calc_slider_size( FL_OBJECT *,
                            FLI_SCROLLBAR_KNOB * );
 
-void fli_drw_slider( FL_OBJECT *,
-                     FL_COLOR,
-                     FL_COLOR,
-                     const char *,
-                     int );
+void fli_draw_slider( FL_OBJECT *,
+                      FL_COLOR,
+                      FL_COLOR,
+                      const char *,
+                      int );
 
-void fli_drw_checkbox( int      type,
-                       FL_Coord x,
-                       FL_Coord y,
-                       FL_Coord w,
-                       FL_Coord h,
-                       FL_COLOR col,
-                       int      bw );
+void fli_draw_checkbox( int      type,
+                        FL_Coord x,
+                        FL_Coord y,
+                        FL_Coord w,
+                        FL_Coord h,
+                        FL_COLOR col,
+                        int      bw );
 
 void fli_set_global_clipping( FL_Coord,
                               FL_Coord,

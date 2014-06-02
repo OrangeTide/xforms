@@ -227,8 +227,8 @@ show_pixmap( FL_OBJECT * obj,
 
     if ( pixmap == None || bits_w == 0 || bits_h == 0 )
     {
-        fl_drw_text( FL_ALIGN_CENTER, obj->x, obj->y, obj->w, obj->h,
-                     obj->lcol, obj->lstyle, FL_TINY_SIZE, "p" );
+        fl_draw_text( FL_ALIGN_CENTER, obj->x, obj->y, obj->w, obj->h,
+                      obj->lcol, obj->lstyle, FL_TINY_SIZE, "p" );
         return;
     }
 
@@ -390,8 +390,8 @@ draw_pixmap( FL_OBJECT * obj )
 {
     /* Draw the box */
 
-    fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
-                obj->col2, obj->bw );
+    fl_draw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
+                 obj->col2, obj->bw );
     show_pixmap( obj, 0 );
 }
 

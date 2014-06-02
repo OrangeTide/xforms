@@ -207,8 +207,8 @@ draw_digitalclock( FL_OBJECT * ob )
     else
         sprintf( buf, "%d:%02d:%02d", hours, minutes, seconds );
 
-    fl_drw_text( FL_ALIGN_CENTER, ob->x, ob->y, ob->w, ob->h, ob->col2,
-                 ob->lstyle, ob->lsize, buf );
+    fl_draw_text( FL_ALIGN_CENTER, ob->x, ob->y, ob->w, ob->h, ob->col2,
+                  ob->lstyle, ob->lsize, buf );
 }
 
 
@@ -235,8 +235,8 @@ handle_clock( FL_OBJECT * ob,
             break;
 
         case FL_DRAW :
-            fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h,
-                        ob->col1, ob->bw );
+            fl_draw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h,
+                         ob->col1, ob->bw );
             if ( ob->type == FL_DIGITAL_CLOCK )
                 draw_digitalclock( ob );
             else
@@ -246,10 +246,10 @@ handle_clock( FL_OBJECT * ob,
 
         case FL_DRAWLABEL :
             if ( ! updating )
-                fl_drw_text_beside( ob->align & ~ FL_ALIGN_INSIDE,
-                                    ob->x, ob->y, ob->w, ob->h,
-                                    ob->lcol, ob->lstyle, ob->lsize,
-                                    ob->label );
+                fl_draw_text_beside( ob->align & ~ FL_ALIGN_INSIDE,
+                                     ob->x, ob->y, ob->w, ob->h,
+                                     ob->lcol, ob->lstyle, ob->lsize,
+                                     ob->label );
             updating = 0;
             break;
 

@@ -132,8 +132,8 @@ noop_handle( FL_OBJECT * obj,
 {
     if ( e == FL_DRAW )
     {
-        fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
-                    obj->col1, obj->bw );
+        fl_draw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
+                     obj->col1, obj->bw );
         return 0;
     }
 

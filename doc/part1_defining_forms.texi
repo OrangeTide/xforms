@@ -1803,7 +1803,7 @@ int fl_draw_symbol(const char *symbolname, FL_Coord x, FL_Coord y,
 @noindent
 (the function returns @code{1} on success and @code{0} on failure
 when the symbol name isn't valid) or indirectly via
-@code{@ref{fl_drw_text()}}. Drawing is clipped automatically to the
+@code{@ref{fl_draw_text()}}. Drawing is clipped automatically to the
 area given by the arguments.
 
 The application program can also add symbols to the system which it

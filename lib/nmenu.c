@@ -811,22 +811,22 @@ draw_menu( FL_OBJECT * obj )
 {
     if ( ! obj->pushed )
     {
-        fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h, obj->col1,
-                    obj->bw );
+        fl_draw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h, obj->col1,
+                     obj->bw );
         obj->align = fl_to_outside_lalign( obj->align );
-        fl_drw_text( obj->align, obj->x, obj->y, obj->w, obj->h, obj->lcol,
-                     obj->lstyle, obj->lsize, obj->label );
+        fl_draw_text( obj->align, obj->x, obj->y, obj->w, obj->h, obj->lcol,
+                      obj->lstyle, obj->lsize, obj->label );
     }
     else
     {
         FLI_NMENU_SPEC *sp = obj->spec;
 
-        fl_drw_box( ( IS_BUTTON_NMENU( obj ) && obj->boxtype == FL_FLAT_BOX ) ?
-                    FL_UP_BOX : obj->boxtype,
-                    obj->x, obj->y, obj->w, obj->h, obj->col2, obj->bw );
+        fl_draw_box( ( IS_BUTTON_NMENU( obj ) && obj->boxtype == FL_FLAT_BOX ) ?
+                     FL_UP_BOX : obj->boxtype,
+                     obj->x, obj->y, obj->w, obj->h, obj->col2, obj->bw );
         obj->align = fl_to_inside_lalign( obj->align );
-        fl_drw_text( obj->align, obj->x, obj->y, obj->w, obj->h, sp->hl_color,
-                     obj->lstyle, obj->lsize, obj->label );
+        fl_draw_text( obj->align, obj->x, obj->y, obj->w, obj->h, sp->hl_color,
+                      obj->lstyle, obj->lsize, obj->label );
     }   
 }
 

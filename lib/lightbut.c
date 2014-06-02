@@ -54,7 +54,7 @@ draw_lightbutton( FL_OBJECT * ob )
     c1 = ob->belowmouse ? FL_LIGHTBUTTON_MCOL : FL_LIGHTBUTTON_TOPCOL;
     c2 = sp->val ? ob->col2 : ob->col1;
 
-    fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, c1, ob->bw );
+    fl_draw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, c1, ob->bw );
 
     if ( ob->boxtype == FL_NO_BOX || ob->boxtype == FL_FLAT_BOX )
         absbw = FL_abs( FL_BOUND_WIDTH );
@@ -125,13 +125,13 @@ draw_lightbutton( FL_OBJECT * ob )
     }
 
     bw2 = absbw > 2 ? absbw - 1 : absbw;
-    fl_drw_box( libox, xx, yy, ww, hh, c2, bw2 );
+    fl_draw_box( libox, xx, yy, ww, hh, c2, bw2 );
 
     /* Draw the label */
 
     if ( fl_is_center_lalign( ob->align ) )
-        fl_drw_text( FL_ALIGN_LEFT, xx + ww + 1, ob->y, ob->w - ww - 3,
-                     ob->h, ob->lcol, ob->lstyle, ob->lsize, ob->label );
+        fl_draw_text( FL_ALIGN_LEFT, xx + ww + 1, ob->y, ob->w - ww - 3,
+                      ob->h, ob->lcol, ob->lstyle, ob->lsize, ob->label );
     else
         fl_draw_object_label( ob );
 
@@ -140,9 +140,9 @@ draw_lightbutton( FL_OBJECT * ob )
         ww = absbw + 1;
 
     if ( ob->type == FL_RETURN_BUTTON )
-        fl_drw_text( 0, ob->x + ob->w - ww, ob->y + 0.2 * ob->h,
-                     0.6 * ob->h, 0.6 * ob->h,
-                     ob->lcol, 0, 0, "@returnarrow" );
+        fl_draw_text( 0, ob->x + ob->w - ww, ob->y + 0.2 * ob->h,
+                      0.6 * ob->h, 0.6 * ob->h,
+                      ob->lcol, 0, 0, "@returnarrow" );
 }
 
 

@@ -62,6 +62,13 @@ static char * get_fname( const char *,
  *
  */
 
+/* These default fonts may not be the most beuatiful X11 fonts available
+   on the system but they are part of X11 distributions since at least
+   20 years, so we can be rather sure that they're available everywhere.
+   (And, remember, these fonts must be available on the machine where the
+   X server is running on, which is not necessarily the machine where the
+   program using XForms is executed.) */
+
 static const char *default_fonts[ ] =
 {
     "-*-helvetica-medium-r-*-*-*-?-*-*-p-*-*-*",

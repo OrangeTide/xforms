@@ -646,8 +646,8 @@ draw_curve_only( FL_OBJECT * ob )
                 drawsymbol( ob, nplot, p, 3, 4, 4 );
             }
 
-            fl_drw_text( FL_ALIGN_LEFT, key_xs + 20, key_ys, 0, 0, col,
-                         sp->key_lstyle, sp->key_lsize, sp->key[ nplot ] );
+            fl_draw_text( FL_ALIGN_LEFT, key_xs + 20, key_ys, 0, 0, col,
+                          sp->key_lstyle, sp->key_lsize, sp->key[ nplot ] );
 
             key_ys += sp->key_ascend + sp->key_descend * 0.9;
         }
@@ -1141,8 +1141,8 @@ add_xtics( FL_OBJECT * ob )
         }
         
         if ( label )
-            fl_drw_text( FL_ALIGN_TOP, xr, sp->yf + ticl - 2, 0, 0,
-                         ob->col2, sp->lstyle, sp->lsize, label );
+            fl_draw_text( FL_ALIGN_TOP, xr, sp->yf + ticl - 2, 0, 0,
+                          ob->col2, sp->lstyle, sp->lsize, label );
     }
 }
 
@@ -1188,8 +1188,8 @@ add_logxtics( FL_OBJECT * ob )
         if ( sp->xbase == 10.0 )
         {
             sprintf( label, "%g", pow( sp->xbase, xw ) );
-            fl_drw_text( FL_ALIGN_TOP, xr, sp->yf + ticl - 2, 0, 0,
-                         ob->col2, sp->lstyle, sp->lsize, label );
+            fl_draw_text( FL_ALIGN_TOP, xr, sp->yf + ticl - 2, 0, 0,
+                          ob->col2, sp->lstyle, sp->lsize, label );
         }
         else
         {
@@ -1199,13 +1199,14 @@ add_logxtics( FL_OBJECT * ob )
 
             ll = sprintf( label, "%g", sp->xbase );
 
-            fl_drw_text( FL_ALIGN_TOP, xr, yf - 2, 0, 0,
-                         ob->col2, sp->lstyle, sp->lsize, label );
+            fl_draw_text( FL_ALIGN_TOP, xr, yf - 2, 0, 0,
+                          ob->col2, sp->lstyle, sp->lsize, label );
             len1 = fl_get_string_width( sp->lstyle, sp->lsize, label, ll );
             ll = sprintf( label, "%d", ( int ) ceil( xw ) );
             len2 = fl_get_string_width( sp->lstyle, sp->lsize, label, ll );
-            fl_drw_text( FL_ALIGN_TOP, xr + len1 / 2 + 2 + len2 / 2,
-                         yf - 6, 0, 0, ob->col2, sp->lstyle, sp->lsize, label );
+            fl_draw_text( FL_ALIGN_TOP, xr + len1 / 2 + 2 + len2 / 2,
+                          yf - 6, 0, 0, ob->col2, sp->lstyle, sp->lsize,
+                          label );
         }
     }
 }
@@ -1243,8 +1244,8 @@ add_logytics( FL_OBJECT * ob )
         if ( sp->ybase == 10.0 )
         {
             sprintf( label, "%g", pow( sp->ybase, yw ) );
-            fl_drw_text( FL_ALIGN_RIGHT, sp->xi - ticl + 2, yr,
-                         0, 0, ob->col2, sp->lstyle, sp->lsize, label );
+            fl_draw_text( FL_ALIGN_RIGHT, sp->xi - ticl + 2, yr,
+                          0, 0, ob->col2, sp->lstyle, sp->lsize, label );
         }
         else
         {
@@ -1252,12 +1253,13 @@ add_logytics( FL_OBJECT * ob )
                 ll;
 
             ll = sprintf( label, "%d", ( int ) ceil( yw ) );
-            fl_drw_text( FL_ALIGN_RIGHT, sp->xi - ticl + 2, yr - 3,
-                         0, 0, ob->col2, sp->lstyle, sp->lsize, label );
+            fl_draw_text( FL_ALIGN_RIGHT, sp->xi - ticl + 2, yr - 3,
+                          0, 0, ob->col2, sp->lstyle, sp->lsize, label );
             len = fl_get_string_width( sp->lstyle, sp->lsize, label, ll );
             sprintf( label, "%g", sp->ybase );
-            fl_drw_text( FL_ALIGN_RIGHT, sp->xi - ticl + 1 - len,
-                         yr + 1, 0, 0, ob->col2, sp->lstyle, sp->lsize, label );
+            fl_draw_text( FL_ALIGN_RIGHT, sp->xi - ticl + 1 - len,
+                          yr + 1, 0, 0, ob->col2, sp->lstyle, sp->lsize,
+                          label );
         }
     }
 }
@@ -1304,8 +1306,8 @@ add_ytics( FL_OBJECT * ob )
                 label = sp->aytic[ i ];
         }
 
-        fl_drw_text( FL_ALIGN_RIGHT, sp->xi - ticl + 2, yr,
-                     0, 0, ob->col2, sp->lstyle, sp->lsize, label );
+        fl_draw_text( FL_ALIGN_RIGHT, sp->xi - ticl + 2, yr,
+                      0, 0, ob->col2, sp->lstyle, sp->lsize, label );
     }
 }
 
@@ -1470,13 +1472,13 @@ convert_coord( FL_OBJECT       * ob,
  ***************************************/
 
 static void
-fl_drw_text_point( int        lalign,
-                   int        x,
-                   int        y,
-                   FL_COLOR   col,
-                   int        lstyle,
-                   int        lsize,
-                   char     * str )
+draw_text_point( int        lalign,
+                 int        x,
+                 int        y,
+                 FL_COLOR   col,
+                 int        lstyle,
+                 int        lsize,
+                 char     * str )
 {
     int align = fl_to_outside_lalign( lalign );
     int bbox = 1.4 * lsize + 6;
@@ -1529,7 +1531,7 @@ fl_drw_text_point( int        lalign,
             break;
     }
 
-    fl_drw_text_beside( align, xx, yy, bbox, bbox, col, lstyle, lsize, str );
+    fl_draw_text_beside( align, xx, yy, bbox, bbox, col, lstyle, lsize, str );
 }
 
 
@@ -1548,8 +1550,8 @@ draw_inset( FL_OBJECT * ob )
         if ( sp->text[ i ] )
         {
             w2s_draw( ob, sp->xt[ i ], sp->yt[ i ], &tx, &ty );
-            fl_drw_text_point( sp->talign[ i ], tx, ty, sp->tcol[ i ],
-                               sp->lstyle, sp->lsize, sp->text[ i ] );
+            draw_text_point( sp->talign[ i ], tx, ty, sp->tcol[ i ],
+                             sp->lstyle, sp->lsize, sp->text[ i ] );
         }
 }
 
@@ -1683,10 +1685,10 @@ draw_xyplot( FL_OBJECT * ob )
                      && ob->flpixmap
                      && ob->form->window == ob->flpixmap->pixmap;
 
-    fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
+    fl_draw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
 
-    fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
-                        ob->lcol, ob->lstyle, ob->lsize, ob->label );
+    fl_draw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
+                         ob->lcol, ob->lstyle, ob->lsize, ob->label );
 
     if ( *sp->n <= 0 || ! *sp->x || ! *sp->y )
         return;
@@ -1732,18 +1734,18 @@ draw_xyplot( FL_OBJECT * ob )
     /* Draw the title */
 
     if ( *sp->title )
-        fl_drw_text( FL_ALIGN_BOTTOM, ( sp->xi + sp->xf ) / 2,
-                     sp->yi + 1, 0, 0, ob->col2, sp->lstyle, sp->lsize,
-                     sp->title );
+        fl_draw_text( FL_ALIGN_BOTTOM, ( sp->xi + sp->xf ) / 2,
+                      sp->yi + 1, 0, 0, ob->col2, sp->lstyle, sp->lsize,
+                      sp->title );
 
     ( sp->xscale == FL_LOG ? add_logxtics : add_xtics )( ob );
 
     if ( *sp->xlabel )
-        fl_drw_text( FL_ALIGN_BOTTOM,
-                     ( sp->xi + sp->xf ) / 2,
-                     ob->y + ob->h - bw - ( draw_to_pixmap ? ob->y : 0 ),
-                     1, 1,
-                     ob->col2, sp->lstyle, sp->lsize, sp->xlabel );
+        fl_draw_text( FL_ALIGN_BOTTOM,
+                      ( sp->xi + sp->xf ) / 2,
+                      ob->y + ob->h - bw - ( draw_to_pixmap ? ob->y : 0 ),
+                      1, 1,
+                      ob->col2, sp->lstyle, sp->lsize, sp->xlabel );
 
     ( sp->yscale == FL_LOG ? add_logytics : add_ytics )( ob );
 
@@ -1756,10 +1758,10 @@ draw_xyplot( FL_OBJECT * ob )
         char s[ 2 ] = "";
 
         for ( j = 0; ( *s = sp->ylabel[ j ] ); j++ )
-            fl_drw_text( FL_ALIGN_CENTER,
-                         sp->xi - sp->maxytic - 2 - cw,
-                         ( sp->yi + sp->yf ) / 2 + ( j - 0.5 * nc ) * ch,
-                         cw, ch, ob->col2, sp->lstyle, sp->lsize, s );
+            fl_draw_text( FL_ALIGN_CENTER,
+                          sp->xi - sp->maxytic - 2 - cw,
+                          ( sp->yi + sp->yf ) / 2 + ( j - 0.5 * nc ) * ch,
+                          cw, ch, ob->col2, sp->lstyle, sp->lsize, s );
     }
 
     fl_unset_text_clipping( );

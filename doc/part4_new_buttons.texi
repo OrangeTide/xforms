@@ -139,28 +139,28 @@ static void draw_nbutton(FL_OBJECT *obj) @{
      * the boxtype */
      if (   obj->boxtype == FL_UP_BOX
          && ((FL_BUTTON_STRUCT *) obj->spec)->val)
-         fl_drw_box(FL_DOWN_BOX, obj->x, obj->y, obj->w, obj->h,
-                    col, obj->bw);
+         fl_draw_box(FL_DOWN_BOX, obj->x, obj->y, obj->w, obj->h,
+                     col, obj->bw);
      else
-         fl_drw_box(obj->boxtype, obj->x, obj->y, obj->w, obj->h,
-                    col, obj->bw);
+         fl_draw_box(obj->boxtype, obj->x, obj->y, obj->w, obj->h,
+                     col, obj->bw);
 
      /* draw the button label */
-     fl_drw_object_label(obj);
+     fl_draw_object_label(obj);
 
      /* if the button is a return button, draw the return symbol.
       * Note that size and style are 0 as they are not used when
       * drawing symbols */
      if (obj->type == FL_RETURN_BUTTON)
-         fl_drw_text(FL_ALIGN_CENTER,
-                     obj->x + obj->w - 0.8 * obj->h - 1,
-                     obj->y + 0.2 * obj->h, 0.6 * obj->h,
-                     0.6 * obj->h, obj->lcol, 0, 0, "@@returnarrow");
+         fl_draw_text(FL_ALIGN_CENTER,
+                      obj->x + obj->w - 0.8 * obj->h - 1,
+                      obj->y + 0.2 * obj->h, 0.6 * obj->h,
+                      0.6 * obj->h, obj->lcol, 0, 0, "@@returnarrow");
 @}
 @end example
 
 Note that when drawing symbols, the style and size are irrelevent and
-set to zero in @code{@ref{fl_drw_text()}} above.
+set to zero in @code{@ref{fl_draw_text()}} above.
 
 Since we don't use the @code{cspecv} field to point to dynamically
 allocated memory we don't have to write a clean-up function.
@@ -262,8 +262,8 @@ static void draw_crossbutton(FL_OBJECT *obj) @{
         return;
 
     /* draw the bounding box first */
-    fl_drw_box(obj->boxtype, obj->x, obj->y, obj->w, obj->h,
-               obj->col1, obj->bw);
+    fl_draw_box(obj->boxtype, obj->x, obj->y, obj->w, obj->h,
+                obj->col1, obj->bw);
 
     /* Draw the box that contains the cross */
     ww = hh = (0.5 * FL_min(obj->w, obj->h)) - 1;
@@ -272,23 +272,23 @@ static void draw_crossbutton(FL_OBJECT *obj) @{
 
     /* If pushed, draw a down box with the cross */
     if (sp->val) @{
-        fl_drw_box(FL_DOWN_BOX, xx, yy, ww, hh, obj->col1, obj->bw);
-        fl_drw_text(FL_ALIGN_CENTER, xx - 2, yy - 2, ww + 4, hh + 4,
-                    obj->col2, 0, 0, "@@9plus");
+        fl_draw_box(FL_DOWN_BOX, xx, yy, ww, hh, obj->col1, obj->bw);
+        fl_draw_text(FL_ALIGN_CENTER, xx - 2, yy - 2, ww + 4, hh + 4,
+                     obj->col2, 0, 0, "@@9plus");
     @} else
-        fl_drw_box(FL_UP_BOX, xx, yy, ww, hh, obj->col1, obj->bw);
+        fl_draw_box(FL_UP_BOX, xx, yy, ww, hh, obj->col1, obj->bw);
 
     /* Draw the label */
     if (obj->align == FL_ALIGN_CENTER)
-        fl_drw_text(FL_ALIGN_LEFT, xx + ww + 2, obj->y, 0, obj->h,
-                    obj->lcol, obj->lstyle, obj->lsize, obj->label);
+        fl_draw_text(FL_ALIGN_LEFT, xx + ww + 2, obj->y, 0, obj->h,
+                     obj->lcol, obj->lstyle, obj->lsize, obj->label);
     else
         fl_draw_object_label_outside(obj);
 
     if (obj->type == FL_RETURN_BUTTON)
-        fl_drw_text(FL_ALIGN_CENTER, obj->x + obj->w - 0.8 * obj->h,
-                    obj->y + 0.2 * obj->h, 0.6 * obj->h, 0.6 * obj->h,
-                    obj->lcol, 0, 0, "@@returnarrow");
+        fl_draw_text(FL_ALIGN_CENTER, obj->x + obj->w - 0.8 * obj->h,
+                     obj->y + 0.2 * obj->h, 0.6 * obj->h, 0.6 * obj->h,
+                     obj->lcol, 0, 0, "@@returnarrow");
 @}
 @end example
 

@@ -123,8 +123,8 @@ draw_dial( FL_OBJECT * obj )
     radius = 0.5 * FL_min( w, h );
     iradius = radius - 1;         /* internal radius */
 
-    fl_drw_box( boxtype, x - radius, y - radius, 2 * radius, 2 * radius,
-                obj->col1, obj->bw );
+    fl_draw_box( boxtype, x - radius, y - radius, 2 * radius, 2 * radius,
+                 obj->col1, obj->bw );
 
     /* the "hand" */
 
@@ -188,8 +188,8 @@ draw_dial( FL_OBJECT * obj )
     else
         M_err( "draw_dial", "Bad type" );
 
-    fl_drw_text_beside( obj->align, obj->x, obj->y, obj->w, obj->h,
-                        obj->lcol, obj->lstyle, obj->lsize, obj->label );
+    fl_draw_text_beside( obj->align, obj->x, obj->y, obj->w, obj->h,
+                         obj->lcol, obj->lstyle, obj->lsize, obj->label );
 }
 
 
@@ -350,9 +350,9 @@ handle_dial( FL_OBJECT * obj,
             break;
 
         case FL_DRAWLABEL:
-            fl_drw_text_beside( obj->align, obj->x, obj->y, obj->w, obj->h,
-                                obj->lcol, obj->lstyle, obj->lsize,
-                                obj->label );
+            fl_draw_text_beside( obj->align, obj->x, obj->y, obj->w, obj->h,
+                                 obj->lcol, obj->lstyle, obj->lsize,
+                                 obj->label );
             break;
 
         case FL_PUSH:

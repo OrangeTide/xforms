@@ -86,11 +86,11 @@ fli_draw_button( FL_OBJECT * obj )
     }
 
     if ( FL_IS_UPBOX( obj->boxtype ) && ( sp->val || sp->is_pushed ) )
-        fl_drw_box( FL_TO_DOWNBOX( obj->boxtype ), obj->x, obj->y, obj->w,
-                    obj->h, col, obj->bw );
+        fl_draw_box( FL_TO_DOWNBOX( obj->boxtype ), obj->x, obj->y, obj->w,
+                     obj->h, col, obj->bw );
     else
-        fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h, col,
-                    obj->bw );
+        fl_draw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h, col,
+                     obj->bw );
 
     dh = FL_crnd( 0.6 * obj->h );
     dw = FL_crnd( FL_min( 0.6 * obj->w, dh ) );
@@ -101,8 +101,8 @@ fli_draw_button( FL_OBJECT * obj )
 
     if ( obj->type == FL_RETURN_BUTTON )
     {
-        fl_drw_text( 0, obj->x + obj->w - ww, FL_crnd( obj->y + 0.2 * obj->h ),
-                     dw, dh, obj->lcol, 0, 0, "@returnarrow" );
+        fl_draw_text( 0, obj->x + obj->w - ww, FL_crnd( obj->y + 0.2 * obj->h ),
+                      dw, dh, obj->lcol, 0, 0, "@returnarrow" );
         off2 = dw - 2;
     }
 
@@ -113,8 +113,8 @@ fli_draw_button( FL_OBJECT * obj )
         dw = FL_max( 0.11 * obj->w, 13 );
         dh = FL_max( 6 + (obj->bw > 0 ), obj->h * 0.1 );
 
-        fl_drw_box( FL_UP_BOX, obj->x + obj->w - dw - absbw - 2,
-                    obj->y + ( obj->h - dh ) / 2, dw, dh, obj->col1, -dbh );
+        fl_draw_box( FL_UP_BOX, obj->x + obj->w - dw - absbw - 2,
+                     obj->y + ( obj->h - dh ) / 2, dw, dh, obj->col1, -dbh );
         off2 = dw - 1;
     }
 

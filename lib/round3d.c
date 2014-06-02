@@ -53,7 +53,7 @@ draw_round3dbutton( FL_OBJECT * ob )
 
     c1 = ob->belowmouse ? FL_ROUND3DBUTTON_MCOL : FL_ROUND3DBUTTON_TOPCOL;
 
-    fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h, c1, ob->bw);
+    fl_draw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h, c1, ob->bw);
 
     rr = 0.3 * FL_min( ob->w, ob->h ) + 0.5;
     xx = ob->x + rr + 4.1;
@@ -63,8 +63,8 @@ draw_round3dbutton( FL_OBJECT * ob )
         rr = bw / 2 + 1;
 
 #if 1
-    fl_drw_box( FL_OVAL3D_DOWNBOX, xx - rr, yy - rr,
-                2 * rr, 2 * rr, ob->col1, ob->bw );
+    fl_draw_box( FL_OVAL3D_DOWNBOX, xx - rr, yy - rr,
+                 2 * rr, 2 * rr, ob->col1, ob->bw );
 #else
     olw = fl_get_linewidth( );
     fl_linewidth( bw );
@@ -82,15 +82,16 @@ draw_round3dbutton( FL_OBJECT * ob )
                   ob->col2 );
 
     if ( fl_is_center_lalign( ob->align ) )
-        fl_drw_text( FL_ALIGN_LEFT, xx + rr + 1, ob->y, 0, ob->h,
-                     ob->lcol, ob->lstyle, ob->lsize, ob->label );
+        fl_draw_text( FL_ALIGN_LEFT, xx + rr + 1, ob->y, 0, ob->h,
+                      ob->lcol, ob->lstyle, ob->lsize, ob->label );
     else
-        fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
-                            ob->lcol, ob->lstyle, ob->lsize, ob->label );
+        fl_draw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
+                             ob->lcol, ob->lstyle, ob->lsize, ob->label );
 
     if ( ob->type == FL_RETURN_BUTTON )
-        fl_drw_text( 0, ob->x + ob->w - 0.8 * ob->h, ob->y + 0.2 * ob->h,
-                     0.6 * ob->h, 0.6 * ob->h, ob->lcol, 0, 0, "@returnarrow" );
+        fl_draw_text( 0, ob->x + ob->w - 0.8 * ob->h, ob->y + 0.2 * ob->h,
+                      0.6 * ob->h, 0.6 * ob->h, ob->lcol, 0, 0,
+                      "@returnarrow" );
 }
 
 

@@ -170,8 +170,8 @@ draw_positioner( FL_OBJECT * obj )
     if ( ! sp->partial )
     {
         if ( obj->type != FL_OVERLAY_POSITIONER )
-            fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
-                        obj->col1, obj->bw );
+            fl_draw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
+                         obj->col1, obj->bw );
         fl_draw_object_label_outside( obj );
     }
 

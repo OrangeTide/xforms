@@ -65,8 +65,8 @@ draw_labelbutton( FL_OBJECT * ob )
         ww = dw + absbw + 1 + ( ob->bw > 0 );
 
     if ( ob->type == FL_RETURN_BUTTON )
-        fl_drw_text( 0, ob->x + ob->w - ww, ob->y + 0.2 * ob->h,
-                     dw, dh, ob->lcol, 0, 0, "@returnarrow" );
+        fl_draw_text( 0, ob->x + ob->w - ww, ob->y + 0.2 * ob->h,
+                      dw, dh, ob->lcol, 0, 0, "@returnarrow" );
 
     fl_draw_object_label( ob );
     ob->lcol = scol;

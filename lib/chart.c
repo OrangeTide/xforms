@@ -149,9 +149,9 @@ draw_barchart( FL_OBJECT * ob,
     lbox = 0.8 * bwidth;
 
     for ( e = entries, es = e + numb, fx = x; e < es; fx += bwidth, e++ )
-        fl_drw_text_beside( FL_ALIGN_BOTTOM, fx + 0.5 * ( bwidth - lbox ),
-                            zeroh - lbox, lbox, lbox, e->lcol,
-                            sp->lstyle, sp->lsize, e->str );
+        fl_draw_text_beside( FL_ALIGN_BOTTOM, fx + 0.5 * ( bwidth - lbox ),
+                             zeroh - lbox, lbox, lbox, e->lcol,
+                             sp->lstyle, sp->lsize, e->str );
 }
 
 
@@ -238,10 +238,10 @@ draw_horbarchart( FL_OBJECT * ob,
 
     lbox = 0.8 * bwidth;
     for ( e = entries + numb - 1, i = 0; i < numb; i++, e-- )
-        fl_drw_text_beside( FL_ALIGN_LEFT, zeroh,
-                            y + i * bwidth + 0.5 * ( bwidth - lbox ),
-                            lbox, lbox, e->lcol, sp->lstyle,
-                            sp->lsize, e->str );
+        fl_draw_text_beside( FL_ALIGN_LEFT, zeroh,
+                             y + i * bwidth + 0.5 * ( bwidth - lbox ),
+                             lbox, lbox, e->lcol, sp->lstyle,
+                             sp->lsize, e->str );
 }
 
 
@@ -347,14 +347,14 @@ draw_linechart( FL_OBJECT * ob,
     for ( e = entries, es = e + numb; e < es; e++, xx += bwidth )
     {
         if ( e->val < 0.0 )
-            fl_drw_text_beside( FL_ALIGN_TOP, xx, zeroh - e->val * incr + 12,
-                                lbox, lbox, e->lcol, sp->lstyle,
-                                sp->lsize, e->str );
+            fl_draw_text_beside( FL_ALIGN_TOP, xx, zeroh - e->val * incr + 12,
+                                 lbox, lbox, e->lcol, sp->lstyle,
+                                 sp->lsize, e->str );
         else
-            fl_drw_text_beside( FL_ALIGN_BOTTOM, xx,
-                                zeroh - e->val * incr - 12 - lbox,
-                                lbox, lbox, e->lcol, sp->lstyle,
-                                sp->lsize, e->str );
+            fl_draw_text_beside( FL_ALIGN_BOTTOM, xx,
+                                 zeroh - e->val * incr - 12 - lbox,
+                                 lbox, lbox, e->lcol, sp->lstyle,
+                                 sp->lsize, e->str );
     }
 }
 
@@ -450,13 +450,13 @@ draw_piechart( FL_OBJECT * ob,
             yl = tyc - 1.1 * rad * sin( ARCINC * curang );
 
             if ( xl < txc )
-                fl_drw_text_beside( FL_ALIGN_LEFT, xl, yl - 0.5 * lbox,
-                                    lbox, lbox, e->lcol, sp->lstyle,
-                                    sp->lsize, e->str );
+                fl_draw_text_beside( FL_ALIGN_LEFT, xl, yl - 0.5 * lbox,
+                                     lbox, lbox, e->lcol, sp->lstyle,
+                                     sp->lsize, e->str );
             else
-                fl_drw_text_beside( FL_ALIGN_RIGHT, xl - lbox, yl - 0.5 * lbox,
-                                    lbox, lbox, e->lcol, sp->lstyle,
-                                    sp->lsize, e->str );
+                fl_draw_text_beside( FL_ALIGN_RIGHT, xl - lbox, yl - 0.5 * lbox,
+                                     lbox, lbox, e->lcol, sp->lstyle,
+                                     sp->lsize, e->str );
 
             curang += 0.5 * incr * e->val;
             fli_reset_vertex( );
@@ -512,12 +512,12 @@ draw_chart( FL_OBJECT * ob )
 
     /* Do the drawing */
 
-    fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
+    fl_draw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
 
     if ( sp->numb == 0 )
     {
-        fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
-                            ob->lcol, ob->lstyle, ob->lsize, ob->label );
+        fl_draw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
+                             ob->lcol, ob->lstyle, ob->lsize, ob->label );
         return;
     }
 

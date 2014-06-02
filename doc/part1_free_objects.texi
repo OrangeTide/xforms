@@ -625,8 +625,8 @@ int freeobject_handler(FL_OBJECT *obj, int event,
                                  cur_fig->w, cur_fig->h,
                                  cur_fig->col);
             else @{
-                fl_drw_box(obj->boxtype, obj->x, obj->y, obj->w,
-                           obj->h, obj->col1, obj->bw);
+                fl_draw_box(obj->boxtype, obj->x, obj->y, obj->w,
+                            obj->h, obj->col1, obj->bw);
             
                 for (dr = saved_figure; dr < cur_fig; dr++) @{
                     fl_mapcolor(FL_FREE_COL1,

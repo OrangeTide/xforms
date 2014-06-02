@@ -50,13 +50,13 @@ handle_frame( FL_OBJECT * ob,
             break;
 
         case FL_DRAW:
-            fl_drw_frame( ob->type, ob->x, ob->y, ob->w, ob->h,
-                          ob->col1, ob->bw );
+            fl_draw_frame( ob->type, ob->x, ob->y, ob->w, ob->h,
+                           ob->col1, ob->bw );
             /* fall through */
 
         case FL_DRAWLABEL:
-            fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
-                         ob->lcol, ob->lstyle, ob->lsize, ob->label );
+            fl_draw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
+                          ob->lcol, ob->lstyle, ob->lsize, ob->label );
             break;
     }
 

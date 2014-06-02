@@ -355,13 +355,14 @@ FL_EXPORT void fl_pieslice( int      fill,
 
 /* High level drawing routines */
 
-FL_EXPORT void fl_drw_frame( int      style,
-                             FL_Coord x,
-                             FL_Coord y,
-                             FL_Coord w,
-                             FL_Coord h,
-                             FL_COLOR c,
-                             int      bw );
+#define fl_drw_frame fl_draw_frame
+FL_EXPORT void fl_draw_frame( int      style,
+                              FL_Coord x,
+                              FL_Coord y,
+                              FL_Coord w,
+                              FL_Coord h,
+                              FL_COLOR c,
+                              int      bw );
 
 /*
  * Interfaces

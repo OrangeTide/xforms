@@ -62,13 +62,13 @@ extern int fli_no_connection;
 extern char fli_curfnt[ 127 ];
 extern FLI_WIN *fli_app_win;
 
-extern void fli_drw_tbox( int,
-                          FL_Coord,
-                          FL_Coord,
-                          FL_Coord,
-                          FL_Coord,
-                          FL_COLOR,
-                          int );
+extern void fli_draw_tbox( int,
+                           FL_Coord,
+                           FL_Coord,
+                           FL_Coord,
+                           FL_Coord,
+                           FL_COLOR,
+                           int );
 
 
 #endif /* !def EXTERN.H */

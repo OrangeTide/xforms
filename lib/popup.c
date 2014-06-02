@@ -162,7 +162,7 @@ static void set_need_recalc( FL_POPUP * );
 #define LINE_HEIGHT           4
 
 
-/* Extra offsets added by fl_drw_text() that need to be taken into account
+/* Extra offsets added by fl_draw_text() that need to be taken into account
    (see variables 'xoff' and 'yoff' of 'fli_draw_text_inside()' in xtext.c) */
 
 #define STR_OFFSET_X    5
@@ -2998,8 +2998,8 @@ draw_popup( FL_POPUP * popup )
     {
         /* Draw the popup box  */
 
-        fl_drw_box( FL_UP_BOX, 0, 0, popup->w, popup->h, popup->bg_color,
-                    popup->top_parent->bw );
+        fl_draw_box( FL_UP_BOX, 0, 0, popup->w, popup->h, popup->bg_color,
+                     popup->top_parent->bw );
 
         /* Draw the title and all entries */
 
@@ -3025,13 +3025,13 @@ draw_title( FL_POPUP * popup )
 
     /* Draw a box with a frame around the title */
 
-    fl_drw_box( FL_FRAME_BOX, popup->title_box_x - 1, popup->title_box_y - 1,
-                popup->title_box_w + 2, popup->title_box_h + 2,
-                ptp->bg_color, 1 );
+    fl_draw_box( FL_FRAME_BOX, popup->title_box_x - 1, popup->title_box_y - 1,
+                 popup->title_box_w + 2, popup->title_box_h + 2,
+                 ptp->bg_color, 1 );
 
-    fl_drw_text( FL_ALIGN_CENTER, popup->title_box_x, popup->title_box_y,
-                 popup->title_box_w, popup->title_box_h, ptp->title_color,
-                 ptp->title_font_style, ptp->title_font_size, popup->title );
+    fl_draw_text( FL_ALIGN_CENTER, popup->title_box_x, popup->title_box_y,
+                  popup->title_box_w, popup->title_box_h, ptp->title_color,
+                  ptp->title_font_style, ptp->title_font_size, popup->title );
 }
 
 
@@ -3065,8 +3065,8 @@ draw_entry( FL_POPUP_ENTRY * entry )
 
     if ( entry->type == FL_POPUP_LINE )
     {
-        fl_drw_box( FL_DOWN_BOX, x, entry->box_y + OUTER_PADDING_TOP + 1,
-                    w, LINE_HEIGHT - 1, ptp->bg_color, 1 );
+        fl_draw_box( FL_DOWN_BOX, x, entry->box_y + OUTER_PADDING_TOP + 1,
+                     w, LINE_HEIGHT - 1, ptp->bg_color, 1 );
         return;
     }
 
@@ -3089,11 +3089,11 @@ draw_entry( FL_POPUP_ENTRY * entry )
     if ( p->has_boxes )
     {
         if ( entry->type == FL_POPUP_RADIO )
-            fl_drw_box( FL_ROUNDED3D_DOWNBOX, x + 0.2 * entry->sl_h,
-                        entry->box_y + 0.25 * entry->sl_h + STR_OFFSET_Y,
-                        0.5 * entry->sl_h, 0.5 * entry->sl_h,
-                        entry->state & FL_POPUP_CHECKED ?
-                        ptp->radio_color : ptp->bg_color, 1 );
+            fl_draw_box( FL_ROUNDED3D_DOWNBOX, x + 0.2 * entry->sl_h,
+                         entry->box_y + 0.25 * entry->sl_h + STR_OFFSET_Y,
+                         0.5 * entry->sl_h, 0.5 * entry->sl_h,
+                         entry->state & FL_POPUP_CHECKED ?
+                         ptp->radio_color : ptp->bg_color, 1 );
         else if ( entry->state & FL_POPUP_CHECKED )
         {
             FL_POINT xp[ 3 ];
@@ -3143,18 +3143,18 @@ draw_entry( FL_POPUP_ENTRY * entry )
 
     if ( entry->label && *entry->label )
     {
-        fl_drw_text( FL_ALIGN_LEFT_TOP, x, entry->box_y, w, entry->box_h,
-                     color, ptp->entry_font_style, ptp->entry_font_size,
-                     entry->label );
+        fl_draw_text( FL_ALIGN_LEFT_TOP, x, entry->box_y, w, entry->box_h,
+                      color, ptp->entry_font_style, ptp->entry_font_size,
+                      entry->label );
         if ( entry->ulpos >= 0 )
             fl_rectangle( 1, x + entry->ul_x, entry->box_y + entry->ul_y ,
                           entry->ul_w, entry->ul_h, color );
     }
 
     if ( entry->accel && *entry->accel )
-        fl_drw_text( FL_ALIGN_RIGHT_TOP, x, entry->box_y, w, entry->box_h,
-                     color, ptp->entry_font_style, ptp->entry_font_size,
-                     entry->accel );
+        fl_draw_text( FL_ALIGN_RIGHT_TOP, x, entry->box_y, w, entry->box_h,
+                      color, ptp->entry_font_style, ptp->entry_font_size,
+                      entry->accel );
 }
 
 

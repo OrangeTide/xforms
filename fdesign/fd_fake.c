@@ -51,18 +51,19 @@ handle_simu_canvas( FL_OBJECT * ob,
     switch ( event )
     {
         case FL_DRAW:
-            fl_drw_box( FL_FLAT_BOX, ob->x, ob->y, ob->w, ob->h,
-                        ob->col1, ob->bw );
+            fl_draw_box( FL_FLAT_BOX, ob->x, ob->y, ob->w, ob->h,
+                         ob->col1, ob->bw );
             ftype = fli_boxtype2frametype( ob->boxtype );
-            fl_drw_frame( ftype, ob->x, ob->y, ob->w, ob->h, ob->col2, ob->bw );
-            fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
-                         ob->lcol, ob->lstyle, ob->lsize, ob->label );
+            fl_draw_frame( ftype, ob->x, ob->y, ob->w, ob->h, ob->col2,
+                           ob->bw );
+            fl_draw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
+                          ob->lcol, ob->lstyle, ob->lsize, ob->label );
             break;
 
         case FL_DRAWLABEL:
             if ( ! fl_is_center_lalign( ob->align ) )
-                fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
-                             ob->lcol, ob->lstyle, ob->lsize, ob->label );
+                fl_draw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
+                              ob->lcol, ob->lstyle, ob->lsize, ob->label );
             break;
     }
 
@@ -180,7 +181,8 @@ handle_tabfolder( FL_OBJECT * ob,
 {
     if ( event == FL_DRAW )
     {
-        fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
+        fl_draw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1,
+                     ob->bw );
         fl_draw_object_label( ob );
     }
 
@@ -246,7 +248,8 @@ handle_formbrowser( FL_OBJECT * ob,
 {
     if ( event == FL_DRAW )
     {
-        fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
+        fl_draw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1,
+                     ob->bw );
         fl_draw_object_label( ob );
     }
 

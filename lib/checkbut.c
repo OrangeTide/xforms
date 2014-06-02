@@ -50,30 +50,30 @@ draw_checkbutton( FL_OBJECT * ob )
     if ( sp->event == FL_ENTER || sp->event == FL_LEAVE )
         return;
 
-    fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
+    fl_draw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
 
     ww = hh = 0.6 * FL_min( ob->w, ob->h );
     xx = ob->x + 4.5;
     yy = ob->y + ( ob->h - hh ) / 2;
 
     if ( sp->val )
-        fli_drw_checkbox( FL_DOWN_BOX, xx, yy, ww, hh, ob->col2, bw );
+        fli_draw_checkbox( FL_DOWN_BOX, xx, yy, ww, hh, ob->col2, bw );
     else
-        fli_drw_checkbox( FL_UP_BOX, xx, yy, ww, hh, ob->col1, bw );
+        fli_draw_checkbox( FL_UP_BOX, xx, yy, ww, hh, ob->col1, bw );
 
     if ( fl_is_inside_lalign( ob->align ) )
-        fl_drw_text( FL_ALIGN_LEFT, xx + ww + 1, ob->y, ob->w - ww - 3, ob->h,
-                     ob->lcol, ob->lstyle, ob->lsize, ob->label );
+        fl_draw_text( FL_ALIGN_LEFT, xx + ww + 1, ob->y, ob->w - ww - 3, ob->h,
+                      ob->lcol, ob->lstyle, ob->lsize, ob->label );
     else
-        fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
-                            ob->lcol, ob->lstyle, ob->lsize, ob->label );
+        fl_draw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
+                             ob->lcol, ob->lstyle, ob->lsize, ob->label );
 
     if ( ob->type == FL_RETURN_BUTTON )
-        fl_drw_text( 0,
-                     ob->x + ob->w - 0.8f * ob->h,
-                     ob->y + 0.2f * ob->h,
-                     0.6f * ob->h, 0.6f * ob->h,
-                     ob->lcol, 0, 0, "@returnarrow" );
+        fl_draw_text( 0,
+                      ob->x + ob->w - 0.8f * ob->h,
+                      ob->y + 0.2f * ob->h,
+                      0.6f * ob->h, 0.6f * ob->h,
+                      ob->lcol, 0, 0, "@returnarrow" );
 }
 
 

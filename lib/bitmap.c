@@ -134,8 +134,8 @@ draw_bitmap( FL_OBJECT * obj )
 
     /* Draw the box */
 
-    fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
-                obj->col1, obj->bw );
+    fl_draw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
+                 obj->col1, obj->bw );
 
     /* Do nothing for empty data */
 

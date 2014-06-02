@@ -412,7 +412,7 @@ init_canvas( FL_OBJECT * ob )
         XClearWindow( flx->display, sp->window );
 
     sp->dec_type = fli_boxtype2frametype( ob->boxtype );
-    fl_drw_frame( sp->dec_type, ob->x, ob->y, ob->w, ob->h, ob->col2, ob->bw );
+    fl_draw_frame( sp->dec_type, ob->x, ob->y, ob->w, ob->h, ob->col2, ob->bw );
 }
 
 

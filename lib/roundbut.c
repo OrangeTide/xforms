@@ -51,7 +51,7 @@ draw_roundbutton( FL_OBJECT * ob )
 
     c1 = ob->belowmouse ? FL_ROUNDBUTTON_MCOL : FL_ROUNDBUTTON_TOPCOL;
 
-    fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, c1, ob->bw );
+    fl_draw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, c1, ob->bw );
 
     rr = 0.3 * FL_min( ob->w, ob->h ) + 0.5;
     xx = ob->x + rr + 4.1;
@@ -67,15 +67,16 @@ draw_roundbutton( FL_OBJECT * ob )
     }
 
     if ( fl_is_center_lalign( ob->align ) )
-        fl_drw_text( FL_ALIGN_LEFT, xx + rr + 1, ob->y, 0, ob->h,
-                     ob->lcol, ob->lstyle, ob->lsize, ob->label );
+        fl_draw_text( FL_ALIGN_LEFT, xx + rr + 1, ob->y, 0, ob->h,
+                      ob->lcol, ob->lstyle, ob->lsize, ob->label );
     else
         fl_draw_object_label_outside( ob );
 
     if ( ob->type == FL_RETURN_BUTTON )
-        fl_drw_text( 0,
-                     ob->x + ob->w - 0.8 * ob->h, ob->y + 0.2 * ob->h,
-                     0.6 * ob->h, 0.6 * ob->h, ob->lcol, 0, 0, "@returnarrow" );
+        fl_draw_text( 0,
+                      ob->x + ob->w - 0.8 * ob->h, ob->y + 0.2 * ob->h,
+                      0.6 * ob->h, 0.6 * ob->h, ob->lcol, 0, 0,
+                      "@returnarrow" );
 }
 
 

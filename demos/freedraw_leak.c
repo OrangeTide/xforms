@@ -271,8 +271,8 @@ freeobject_handler( FL_OBJECT * ob,
 								 cur_fig->w, cur_fig->h, FL_FREE_COL1 );
 			else
 			{
-				fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1,
-							FL_BOUND_WIDTH );
+				fl_draw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1,
+                             FL_BOUND_WIDTH );
 
 				for ( dr = saved_figure; dr < cur_fig; dr++ )
 				{

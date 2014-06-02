@@ -1802,15 +1802,15 @@ draw_item( PopUP * m,
     str = item->str;
 
     if ( ! ( item->mode & FL_PUP_GREY ) )
-        fl_drw_box( style, x + 1, y, w - 2, h - 1,
-                    pup_color, m->bw == -1 ? -1 : -2 );
+        fl_draw_box( style, x + 1, y, w - 2, h - 1,
+                     pup_color, m->bw == -1 ? -1 : -2 );
 
     if ( item->mode & FL_PUP_BOX && ! ( item->mode & FL_PUP_CHECK ) )
     {
         int w = CHECKW + ( item->radio ? 0 : 2 );
         int bbw = item->radio ? -2 : -1;
 
-        ( item->radio ? fli_drw_checkbox : fl_drw_box )
+        ( item->radio ? fli_draw_checkbox : fl_draw_box )
             ( FL_UP_BOX, 2 * bw + ( m->lpad - w ) / 2,
               y + ( h - CHECKW ) / 2 - 2,
               w, w, pup_color, bbw );
@@ -1821,7 +1821,7 @@ draw_item( PopUP * m,
         int w = CHECKW + ( item->radio ? 0 : 2 );
         int bbw = item->radio ? -3 : -2;
 
-        ( item->radio ? fli_drw_checkbox : fl_drw_box )
+        ( item->radio ? fli_draw_checkbox : fl_draw_box )
             ( FL_DOWN_BOX, 2 * bw + ( m->lpad - w ) / 2,
               y + ( h - CHECKW ) / 2 - 2, w, w,
               fli_depth( fl_vmode ) == 1 ? FL_BLACK : pup_checked_color, bbw );
@@ -1830,10 +1830,10 @@ draw_item( PopUP * m,
     /* show text */
 
     j = str[ 0 ] == '\010';
-    fli_drw_stringTAB( m->win, gc,
-                       m->lpad + 2 * bw, y + m->padh + pup_ascent,
-                       pup_font_style, pup_font_size, str + j,
-                       strlen( str ) - j, 0 );
+    fli_draw_stringTAB( m->win, gc,
+                        m->lpad + 2 * bw, y + m->padh + pup_ascent,
+                        pup_font_style, pup_font_size, str + j,
+                        strlen( str ) - j, 0 );
 
     /* do underline */
 
@@ -1949,13 +1949,14 @@ draw_popup( PopUP * m )
 
     /* make the popup box  */
 
-    fl_drw_box( FL_UP_BOX, 0, 0, m->w, m->h, pup_color, m->bw );
+    fl_draw_box( FL_UP_BOX, 0, 0, m->w, m->h, pup_color, m->bw );
 
     /* title box */
 
     if ( m->title && *m->title )
     {
-        fl_drw_box( FL_FRAME_BOX, 3, 3, m->w - 6, m->titleh - 6, pup_color, 1 );
+        fl_draw_box( FL_FRAME_BOX, 3, 3, m->w - 6, m->titleh - 6,
+                     pup_color, 1 );
 
         draw_title( flx->display, m->win, ( m->w - m->title_width ) / 2,
                     PADTITLE / 2 + pup_title_ascent, m->title );

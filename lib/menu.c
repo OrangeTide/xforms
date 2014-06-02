@@ -261,16 +261,16 @@ handle_menu( FL_OBJECT * ob,
             else
                 col = ob->col1;
 
-            fl_drw_box( boxtype, ob->x, ob->y, ob->w, ob->h, col, ob->bw );
-            fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
-                         ob->lcol, ob->lstyle, ob->lsize, ob->label );
+            fl_draw_box( boxtype, ob->x, ob->y, ob->w, ob->h, col, ob->bw );
+            fl_draw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
+                          ob->lcol, ob->lstyle, ob->lsize, ob->label );
 
             if ( sp->showsymbol )
             {
                 int dm = 0.85 * FL_min( ob->w, ob->h );
 
-                fl_drw_text( 0, ob->x + ob->w - dm - 1, ob->y + 1,
-                             dm, dm, col, 0, 0, "@menu" );
+                fl_draw_text( 0, ob->x + ob->w - dm - 1, ob->y + 1,
+                              dm, dm, col, 0, 0, "@menu" );
             }
             break;
 

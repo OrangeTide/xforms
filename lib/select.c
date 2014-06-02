@@ -935,9 +935,9 @@ handle_select( FL_OBJECT * obj,
             /* fall through */
 
         case FL_DRAWLABEL :
-            fl_drw_text_beside( obj->align, obj->x, obj->y,
-                                obj->w, obj->h, obj->lcol, obj->lstyle,
-                                obj->lsize, obj->label );
+            fl_draw_text_beside( obj->align, obj->x, obj->y,
+                                 obj->w, obj->h, obj->lcol, obj->lstyle,
+                                 obj->lsize, obj->label );
             break;
 
         case FL_ENTER :
@@ -1165,11 +1165,11 @@ draw_select( FL_OBJECT * obj )
     /* Draw the box of the object, possibly lowered if the object is pushed */
 
     if ( FL_IS_UPBOX( obj->boxtype ) && obj->pushed )
-        fl_drw_box( FL_TO_DOWNBOX( obj->boxtype ), obj->x, obj->y, obj->w,
-                    obj->h, color, obj->bw );
+        fl_draw_box( FL_TO_DOWNBOX( obj->boxtype ), obj->x, obj->y, obj->w,
+                     obj->h, color, obj->bw );
     else
-        fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h, color,
-                    obj->bw );
+        fl_draw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h, color,
+                     obj->bw );
 
     /* The FL_MENU_SELECT type has a small raised box on the right hand
        side */
@@ -1189,8 +1189,8 @@ draw_select( FL_OBJECT * obj )
             int box_x = obj->x + obj->w -box_w - bw - 2;
             int box_y = obj->y + ( obj->h - box_h ) / 2;
 
-            fl_drw_box( FL_UP_BOX, box_x, box_y, box_w, box_h, obj->col1,
-                        box_bw );
+            fl_draw_box( FL_UP_BOX, box_x, box_y, box_w, box_h, obj->col1,
+                         box_bw );
 
             box_w += 3;
         }
@@ -1200,9 +1200,9 @@ draw_select( FL_OBJECT * obj )
     {
         fl_set_text_clipping( obj->x + bw, obj->y + bw,
                               obj->w - box_w - 2 * bw, obj->h - 2 * bw );
-        fl_drw_text( sp->align, obj->x + bw, obj->y + bw,
-                     obj->w - box_w - 2 * bw, obj->h - 2 * bw,
-                     sp->color, sp->style, sp->size, sp->sel->label );
+        fl_draw_text( sp->align, obj->x + bw, obj->y + bw,
+                      obj->w - box_w - 2 * bw, obj->h - 2 * bw,
+                      sp->color, sp->style, sp->size, sp->sel->label );
         fl_unset_text_clipping( );
     }
 }
@@ -1252,24 +1252,24 @@ draw_droplist( FL_OBJECT * obj )
 
     /* Draw the box for the text of the selected item */
 
-    fl_drw_box( obj->boxtype, box_x, box_y, box_w, box_h, obj->col1,
-                obj->bw );
+    fl_draw_box( obj->boxtype, box_x, box_y, box_w, box_h, obj->col1,
+                 obj->bw );
 
     /* Draw the box for the arrow button, possibly lowered if the object is
        pushed */
 
     if ( FL_IS_UPBOX( obj->boxtype ) && obj->pushed )
-        fl_drw_box( FL_TO_DOWNBOX( obj->boxtype ), button_x, button_y,
-                    button_w, button_h, color, obj->bw );
+        fl_draw_box( FL_TO_DOWNBOX( obj->boxtype ), button_x, button_y,
+                     button_w, button_h, color, obj->bw );
     else
-        fl_drw_box( obj->boxtype, button_x, button_y, button_w, button_h,
-                    color, obj->bw );
+        fl_draw_box( obj->boxtype, button_x, button_y, button_w, button_h,
+                     color, obj->bw );
 
     /* Draw the arrow */
 
-    fl_drw_text( FL_ALIGN_CENTER, button_x + bw, button_y + bw,
-                 button_w - 2 * bw, button_h - 2 * bw, sp->color, 0, 0,
-                 "@#2->" );
+    fl_draw_text( FL_ALIGN_CENTER, button_x + bw, button_y + bw,
+                  button_w - 2 * bw, button_h - 2 * bw, sp->color, 0, 0,
+                  "@#2->" );
 
     /* Draw the text of the currently selected item */
 
@@ -1277,9 +1277,9 @@ draw_droplist( FL_OBJECT * obj )
     {
         fl_set_text_clipping( box_x + bw, box_y + bw,
                               box_w - 2 * bw, box_h - 2 * bw );
-        fl_drw_text( sp->align, box_x + bw, box_y + bw,
-                     box_w - 2 * bw, box_h - 2 * bw,
-                     sp->color, sp->style, sp->size, sp->sel->label );
+        fl_draw_text( sp->align, box_x + bw, box_y + bw,
+                      box_w - 2 * bw, box_h - 2 * bw,
+                      sp->color, sp->style, sp->size, sp->sel->label );
         fl_unset_text_clipping( );
     }
 }

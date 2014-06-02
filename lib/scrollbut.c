@@ -57,7 +57,7 @@ draw_scrollbutton( FL_OBJECT * ob )
         return;
 
     if ( sp->event == FL_DRAW )
-        fl_drw_box( ob->boxtype, x, y, w, h, ob->col1, ob->bw );
+        fl_draw_box( ob->boxtype, x, y, w, h, ob->col1, ob->bw );
 
     if ( *label == '#' )
     {
@@ -84,8 +84,8 @@ draw_scrollbutton( FL_OBJECT * ob )
         btype = sp->val ? FLI_TRIANGLE_DOWNBOX8 : FLI_TRIANGLE_UPBOX8;
 
     c1 = ( ob->belowmouse && sp->event != FL_RELEASE ) ? FL_MCOL : ob->col2;
-    fli_drw_tbox( btype, x + extra, y + extra, w - 2 * extra, h - 2 * extra,
-                  c1, abw );
+    fli_draw_tbox( btype, x + extra, y + extra, w - 2 * extra, h - 2 * extra,
+                   c1, abw );
 }
 
 

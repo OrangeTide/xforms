@@ -82,6 +82,9 @@ static int float_validator( FL_OBJECT *,
                             const char *,
                             int );
 
+static int xytopos( FLI_INPUT_SPEC * sp,
+                    int              xpos,
+                    int              ypos );
 
 enum {
     NORMAL_SELECT,
@@ -268,8 +271,8 @@ draw_input( FL_OBJECT * obj )
 
     if ( sp->drawtype == COMPLETE )
     {
-        fl_drw_box( obj->boxtype, sp->input->x, sp->input->y,
-                    sp->input->w, sp->input->h, col, obj->bw );
+        fl_draw_box( obj->boxtype, sp->input->x, sp->input->y,
+                     sp->input->w, sp->input->h, col, obj->bw );
         fl_draw_object_label_outside( obj );
     }
 
@@ -286,23 +289,23 @@ draw_input( FL_OBJECT * obj )
     fl_set_text_clipping( cx, cy, sp->w, sp->h );
     fl_set_clipping( cx, cy, sp->w, sp->h );
 
-    max_pixels = fli_drw_string( obj->type == FL_MULTILINE_INPUT ?
-                                 FL_ALIGN_LEFT_TOP : FL_ALIGN_LEFT,
-                                 cx - sp->xoffset,      /* Bounding box */
-                                 cy - sp->yoffset,
-                                 sp->w + sp->xoffset,
-                                 sp->h + sp->yoffset,
+    max_pixels = fli_draw_string( obj->type == FL_MULTILINE_INPUT ?
+                                  FL_ALIGN_LEFT_TOP : FL_ALIGN_LEFT,
+                                  cx - sp->xoffset,      /* Bounding box */
+                                  cy - sp->yoffset,
+                                  sp->w + sp->xoffset,
+                                  sp->h + sp->yoffset,
                                  -1,               /* Clipping is already set */
-                                 col, sp->textcol, curscol,
-                                 obj->lstyle, obj->lsize,
-                                 (    sp->cursor_visible
-                                   && obj->focus
-                                   && sp->beginrange >= sp->endrange ) ?
-                                 sp->position : -1,
-                                 sp->beginrange, sp->endrange,
+                                  col, sp->textcol, curscol,
+                                  obj->lstyle, obj->lsize,
+                                  (    sp->cursor_visible
+                                    && obj->focus
+                                    && sp->beginrange >= sp->endrange ) ?
+                                  sp->position : -1,
+                                  sp->beginrange, sp->endrange,
                                  sp->str, sp->drawtype != COMPLETE,
-                                 sp->topline,
-                                 sp->topline + sp->screenlines, 0 );
+                                  sp->topline,
+                                  sp->topline + sp->screenlines, 0 );
 
     max_pixels_line = fli_get_max_pixels_line( ) + 1;
     sp->charh = fl_get_char_height( obj->lstyle, obj->lsize, 0, 0 );
@@ -532,40 +535,13 @@ delete_piece( FL_OBJECT * obj,
 }
 
 
-/***************************************
- * Returns the width of the substring of the input field
- ***************************************/
-
-#if 1
 #define get_substring_width( o, b, e )                                       \
     fl_get_string_width( ( o )->lstyle, ( o )->lsize,                        \
                          ( ( FLI_INPUT_SPEC * ) ( o )->spec )->str + ( b ),  \
                          ( e ) - ( b ) )
 
-#else
-static int
-get_substring_width( FL_OBJECT * obj,
-                     int         startpos,
-                     int         endpos )
-{
-    FLI_INPUT_SPEC *sp = obj->spec;
-    char *str = sp->str + startpos;
-    char tmpch = sp->str[endpos];   /* Save end position */
-    int wid;                        /* The required width */
-
-    sp->str[ endpos ] = '\0';
-    wid = fl_get_string_width( obj->lstyle, obj->lsize,
-                               str, endpos - startpos );
-    sp->str[ endpos ] = tmpch;      /* Restore end position */
-
-    return wid;
-}
-
-#endif
-
 #define IsRegular( k )  (    ( k ) == '\n'                                \
                           || ( key >= 32 && key <= 255 && key != 127 ) )
-
 
 
 /***************************************
@@ -838,7 +814,6 @@ handle_edit( FL_OBJECT * obj,
             ret = FL_RETURN_NONE;
         else
         {
-
 #if defined USE_CLASSIC_EDITKEYS
             while (    i < slen
                     && ( sp->str[ i ] == ' ' || sp->str[ i ] == '\n' ) )
@@ -1441,12 +1416,12 @@ handle_input( FL_OBJECT * obj,
             if ( sp->input->type != FL_MULTILINE_INPUT )
                 fl_draw_object_label_outside( sp->input );
             else
-                fl_drw_text_beside( sp->dummy->align,
-                                    sp->input->x, sp->input->y,
-                                    sp->input->w + sp->vw,
-                                    sp->input->h + sp->hh,
-                                    sp->input->lcol, sp->input->lstyle,
-                                    sp->input->lsize, sp->dummy->label );
+                fl_draw_text_beside( sp->dummy->align,
+                                     sp->input->x, sp->input->y,
+                                     sp->input->w + sp->vw,
+                                     sp->input->h + sp->hh,
+                                     sp->input->lcol, sp->input->lstyle,
+                                     sp->input->lsize, sp->dummy->label );
             break;
 
         case FL_FOCUS:
@@ -1568,6 +1543,11 @@ handle_input( FL_OBJECT * obj,
         }
     }
 
+    /* In some places the x- and y-coordinates (column and row) of the cursor
+       aren't set consistently, so repair it here... */
+
+    fl_get_input_cursorpos( obj, &sp->xpos, &sp->ypos );
+
     return ret;
 }
 
@@ -1581,9 +1561,11 @@ vsl_cb( FL_OBJECT * obj,
         long        data  FL_UNUSED_ARG )
 {
     FLI_INPUT_SPEC *sp = obj->parent->spec;
-    double val = fl_get_scrollbar_value( obj );
-    int top = val * ( sp->lines - sp->screenlines ) + 1.01;
 
+    double val = fl_get_scrollbar_value( obj );
+    int top = FL_nint( val * ( sp->lines - sp->screenlines ) ) + 1;
+
+    sp->endrange = -1;          /* switch off selection */
     sp->drawtype = VSLIDER;
     fl_set_input_topline( sp->input, top );
 }
@@ -2142,17 +2124,34 @@ fl_set_input_selected( FL_OBJECT * obj,
 static int
 xytopos( FLI_INPUT_SPEC * sp,
          int              xpos,
-         int              ypos,
-         int              len )
+         int              ypos )
 {
-    int y;
+    int newp = 0;
     char *s = sp->str,
-         *se = s + len;
+         *se = s + strlen( s );
 
-    for ( y = 1; y < ypos && s < se; s++ )
-        if ( *s == '\n' )
-            y++;
-    return ( s - sp->str ) + xpos;
+    if ( ypos < 1 )
+        ypos = 1;
+    else if ( ypos > sp->lines )
+        ypos = sp->lines;
+
+    if ( xpos < 0 )
+        xpos = 0;
+
+    sp->ypos = 1;
+    while ( sp->ypos < ypos && ( s = strchr( s, '\n' ) ) )
+    {
+        sp->ypos++;
+        s++;
+        newp = s - sp->str;
+    }
+
+    s = sp->str + newp;
+    for ( sp->xpos = 0; sp->xpos < xpos && s < se; sp->xpos++, newp++ )
+        if (  *++s == '\n' )
+            break;
+
+    return sp->position = newp;
 }
 
 
@@ -2166,32 +2165,18 @@ fl_set_input_cursorpos( FL_OBJECT * obj,
                         int         ypos )
 {
     FLI_INPUT_SPEC *sp = obj->spec;
-    int newp,
-        len;
+    int oldp = sp->position;
 
     if ( obj->type == FL_HIDDEN_INPUT )
         return;
 
-    if ( ypos < 1 )
-        ypos = 1;
-    else if ( ypos > sp->lines )
-        ypos = sp->lines;
-
-    if ( xpos < 0 )
-        xpos = 0;
-
-    len = strlen( sp->str );
-
-    newp = xytopos( sp, xpos, ypos, len );
-
-    if ( newp > len )
-        newp = len;
-
-    if ( newp != sp->position )
+    if ( ( oldp = xytopos( sp, xpos, ypos ) ) )
     {
-        sp->position = newp;
-        make_line_visible( obj, ypos );
-        fl_redraw_object( sp->input );
+        fl_freeze_form( obj->form );
+        make_line_visible( obj, sp->ypos );
+        make_char_visible( obj, sp->xpos );
+        fl_redraw_object( obj );
+        fl_unfreeze_form( obj->form );
     }
 }
 
@@ -2205,22 +2190,24 @@ fl_get_input_cursorpos( FL_OBJECT * obj,
                         int       * y )
 {
     FLI_INPUT_SPEC *sp = obj->spec;
-    int i,
-        j;
     char *s = sp->str;
+    int cnt = 0;
 
-    for ( i = 1, j = 0; s && *s && sp->position > s - sp->str; s++ )
-    {
-        j++;
+    if ( ! obj->focus )
+        return sp->position = *x = -1;
+
+    *y = 1;
+    *x = 0;
+
+    for ( ; s && *s && cnt < sp->position; s++, cnt++ )
         if ( *s == '\n' )
         {
-            i++;
-            j = 0;
+            *y += 1;
+            *x = 0;
         }
-    }
+        else
+            *x += 1;
 
-    *x = sp->position >= 0 ? j : -1;
-    *y = i;
     return sp->position;
 }
 
@@ -2670,18 +2657,30 @@ fl_set_input_topline( FL_OBJECT * obj,
 
     correct_topline( sp, &top );
 
-    if ( sp->topline != top )
+    if ( sp->topline == top )
+        return;
+
+    /* Make sure the cursor remains in a visible line */
+
+    if ( sp->ypos < top || sp->ypos >= top + sp->screenlines )
     {
-        sp->topline = top;
-        if ( sp->drawtype != VSLIDER )
-        {
-            check_scrollbar_size( obj );
-            redraw_scrollbar( obj );
-        }
-        sp->drawtype = COMPLETE;
-        sp->yoffset = ( sp->topline - 1 ) * sp->charh;
-        fl_redraw_object( sp->input );
+        if ( sp->ypos < top )
+            xytopos( sp, sp->xpos, top );
+        else
+            xytopos( sp, sp->xpos, top + sp->screenlines - 1 );
+        make_char_visible( obj, sp->xpos );
     }
+
+    sp->topline = top;
+    if ( sp->drawtype != VSLIDER )
+    {
+        check_scrollbar_size( obj );
+        redraw_scrollbar( obj );
+    }
+
+    sp->drawtype = COMPLETE;
+    sp->yoffset = ( sp->topline - 1 ) * sp->charh;
+    fl_redraw_object( sp->input );
 }
 
 
@@ -2970,9 +2969,9 @@ redraw_scrollbar( FL_OBJECT * obj )
     {
         sp->dead_area = 0;
         fl_winset( FL_ObjWin( obj ) );
-        fl_drw_box( FL_FLAT_BOX, sp->dummy->x + sp->dummy->w - sp->vw,
-                    sp->dummy->y + sp->dummy->h - sp->hh, sp->vw,
-                    sp->hh, sp->hscroll->col1, 1 );
+        fl_draw_box( FL_FLAT_BOX, sp->dummy->x + sp->dummy->w - sp->vw,
+                     sp->dummy->y + sp->dummy->h - sp->hh, sp->vw,
+                     sp->hh, sp->hscroll->col1, 1 );
     }
 
     fl_unfreeze_form( obj->form );

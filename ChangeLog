@@ -1,8 +1,13 @@
+2014-06-02 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/input.c: Attempt to fix bugs and inconsistencies
+	reported by Lucas Sköldqvist.
+
 2014-05-24 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib.bitmaps/colorwheel.xpm: number of colors reduced since
-	this bitap alone wa resposible for over one third of the
-	size of the library.
+	this bitmap alone was resposible for over a third of the size
+	of the tar ball.
 
 2014-05-23 Jens Thoms Toerring    <jt@toerring.de>
 

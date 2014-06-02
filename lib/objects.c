@@ -3086,11 +3086,11 @@ fl_draw_object_label( FL_OBJECT * obj )
     align = fl_to_outside_lalign( obj->align );
 
     if ( fl_is_inside_lalign( obj->align ) )
-        fl_drw_text( align, obj->x, obj->y, obj->w, obj->h,
-                     obj->lcol, obj->lstyle, obj->lsize, obj->label );
+        fl_draw_text( align, obj->x, obj->y, obj->w, obj->h,
+                      obj->lcol, obj->lstyle, obj->lsize, obj->label );
     else
-        fl_drw_text_beside( align, obj->x, obj->y, obj->w, obj->h,
-                            obj->lcol, obj->lstyle, obj->lsize, obj->label );
+        fl_draw_text_beside( align, obj->x, obj->y, obj->w, obj->h,
+                             obj->lcol, obj->lstyle, obj->lsize, obj->label );
 }
 
 
@@ -3100,9 +3100,9 @@ fl_draw_object_label( FL_OBJECT * obj )
 void
 fl_draw_object_label_outside( FL_OBJECT * obj )
 {
-    fl_drw_text_beside( fl_to_outside_lalign( obj->align ),
-                        obj->x, obj->y, obj->w, obj->h,
-                        obj->lcol, obj->lstyle, obj->lsize, obj->label );
+    fl_draw_text_beside( fl_to_outside_lalign( obj->align ),
+                         obj->x, obj->y, obj->w, obj->h,
+                         obj->lcol, obj->lstyle, obj->lsize, obj->label );
 }
 
 

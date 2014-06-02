@@ -70,8 +70,8 @@ handle_lframe( FL_OBJECT * ob,
             break;
 
         case FL_DRAW :
-            fl_drw_frame( ob->type, ob->x, ob->y, ob->w, ob->h,
-                          ob->col1, ob->bw );
+            fl_draw_frame( ob->type, ob->x, ob->y, ob->w, ob->h,
+                           ob->col1, ob->bw );
             /* fall through */
 
         case FL_DRAWLABEL :
@@ -139,10 +139,9 @@ handle_lframe( FL_OBJECT * ob,
                     break;
             }
 
-            fl_drw_box( FL_FLAT_BOX, sx, sy, sw, sh, ob->col2, 0 );
-
-            fl_drw_text( FL_ALIGN_CENTER, sx, sy, sw, sh,
-                         ob->lcol, ob->lstyle, ob->lsize, ob->label );
+            fl_draw_box( FL_FLAT_BOX, sx, sy, sw, sh, ob->col2, 0 );
+            fl_draw_text( FL_ALIGN_CENTER, sx, sy, sw, sh,
+                          ob->lcol, ob->lstyle, ob->lsize, ob->label );
             break;
     }
 

@@ -1684,8 +1684,8 @@ draw_tbox( FL_OBJECT * obj )
     FLI_TBOX_SPEC *sp = obj->spec;
     int i;
 
-    fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
-                obj->col1, obj->bw );
+    fl_draw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
+                 obj->col1, obj->bw );
 
     XFillRectangle( flx->display, FL_ObjWin( obj ),
                     sp->backgroundGC,
@@ -1719,10 +1719,10 @@ draw_tbox( FL_OBJECT * obj )
             /* The extra horizontal pixels here are due to the function called
                subtracting them! */
 
-            fl_drw_text( 0, obj->x + sp->x - 3,
-                         obj->y + sp->y - sp->yoffset + tl->y + tl->h / 2,
-                         sp->w + 6, 1,
-                         FL_COL1, FL_NORMAL_STYLE, sp->def_size, "@DnLine" );
+            fl_draw_text( 0, obj->x + sp->x - 3,
+                          obj->y + sp->y - sp->yoffset + tl->y + tl->h / 2,
+                          sp->w + 6, 1,
+                          FL_COL1, FL_NORMAL_STYLE, sp->def_size, "@DnLine" );
             continue;
         }
 
@@ -1782,10 +1782,10 @@ draw_tbox( FL_OBJECT * obj )
                          ( fli_dithered( fl_vmode ) && tl->selected ) ?
                          FL_WHITE : tl->color );
 
-        fli_drw_stringTAB( FL_ObjWin( obj ), activeGC,
-                           obj->x + sp->x - sp->xoffset + tl->x,
-                           obj->y + sp->y - sp->yoffset + tl->y + tl->asc,
-                           tl->style, tl->size, tl->text, tl->len, 0 );
+        fli_draw_stringTAB( FL_ObjWin( obj ), activeGC,
+                            obj->x + sp->x - sp->xoffset + tl->x,
+                            obj->y + sp->y - sp->yoffset + tl->y + tl->asc,
+                            tl->style, tl->size, tl->text, tl->len, 0 );
     }
 
     fl_unset_clipping( );

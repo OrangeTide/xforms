@@ -333,13 +333,13 @@ fl_oval3dbox( int      style,
  ***************************************/
 
 void
-fl_drw_box( int      style,
-            FL_Coord x,
-            FL_Coord y,
-            FL_Coord w,
-            FL_Coord h,
-            FL_COLOR c,
-            int      bw_in )
+fl_draw_box( int      style,
+             FL_Coord x,
+             FL_Coord y,
+             FL_Coord w,
+             FL_Coord h,
+             FL_COLOR c,
+             int      bw_in )
 {
     FL_POINT vert[ 5 ];             /* need one extra for closing of polygon! */
     int B,
@@ -461,22 +461,22 @@ fl_drw_box( int      style,
 
         case FL_FRAME_BOX:
             B = bw > 2 ? bw - 2 : 1;
-            fl_drw_box( FL_DOWN_BOX, x, y, w, h, c, 1 );
+            fl_draw_box( FL_DOWN_BOX, x, y, w, h, c, 1 );
             x += B + 1;
             y += B + 1;
             w -= 2 * ( B + 1 );
             h -= 2 * ( B + 1 );
-            fl_drw_frame( FL_UP_FRAME, x, y, w, h, c, -1 );
+            fl_draw_frame( FL_UP_FRAME, x, y, w, h, c, -1 );
             break;
 
         case FL_EMBOSSED_BOX:
             B = bw > 2 ? bw - 2 : 1;
-            fl_drw_box( FL_UP_BOX, x, y, w, h, c, -1 );
+            fl_draw_box( FL_UP_BOX, x, y, w, h, c, -1 );
             x += B + 1;
             y += B + 1;
             w -= 2 * ( B + 1 );
             h -= 2 * ( B + 1 );
-            fl_drw_frame( FL_DOWN_FRAME, x, y, w, h, c, 1 );
+            fl_draw_frame( FL_DOWN_FRAME, x, y, w, h, c, 1 );
             break;
 
         case FL_ROUNDED_BOX:
@@ -543,7 +543,7 @@ fl_drw_box( int      style,
             if ( style & FLI_BROKEN_BOX )
                 fl_foldertab_box( style, x, y, w, h, c, bw_in );
             else
-                M_err( "fl_drw_box", "Unkonwn boxtype: %d", style );
+                M_err( "fl_draw_box", "Unkonwn boxtype: %d", style );
             break;
     }
 }
@@ -557,13 +557,13 @@ fl_drw_box( int      style,
  ***************************************/
 
 void
-fli_drw_checkbox( int      type,
-                  FL_Coord x,
-                  FL_Coord y,
-                  FL_Coord w,
-                  FL_Coord h,
-                  FL_COLOR col,
-                  int      bw )
+fli_draw_checkbox( int      type,
+                   FL_Coord x,
+                   FL_Coord y,
+                   FL_Coord w,
+                   FL_Coord h,
+                   FL_COLOR col,
+                   int      bw )
 {
     int halfw = w / 2,
         halfh = h / 2;
@@ -628,13 +628,13 @@ fli_drw_checkbox( int      type,
  ***************************************/
 
 void
-fl_drw_frame( int      style,
-              FL_Coord x,
-              FL_Coord y,
-              FL_Coord w,
-              FL_Coord h,
-              FL_COLOR c,
-              int      bw )
+fl_draw_frame( int      style,
+               FL_Coord x,
+               FL_Coord y,
+               FL_Coord w,
+               FL_Coord h,
+               FL_COLOR c,
+               int      bw )
 {
     FL_POINT vert[ 5 ];          /* need one extra for closing of polygon! */
     int B,
@@ -760,15 +760,15 @@ fl_drw_frame( int      style,
 
         case FL_EMBOSSED_FRAME:
             B = bw > 2 ? ( bw - 2 ) : 1;
-            fl_drw_frame( FL_UP_FRAME, x, y, w, h, 0, -1 );
-            fl_drw_frame( FL_DOWN_FRAME, x + B, y + B, w - 2 * B, h - 2 * B,
+            fl_draw_frame( FL_UP_FRAME, x, y, w, h, 0, -1 );
+            fl_draw_frame( FL_DOWN_FRAME, x + B, y + B, w - 2 * B, h - 2 * B,
                           0, 1 );
             break;
 
         case FL_ENGRAVED_FRAME:
             B = bw > 2 ? bw - 2 : 1;
-            fl_drw_frame( FL_DOWN_FRAME, x, y, w, h, 0, 1 );
-            fl_drw_frame( FL_UP_FRAME, x + B, y + B,
+            fl_draw_frame( FL_DOWN_FRAME, x, y, w, h, 0, 1 );
+            fl_draw_frame( FL_UP_FRAME, x + B, y + B,
                           w - 2 * B, h - 2 * B, 0, -1 );
             break;
 
@@ -1120,13 +1120,13 @@ fl_foldertab_box( int      style,
  ***************************************/
 
 void
-fli_drw_tbox( int      style,
-              FL_Coord x,
-              FL_Coord y,
-              FL_Coord w,
-              FL_Coord h,
-              FL_COLOR c,
-              int bw_in )
+fli_draw_tbox( int      style,
+               FL_Coord x,
+               FL_Coord y,
+               FL_Coord w,
+               FL_Coord h,
+               FL_COLOR c,
+               int bw_in )
 {
     FL_POINT vert[ 4 ];          /* need one extra for closing of polygon! */
     int dp = fli_dithered( fl_vmode ),

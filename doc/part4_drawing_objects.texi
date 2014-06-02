@@ -853,12 +853,12 @@ int fl_get_drawmode(void);
 There are also a number of high-level drawing routines available. To
 draw boxes the following routine exists. Almost any object class will
 use it to draw the bounding box of the object.
-@findex fl_drw_box()
-@anchor{fl_drw_box()}
+@findex fl_draw_box()
+@anchor{fl_draw_box()}
 @example
-void fl_drw_box(int style, FL_Coord x, FL_Coord y,
-                FL_Coord w, FL_Coord h,
-                FL_COLOR col, int bw);
+void fl_draw_box(int style, FL_Coord x, FL_Coord y,
+                 FL_Coord w, FL_Coord h,
+                 FL_COLOR col, int bw);
 @end example
 @noindent
 @code{style} is the type of the box, e.g., @code{FL_DOWN_BOX}.
@@ -870,28 +870,28 @@ boundary, which typically should be given the value @code{obj->bw} or
 visual effect of different border widths.
 
 There is also a routine for drawing a frame:
-@findex fl_drw_frame()
-@anchor{fl_drw_frame()}
+@findex fl_draw_frame()
+@anchor{fl_draw_frame()}
 @example
-void fl_drw_frame(int style, FL_Coord x, FL_Coord y,
-                  FL_Coord w, FL_Coord h, FL_COLOR col, int bw)
+void fl_draw_frame(int style, FL_Coord x, FL_Coord y,
+                   FL_Coord w, FL_Coord h, FL_COLOR col, int bw)
 @end example
 @noindent
 All parameters have the usual meaning except that the frame is drawn
 outside of the bounding box specified.
 
 For drawing text there are two routines:
-@findex fl_drw_text()
-@anchor{fl_drw_text()}
-@findex fl_drw_text_beside()
-@anchor{fl_drw_text_beside()}
+@findex fl_draw_text()
+@anchor{fl_draw_text()}
+@findex fl_draw_text_beside()
+@anchor{fl_draw_text_beside()}
 @example
-void fl_drw_text(int align, FL_Coord x, FL_Coord y, FL_Coord w,
-                 FL_Coord h, FL_COLOR col, int style, int size,
-                 const char *str);
-void fl_drw_text_beside(int align, FL_Coord x, FL_Coord y,
-                        FL_Coord w, FL_Coord h, FL_COLOR col,
-                        int style, int size, const char *str);
+void fl_draw_text(int align, FL_Coord x, FL_Coord y, FL_Coord w,
+                  FL_Coord h, FL_COLOR col, int style, int size,
+                  const char *str);
+void fl_draw_text_beside(int align, FL_Coord x, FL_Coord y,
+                         FL_Coord w, FL_Coord h, FL_COLOR col,
+                         int style, int size, const char *str);
 @end example
 @noindent
 where @code{align} is the alignment, namely, @code{FL ALIGN LEFT},
@@ -902,25 +902,25 @@ indicate the bounding box, @code{col} is the color of the text,
 and Fonts}, for valid styles). Finally, @code{str} is the string
 itself, possibly containing embedded newline characters.
 
-@code{@ref{fl_drw_text()}} draws the text inside the bounding box
+@code{@ref{fl_draw_text()}} draws the text inside the bounding box
 according to the alignment requested while
-@code{@ref{fl_drw_text_beside()}} draws the text aligned outside of
+@code{@ref{fl_draw_text_beside()}} draws the text aligned outside of
 the box. These two routines interpret a text string starting with the
 character @code{@@} differently in drawing some symbols instead. Note
-that @code{@ref{fl_drw_text()}} puts a padding of 5 pixels in vertical
+that @code{@ref{fl_draw_text()}} puts a padding of 5 pixels in vertical
 direction and 4 in horizontal around the text. Thus the bounding box
 should be 10 pixels wider and 8 pixels higher than required for the
 text to be drawn.
 
 The following routine can also be used to draw text and, in addition, a
 cursor can optionally be drawn
-@findex fl_drw_text_cursor()
-@anchor{fl_drw_text_cursor()}
+@findex fl_draw_text_cursor()
+@anchor{fl_draw_text_cursor()}
 @example
-void fl_drw_text_cursor(int align, FL_Coord x, FL_Coord y,
-                        FL_Coord w, FL_Coord h, FL_COLOR col,
-                        int style, int size, char *str,
-                        int FL_COLOR ccol, int pos);
+void fl_draw_text_cursor(int align, FL_Coord x, FL_Coord y,
+                         FL_Coord w, FL_Coord h, FL_COLOR col,
+                         int style, int size, char *str,
+                         int FL_COLOR ccol, int pos);
 @end example
 @noindent
 where @code{ccol} is the color of the cursor and @code{pos} is its
