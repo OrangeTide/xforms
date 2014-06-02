@@ -1526,7 +1526,7 @@ handle_input( FL_OBJECT * obj,
         case FL_FREEMEM:
             fli_safe_free( ( ( FLI_INPUT_SPEC * ) obj->spec )->str );
             fli_safe_free( obj->spec );
-            break;
+            return ret;
     }
 
     if (    ret
@@ -1546,6 +1546,7 @@ handle_input( FL_OBJECT * obj,
     /* In some places the x- and y-coordinates (column and row) of the cursor
        aren't set consistently, so repair it here... */
 
+    if ( obj->spec )
     fl_get_input_cursorpos( obj, &sp->xpos, &sp->ypos );
 
     return ret;
