@@ -125,6 +125,12 @@ FL_EXPORT int fl_scrh,      /* screen dimension in pixels */
               fl_scrw;
 FL_EXPORT int fl_vmode;
 
+#define fl_visual    ( fl_state[ fl_vmode ].xvinfo->visual )
+#define fl_colormap  ( fl_state[ fl_vmode ].colormap )
+
+#define fl_get_visual( )    ( fl_state[ fl_vmode ].xvinfo->visual )
+#define fl_get_colormap( )  ( fl_state[ fl_vmode ].colormap )
+
 
 /* Current version only runs in single visual mode */
 

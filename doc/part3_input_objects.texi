@@ -184,15 +184,9 @@ Per default the input object gets returned to the application (or the
 callback set for the input object is invoked) when the input field is
 left and has been changed. Depending on the application, other options
 might be useful. To change the precise condition for the object to be
-returned (or its callback to become invoked), the following function
-can be used:
-@findex fl_set_input_return()
-@anchor{fl_set_input_return()}
-@example
-void fl_set_input_return(FL_OBJECT *obj, int when);
-@end example
-@noindent
-Where @code{when} can take one of the following values:
+returned (or its callback to become invoked), the
+@code{@ref{fl_set_object_return()}} function can be used with one of
+the following values:
 @table @code
 @item @ref{FL_RETURN_NONE}
 Never return or invoke callback

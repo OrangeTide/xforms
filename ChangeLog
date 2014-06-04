@@ -1,3 +1,7 @@
+2014-06-04 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/input.c: some more corrections.
+
 2014-06-02 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/input.c: Attempt to fix bugs and inconsistencies

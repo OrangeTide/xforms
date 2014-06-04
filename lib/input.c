@@ -58,11 +58,11 @@ static void correct_topline( FLI_INPUT_SPEC *,
 
 static void redraw_scrollbar( FL_OBJECT * );
 
-static int make_line_visible( FL_OBJECT *,
-                              int );
+static int make_line_visible( FL_OBJECT * obj,
+                              int         ypos );
 
-static int make_char_visible( FL_OBJECT *,
-                              int );
+static int make_char_visible( FL_OBJECT * obj,
+                              int         xpos );
 
 static void copy_attributes( FL_OBJECT *,
                              FL_OBJECT * );
@@ -122,7 +122,7 @@ get_margin( int        btype,
 
 
 /***************************************
- * Check the size of scrollbars and input field.  No drawing is allowed
+ * Checks the size of scrollbars and input field.  No drawing is allowed
  ***************************************/
 
 static void
@@ -1158,6 +1158,12 @@ handle_key( FL_OBJECT    * obj,
         }
 
         handle_movement( obj, key, slen, startpos, kmask );
+
+        if ( sp->endrange != -1 )
+        {
+            make_line_visible( obj, sp->ypos );
+            make_char_visible( obj, sp->xpos );
+        }
     }
     else
         ret = handle_edit( obj, key, slen );
@@ -2171,7 +2177,7 @@ fl_set_input_cursorpos( FL_OBJECT * obj,
     if ( obj->type == FL_HIDDEN_INPUT )
         return;
 
-    if ( ( oldp = xytopos( sp, xpos, ypos ) ) )
+    if ( oldp != xytopos( sp, xpos, ypos ) )
     {
         fl_freeze_form( obj->form );
         make_line_visible( obj, sp->ypos );
@@ -2595,6 +2601,11 @@ fl_get_input_xoffset( FL_OBJECT * obj )
 
 
 /***************************************
+ * Corrects, if necessary, the value of 'top' (the topmost line to be
+ * shown in a FL_MULTILINE_INPUT object, count is starting at 1) so
+ * that the value is at least 1 and, if there are less lines below
+ * 'top' then fit into the input field, adjusts 'top' that the
+ * complete field is used (i.e. there are no empty lines at the end).
  ***************************************/
 
 static void
@@ -2603,7 +2614,7 @@ correct_topline( FLI_INPUT_SPEC * sp,
 {
     if ( sp->lines > sp->screenlines )
     {
-        if ( sp->lines + 1 - *top < sp->screenlines )
+        if ( sp->lines < *top + sp->screenlines - 1 )
             *top = sp->lines - sp->screenlines + 1;
         if ( *top < 1 )
             *top = 1;
@@ -2616,35 +2627,27 @@ correct_topline( FLI_INPUT_SPEC * sp,
 /***************************************
  ***************************************/
 
-static int
-count_lines( const char *s )
+int
+fl_get_input_numberoflines( FL_OBJECT * obj )
 {
+    FLI_INPUT_SPEC *sp = obj->spec;
     int count;
+    const char *s = sp->str;
 
     if ( ! s )
-        return 0;
+        return sp->lines = 0;
 
     for ( count = 1; *s; s++ )
         if ( *s == '\n' )
             count++;
 
-    return count;
+    return sp->lines = count;
 }
 
 
 /***************************************
- ***************************************/
-
-int
-fl_get_input_numberoflines( FL_OBJECT * obj )
-{
-    FLI_INPUT_SPEC *sp = obj->spec;
-
-    return sp->lines = count_lines( sp->str );
-}
-
-
-/***************************************
+ * Makes the requested line 'top' (starting at 1) the topmost line
+ * shown in a FL_MULTILINE_INPUT object.
  ***************************************/
 
 void
@@ -2691,7 +2694,7 @@ fl_set_input_topline( FL_OBJECT * obj,
 
 static int
 make_line_visible( FL_OBJECT * obj,
-                   int         n )
+                   int         ypos )
 {
     FLI_INPUT_SPEC *sp = obj->spec;
     int oldtop = sp->topline;
@@ -2699,12 +2702,12 @@ make_line_visible( FL_OBJECT * obj,
     if ( obj->type != FL_MULTILINE_INPUT )
         return 0;
 
-    if ( n < sp->topline )
-        fl_set_input_topline( obj, n );
-    else if ( n - sp->topline + 1 > sp->screenlines )
-        fl_set_input_topline( obj, n - sp->screenlines + 1 );
-    else if ( sp->lines + 1 - sp->topline < sp->screenlines )
-        fl_set_input_topline( obj, sp->lines );
+    if ( ypos < sp->topline )
+        fl_set_input_topline( obj, ypos );
+    else if ( ypos > sp->topline + sp->screenlines - 1 )
+        fl_set_input_topline( obj, ypos - sp->screenlines + 1 );
+    else if ( sp->lines < sp->screenlines )
+        fl_set_input_topline( obj, 1 );
 
     return oldtop != sp->topline;
 }
@@ -2715,20 +2718,20 @@ make_line_visible( FL_OBJECT * obj,
 
 static int
 make_char_visible( FL_OBJECT * obj,
-                   int         n )
+                   int         xpos )
 {
     FLI_INPUT_SPEC *sp = obj->spec;
-    int startpos = sp->position;
+    int start_of_line = sp->position;
     int oldxoffset = sp->xoffset;
     int tmp;
 
-    if ( n < 0 )
+    if ( xpos < 0 )
         return 0;
 
-    while ( startpos > 0 && sp->str[ startpos - 1 ] != '\n' )
-        startpos--;
+    while ( start_of_line > 0 && sp->str[ start_of_line - 1 ] != '\n' )
+        start_of_line--;
 
-    tmp = get_substring_width( obj, startpos, n + startpos );
+    tmp = get_substring_width( obj, start_of_line, start_of_line + xpos );
 
     if ( tmp < sp->xoffset )
         sp->xoffset = tmp;

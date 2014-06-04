@@ -15,7 +15,7 @@ specific object classes see Part III.
 * Doing Interaction::
 * Signals::
 * Idle Callbacks and Timeouts::
-* Global Variables::
+* Global Variables and Macros::
 @end menu
 
 @end ifnottex
@@ -2190,8 +2190,8 @@ where @code{id} is the timeout ID returned by
 use of signal should be considered.
 
 
-@node Global Variables
-@section Global Variables
+@node Global Variables and Macros
+@section Global Variables and Macros
 
 For convenience the library exports a number of global variables.
 These are:
@@ -2262,11 +2262,31 @@ also safe for future versions that may allow multiple connections).
 
 @vindex fl_state
 @anchor{fl_state}
-@item FL_State fl_state[ 6 ]
+@item FL_State fl_state[6]
 This array of structure of type @code{@ref{FL_State}} contains a lot
 of information about the graphics mode, where each structure has the
-information for each of the cisual modes. Interesting is only the
-entry for the visual mode used, @code{@ref{fl_vmode}}.
+information for each of the visual modes. Of interest is only the
+entry for the visual mode in use, @code{@ref{fl_vmode}}.
+
+
+@vindex fl_visual
+@findex fl_get_visual()
+@anchor{fl_visual}
+@anchor{fl_get_visual()}
+@item Visual *fl_visual
+@item Visual *fl_get_visual()
+Convenience macros that expands to the @code{Visual} pointer in use.
+Same as @code{@ref{fl_state}[@ref{fl_vmode}].xvinfo->visual}.
+
+
+@vindex fl_colormap
+@findex fl_get_colormap()
+@anchor{fl_colormap}
+@anchor{fl_get_colormap()}
+@item Colormap fl_colormap
+@item Colormap fl_get_colormap()
+Convenience macros that expands to the currently used @code{Colormap}.
+Same as @code{@ref{fl_state}[@ref{fl_vmode}].colormap}.
 
 
 @vindex fl_ul_magic_char

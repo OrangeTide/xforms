@@ -959,7 +959,7 @@ print_form_newformat( FILE       * fn,
     for ( obj = form->first; obj; obj = obj->next )
         emit_objclass_spec_header( fn, obj );
 
-    fprintf( fn, "\n\n/***************************************\n"
+    fprintf( fn, "\n/***************************************\n"
                  " ***************************************/\n\n" );
 
     fprintf( fn, "%s *\ncreate_form_%s( void )\n{\n    FL_OBJECT *obj;\n",
@@ -1139,9 +1139,9 @@ get_free_handle( FL_OBJECT  * ob,
     if ( ob->c_vdata )
         strcpy( buf, ob->c_vdata );
     else if ( *name )
-        sprintf( buf, "freeobj_%s_handle", name );
+        sprintf( buf, "freeobj_%s_handler", name );
     else if ( *ob->label )
-        sprintf( buf, "freeobj_%s_handle", ob->label );
+        sprintf( buf, "freeobj_%s_handler", ob->label );
     else
     {
         int i,
@@ -1157,7 +1157,7 @@ get_free_handle( FL_OBJECT  * ob,
             freeobj[ k ] = ob;
         }
 
-        sprintf( buf, "freeobj%d_handle", k );
+        sprintf( buf, "freeobj%d_handler", k );
     }
 
     return buf;
@@ -1193,19 +1193,23 @@ print_callbacks_and_globals( FILE    * fn,
             }
             else
             {
+                const char * hname = get_free_handle( obj, name );
+                int width = strlen( hname ) + 1;
+
                 fprintf( fn, "/***************************************\n"
-                         " ***************************************/\n\n" );
-                fprintf( fn, "int %s( FL_OBJECT * ob,\n"
-                             "        int         ev,\n"
-                             "        FL_Coord    mx,\n"
-                             "        FL_Coord    my,\n"
-                             "        int         key,\n"
-                             "        void      * xev )\n"
+                             " ***************************************/\n\n"
+                             "int\n%s( FL_OBJECT * obj,\n"
+                             "%*s int         ev,\n"
+                             "%*s FL_Coord    mx,\n"
+                             "%*s FL_Coord    my,\n"
+                             "%*s int         key,\n"
+                             "%*s void      * xev )\n"
                              "{\n"
                              "    /* Free object handler code */\n\n"
                              "    return 0;\n"
                              "}\n\n\n",
-                         get_free_handle( obj, name ) );
+                         hname, width, " ", width, " ", width, " ",
+                         width, " ", width, " " );
             }
         }
 
@@ -1218,11 +1222,11 @@ print_callbacks_and_globals( FILE    * fn,
             else
                 fprintf( fn, "/***************************************\n"
                              " ***************************************/\n\n"
-                             "void %s( FL_OBJECT * ob,\n"
-                             "         long        data )\n"
+                             "void\n%s( FL_OBJECT * obj,\n"
+                             "%*s long        data )\n"
                              "{\n"
                              "    /* Fill-in code for callback here */\n"
-                             "}\n\n\n", cbname );
+                         "}\n\n\n", cbname, ( int ) strlen( cbname ) + 1, " " );
         }
 
         if ( obj->objclass == FL_MENU )
@@ -1347,7 +1351,7 @@ output_callbacks( FILE * fn,
 
     for ( i = 0; i < nform; i++ )
     {
-        fprintf( fn, "/* Callbacks and freeobj handles for form %s */\n\n",
+        fprintf( fn, "/* Callbacks and freeobj handlers for form %s */\n\n\n",
                  fdform[ i ].fname );
         print_callbacks_and_globals( fn, fdform[i].form, 1 );
         fprintf( fn, "\n" );
@@ -1393,7 +1397,9 @@ output_main_newformat( FILE * fn,
     if ( ! fdopt.emit_cb )
         output_callbacks( fn, fdform, nform );
 
-    fprintf( fn, "int\nmain( int    argc,\n      char * argv[ ] )\n{\n" );
+    fprintf( fn, "\n/***************************************\n"
+                 " ***************************************/\n\n"
+                 "int\nmain( int    argc,\n      char * argv[ ] )\n{\n" );
 
     for ( i = 0; i < nform; i++ )
     {

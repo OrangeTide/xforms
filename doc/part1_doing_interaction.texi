@@ -722,8 +722,8 @@ All of the values above, except @code{@ref{FL_RETURN_END_CHANGED}},
 logically @code{OR}'ed. @code{@ref{FL_RETURN_END_CHANGED}} is
 different in that it only can be returned when the conditions for
 @code{@ref{FL_RETURN_END}} and @code{@ref{FL_RETURN_CHANGED}} are
-satisfied at once. If this is request @code{@ref{FL_RETURN_END}} and
-@code{@ref{FL_RETURN_CHANGED}} will automatically deselected. So if
+satisfied at once. If this is requested both @code{@ref{FL_RETURN_END}} and
+@code{@ref{FL_RETURN_CHANGED}} will automatically become deselected. So if
 you want notifications about the conditions that lead to
 @code{@ref{FL_RETURN_END}} or @code{@ref{FL_RETURN_CHANGED}} (or both
 at once) ask instead for the logical @code{OR} of these two.
