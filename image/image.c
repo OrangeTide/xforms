@@ -1421,7 +1421,7 @@ flimage_dup_( FL_IMAGE * sim,
         memcpy( im->io_spec, sim->io_spec, sim->spec_size );
     }
 
-    /* reset stuff that's on a per-image basis */
+    /* Reset stuff that's on a per-image basis */
 
     im->depth = 0;
     im->vclass = 0;

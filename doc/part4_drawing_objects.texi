@@ -920,7 +920,7 @@ cursor can optionally be drawn
 void fl_draw_text_cursor(int align, FL_Coord x, FL_Coord y,
                          FL_Coord w, FL_Coord h, FL_COLOR col,
                          int style, int size, char *str,
-                         int FL_COLOR ccol, int pos);
+                         FL_COLOR ccol, int pos);
 @end example
 @noindent
 where @code{ccol} is the color of the cursor and @code{pos} is its

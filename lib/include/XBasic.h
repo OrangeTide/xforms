@@ -142,6 +142,9 @@ FL_EXPORT FL_State fl_state[ ];
 
 FL_EXPORT char *fl_ul_magic_char;
 
+FL_EXPORT double fl_dpi;
+#define fl_get_dpi( ) ( fl_dpi )
+
 FL_EXPORT int fl_mode_capable( int mode,
                                int warn );
 

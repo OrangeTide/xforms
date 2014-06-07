@@ -31,7 +31,6 @@
 
 #include "include/forms.h"
 #include "flinternal.h"
-#include <string.h>
 #include "private/flvasprintf.h"
 
 
@@ -45,19 +44,19 @@ extern FL_OBJECT * fli_handled_parent;     /* defined in  events.c */
 static void redraw( FL_FORM *,
                     int );
 static void lose_focus( FL_OBJECT * );
-static void get_object_rect( FL_OBJECT *,
-                             XRectangle *,
-                             int );
-static XRectangle * get_label_rect( FL_OBJECT  * obj,
-                                    XRectangle * rect );
-static int objects_intersect( FL_OBJECT *,
-                              FL_OBJECT * );
+static void get_object_rect( const FL_OBJECT * obj,
+                             XRectangle      * rect,
+                             int               extra );
+static XRectangle * get_label_rect( const FL_OBJECT  * obj,
+                                    XRectangle       * rect );
+static int objects_intersect( const FL_OBJECT *,
+                              const FL_OBJECT * );
 static void mark_object_for_redraw( FL_OBJECT * );
-static int object_is_under( FL_OBJECT * );
+static int object_is_under( const FL_OBJECT * );
 static void checked_hide_tooltip( FL_OBJECT *,
                                   XEvent    * );
 static int prep_recalc( FL_FORM   * form,
-                         FL_OBJECT * start_obj );
+                        FL_OBJECT * start_obj );
 static void finish_recalc( FL_FORM   * form,
                            FL_OBJECT * start_obj );
 
@@ -83,9 +82,9 @@ static FL_RECT *tmp_rects = NULL;
                                     && ( form )->frozen == 0 )
 
 
-/* Macro for checking if a label is to be consider to be "outside" of its
-   object for redrawing purposes. When a label is outside its object and
-   we change the position or size of the object or the text, style or
+/* Macro for checking if a label is to be considered to be "outside" of its
+   object for redrawing purposes. When a label is outside of its object and
+   we change the position or size of the object, the text, or style or
    font size of the label then other objects under the label also need
    to be redrawn. In priciple calling fl_is_outside_lalign() should do
    the job but there are some semi-transparent objects which we need to
@@ -119,7 +118,7 @@ bg_object( FL_FORM * form )
 
 
 /***************************************
- * Creates an object - NOT FOR USE BY USERS OF THE LIBRARY!
+ * Creates an object - NOT MEANT FOR USE BY USERS OF THE LIBRARY!
  ***************************************/
 
 FL_OBJECT *
@@ -164,19 +163,19 @@ fl_make_object( int            objclass,
             break;
 
         case FL_COORD_MM :
-            fli_scale_object( obj, fli_dpi / 25.4, fli_dpi / 25.4 );
+            fli_scale_object( obj, fl_dpi / 25.4, fl_dpi / 25.4 );
             break;
 
         case FL_COORD_POINT :
-            fli_scale_object( obj, fli_dpi / 72.0, fli_dpi / 72.0 );
+            fli_scale_object( obj, fl_dpi / 72.0, fl_dpi / 72.0 );
             break;
 
         case FL_COORD_centiPOINT :
-            fli_scale_object( obj, fli_dpi / 7200.0, fli_dpi / 7200.0 );
+            fli_scale_object( obj, fl_dpi / 7200.0, fl_dpi / 7200.0 );
             break;
 
         case FL_COORD_centiMM :
-            fli_scale_object( obj, fli_dpi / 2540.0, fli_dpi / 2540.0 );
+            fli_scale_object( obj, fl_dpi / 2540.0, fl_dpi / 2540.0 );
             break;
 
         default:
@@ -1983,7 +1982,7 @@ fl_get_focus_object( FL_FORM * form )
 
 /***************************************
  * Returns an object of type 'find' in a form, starting at 'obj'.
- * If find_object() does not return an object the event that
+ * If the function does not return an object the event that
  * triggered the call will be eaten. This is how the deactived
  * and inactive objects reject events.
  * Modify with care!
@@ -2265,8 +2264,8 @@ fl_redraw_object( FL_OBJECT * obj )
  ***************************************/
 
 static int
-objects_intersect( FL_OBJECT * obj1,
-                   FL_OBJECT * obj2 )
+objects_intersect( const FL_OBJECT * obj1,
+                   const FL_OBJECT * obj2 )
 {
     if ( tmp_vdata )
     {
@@ -2660,7 +2659,7 @@ handle_object( FL_OBJECT * obj,
         case FL_FOCUS:
             /* 'refocus' is set if on the last FL_UNFOCUS it was found
                that the text in the input field didn't validate. In that
-               case the focus has to go back to that field instead to a
+               case the focus has to go back to that field and *not* to a
                different one */
 
             if ( refocus && refocus->form )
@@ -3133,7 +3132,7 @@ fl_call_object_callback( FL_OBJECT * obj )
  ***************************************/
 
 static int
-object_is_under( FL_OBJECT * obj )
+object_is_under( const FL_OBJECT * obj )
 {
     FL_OBJECT *o;
     int cnt = 0;
@@ -3543,8 +3542,8 @@ fl_get_object_bbox( FL_OBJECT * obj,
  ***************************************/
 
 static XRectangle *
-get_label_rect( FL_OBJECT  * obj,
-                XRectangle * rect )
+get_label_rect( const FL_OBJECT * obj,
+                XRectangle      * rect )
 {
     int sw,
         sh;
@@ -3597,9 +3596,9 @@ get_label_rect( FL_OBJECT  * obj,
  ***************************************/
 
 static void
-get_object_rect( FL_OBJECT * obj,
-                 FL_RECT   * rect,
-                 int         extra )
+get_object_rect( const FL_OBJECT * obj,
+                 FL_RECT         * rect,
+                 int               extra )
 {
     if (    obj->objclass == FL_FRAME
          || obj->objclass == FL_LABELFRAME
@@ -3617,7 +3616,7 @@ get_object_rect( FL_OBJECT * obj,
     /* Include the label into the box - but only for labels that are not
        within the object. If "inside" labels extend beyond the limits of the
        object things look ugly anyway and it doesn't seem to make too much
-       sense to slow down the program any further for that case. */
+       sense to slow down the program for this case. */
 
     if ( obj->label && *obj->label && OL( obj ) )
     {
@@ -3634,20 +3633,22 @@ void
 fl_set_object_automatic( FL_OBJECT * obj,
                          int         flag )
 {
-    if ( obj->automatic != ( flag ? 1 : 0 ) )
+    flag = flag ? 1 : 0;
+
+    if ( obj->automatic == flag )
+        return;
+
+    obj->automatic = flag;
+
+    if ( obj->form )
     {
-        obj->automatic = flag ? 1 : 0;
-
-        if ( obj->form )
-        {
-            if ( flag )
-                obj->form->num_auto_objects++;
-            else
-                obj->form->num_auto_objects--;
-        }
-
-        fli_recount_auto_objects( );
+        if ( flag )
+            obj->form->num_auto_objects++;
+        else
+            obj->form->num_auto_objects--;
     }
+
+    fli_recount_auto_objects( );
 }
 
 
@@ -3698,12 +3699,16 @@ lose_focus( FL_OBJECT * obj )
 
 
 /***************************************
- * Part of the public interface, not used within the library
+ * Part of the public interface, not used within the library.
+ * Calls a user supplied function on all objects of a form but stops
+ * in between of the function, when called on one of the objects,
+ * returns 0. The function also gets called for objects that mark the
+ * begin and end of a group!
  ***************************************/
 
 void
 fl_for_all_objects( FL_FORM * form,
-                    int       ( * cb )( FL_OBJECT *, void * ),
+                    int       ( * fp )( FL_OBJECT *, void * ),
                     void    * v )
 {
     FL_OBJECT *obj;
@@ -3714,13 +3719,13 @@ fl_for_all_objects( FL_FORM * form,
         return;
     }
 
-    if ( ! cb )
+    if ( ! fp )
     {
         M_err( "fl_for_all_objects", "NULL callback function" );
         return;
     }
 
-    for ( obj = bg_object( form ); obj && ! cb( obj, v ); obj = obj->next )
+    for ( obj = bg_object( form ); obj && ! fp( obj, v ); obj = obj->next )
         /* empty */ ;
 }
 
@@ -3762,10 +3767,10 @@ fl_set_object_helper_f( FL_OBJECT  * obj,
 /***************************************
  * Function for setting the conditions under which an object gets
  * returned (or its callback invoked). If the object has to do
- * additional work on setting te condition (e.g. it has child
- * objects that also need to be set) it has to set up it's own
- * function that then will called in the end. This function should
- * only be called once an object has been created completely!
+ * additional work on setting the condition (e.g. it has child
+ * objects that also need to be set) it has to set up its own
+ * function that then will be called in the end. This function should
+ * only be called once an object has been fully created!
  ***************************************/
 
 int

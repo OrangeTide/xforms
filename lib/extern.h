@@ -41,17 +41,6 @@ extern FL_OBJECT *fli_current_group;
 
 #define FLI_INACTIVE_PATTERN fli_gray_pattern[ 1 ]
 
-extern Display *fl_display;
-extern Window fl_root,
-              fl_vroot;
-extern int fl_screen;
-
-extern int fl_vmode;
-
-extern int fl_scrh,
-           fl_scrw;
-
-extern float fli_dpi;
 extern FL_IOPT fli_cntl;
 extern int fli_inverted_y;
 

@@ -1438,7 +1438,7 @@ FL_EXPORT void fl_draw_text_cursor( int          align,
 									int          style,
 									int          size,
 									const char * str,
-									int          cc,
+									FL_COLOR     cc,
 									int          pos );
 
 #define fl_draw_box fl_draw_box

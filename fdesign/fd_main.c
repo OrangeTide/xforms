@@ -678,7 +678,7 @@ pre_connect( int    argc,
     create_the_forms( );
     init_classes( );
 
-    fli_dpi = 95;
+    fl_dpi = 96;
 
     if ( i > argc - 1 )
     {

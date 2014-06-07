@@ -44,7 +44,7 @@ static int handle_tbox( FL_OBJECT *,
                         int,
                         void * );
 
-static GC create_gc( FL_OBJECT *,
+static GC create_gc( const FL_OBJECT *,
                      int,
                      int,
                      FL_COLOR,
@@ -319,7 +319,7 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
     tl->specialGC     = None;
     tl->incomp_esc    = 0;
 
-    /* Check for flags at the start of the line. When we're done 'p'
+    /* Check for flags at the start of the line. When we're done 'p' will
        points to the start of the string to be shown in the textbox. */
 
     while ( *p && *p == sp->specialkey && ! done )
@@ -608,16 +608,16 @@ fli_tbox_add_chars( FL_OBJECT  * obj,
        of the line from the old text and the new text, delete te old line and
        then draw a new one in its place.
 
-       Another question is how to deal with situations where by a previous
-       call with e.g. "@C3" a color was selected and in the next call the
+       Another question is how to deal with situations where, by a previous
+       call with e.g. "@C3", a color was selected and in the next call the
        string to be added starts with a digit, let's say '7'. One possibility
        would be to re-evaluate the combined string to mean "@C37", setting
        a different color. But since in older versions this didn't happen
-       (and some users may rely on this, it is assumed that this isn't the
+       (and some users may rely on this), it is assumed that this isn't the
        users intention and to avoid the two digits to become collated and
        interpreted as the number of a different color "@ " is inserted in
        between the digits, with "@ " treated as a separator between digits
-       (the intended ose of "@ " is to allow lines like "@C3@ 2. Chapter", i.
+       (the intended use of "@ " is to allow lines like "@C3@ 2. Chapter", i.
        e. having a color specification, followed by printable text that starts
        with a digit). */
 
@@ -1455,14 +1455,14 @@ fli_tbox_set_dblclick_callback( FL_OBJECT      * obj,
  ***************************************/
 
 static GC
-create_gc( FL_OBJECT * obj,
-           int         style,
-           int         size,
-           FL_COLOR    color,
-           int         clip_x,
-           int         clip_y,
-           int         clip_w,
-           int         clip_h )
+create_gc( const FL_OBJECT * obj,
+           int               style,
+           int               size,
+           FL_COLOR          color,
+           int               clip_x,
+           int               clip_y,
+           int               clip_w,
+           int               clip_h )
 {
     GC gc;
     XGCValues xgcv;
@@ -1864,7 +1864,7 @@ fli_tbox_get_topline( FL_OBJECT * obj )
         return -1;
 
     /* If the box was never shown assume that the very first line will
-       be the one that's goin tp be in topmost position */
+       be the one that's going to be in topmost position */
 
     if ( ! sp->def_height )
         return 0;

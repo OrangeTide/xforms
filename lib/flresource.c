@@ -1142,10 +1142,10 @@ fl_initialize( int        * na,
     if ( xdpi / ydpi > 1.05 || ydpi / xdpi < 0.95 )
         M_warn( "fl_initialize", "NonSquarePixel %.1f %.1f", xdpi, ydpi );
 
-    fli_dpi = ( xdpi + ydpi ) / 2;
-    fli_dpi = ( ( int ) ( fli_dpi * 10.0 + 0.3 ) ) * 0.1;
+    fl_dpi = ( xdpi + ydpi ) / 2;
+    fl_dpi = FL_nint( fl_dpi * 10.0 + 0.5 ) * 0.1;
 
-    M_info( "fl_initialize", "screen DPI = %f", fli_dpi );
+    M_info( "fl_initialize", "screen DPI = %f", fl_dpi );
 
     fl_vmode = fli_initialize_program_visual( );
     fli_init_colormap( fl_vmode );

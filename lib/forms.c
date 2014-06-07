@@ -36,10 +36,10 @@
 #include "private/flvasprintf.h"
 
 
-#define PointToPixel( a )     FL_crnd( ( a ) * fli_dpi / 72.0   )
-#define MMToPixel( a )        FL_crnd( ( a ) * fli_dpi / 25.4   )
-#define CMMToPixel( a )       FL_crnd( ( a ) * fli_dpi / 2540.0 )
-#define CPointToPixel( a )    FL_crnd( ( a ) * fli_dpi / 7200.0 )
+#define PointToPixel( a )     FL_crnd( ( a ) * fl_dpi / 72.0   )
+#define MMToPixel( a )        FL_crnd( ( a ) * fl_dpi / 25.4   )
+#define CMMToPixel( a )       FL_crnd( ( a ) * fl_dpi / 2540.0 )
+#define CPointToPixel( a )    FL_crnd( ( a ) * fl_dpi / 7200.0 )
 
 static FL_FORM * create_new_form( FL_Coord,
                                   FL_Coord );

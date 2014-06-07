@@ -62,7 +62,7 @@ XKeyboardControl fli_keybdcontrol;
 
 unsigned long fli_keybdmask = ( 1L << 8 ) - 1;
 
-float fli_dpi = 80.0;
+double fl_dpi = 96.0;
 
 int fli_inverted_y;
 

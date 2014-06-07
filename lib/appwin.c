@@ -207,9 +207,9 @@ fl_add_event_callback( Window           win,
 
 
 /***************************************
- * Removes one or all event callbacks for a window. May be
- * called with for a window for which no event callbacks
- * have been set, so handle also that case gracefully.
+ * Removes one or all event callbacks for a window. Might be
+ * called for a window for which no event callbacks have been
+ * set, so handle also that case gracefully.
  ***************************************/
 
 void

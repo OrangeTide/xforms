@@ -60,14 +60,12 @@ flimage_ps_options( void )
 
     if ( ! sp )
     {
-        extern float fli_dpi;   /* I don't like this and will change it */
-
         sp = fl_calloc( 1, sizeof *sp );
         sp->orientation = FLPS_AUTO;
         sp->paper_w = 8.5;
         sp->paper_h = 11.0;
         sp->auto_fit = 1;
-        sp->xdpi = sp->ydpi = fli_dpi;
+        sp->xdpi = sp->ydpi = fl_dpi;
         sp->printer_dpi = 300;
         sp->vm = sp->hm = 0.3;
         sp->xscale = sp->yscale = 1.0;

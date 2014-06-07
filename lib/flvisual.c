@@ -188,7 +188,7 @@ select_best_visual( void )
     if ( fli_cntl.debug )
     {
         M_warn( "select_best_visual", "XlibVersion: %s", XlibVersion );
-        M_info( "select_best_visual", "DPI = %d", fli_dpi );
+        M_info( "select_best_visual", "DPI = %d", fl_dpi );
         M_warn( "select_best_visual", "No. of Visuals: %d", xvn );
         for ( j = 0; j < 6; j++ )
             if ( bestv[ j ] )

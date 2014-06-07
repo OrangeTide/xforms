@@ -2269,6 +2269,18 @@ information for each of the visual modes. Of interest is only the
 entry for the visual mode in use, @code{@ref{fl_vmode}}.
 
 
+@vindex fl_dpi
+@findex fl_get_dpi()
+@anchor{fl_dpi}
+@anchor{fl_get_dpi()}
+@item double fl_dpi
+@item double fl_get_dpi()
+The @code{fl_dpi} variable contains the screen resolution (in dots
+per inch), averaged over the resolutions in @code{x}- and
+@code{y}-direction. The funtion is a convenience macros with the same
+result.
+
+
 @vindex fl_visual
 @findex fl_get_visual()
 @anchor{fl_visual}

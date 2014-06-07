@@ -583,7 +583,7 @@ fl_setpup_default_fontsize( int size )
     pup_font_size = size;
     pup_title_font_size = size;
 
-    pup_font_struct = pup_title_font_struct = 0;
+    pup_font_struct = pup_title_font_struct = NULL;
 
     if ( ! flx->display )
         return old_pup_font_size;
@@ -2103,7 +2103,7 @@ fl_showpup( int n )
             xgcv.foreground = fl_get_flcolor( FL_INACTIVE );
             m->gc_inactive = XCreateGC( flx->display, m->win, vmask, &xgcv );
 
-            /* special hack for B&W */
+            /* Special hack for B&W */
 
             if ( fli_dithered( fl_vmode ) )
                 XSetFillStyle( flx->display, m->gc_inactive, FillStippled );

@@ -61,7 +61,7 @@ flps_init( void )
         /* driver will fill-in appropriate vals for minus */
 
         local_flps->drawbox = -1;
-        local_flps->xdpi    = local_flps->ydpi = fli_dpi;
+        local_flps->xdpi    = local_flps->ydpi = fl_dpi;
         local_flps->pack    = 1;
 
         /* Cache */

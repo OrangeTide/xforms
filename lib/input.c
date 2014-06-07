@@ -64,8 +64,8 @@ static int make_line_visible( FL_OBJECT * obj,
 static int make_char_visible( FL_OBJECT * obj,
                               int         xpos );
 
-static void copy_attributes( FL_OBJECT *,
-                             FL_OBJECT * );
+static void copy_attributes( FL_OBJECT       * dest,
+                             const FL_OBJECT * src );
 
 static int date_validator( FL_OBJECT *,
                            const char *,
@@ -303,7 +303,7 @@ draw_input( FL_OBJECT * obj )
                                     && sp->beginrange >= sp->endrange ) ?
                                   sp->position : -1,
                                   sp->beginrange, sp->endrange,
-                                 sp->str, sp->drawtype != COMPLETE,
+                                  sp->str, sp->drawtype != COMPLETE,
                                   sp->topline,
                                   sp->topline + sp->screenlines, 0 );
 
@@ -2919,8 +2919,8 @@ fl_get_input_editkeymap( FL_EditKeymap * keymap )
  ***************************************/
 
 static void
-copy_attributes( FL_OBJECT * dest,
-                 FL_OBJECT * src )
+copy_attributes( FL_OBJECT       * dest,
+                 const FL_OBJECT * src )
 {
     if ( src == dest )
         return;
@@ -3003,7 +3003,7 @@ fl_set_input_cursor_visible( FL_OBJECT * obj,
  ***************************************/
 
 int
-fl_input_changed( FL_OBJECT *obj )
+fl_input_changed( FL_OBJECT * obj )
 {
     return ( ( FLI_INPUT_SPEC * ) obj->spec )->changed;
 }

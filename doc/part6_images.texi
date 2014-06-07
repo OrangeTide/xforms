@@ -3,10 +3,10 @@
 
 Although images are not typically a part of the GUI, they are often
 part of an application. For this reason and others, image support is
-part of Forms Library. It is somewhat not unexpected that the users of
-a graphical user interface want some graphics support.
+part of Forms Library. It is not unusual that the users of a graphical
+user interface want some graphics support.
 
-The most important reason to have  image support in the library is the
+The most important reason to have image support in the library is the
 amount of questions/requests on the  mailing list of the Forms Library
 about images. It convinced us that having image support will make many
 Forms Library users life easier.

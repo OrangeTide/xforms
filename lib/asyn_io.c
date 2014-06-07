@@ -67,7 +67,7 @@ static void clear_freelist( void );
  ***************************************/
 
 static void
-collect_fd( void )
+collect_fds( void )
 {
     FLI_IO_REC *p;
     int nf = 0;
@@ -84,7 +84,7 @@ collect_fd( void )
     {
         if ( p->source < 0 )
         {
-            M_err( "collect_fd", "source < 0\n" );
+            M_err( "collect_fds", "source < 0\n" );
             continue;
         }
 
@@ -126,7 +126,7 @@ fl_add_io_callback( int              fd,
 
     fli_context->io_rec = io_rec;
 
-    collect_fd( );
+    collect_fds( );
 }
 
 
@@ -169,19 +169,20 @@ fl_remove_io_callback( int            fd,
            then fli_watch_io(), iterating over all IO callbacks still tries to
            to access the 'next' field and if the structure has been
            deallocated completely (instead of having been temporarily moved
-           to somewhere else where it still can be accessed) stumbles badly.
-           That's also why fli_watch_io() calls clear_freelist() - it's the
-           only instance that knows when the structure isn't needed anymore. */
+           to somewhere else where it still can be accessed) it stumbles
+           badly. That's also why fli_watch_io() calls clear_freelist() -
+           it's the only place where it's known when the structure isn't
+           needed anymore. */
 
         add_to_freelist( io );
     }
 
-    collect_fd( );
+    collect_fds( );
 }
 
 
 /***************************************
- * Watch for activities using select or poll. Timeout in milli-second
+ * Watch for activities using select or poll. Timeout is in milli-seconds.
  ***************************************/
 
 void

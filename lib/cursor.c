@@ -37,7 +37,6 @@
 
 #include "include/forms.h"
 #include "flinternal.h"
-#include "extern.h"
 
 
 #define MAX_CURSORS   64    /* max. number of bitmap cursors     */

@@ -883,13 +883,13 @@ get_conversion_factor( void )
     double sc = 1.0;
 
     if ( fdopt.unit == FL_COORD_POINT )
-        sc = 72.00 / fli_dpi;
+        sc = 72.00 / fl_dpi;
     else if ( fdopt.unit == FL_COORD_MM )
-        sc = 25.40 / fli_dpi;
+        sc = 25.40 / fl_dpi;
     else if ( fdopt.unit == FL_COORD_centiPOINT )
-        sc = 7200.00 / fli_dpi;
+        sc = 7200.00 / fl_dpi;
     else if ( fdopt.unit == FL_COORD_centiMM )
-        sc = 2540.00 / fli_dpi;
+        sc = 2540.00 / fl_dpi;
 
     return sc;
 }

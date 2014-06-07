@@ -103,19 +103,22 @@ fli_get_max_pixels_line( void )
 }
 
 
-typedef int ( * DrawString )( Display *,
-                              Drawable, GC,
-                              int,
-                              int,
-                              const char *,
-                              int );
+/* type fitting both XDrawString() and XDrawImageString() */
+
+typedef int ( * DrawString )( Display    * display,
+                              Drawable     d,
+                              GC           gc,
+                              int          x,
+                              int          y,
+                              const char * string,
+                              int          length );
 
 
 /***************************************
  * Major text drawing routine. It draws text (possibly consisting of several
  * lines) into the box specified via the coordinates and using the given
  * alignment relative to that box. Also a cursor is drawn. For lines that
- * contain a specal character indicating underlining this is also handled.
+ * contain a special character indicating underlining this is also handled.
  * Finally, parts of the text can be shown as selected.
  *
  * Arguments:
@@ -126,7 +129,7 @@ typedef int ( * DrawString )( Display *,
  *              -1 = clipping is done but already has been set externally
  *  backcol     color to be used for selected text
  *  forecol     color for (unselected) text
- *  curscol     color of cursor
+ *  curscol     color for cursor
  *  style       text font style
  *  size        text font size
  *  curspos     index into string where cursor is to be drawn (if negative or
@@ -135,15 +138,15 @@ typedef int ( * DrawString )( Display *,
  *  selend      index into string where selection ends (to get selection this
  *              must be larger than 'selstart')
  *  istr        pointer to the text to be drawn
- *  img         if non-zero use XDrawImageString() instead of XDrawString()
- *              to draw the text
+ *  img         if non-zero also draw background (use XDrawImageString()
+ *              instead of XDrawString() to draw the text)
  *  topline     first line of the text to be actually shown (counting starts
  *              at 1)
  *  endline     last line to be shown (if less than 1 or too large is replaced
  *              by the number of lines in the text)
- *  bkcol       background color
+ *  bkcol       background color (used when 'img' is true)
  *
- * Returns the width (in pixel) of the widest line of the text.
+ * Returns the width (in pixel) of the widest line of the text drawn.
  ***************************************/
 
 int
@@ -160,7 +163,7 @@ fli_draw_string( int           align,
                  int           size,
                  int           curspos,
                  int           selstart,
-                int           selend,
+                 int           selend,
                  const char *  istr,
                  int           img,
                  int           topline,
@@ -181,7 +184,7 @@ fli_draw_string( int           align,
        the very first position and there's no string to output. It would
        be tempting to also bail out if the height 'h' is 0 or even negative
        but there are some code paths were this actually may happen and we
-       wouldn't outut a string even though it is needed (I know, it's a
+       wouldn't output a string even though it is needed (I know, it's a
        bloody mess but fixing it right now would probably take a few weeks
        and even might break existing code...) */
 
@@ -278,7 +281,7 @@ fli_draw_string( int           align,
             max_pixelline = i;
         }
 
-        /* Calculate the x- and y- positon of were to print the text */
+        /* Calculate the x- and y- positon of where to print the text */
 
         switch ( horalign )
         {
@@ -330,7 +333,7 @@ fli_draw_string( int           align,
     fli_textcolor( forecol );
     fli_bk_textcolor( bkcol );
 
-    /* Draw the lines requested */
+    /* Draw all the lines requested */
 
     for ( i = topline; i < endline; i++ )
     {
@@ -399,7 +402,7 @@ fli_draw_string( int           align,
             fl_rectf( xsel, line->y - flx->fasc, wsel,
                       flx->fheight, forecol );
 
-            fli_textcolor( backcol );  /* bkcol ? */
+            fli_textcolor( backcol );
             drawIt( flx->display, flx->win, flx->textgc, xsel,
                     line->y, line->str + start, len );
             fli_textcolor( forecol );
@@ -476,6 +479,8 @@ fli_draw_string( int           align,
         fl_rectf( xc, yc, 2, flx->fheight, curscol );
     }
 
+    /* Free our copy of the string */
+
     fli_safe_free( str );
 
     /* Reset clipping if required */
@@ -488,6 +493,12 @@ fli_draw_string( int           align,
 
 
 /***************************************
+ * Function returns the index of the character in the label of the object
+ * the mouse is over or -1 if it's not over the label. Note that the function
+ * has some limitations: it can only be used on labels inside of the object
+ * and the label string may not contain underline characters (and the label
+ * can't be a symbol) - if you try to use it on labels that don't satisfy
+ * these requirements -1 is returned. 
  ***************************************/
 
 int
@@ -534,7 +545,7 @@ fl_get_label_char_at_mouse( FL_OBJECT * obj )
  * mouse is to the left of the start of the line)
  * The function expects a string that doesn't contain mon-printable characters
  * (except '\n' for starts a new lines)
- * This function is supposed to ork on text drawn using fli_draw_string()
+ * This function is supposed to work on text drawn using fli_draw_string()
  * using the same relevant arguments (alignment, box, font style and size
  * and string) as passed to this function.
  *
@@ -732,57 +743,58 @@ fli_get_pos_in_string( int          align,
 ***/
 
 /***************************************
- * Draws a (multi-line) text with a cursor on a white background
- ***************************************/
-
-void
-fl_draw_text_cursor( int          align,
-                     FL_Coord     x,
-                     FL_Coord     y,
-                     FL_Coord     w,
-                     FL_Coord     h,
-                     FL_COLOR     c,
-                     int          style,
-                     int          size,
-                     const char * str,
-                     int          cc,
-                     int          pos )
-{
-    fli_draw_string( align, x, y, w, h, 0, FL_WHITE, c, cc,
-                     style, size, pos, 0, -1, str, 0, 0, 0, 0 );
-}
-
-
-/***************************************
+ * Draw text with cursor and, if 'bk' is set, also the background
+ * (but with no highlighting)
  ***************************************/
 
 static void
-fli_draw_text_cursor( int          align,
-                      FL_Coord     x,
+fli_draw_text_cursor( int          align,   /* alignment in box */
+                      FL_Coord     x,       /* box geometry */
                       FL_Coord     y,
                       FL_Coord     w,
                       FL_Coord     h,
-                      const char * str,
-                      int          style,
+                      const char * str,     /* string to draw */
+                      int          style,   /* font style and size */
                       int          size,
-                      FL_COLOR     c,
-                      FL_COLOR     bc,
-                      FL_COLOR     cc,
-                      int          bk,
-                      int          pos )
+                      FL_COLOR     c,       /* color for text */
+                      FL_COLOR     bc,      /* background color */
+                      FL_COLOR     cc,      /* color for cursor */
+                      int          bk,      /* draws background when set */
+                      int          pos )    /* index of cursor position */
 {
-    fli_draw_string( align, x, y, w, h, 0, FL_WHITE, c, cc,
+    fli_draw_string( align, x, y, w, h, 0, FL_NOCOLOR, c, cc,
                      style, size, pos, 0, -1, str, bk, 0, 0, bc );
 }
 
 
-#define D( x, y, c )                                      \
-    fli_draw_text_cursor( align, x, y, w, h, str,         \
-                          style,size, c, bc, 0, bk, -1 )
+/***************************************
+ * Draws a (multi-line) text with a cursor (no background, no highlighting)
+ ***************************************/
+
+void
+fl_draw_text_cursor( int          align,   /* alignment in box */
+                     FL_Coord     x,       /* box geometry */
+                     FL_Coord     y,
+                     FL_Coord     w,
+                     FL_Coord     h,
+                     FL_COLOR     c,       /* text color */
+                     int          style,   /* font style and size */
+                     int          size,
+                     const char * str,     /* the text to draw */
+                     FL_COLOR     cc,      /* cursor color */
+                     int          pos )    /* cursor position */
+{
+    fli_draw_text_cursor( align, x, y, w, h, str, style, size,
+                          c, FL_NOCOLOR, cc, 0, pos );
+}
 
 
 /***************************************
  ***************************************/
+
+#define D( x, y, c )                                      \
+    fli_draw_text_cursor( align, x, y, w, h, str,         \
+                          style,size, c, bc, 0, bk, -1 )
 
 void
 fli_draw_text_inside( int          align,
@@ -863,7 +875,7 @@ fli_draw_text_inside( int          align,
     }
 
     fli_draw_text_cursor( align, x, y, w, h, str, style, size,
-                          c, bc, 0, special ? 0 : bk, -1 );
+                          c, bc, FL_NOCOLOR, special ? 0 : bk, -1 );
 }
 
 
@@ -884,66 +896,6 @@ fl_draw_text( int          align,
 {
     fli_draw_text_inside( align, x, y, w, h, str, style, size, c, 0, 0 );
 }
-
-
-/***************************************
- ***************************************/
-
-#if 0
-
-void
-fl_draw_text_beside( int        align,
-                     FL_Coord   x,
-                     FL_Coord   y,
-                     FL_Coord   w,
-                     FL_Coord   h,
-                     char     * str,
-                     int        len,
-                     int        style,
-                     int        size,
-                     FL_COLOR   c,
-                     FL_COLOR   bc,
-                     int        bk )
-{
-    int newa,
-        newx,
-        newy,
-        dx = 0,
-        dy = 0;
-
-    if ( ! str || ! *str )
-        return;
-
-    if ( fl_is_inside_lalign( align ) && ! fl_is_center_lalign( align ) )
-        M_warn( "drw_text_beside", "align request is inside" );
-
-    if ( align & FL_ALIGN_LEFT )
-    {
-        if ( align & FL_ALIGN_BOTTOM || align & FL_ALIGN_TOP )
-            dx = - 4;
-        else
-            dx = 1;
-    }
-    else if ( align & FL_ALIGN_RIGHT )
-    {
-        if ( align & FL_ALIGN_BOTTOM || align & FL_ALIGN_TOP )
-            dx = 4;
-        else
-            dx = - 1;
-    }
-
-    if ( align & FL_ALIGN_BOTTOM )
-        dy = - 2;
-    else if ( align & FL_ALIGN_TOP )
-        dy = 2;
-
-    x += dx;
-    y += dy;
-
-    fli_get_outside_align( align, x, y, w, h, &newa, &newx, &newy );
-    fli_draw_text_inside( align, x, y, w, h, str, style, size, c, bc, bk );
-}
-#endif
 
 
 /***************************************
