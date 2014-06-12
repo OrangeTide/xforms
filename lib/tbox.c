@@ -44,7 +44,7 @@ static int handle_tbox( FL_OBJECT *,
                         int,
                         void * );
 
-static GC create_gc( const FL_OBJECT *,
+static GC create_gc( FL_OBJECT *,
                      int,
                      int,
                      FL_COLOR,
@@ -1455,14 +1455,14 @@ fli_tbox_set_dblclick_callback( FL_OBJECT      * obj,
  ***************************************/
 
 static GC
-create_gc( const FL_OBJECT * obj,
-           int               style,
-           int               size,
-           FL_COLOR          color,
-           int               clip_x,
-           int               clip_y,
-           int               clip_w,
-           int               clip_h )
+create_gc( FL_OBJECT * obj,
+           int         style,
+           int         size,
+           FL_COLOR    color,
+           int         clip_x,
+           int         clip_y,
+           int         clip_w,
+           int         clip_h )
 {
     GC gc;
     XGCValues xgcv;
