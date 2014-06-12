@@ -1,3 +1,8 @@
+2014-06-12 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/forms.c: an object that isn't visible could become the
+	focus object, which was an insidious bug:-(
+
 2014-06-07 Jens Thoms Toerring    <jt@toerring.de>
 
 	* Lots of minor corrections
